@@ -1,0 +1,27 @@
+Package: DMCfun
+Type: Package
+Title: Diffusion model of conflict (DMC) in reaction time tasks
+Version: 0.1
+Date: 2018-05-25
+Authors@R: c(person("Mackenzie G.", "Ian", email="ian.mackenzie@uni-tuebingen.de", role = c("cre", "aut")),
+           person("Leuthold", "Hartmut", email="hartmut.leuthold@uni-tuebingen.de", role = c("aut")),
+           person("Ulrich", "Rolf", email="rolf.ulrich@uni-tuebingen.de", role = c("aut")))
+Maintainer: Ian G. Mackenzie <ian.mackenzie@uni-tuebingen.de>
+Description: DMC model simulation detailed in Ulrich, R., Schroeter, H., Leuthold, H., & Birngruber, T. (2015). Automatic and controlled stimulus processing in conflict tasks: Superimposed diffusion processes and delta functions. Cognitive Psychology, 78, 148-174.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Depends: R (>= 3.1)
+Imports: 
+  Rcpp (>= 0.12.16),
+  dplyr,
+  ez,
+  optimr,
+  psychReport,
+  readr,
+  testthat,
+  tibble,
+  tidyr
+LinkingTo: Rcpp, BH
+RoxygenNote: 6.1.0
+LazyData: true
+SystemRequirements: C++11

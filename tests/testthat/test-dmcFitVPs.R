@@ -1,0 +1,33 @@
+context("dmcFitVPs")
+
+test_that("dmcFitVPs", {
+
+  # test 1
+  fit <- dmcFitVPs(DMCfun::flankerData1, nTrl = 500,
+                   printInputArgs = FALSE, printResults = FALSE)
+  testthat::expect_type(fit, "list")
+  testthat::expect_s3_class(fit[[1]], "dmcfit")
+  testthat::expect_s3_class(fit[[1]][[1]], "dmcsim")
+
+  # test 2
+  fit <- dmcFitVPs(DMCfun::flankerData2, nTrl = 500, VP = c(1, 2, 3),
+                   printInputArgs = FALSE, printResults = FALSE)
+  testthat::expect_type(fit, "list")
+  testthat::expect_s3_class(fit[[1]], "dmcfit")
+  testthat::expect_s3_class(fit[[1]][[1]], "dmcsim")
+  testthat::expect_s3_class(fit[[2]], "dmcfit")
+  testthat::expect_s3_class(fit[[2]][[1]], "dmcsim")
+  testthat::expect_s3_class(fit[[3]], "dmcfit")
+  testthat::expect_s3_class(fit[[3]][[1]], "dmcsim")
+
+  # test 3
+  fit <- dmcFitVPs(DMCfun::simonData1, nTrl = 500, VP = c(1, 3, 5),
+                   printInputArgs = FALSE, printResults = FALSE)
+  testthat::expect_s3_class(fit[[1]], "dmcfit")
+  testthat::expect_s3_class(fit[[1]][[1]], "dmcsim")
+  testthat::expect_null(fit[[2]])
+  testthat::expect_s3_class(fit[[3]], "dmcfit")
+  testthat::expect_s3_class(fit[[3]][[1]], "dmcsim")
+  testthat::expect_null(fit[[4]])
+
+})
