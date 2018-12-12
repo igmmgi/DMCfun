@@ -22,6 +22,6 @@ Imports:
   tibble,
   tidyr
 LinkingTo: Rcpp, BH
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 LazyData: true
 SystemRequirements: C++11

@@ -23,20 +23,20 @@
 #' library(DMCfun)
 #'
 #' # Example 1
-#' resTh <- dmcFit(flankerData1, nTrl = 5000)
+#' resTh <- dmcFitAgg(flankerData1, nTrl = 5000)
 #' plot(resTh, flankerData1)
 #'
 #' # Example 2
-#' resTh <- dmcFit(flankerData2, nTrl = 5000)
+#' resTh <- dmcFitAgg(flankerData2, nTrl = 5000)
 #' plot(resTh, flankerData2)
 #' plot(resTh, flankerData2, figType = "all")
 #'
 #' # Example 3
-#' resTh <- dmcFit(simonData1, nTrl = 5000)
+#' resTh <- dmcFitAgg(simonData1, nTrl = 5000)
 #' plot(resTh, simonData1)
 #'
 #' # Example 4
-#' resTh <- dmcFit(simonData1, nTrl = 5000, VP = 1)
+#' resTh <- dmcFitAgg(simonData1, nTrl = 5000, VP = 1)
 #' plot(simonData1, VP = 1)
 #' plot(resTh, simonData1, VP = 1)
 #' }

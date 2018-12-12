@@ -17,7 +17,7 @@
 #' @examples
 #' \dontrun{
 #' library(psychReport)
-#' requiredPackages(c("DMCfun", "ez", "dplyr"))
+#' requiredPackages(c("DMCfun",  "ez", "dplyr"))
 #'
 #' # Example 1
 #' # datOb <- dmcObservedData("flankerData1.txt")
