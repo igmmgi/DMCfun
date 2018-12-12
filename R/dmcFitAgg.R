@@ -11,6 +11,7 @@
 #' @param startVals Starting values for to-be estimated parameters
 #' @param minVals Minimum values for the to-be estimated parameters
 #' @param maxVals Maximum values for the to-be estimated parameters
+#' @param fixed Fix parameter to starting value
 #' @param parScale Scalling values for the to-be estimated parameters
 #' @param fitInitialTau TRUE/FALSE
 #' @param stepCAF Step size for the CAF bins. For example, a step size of 20 would result
@@ -66,9 +67,10 @@
 dmcFitAgg <- function(resOb,
                       nTrl           = 50000,
                       method         = "L-BFGS-B",
-                      startVals      = c(20, 100, 0.5,  75, 300,  30, 3),
-                      minVals        = c(10,   5, 0.1,  20, 200,   5, 2),
-                      maxVals        = c(30, 300, 1.0, 150, 800, 100, 4),
+                      startVals      = c(20, 100, 0.5,  75, 300,  30, 2, 3),
+                      minVals        = c(10,   5, 0.1,  20, 200,   5, 1, 2),
+                      maxVals        = c(30, 300, 1.0, 150, 800, 100, 3, 4),
+                      fixed          = c( 0,   0, 0,     0,   0,   0, 0, 0),
                       parScale       = startVals/min(startVals),
                       fitInitialTau  = TRUE,
                       stepCAF        = 20,
@@ -76,7 +78,16 @@ dmcFitAgg <- function(resOb,
                       printInputArgs = TRUE,
                       printResults   = FALSE) {
 
-  # check observed data contains correct number of delta/CAF bins
+  prms <- list("amp" = startVals[1],
+               "tau" = startVals[2],
+               "mu" = startVals[3],
+               "bnds" = startVals[4],
+               "resMean" = startVals[5],
+               "resSD" = startVals[6],
+               "aaShape" = startVals[7],
+               "spShape" = startVals[8])
+
+ # check observed data contains correct number of delta/CAF bins
   if (nrow(resOb$delta) != length(seq(stepDelta, 100 - stepDelta, stepDelta))) {
     stop("Number of delta bins in observed data and nDelta bins are not equal!")
   }
@@ -101,10 +112,12 @@ dmcFitAgg <- function(resOb,
   }
 
   # function to minimise
-  minimizeCostValue <- function(x, resOb, nTrl, stepDelta, stepCAF, printInputArgs, printResults) {
+  minimizeCostValue <- function(x, prms, fixed, resOb, nTrl, stepDelta, stepCAF, printInputArgs, printResults) {
 
-    resTh <- dmcSim(amp = x[1], tau = x[2], mu = x[3], bnds = x[4], resMean = x[5], resSD = x[6],
-                    varSP = TRUE, spShape = x[7], spLim = c(-x[4], x[4]),
+    prms[!as.logical(fixed)] <- x
+    resTh <- dmcSim(amp = prms$amp, tau = prms$tau, mu = prms$mu, bnds = prms$bnds, resMean = prms$resMean, resSD = prms$resSD,
+                    aaShape = prms$aaShape,
+                    varSP = TRUE, spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
                     nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,
                     printInputArgs = printInputArgs, printResults = printResults)
 
@@ -118,7 +131,8 @@ dmcFitAgg <- function(resOb,
     for (t in seq(15, 150, 5)) {
       resTh <- dmcSim(amp = startVals[1], tau = t, mu = startVals[3],
                       bnds = startVals[4], startVals[5], startVals[6],
-                      varSP = TRUE, spShape = startVals[7], spLim = c(-startVals[4], startVals[4]),
+                      aaShape = startVals[7],
+                      varSP = TRUE, spShape = startVals[8], spLim = c(-startVals[4], startVals[4]),
                       nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,
                       printInputArgs = printInputArgs, printResults = FALSE)
       costValue <- calcCostValue(resTh, resOb)
@@ -132,19 +146,22 @@ dmcFitAgg <- function(resOb,
     maxVals[2]   <- min(300, startTau + 20)
   }
 
-  fit <- optimr::optimr(par = startVals, fn = minimizeCostValue, resOb = resOb,
+  fit <- optimr::optimr(par = startVals[!as.logical(fixed)], fn = minimizeCostValue, prms = prms, fixed = fixed, resOb = resOb,
                         nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,
                         printInputArgs = printInputArgs, printResults = printResults,
-                        method = method, lower = minVals, upper = maxVals,
-                        control = list(parscale = parScale))
+                        method = method, lower = minVals[!as.logical(fixed)], upper = maxVals[!as.logical(fixed)],
+                        control = list(parscale = parScale[!as.logical(fixed)]))
 
-  resTh <- dmcSim(amp = fit[["par"]][1], tau = fit[["par"]][2], mu = fit[["par"]][3],
-                  bnds = fit[["par"]][4], resMean = fit[["par"]][5], resSD = fit[["par"]][6],
-                  varSP = TRUE, spShape = fit[["par"]][7], spLim = c(-fit[["par"]][4], fit[["par"]][4]),
+  prms[!fixed] <- fit$par
+
+  resTh <- dmcSim(amp = prms$amp, tau = prms$tau, mu = prms$mu, bnds = prms$bnds,
+                  resMean = prms$resMean, resSD = prms$resSD,
+                  aaShape = prms$aaShape,
+                  varSP = TRUE, spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
                   nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,
                   printResults = FALSE)
 
-  cat(sprintf("RMSE: %.3f\n", fit[2]$value))
+  cat(sprintf("RMSE: %.3f\n", fit$value))
 
   dmcfit <- list(resTh, fit)
   class(dmcfit) <- c("dmcfit")

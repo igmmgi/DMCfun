@@ -15,7 +15,7 @@
 #' @param nTrl number of trials
 #' @param tmax number of time points per trial
 #' @param varSP true/false variable starting point
-#' @param spShape shape parameter of drift rate
+#' @param spShape shape parameter of starting point
 #' @param spLim limit range of distribution of starting point
 #' @param varDR true/false variable drift rate NB. In DMC, drift rate across trials is always
 #' constant.

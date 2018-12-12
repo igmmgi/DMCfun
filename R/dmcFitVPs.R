@@ -11,6 +11,7 @@
 #' @param startVals Starting values for to-be estimated parameters
 #' @param minVals Minimum values for the to-be estimated parameters
 #' @param maxVals Maximum values for the to-be estimated parameters
+#' @param fixed Fix parameter to starting value
 #' @param parScale Scalling values for the to-be estimated parameters
 #' @param fitInitialTau TRUE/FALSE
 #' @param stepCAF Step size for the CAF bins. For example, a step size of 20 would result
@@ -47,9 +48,10 @@
 dmcFitVPs <- function(resOb,
                       nTrl           = 50000,
                       method         = "L-BFGS-B",
-                      startVals      = c(20, 100, 0.5,  75, 300,  30, 3),
-                      minVals        = c(10,   5, 0.1,  20, 200,   5, 2),
-                      maxVals        = c(30, 300, 1.0, 150, 800, 100, 4),
+                      startVals      = c(20, 100, 0.5,  75, 300,  30, 2, 3),
+                      minVals        = c(10,   5, 0.1,  20, 200,   5, 1, 2),
+                      maxVals        = c(30, 300, 1.0, 150, 800, 100, 3, 4),
+                      fixed          = c(0, 0, 0, 0, 0, 0,  0, 0),
                       parScale       = startVals/min(startVals),
                       fitInitialTau  = TRUE,
                       stepCAF        = 20,
@@ -75,6 +77,7 @@ dmcFitVPs <- function(resOb,
                               startVals      = startVals,
                               minVals        = minVals,
                               maxVals        = maxVals,
+                              fixed          = fixed,
                               parScale       = parScale,
                               fitInitialTau  = fitInitialTau,
                               stepCAF        = stepCAF,

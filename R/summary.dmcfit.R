@@ -29,17 +29,17 @@ summary.dmcfit <- function(object, ...) {
   if ("par" %in% names(object[[2]])) {
 
     out           <- tibble::as_tibble(cbind(t(object[[2]][[1]]), object[[2]][[2]]))
-    colnames(out) <- c("amp", "tau", "mu", "bnds", "resMean", "resSD", "spShape", "rmse")
+    colnames(out) <- c("amp", "tau", "mu", "bnds", "resMean", "resSD", "aaShape", "spShape", "rmse")
 
   } else {
 
     outVP <- tibble::as_tibble(cbind(VP = which(!unlist(lapply(object, is.null))),
                                      do.call(rbind, lapply(lapply(object, `[[`, 2), `[[`, 1)),
                                      do.call(rbind, lapply(lapply(object, `[[`, 2), `[[`, 2))))
-    outAvg <- tibble::as_tibble(t(c(VP = NA,  colMeans(outVP[,c(2:9)]))))
+    outAvg <- tibble::as_tibble(t(c(VP = NA,  colMeans(outVP[,c(2:10)]))))
 
     out <- rbind(outVP, outAvg)
-    colnames(out) <- c("VP", "amp", "tau", "mu", "bnds", "resMean", "resSD", "spShape", "rmse")
+    colnames(out) <- c("VP", "amp", "tau", "mu", "bnds", "resMean", "resSD", "aaShape", "spShape", "rmse")
 
   }
 
