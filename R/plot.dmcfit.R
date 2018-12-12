@@ -58,9 +58,9 @@ plot.dmcfit <- function(x,
     x$summary <- x[[1]]$summary
     x$delta   <- x[[1]]$delta
     x$caf     <- x[[1]]$caf
-    y$summary <- y$summaryAgg
-    y$delta   <- y$deltaAgg
-    y$caf     <- y$cafAgg
+    # y$summary <- y$summaryAgg
+    # y$delta   <- y$deltaAgg
+    # y$caf     <- y$cafAgg
   } else {
     if (!VP %in% y$summaryVP$VP) {
       stop("datOb does not contain requested VP!")

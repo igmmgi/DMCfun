@@ -8,11 +8,10 @@
 #' @param RT Parameters for the call to rtDist function
 #' @param Error Parameters for the call to errDist function
 #'
-#' @return DataFrame
+#' @return DataFrame with RT and Error columns
 #'
 #' @examples
 #' library(DMCfun)
-#'
 #' # Example 1: default dataframe
 #' dat <- createDF()
 #' dat <- addDataDF(dat)
@@ -32,14 +31,12 @@
 #' dat <- addDataDF(dat,
 #'                  RT = list(list(c("Comp:comp"), vals = c(500, 80, 100)),
 #'                            list(c("Comp:incomp"), vals = c(550, 80, 140))),
-#'                  Error = list(list(c("Comp:comp"), vals = c(10, 5)),
-#'                             list(c("Comp:incomp"), vals = c(20, 10))))
+#'                  Error = list(list(c("Comp:comp"), vals = c(5)),
+#'                               list(c("Comp:incomp"), vals = c(10))))
 #' boxplot(dat$RT ~ dat$Comp)
 #' table(dat$Comp, dat$Error)
-#' dat <- dmcObservedData(dat)
-#' plot(dat)
 #'
-#' # Example 4
+#' # Example 4:
 #' # create dataframe with defined RT + Error parameters across different conditions
 #' dat <- createDF(nVP = 50, nTrl = 50,
 #'                 design = list("Comp" = c("comp", "incomp")))
@@ -50,33 +47,31 @@
 #'                             list(c("Comp:incomp"), vals = c(25, 8, 5, 2, 2))))
 #' boxplot(dat$RT ~ dat$Comp)
 #' table(dat$Comp, dat$Error)
-#' dat <- dmcObservedData(dat)
-#' plot(dat, errorBars = TRUE, errorBarType = "sd")
-#
+#'
 #' @export
 addDataDF <- function(dat, RT=NULL, Error=NULL) {
 
-   # reaction time
-   if (is.null(RT)) {
-     dat$RT <- rtDist(n = nrow(dat))
-   } else if (!is.null(RT) & is.double(RT)) {
-     dat$RT <- rtDist(n = nrow(dat), RT[1], RT[2], RT[3])
-   } else if (!is.null(RT) & is.list(RT)) {
+  # reaction time
+  if (is.null(RT)) {
+    dat$RT <- rtDist(n = nrow(dat))
+  } else if (!is.null(RT) & is.double(RT)) {
+    dat$RT <- rtDist(n = nrow(dat), RT[1], RT[2], RT[3])
+  } else if (!is.null(RT) & is.list(RT)) {
 
-     for (i in c(1:length(RT))) {
-       numFactors = unlist(lapply(RT[[i]][1], length)[1])
-       idx = NULL
-       for (fct in c(1:numFactors)) {
-         level <- strsplit(RT[[i]][[1]][fct], split = ":", fixed = TRUE)
-         idx   <- cbind(idx, dat[level[[1]][1]] == level[[1]][2])
-       }
-       idx         <- apply(idx, 1, all)
-       vals        <- RT[[i]]$vals
-       dat$RT[idx] <- rtDist(n = sum(idx), vals[1], vals[2], vals[3])
+    for (i in c(1:length(RT))) {
+      numFactors = unlist(lapply(RT[[i]][1], length)[1])
+      idx = NULL
+      for (fct in c(1:numFactors)) {
+        level <- strsplit(RT[[i]][[1]][fct], split = ":", fixed = TRUE)
+        idx   <- cbind(idx, dat[level[[1]][1]] == level[[1]][2])
+      }
+      idx         <- apply(idx, 1, all)
+      vals        <- RT[[i]]$vals
+      dat$RT[idx] <- rtDist(n = sum(idx), vals[1], vals[2], vals[3])
 
-     }
+    }
 
-   }
+  }
 
   # error rate
   if (is.null(Error)) {
@@ -87,7 +82,7 @@ addDataDF <- function(dat, RT=NULL, Error=NULL) {
 
     dat <- dat %>%
       dplyr::group_by_(names(dat)[2:(ncol(dat) - 1)]) %>%
-      dplyr::mutate(bin = ntile(RT, length(Error[[1]]$vals))) %>%
+      dplyr::mutate(bin = dplyr::ntile(RT, length(Error[[1]]$vals))) %>%
       as.data.frame()
 
     for (i in c(1:length(Error[[1]]$vals)))  {

@@ -185,18 +185,18 @@ dmcObservedData <- function(dat,
 
   # summary
   obj$summaryVP        <- datVP[ , c(1, 2, 7, 9, 8)]
-  obj$summaryAgg       <- datAgg[ , c(1, 6, 7, 8, 12, 13, 14, 9, 10, 11)]
+  obj$summary          <- datAgg[ , c(1, 6, 7, 8, 12, 13, 14, 9, 10, 11)]
   names(obj$summaryVP) <- c("VP", "Comp", "rtCor", "perErr", "rtErr")
 
   # caf
   obj$cafVP        <- datVP_caf
   names(obj$cafVP) <- c("VP", "Comp", "bin", "accPer")
-  obj$cafAgg       <- datAgg_caf
+  obj$caf          <- datAgg_caf
 
   # delta
   obj$deltaVP        <- datVP_dec
   names(obj$deltaVP) <- c("VP", "bin", "meanComp", "meanIncomp", "meanBin", "meanEffect")
-  obj$deltaAgg       <- datAgg_dec
+  obj$delta          <- datAgg_dec
 
   class(obj) <- "dmcob"
 

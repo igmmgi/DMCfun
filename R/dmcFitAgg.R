@@ -77,10 +77,10 @@ dmcFitAgg <- function(resOb,
                       printResults   = FALSE) {
 
   # check observed data contains correct number of delta/CAF bins
-  if (nrow(resOb$deltaAgg) != length(seq(stepDelta, 100 - stepDelta, stepDelta))) {
+  if (nrow(resOb$delta) != length(seq(stepDelta, 100 - stepDelta, stepDelta))) {
     stop("Number of delta bins in observed data and nDelta bins are not equal!")
   }
-  if ((nrow(resOb$cafAgg)/2) != length(seq(0, 100 - stepCAF, stepCAF))) {
+  if ((nrow(resOb$caf)/2) != length(seq(0, 100 - stepCAF, stepCAF))) {
     stop("Number of CAF bins in observed data and nCAF bins are not equal!")
   }
 
@@ -90,8 +90,8 @@ dmcFitAgg <- function(resOb,
     n_rt  <- nrow(resTh$delta)
     n_err <- nrow(resTh$caf)
 
-    costCAF <- sqrt((1/n_rt)  * sum((resTh$caf$accPer - resOb$cafAgg$accPer)**2))
-    costRT  <- sqrt((1/n_err) * sum((resTh$delta[c("meanComp", "meanIncomp")] - resOb$deltaAgg[c("meanComp", "meanIncomp")])**2))
+    costCAF <- sqrt((1/n_rt)  * sum((resTh$caf$accPer - resOb$caf$accPer)**2))
+    costRT  <- sqrt((1/n_err) * sum((resTh$delta[c("meanComp", "meanIncomp")] - resOb$delta[c("meanComp", "meanIncomp")])**2))
 
     costValue <- (((1 - (2*n_rt) / (2*n_rt + 2*n_err)) * 1500) * costCAF) + costRT
     cat(sprintf("RMSE: %.3f\n", costValue))

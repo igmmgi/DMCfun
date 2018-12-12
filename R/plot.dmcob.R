@@ -25,13 +25,13 @@
 #'
 #' # Example 1 (real dataset)
 #' plot(flankerData1)
-#' plot(flankerData1, errorBarType = "se")
-#' plot(flankerData1, figType = "delta", errorBarType = "sd")
+#' plot(flankerData1, errorBars = TRUE, errorBarType = "se")
+#' plot(flankerData1, figType = "delta", errorBars = TRUE,  errorBarType = "se")
 #'
 #' # Example 2 (real dataset)
 #' plot(simonData1)
-#' plot(simonData1, errorBarType = "se")
-#' plot(simonData1, figType = "delta", errorBarType = "sd")
+#' plot(simonData1, errorBars = TRUE, errorBarType = "se")
+#' plot(simonData1, figType = "delta", errorBars = TRUE, errorBarType = "sd")
 #'
 #' # Example 3 (simulated dataset)
 #' dat <- createDF(nVP = 50, nTrl = 50,
@@ -42,7 +42,7 @@
 #'                  Error = list(list(c("Comp:comp"), vals = c(5, 3, 2, 1, 2)),
 #'                          list(c("Comp:incomp"), vals = c(15, 8, 4, 2, 2))))
 #' datOb <- dmcObservedData(dat)
-#' plot(datOb, errorBarType = "sd")
+#' plot(datOb, errorBars = TRUE, errorBarType = "sd")
 #'
 #' # Example 4 (simulated dataset)
 #' dat <- createDF(nVP = 50, nTrl = 50,
@@ -71,11 +71,7 @@ plot.dmcob <- function(x,
     par(mfrow = c(1, 1))
   }
 
-  if (is.null(VP)) {
-    x$summary <- x$summaryAgg
-    x$delta   <- x$deltaAgg
-    x$caf     <- x$cafAgg
-  } else {
+  if (!is.null(VP)) {
     if (!VP %in% x$summaryVP$VP) {
       stop("datOb does not contain requested VP!")
     }
@@ -85,7 +81,7 @@ plot.dmcob <- function(x,
     errorBars <- FALSE
   }
 
-  if (!is.null(errorBars)) {
+  if (errorBars) {
     if ((!is.character(errorBarType)) | (!errorBarType %in% c("sd", "se"))) {
       stop("errorBar must be either \"sd\", or \"se\"!")
     }
