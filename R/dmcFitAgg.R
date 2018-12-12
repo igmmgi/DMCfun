@@ -153,6 +153,7 @@ dmcFitAgg <- function(resOb,
                         control = list(parscale = parScale[!as.logical(fixed)]))
 
   prms[!fixed] <- fit$par
+  fit$par <- as.vector(unlist(prms))
 
   resTh <- dmcSim(amp = prms$amp, tau = prms$tau, mu = prms$mu, bnds = prms$bnds,
                   resMean = prms$resMean, resSD = prms$resSD,
