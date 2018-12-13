@@ -7,7 +7,6 @@
 #' @param resOb Observed data (see flankerData1, flankerData2,
 #' simonTask1 for data format)
 #' @param nTrl Number of trials to use within dmcSim
-#' @param method L-BFGS-B (default)
 #' @param startVals Starting values for to-be estimated parameters
 #' @param minVals Minimum values for the to-be estimated parameters
 #' @param maxVals Maximum values for the to-be estimated parameters
@@ -47,7 +46,6 @@
 #' @export
 dmcFitVPs <- function(resOb,
                       nTrl           = 50000,
-                      method         = "L-BFGS-B",
                       startVals      = c(20, 100, 0.5,  75, 300,  30, 2, 3),
                       minVals        = c(10,   5, 0.1,  20, 200,   5, 1, 2),
                       maxVals        = c(30, 300, 1.0, 150, 800, 100, 3, 4),
@@ -73,7 +71,6 @@ dmcFitVPs <- function(resOb,
 
     dmcfit[[vp]] <- dmcFitAgg(resObVP,
                               nTrl           = nTrl,
-                              method         = "L-BFGS-B",
                               startVals      = startVals,
                               minVals        = minVals,
                               maxVals        = maxVals,

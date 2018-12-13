@@ -7,7 +7,6 @@
 #' @param resOb Observed data (see flankerData1, flankerData2,
 #' simonTask1 for data format)
 #' @param nTrl Number of trials to use within dmcSim
-#' @param method L-BFGS-B (default)
 #' @param startVals Starting values for to-be estimated parameters
 #' @param minVals Minimum values for the to-be estimated parameters
 #' @param maxVals Maximum values for the to-be estimated parameters
@@ -66,7 +65,6 @@
 #' @export
 dmcFitAgg <- function(resOb,
                       nTrl           = 50000,
-                      method         = "L-BFGS-B",
                       startVals      = c(20, 100, 0.5,  75, 300,  30, 2, 3),
                       minVals        = c(10,   5, 0.1,  20, 200,   5, 1, 2),
                       maxVals        = c(30, 300, 1.0, 150, 800, 100, 3, 4),
@@ -87,7 +85,7 @@ dmcFitAgg <- function(resOb,
                "aaShape" = startVals[7],
                "spShape" = startVals[8])
 
- # check observed data contains correct number of delta/CAF bins
+  # check observed data contains correct number of delta/CAF bins
   if (nrow(resOb$delta) != length(seq(stepDelta, 100 - stepDelta, stepDelta))) {
     stop("Number of delta bins in observed data and nDelta bins are not equal!")
   }
@@ -149,7 +147,7 @@ dmcFitAgg <- function(resOb,
   fit <- optimr::optimr(par = startVals[!as.logical(fixed)], fn = minimizeCostValue, prms = prms, fixed = fixed, resOb = resOb,
                         nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,
                         printInputArgs = printInputArgs, printResults = printResults,
-                        method = method, lower = minVals[!as.logical(fixed)], upper = maxVals[!as.logical(fixed)],
+                        method = "L-BFGS-B", lower = minVals[!as.logical(fixed)], upper = maxVals[!as.logical(fixed)],
                         control = list(parscale = parScale[!as.logical(fixed)]))
 
   prms[!fixed] <- fit$par
