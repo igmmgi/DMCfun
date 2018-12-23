@@ -45,7 +45,7 @@
 #' library(DMCfun)
 #'
 #' # Example 1
-#' dmc <- dmcSim(fullData = TRUE)
+#' dmc <- dmcSim(fullData = FALSE)
 #' plot(dmc)
 #'
 #' # Example 2

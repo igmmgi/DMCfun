@@ -36,8 +36,8 @@ void runDMCsim(Prms &p,
     }
 
     std::vector<double> mu_vec(p.tmax);
-    std::vector<double> activation(p.tmax);
-    std::vector<double> trial(p.tmax);
+    std::vector<double> activation_trial(p.tmax);
+    std::vector<double> activation_sum(p.tmax);
     std::vector<double> dr(p.nTrl, p.mu);
     std::vector<double> dr_mean(2);
     std::vector<double> sp(p.nTrl);
@@ -71,25 +71,27 @@ void runDMCsim(Prms &p,
         bool criterion;
         for (auto trl = 0u; trl < p.nTrl; trl++) {
             criterion = false;
-            activation[0] = mu_vec[0] + (p.sigma * randDist()) + sp[trl] + dr[trl];
-            trial[0] += activation[0];
-            for (auto i = 1u; i < activation.size(); i++) {
-                activation[i] = activation[i - 1] + mu_vec[i] + (p.sigma * randDist()) + dr[trl];
-                if (!criterion && fabs(activation[i]) > p.bnds) {
-                    (activation[i] > p.bnds ? rts : errs).push_back(i + resDist() + 1); // zero index
+            activation_trial[0] = mu_vec[0] + sp[trl] + dr[trl] + (p.sigma * randDist());
+            activation_sum[0] += activation_trial[0];
+            for (auto i = 1u; i < activation_trial.size(); i++) {
+                activation_trial[i] = activation_trial[i - 1] + mu_vec[i] + dr[trl] + (p.sigma * randDist());
+                if (!criterion && fabs(activation_trial[i]) > p.bnds) {
+                    (activation_trial[i] > p.bnds ? rts : errs).push_back(i + resDist() + 1); // zero index
                     criterion = true;
                     if (!p.fullData) break;
                 }
-                if (p.fullData && trl < p.nTrlData) trial_matrix[trl][i] = activation[i];
-                trial[i] += activation[i];
+                if (p.fullData && trl < p.nTrlData) trial_matrix[trl][i] = activation_trial[i];
+                activation_sum[i] += activation_trial[i];
             }
         }
 
         // gather results for full plots
-        if (p.fullData) for (auto &i : trial) i /= p.nTrl;
+        for (auto i = 0u; i < p.tmax; i++) {
+            activation_sum[i] /= p.nTrl;
+        }
 
         simulation["eq4"] = eq4;
-        simulation["activation_" + condition] = trial;
+        simulation["activation_" + condition] = activation_sum;
         simulation["rts_" + condition] = rts;
         trials["trials_" + condition] = trial_matrix;
 
