@@ -34,7 +34,7 @@ dmcSim(amp = 20, tau = 30, mu = 0.5, bnds = 75, resMean = 300,
 
 \item{varSP}{true/false variable starting point}
 
-\item{spShape}{shape parameter of drift rate}
+\item{spShape}{shape parameter of starting point}
 
 \item{spLim}{limit range of distribution of starting point}
 

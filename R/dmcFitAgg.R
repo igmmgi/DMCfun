@@ -113,6 +113,7 @@ dmcFitAgg <- function(resOb,
   minimizeCostValue <- function(x, prms, fixed, resOb, nTrl, stepDelta, stepCAF, printInputArgs, printResults) {
 
     prms[!as.logical(fixed)] <- x
+
     resTh <- dmcSim(amp = prms$amp, tau = prms$tau, mu = prms$mu, bnds = prms$bnds, resMean = prms$resMean, resSD = prms$resSD,
                     aaShape = prms$aaShape,
                     varSP = TRUE, spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
@@ -150,7 +151,7 @@ dmcFitAgg <- function(resOb,
                         method = "L-BFGS-B", lower = minVals[!as.logical(fixed)], upper = maxVals[!as.logical(fixed)],
                         control = list(parscale = parScale[!as.logical(fixed)]))
 
-  prms[!fixed] <- fit$par
+  prms[!as.logical(fixed)] <- fit$par
   fit$par <- as.vector(unlist(prms))
 
   resTh <- dmcSim(amp = prms$amp, tau = prms$tau, mu = prms$mu, bnds = prms$bnds,

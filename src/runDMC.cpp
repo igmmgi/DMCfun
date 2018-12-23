@@ -75,8 +75,8 @@ void runDMCsim(Prms &p,
             trial[0] += activation[0];
             for (auto i = 1u; i < activation.size(); i++) {
                 activation[i] = activation[i - 1] + mu_vec[i] + (p.sigma * randDist()) + dr[trl];
-                if (!criterion && fabs(activation[i]) >= p.bnds) {
-                    (activation[i] > 0 ? rts : errs).push_back(i + resDist() + 1); // zero index
+                if (!criterion && fabs(activation[i]) > p.bnds) {
+                    (activation[i] > p.bnds ? rts : errs).push_back(i + resDist() + 1); // zero index
                     criterion = true;
                     if (!p.fullData) break;
                 }
@@ -107,7 +107,6 @@ void runDMCsim(Prms &p,
 
 }
 
-
 void calculate_summary(std::vector<double> &rts,
                        std::vector<double> &errs,
                        unsigned long nTrl,
@@ -125,7 +124,6 @@ void calculate_summary(std::vector<double> &rts,
     resSummary["resSum_" + condition] = res;
 
 }
-
 
 void calculate_percentile(int stepDelta,
                           std::vector<double> &rts,
@@ -148,14 +146,12 @@ void calculate_percentile(int stepDelta,
     }
 }
 
-
 void calculate_delta(std::map<std::string, std::vector<double> > &resDelta) {
      for (auto i = 0u; i < resDelta["delta_pct_comp"].size(); i++){
          resDelta["delta_pct_mean"].push_back((resDelta["delta_pct_comp"][i]   + resDelta["delta_pct_incomp"][i])/2);
          resDelta["delta_pct_delta"].push_back(resDelta["delta_pct_incomp"][i] - resDelta["delta_pct_comp"][i]);
      }
 }
-
 
 void calculate_caf(std::vector<double> &rts,
                    std::vector<double> &errs,
@@ -192,4 +188,3 @@ void calculate_caf(std::vector<double> &rts,
     }
 
 }
-

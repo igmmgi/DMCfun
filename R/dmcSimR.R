@@ -109,9 +109,10 @@ dmcSimR <- function(amp = 20, tau = 30, aaShape = 2, mu = 0.5, sigma = 4, bnds =
     activation <- t(apply(activation, 1, cumsum))
 
     # find reaction time for each trial
-    rt    <- max.col(abs(activation) >= bnds, ties.method = "first")
+    rt          <- max.col(abs(activation) > bnds, ties.method = "first")
+    rt[rt == 1] <- tmax
     rtIdx <- (1:length(rt) - 1) * ncol(activation) + rt
-    rt    <- cbind(rt + rnorm(nTrl, resMean, resSD), t(activation)[rtIdx] < 0)
+    rt    <- cbind(rt + rnorm(nTrl, resMean, resSD), t(activation)[rtIdx] < bnds)
 
     # calculate caf
     dmc$caf <- rbind(dmc$caf, calculateCAF(rt, stepCAF))

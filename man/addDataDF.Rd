@@ -14,7 +14,7 @@ addDataDF(dat, RT = NULL, Error = NULL)
 \item{Error}{Parameters for the call to errDist function}
 }
 \value{
-DataFrame
+DataFrame with RT and Error columns
 }
 \description{
 Add simulated ex-gaussian reaction-time (RT) data and
@@ -23,7 +23,6 @@ can be used to create simulated dataframes.
 }
 \examples{
 library(DMCfun)
-
 # Example 1: default dataframe
 dat <- createDF()
 dat <- addDataDF(dat)
@@ -43,14 +42,12 @@ dat <- createDF(nVP = 50, nTrl = 50,
 dat <- addDataDF(dat,
                  RT = list(list(c("Comp:comp"), vals = c(500, 80, 100)),
                            list(c("Comp:incomp"), vals = c(550, 80, 140))),
-                 Error = list(list(c("Comp:comp"), vals = c(10, 5)),
-                            list(c("Comp:incomp"), vals = c(20, 10))))
+                 Error = list(list(c("Comp:comp"), vals = c(5)),
+                              list(c("Comp:incomp"), vals = c(10))))
 boxplot(dat$RT ~ dat$Comp)
 table(dat$Comp, dat$Error)
-dat <- dmcObservedData(dat)
-plot(dat)
 
-# Example 4
+# Example 4:
 # create dataframe with defined RT + Error parameters across different conditions
 dat <- createDF(nVP = 50, nTrl = 50,
                 design = list("Comp" = c("comp", "incomp")))
@@ -61,6 +58,5 @@ dat <- addDataDF(dat,
                             list(c("Comp:incomp"), vals = c(25, 8, 5, 2, 2))))
 boxplot(dat$RT ~ dat$Comp)
 table(dat$Comp, dat$Error)
-dat <- dmcObservedData(dat)
-plot(dat, errorBars = TRUE, errorBarType = "sd")
+
 }
