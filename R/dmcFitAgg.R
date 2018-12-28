@@ -96,13 +96,13 @@ dmcFitAgg <- function(resOb,
   # cost value is combination of RT and error rate data
   calcCostValue <- function(resTh, resOb) {
 
-    n_rt  <- nrow(resTh$delta)
-    n_err <- nrow(resTh$caf)
+    n_rt  <- nrow(resTh$delta) * 2
+    n_err <- nrow(resTh$caf) * 2
 
-    costCAF <- sqrt((1/n_rt)  * sum((resTh$caf$accPer - resOb$caf$accPer)**2))
-    costRT  <- sqrt((1/n_err) * sum((resTh$delta[c("meanComp", "meanIncomp")] - resOb$delta[c("meanComp", "meanIncomp")])**2))
+    costCAF <- sqrt((1/n_err) * sum((resTh$caf$accPer - resOb$caf$accPer)**2))
+    costRT  <- sqrt((1/n_rt)  * sum((resTh$delta[c("meanComp", "meanIncomp")] - resOb$delta[c("meanComp", "meanIncomp")])**2))
 
-    costValue <- (((1 - (2*n_rt) / (2*n_rt + 2*n_err)) * 1500) * costCAF) + costRT
+    costValue <- (((1 - (n_rt/(n_rt + n_err))) * 1500) * costCAF) + costRT
     cat(sprintf("RMSE: %.3f\n", costValue))
 
     return(costValue)
