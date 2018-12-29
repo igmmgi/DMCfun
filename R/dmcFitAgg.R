@@ -93,48 +93,33 @@ dmcFitAgg <- function(resOb,
     stop("Number of CAF bins in observed data and nCAF bins are not equal!")
   }
 
-  # cost value is combination of RT and error rate data
-  calcCostValue <- function(resTh, resOb) {
-
-    n_rt  <- nrow(resTh$delta) * 2
-    n_err <- nrow(resTh$caf) * 2
-
-    costCAF <- sqrt((1/n_err) * sum((resTh$caf$accPer - resOb$caf$accPer)**2))
-    costRT  <- sqrt((1/n_rt)  * sum((resTh$delta[c("meanComp", "meanIncomp")] - resOb$delta[c("meanComp", "meanIncomp")])**2))
-
-    costValue <- (((1 - (n_rt/(n_rt + n_err))) * 1500) * costCAF) + costRT
-    cat(sprintf("RMSE: %.3f\n", costValue))
-
-    return(costValue)
-
-  }
-
   # function to minimise
   minimizeCostValue <- function(x, prms, fixed, resOb, nTrl, stepDelta, stepCAF, printInputArgs, printResults) {
 
     prms[!as.logical(fixed)] <- x
 
-    resTh <- dmcSim(amp = prms$amp, tau = prms$tau, mu = prms$mu, bnds = prms$bnds, resMean = prms$resMean, resSD = prms$resSD,
+    resTh <- dmcSim(amp = prms$amp, tau = prms$tau, mu = prms$mu,
+                    bnds = prms$bnds, resMean = prms$resMean, resSD = prms$resSD,
                     aaShape = prms$aaShape,
                     varSP = TRUE, spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
                     nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,
                     printInputArgs = printInputArgs, printResults = printResults)
 
-    return(calcCostValue(resTh, resOb))
+    return(calculateCostValue(resTh, resOb))
 
   }
 
   ############################# FIT PROCEDURE ##################################
   if (fitInitialTau) {
     lowestCostValue <- Inf
-    for (t in seq(15, 150, 5)) {
+    for (t in seq(10, 200, 10)) {
       resTh <- dmcSim(amp = startVals[1], tau = t, mu = startVals[3],
                       bnds = startVals[4], startVals[5], startVals[6],
                       aaShape = startVals[7],
                       varSP = TRUE, spShape = startVals[8], spLim = c(-startVals[4], startVals[4]),
                       nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,
                       printInputArgs = printInputArgs, printResults = FALSE)
-      costValue <- calcCostValue(resTh, resOb)
+      costValue <- calculateCostValue(resTh, resOb)
       if (costValue < lowestCostValue) {
         lowestCostValue <- costValue
         startTau <- t
@@ -145,7 +130,8 @@ dmcFitAgg <- function(resOb,
     maxVals[2]   <- min(300, startTau + 20)
   }
 
-  fit <- optimr::optimr(par = startVals[!as.logical(fixed)], fn = minimizeCostValue, prms = prms, fixed = fixed, resOb = resOb,
+  fit <- optimr::optimr(par = startVals[!as.logical(fixed)], fn = minimizeCostValue,
+                        prms = prms, fixed = fixed, resOb = resOb,
                         nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,
                         printInputArgs = printInputArgs, printResults = printResults,
                         method = "L-BFGS-B", lower = minVals[!as.logical(fixed)], upper = maxVals[!as.logical(fixed)],
@@ -154,8 +140,8 @@ dmcFitAgg <- function(resOb,
   prms[!as.logical(fixed)] <- fit$par
   fit$par <- as.vector(unlist(prms))
 
-  resTh <- dmcSim(amp = prms$amp, tau = prms$tau, mu = prms$mu, bnds = prms$bnds,
-                  resMean = prms$resMean, resSD = prms$resSD,
+  resTh <- dmcSim(amp = prms$amp, tau = prms$tau, mu = prms$mu,
+                  bnds = prms$bnds, resMean = prms$resMean, resSD = prms$resSD,
                   aaShape = prms$aaShape,
                   varSP = TRUE, spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
                   nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,

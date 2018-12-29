@@ -81,7 +81,7 @@ Cognitive Psychology, 78, 148-174. This function is essentially a wrapper around
 library(DMCfun)
 
 # Example 1
-dmc <- dmcSim(fullData = TRUE)
+dmc <- dmcSim(fullData = FALSE)
 plot(dmc)
 
 # Example 2
