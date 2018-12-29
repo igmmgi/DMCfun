@@ -4,8 +4,8 @@
 #' for observed data. Example raw *.txt files are included.
 #'
 #' @param datafile Text file containing the observed data
-#' @param nCAF Number of bins for the conditional accuracy function (CAF)
-#' @param nDelta Number of bins fore the distributional analysis
+#' @param stepCAF Number of bins for the conditional accuracy function (CAF)
+#' @param stepDelta Number of bins fore the distributional analysis
 #' @param outlier Outlier limits e.g., c(200, 1200)
 #' @param quantileType 1
 #' @param datDir Data directory
@@ -14,6 +14,7 @@
 #' @return DataFrame
 #'
 #' @examples
+#' \dontrun{
 #' # Example 1
 #' datOb <- dmcObservedDataRaw("flankerData1.txt", saveData = TRUE)
 #'
@@ -26,6 +27,7 @@
 #' # Example 4
 #' datOb <- dmcObservedDataRaw("simonData2.txt", saveData = TRUE)
 #'
+#'}
 #' @export
 dmcObservedDataRaw <- function(datafile,
                                stepCAF = 20,

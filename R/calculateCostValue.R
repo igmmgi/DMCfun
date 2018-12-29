@@ -10,7 +10,6 @@
 #' @return cost
 #'
 #' @examples
-#' \dontrun{
 #' library(DMCfun)
 #'
 #' # Example 1:

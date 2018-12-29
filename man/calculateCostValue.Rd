@@ -19,3 +19,17 @@ cost
 \description{
 Calculate cost value (fit) as combination of RT and error rate
 }
+\examples{
+library(DMCfun)
+
+# Example 1:
+resTh <- dmcSim()
+resOb <- dmcSim()
+cost  <- calculateCostValue(resTh, resOb)
+
+# Example 2:
+resTh <- dmcSim()
+resOb <- dmcSim(tau = 150)
+cost  <- calculateCostValue(resTh, resOb)
+
+}
