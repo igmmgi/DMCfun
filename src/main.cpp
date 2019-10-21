@@ -1,6 +1,5 @@
 #include <map>
 #include <vector>
-#include <iostream>
 #include "inDMC.h"
 #include "outDMC.h"
 #include "runDMC.h"
@@ -18,7 +17,7 @@ int main(int argc, char *argv[]) {
     std::map<std::string, std::vector<double> > resDelta;
     std::map<std::string, std::vector<double> > resCAF;
     std::map<std::string, std::vector<double> > simulation;
-    std::map<std::string, std::vector<std::vector<double>> > trials;
+    std::map<std::string, std::vector<std::vector<double>>> trials;
 
     runDMCsim(p, resSummary, resDelta, resCAF, simulation, trials);
 

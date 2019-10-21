@@ -51,7 +51,7 @@ test_that("plot.dmcfit", {
                               list(c("Comp:incomp"), vals = c(15, 12, 5, 2, 1))))
   datOb <- dmcObservedData(dat)
 
-  resTh <- dmcFitVPs(datOb, nTrl = 1000, VP = 2,
+  resTh <- dmcFitVPs(datOb, nTrl = 5000, VP = 2,
                      printInputArgs = FALSE, printResults = FALSE)
   testthat::expect_error(plot(resTh, datOb, VP = 2), NA)
 
