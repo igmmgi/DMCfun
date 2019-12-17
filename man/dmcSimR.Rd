@@ -4,11 +4,28 @@
 \alias{dmcSimR}
 \title{dmcSimR}
 \usage{
-dmcSimR(amp = 20, tau = 30, aaShape = 2, mu = 0.5, sigma = 4,
-  bnds = 75, resMean = 300, resSD = 30, nTrl = 1e+05,
-  tmax = 1000, varSP = FALSE, spShape = 3, spLim = c(-75, 75),
-  varDR = FALSE, drShape = 3, drLim = c(0.1, 0.7), nTrlData = 5,
-  stepDelta = 5, stepCAF = 20, setSeed = FALSE)
+dmcSimR(
+  amp = 20,
+  tau = 30,
+  aaShape = 2,
+  mu = 0.5,
+  sigma = 4,
+  bnds = 75,
+  resMean = 300,
+  resSD = 30,
+  nTrl = 1e+05,
+  tmax = 1000,
+  varSP = FALSE,
+  spShape = 3,
+  spLim = c(-75, 75),
+  varDR = FALSE,
+  drShape = 3,
+  drLim = c(0.1, 0.7),
+  nTrlData = 5,
+  stepDelta = 5,
+  stepCAF = 20,
+  setSeed = FALSE
+)
 }
 \arguments{
 \item{amp}{amplitude of automatic activation}

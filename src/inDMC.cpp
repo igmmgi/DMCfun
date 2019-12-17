@@ -1,9 +1,10 @@
 #include <iostream>
 #include <getopt.h>
 #include "inDMC.h"
+#include "Rcpp.h"
 
 void showHelp() {
-    std::cout << "DMC model simulation\n"
+    Rcpp::Rcout << "DMC model simulation\n"
                  "Ulrich, R., Schröter, H., Leuthold, H., & Birngruber, T. (2015).\n"
                  "Automatic and controlled stimulus processing in conflict tasks: Superimposed\n"
                  "diffusion processes and delta functions. Cognitive Psychology, 78, 148-174.\n"
@@ -154,37 +155,37 @@ void processInputArgs(int argc, char **argv, Prms &p, bool &argProblem) {
                     argProblem = true;
                     break;
                 default:
-                    std::cout << "Input option not recognized!:" << option << "\n";
+                    Rcpp::Rcout << "Input option not recognized!:" << option << "\n";
                     argProblem = true;
             }
         }
     } catch (...) {
-        std::cout << "Input option not recognized:" << long_opts[idxOption].name << ":" << optarg << std::endl;
+        Rcpp::Rcout << "Input option not recognized:" << long_opts[idxOption].name << ":" << optarg << std::endl;
         argProblem = true;
     }
 }
 
 void printInputArgs(Prms &p) {
-    std::cout << "\nDMC Parameters:" << "\n";
-    std::cout << "amp: " << p.amp << "\n";
-    std::cout << "tau: " << p.tau << "\n";
-    std::cout << "aaShape: " << p.aaShape << "\n";
-    std::cout << "mu: " << p.mu << "\n";
-    std::cout << "bnds: " << p.bnds << "\n";
-    std::cout << "resMean: " << p.resMean << "\n";
-    std::cout << "resSD: " << p.resSD << "\n";
-    std::cout << "nTrl: " << p.nTrl << "\n";
-    std::cout << "tmax: " << p.tmax << "\n";
+    Rcpp::Rcout << "\nDMC Parameters:" << "\n";
+    Rcpp::Rcout << "amp: " << p.amp << "\n";
+    Rcpp::Rcout << "tau: " << p.tau << "\n";
+    Rcpp::Rcout << "aaShape: " << p.aaShape << "\n";
+    Rcpp::Rcout << "mu: " << p.mu << "\n";
+    Rcpp::Rcout << "bnds: " << p.bnds << "\n";
+    Rcpp::Rcout << "resMean: " << p.resMean << "\n";
+    Rcpp::Rcout << "resSD: " << p.resSD << "\n";
+    Rcpp::Rcout << "nTrl: " << p.nTrl << "\n";
+    Rcpp::Rcout << "tmax: " << p.tmax << "\n";
     if (p.varSP) {
-        std::cout << "varSP: " << p.varSP << "\n";
-        std::cout << "spShape: " << p.spShape << "\n";
-        std::cout << "spLims: " << p.spLimLow << " to " << p.spLimHigh << "\n";
+        Rcpp::Rcout << "varSP: " << p.varSP << "\n";
+        Rcpp::Rcout << "spShape: " << p.spShape << "\n";
+        Rcpp::Rcout << "spLims: " << p.spLimLow << " to " << p.spLimHigh << "\n";
     }
     if (p.varDR) {
-        std::cout << "varDR: " << p.varDR << "\n";
-        std::cout << "drShape: " << p.drShape << "\n";
-        std::cout << "drLims: " << p.drLimLow << " to " << p.drLimHigh;
+        Rcpp::Rcout << "varDR: " << p.varDR << "\n";
+        Rcpp::Rcout << "drShape: " << p.drShape << "\n";
+        Rcpp::Rcout << "drLims: " << p.drLimLow << " to " << p.drLimHigh;
     }
-    std::cout << std::endl;
+    Rcpp::Rcout << std::endl;
 }
 

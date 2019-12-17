@@ -4,12 +4,31 @@
 \alias{dmcSim}
 \title{dmcSim}
 \usage{
-dmcSim(amp = 20, tau = 30, mu = 0.5, bnds = 75, resMean = 300,
-  resSD = 30, sigma = 4, aaShape = 2, nTrl = 1e+05, tmax = 1000,
-  varSP = FALSE, spShape = 3, spLim = c(-75, 75), varDR = FALSE,
-  drShape = 3, drLim = c(0.1, 0.7), fullData = FALSE, nTrlData = 5,
-  stepDelta = 5, stepCAF = 20, printInputArgs = TRUE,
-  printResults = TRUE, setSeed = FALSE)
+dmcSim(
+  amp = 20,
+  tau = 30,
+  mu = 0.5,
+  bnds = 75,
+  resMean = 300,
+  resSD = 30,
+  sigma = 4,
+  aaShape = 2,
+  nTrl = 1e+05,
+  tmax = 1000,
+  varSP = FALSE,
+  spShape = 3,
+  spLim = c(-75, 75),
+  varDR = FALSE,
+  drShape = 3,
+  drLim = c(0.1, 0.7),
+  fullData = FALSE,
+  nTrlData = 5,
+  stepDelta = 5,
+  stepCAF = 20,
+  printInputArgs = TRUE,
+  printResults = TRUE,
+  setSeed = FALSE
+)
 }
 \arguments{
 \item{amp}{amplitude of automatic activation}
@@ -102,6 +121,8 @@ plot(dmc, "caf")
 
 # Example 6
 dmc <- dmcSim(fullData = TRUE, stepDelta = 10, stepCAF = 25)
-plot(dmc)}
+plot(dmc)
+
+}
 
 }

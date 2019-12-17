@@ -4,8 +4,15 @@
 \alias{plot.dmcob}
 \title{plot.dmcob}
 \usage{
-\method{plot}{dmcob}(x, figType = "summary", newFig = TRUE,
-  VP = NULL, errorBars = FALSE, errorBarType = "sd", ...)
+\method{plot}{dmcob}(
+  x,
+  figType = "summary",
+  newFig = TRUE,
+  VP = NULL,
+  errorBars = FALSE,
+  errorBarType = "sd",
+  ...
+)
 }
 \arguments{
 \item{x}{Output from fitDMC}

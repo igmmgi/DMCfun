@@ -3,14 +3,14 @@ context("dmcFitVPs")
 test_that("dmcFitVPs", {
 
   # test 1
-  fit <- dmcFitVPs(DMCfun::flankerData1, nTrl = 500,
+  fit <- dmcFitVPs(DMCfun::flankerData1, nTrl = 5000,
                    printInputArgs = FALSE, printResults = FALSE)
   testthat::expect_type(fit, "list")
   testthat::expect_s3_class(fit[[1]], "dmcfit")
   testthat::expect_s3_class(fit[[1]][[1]], "dmcsim")
 
   # test 2
-  fit <- dmcFitVPs(DMCfun::flankerData2, nTrl = 500, VP = c(1, 2, 3),
+  fit <- dmcFitVPs(DMCfun::flankerData2, nTrl = 5000, VP = c(1, 2, 3),
                    printInputArgs = FALSE, printResults = FALSE)
   testthat::expect_type(fit, "list")
   testthat::expect_s3_class(fit[[1]], "dmcfit")
@@ -21,7 +21,7 @@ test_that("dmcFitVPs", {
   testthat::expect_s3_class(fit[[3]][[1]], "dmcsim")
 
   # test 3
-  fit <- dmcFitVPs(DMCfun::simonData1, nTrl = 500, VP = c(1, 3, 5),
+  fit <- dmcFitVPs(DMCfun::simonData1, nTrl = 5000, VP = c(1, 3, 5),
                    printInputArgs = FALSE, printResults = FALSE)
   testthat::expect_s3_class(fit[[1]], "dmcfit")
   testthat::expect_s3_class(fit[[1]][[1]], "dmcsim")

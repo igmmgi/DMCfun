@@ -4,9 +4,15 @@
 \alias{dmcObservedDataRaw}
 \title{dmcObservedDataRaw}
 \usage{
-dmcObservedDataRaw(datafile, stepCAF = 20, stepDelta = 5,
-  outlier = c(200, 1200), quantileType = 5, datDir = NULL,
-  saveData = FALSE)
+dmcObservedDataRaw(
+  datafile,
+  stepCAF = 20,
+  stepDelta = 5,
+  outlier = c(200, 1200),
+  quantileType = 5,
+  datDir = NULL,
+  saveData = FALSE
+)
 }
 \arguments{
 \item{datafile}{Text file containing the observed data}

@@ -4,27 +4,27 @@ test_that("plot.dmcfit", {
 
   # just check code does not error
   # test 1
-  resTh <- dmcFitAgg(DMCfun::flankerData1, nTrl = 1000,
+  resTh <- dmcFitAgg(DMCfun::flankerData1, nTrl = 5000,
                      printInputArgs = FALSE, printResults = FALSE)
   testthat::expect_error(plot(resTh, DMCfun::flankerData1), NA)
 
   # test 2
-  resTh <- dmcFitAgg(DMCfun::flankerData2, nTrl = 1000,
+  resTh <- dmcFitAgg(DMCfun::flankerData2, nTrl = 5000,
                      printInputArgs = FALSE, printResults = FALSE)
   testthat::expect_error(plot(resTh, DMCfun::flankerData2), NA)
 
   # test 3
-  resTh <- dmcFitAgg(DMCfun::simonData1, nTrl = 1000,
+  resTh <- dmcFitAgg(DMCfun::simonData1, nTrl = 5000,
                      printInputArgs = FALSE, printResults = FALSE)
   testthat::expect_error(plot(resTh, DMCfun::simonData1), NA)
 
   # test 4
-  resTh <- dmcFitVPs(DMCfun::flankerData1, nTrl = 1000, VP = 10,
+  resTh <- dmcFitVPs(DMCfun::flankerData1, nTrl = 5000, VP = 10,
                      printInputArgs = FALSE, printResults = FALSE)
   testthat::expect_error(plot(resTh, DMCfun::flankerData1, VP = 10), NA)
 
   # test 5
-  resTh <- dmcFitVPs(DMCfun::simonData1, nTrl = 1000, VP = 4,
+  resTh <- dmcFitVPs(DMCfun::simonData1, nTrl = 5000, VP = 4,
                      printInputArgs = FALSE, printResults = FALSE)
   testthat::expect_error(plot(resTh, DMCfun::flankerData1, VP = 4), NA)
 
@@ -38,7 +38,7 @@ test_that("plot.dmcfit", {
                               list(c("Comp:incomp"), vals = c(15, 12, 5, 2, 1))))
   datOb <- dmcObservedData(dat)
 
-  resTh <- dmcFitAgg(datOb, nTrl = 1000, printInputArgs = FALSE, printResults = FALSE)
+  resTh <- dmcFitAgg(datOb, nTrl = 5000, printInputArgs = FALSE, printResults = FALSE)
   testthat::expect_error(plot(resTh, datOb), NA)
 
   # test 7

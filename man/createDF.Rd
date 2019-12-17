@@ -4,8 +4,11 @@
 \alias{createDF}
 \title{createDF}
 \usage{
-createDF(nVP = 20, nTrl = 50, design = list(A = c("A1", "A2"), B =
-  c("B1", "B2")))
+createDF(
+  nVP = 20,
+  nTrl = 50,
+  design = list(A = c("A1", "A2"), B = c("B1", "B2"))
+)
 }
 \arguments{
 \item{nVP}{Number of participants}

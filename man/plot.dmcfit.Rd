@@ -4,8 +4,7 @@
 \alias{plot.dmcfit}
 \title{plot.dmcfit}
 \usage{
-\method{plot}{dmcfit}(x, y, figType = "summary", newFig = TRUE,
-  VP = NULL, ...)
+\method{plot}{dmcfit}(x, y, figType = "summary", newFig = TRUE, VP = NULL, ...)
 }
 \arguments{
 \item{x}{Output from dmcFit}

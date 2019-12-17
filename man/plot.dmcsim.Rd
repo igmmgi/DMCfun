@@ -4,14 +4,16 @@
 \alias{plot.dmcsim}
 \title{plot.dmcsim}
 \usage{
-\method{plot}{dmcsim}(x, figType = "summary1", newFig = TRUE, ...)
+\method{plot}{dmcsim}(x, figType = "summary1", newFig = TRUE, errorBars = TRUE, ...)
 }
 \arguments{
 \item{x}{Output from dmcSim}
 
-\item{figType}{summary1, summary2, activation, trials, pdf, cdf, caf, delta, all}
+\item{figType}{summary1, summary2, summary3, activation, trials, pdf, cdf, caf, delta, rtCorrect, rtErrors, errorRate, all}
 
 \item{newFig}{TRUE/FALSE}
+
+\item{errorBars}{TRUE/FALSE}
 
 \item{...}{pars}
 }
@@ -39,7 +41,11 @@ plot(dmc)
 
 # Example 3
 dmc = dmcSim()
-plot(dmc, type = "all")
+plot(dmc, figType = "all")
+
+# Example 4
+dmc = dmcSim()
+plot(dmc, figType = "summary3")
 }
 
 }

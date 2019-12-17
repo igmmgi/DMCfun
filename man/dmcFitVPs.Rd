@@ -4,12 +4,21 @@
 \alias{dmcFitVPs}
 \title{dmcFitVPs}
 \usage{
-dmcFitVPs(resOb, nTrl = 50000, startVals = c(20, 100, 0.5, 75, 300, 30,
-  2, 3), minVals = c(10, 5, 0.1, 20, 200, 5, 1, 2), maxVals = c(30,
-  300, 1, 150, 800, 100, 3, 4), fixed = c(0, 0, 0, 0, 0, 0, 0, 0),
-  parScale = startVals/min(startVals), fitInitialTau = TRUE,
-  stepCAF = 20, stepDelta = 5, VP = c(), printInputArgs = TRUE,
-  printResults = FALSE)
+dmcFitVPs(
+  resOb,
+  nTrl = 50000,
+  startVals = c(20, 100, 0.5, 75, 300, 30, 2, 3),
+  minVals = c(10, 5, 0.1, 20, 200, 5, 1, 2),
+  maxVals = c(30, 300, 1, 150, 800, 100, 3, 4),
+  fixed = c(0, 0, 0, 0, 0, 0, 0, 0),
+  parScale = startVals/min(startVals),
+  fitInitialTau = TRUE,
+  stepCAF = 20,
+  stepDelta = 5,
+  VP = c(),
+  printInputArgs = TRUE,
+  printResults = FALSE
+)
 }
 \arguments{
 \item{resOb}{Observed data (see flankerData1, flankerData2,

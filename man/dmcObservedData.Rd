@@ -4,8 +4,13 @@
 \alias{dmcObservedData}
 \title{dmcObservedData}
 \usage{
-dmcObservedData(dat, stepCAF = 20, stepDelta = 5, outlier = c(200,
-  1200), quantileType = 5)
+dmcObservedData(
+  dat,
+  stepCAF = 20,
+  stepDelta = 5,
+  outlier = c(200, 1200),
+  quantileType = 5
+)
 }
 \arguments{
 \item{dat}{Text file containing the observed data or R dataframe (see createDF/addDataDF)}

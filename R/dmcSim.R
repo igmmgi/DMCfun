@@ -68,6 +68,8 @@
 #' dmc <- dmcSim(fullData = TRUE, stepDelta = 10, stepCAF = 25)
 #' plot(dmc)
 #'
+#' }
+#'
 #' @export
 dmcSim <- function(amp = 20, tau = 30, mu = 0.5, bnds = 75, resMean = 300, resSD = 30,
                    sigma = 4, aaShape = 2,
