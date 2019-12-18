@@ -103,7 +103,7 @@ void processInputArgs(int argc, char **argv, Prms &p, bool &argProblem) {
                     p.nTrl = std::stoul(optarg);
                     break;
                 case 8:
-                    p.tmax = std::stoi(optarg);
+                    p.tmax = static_cast<unsigned int>(std::stoi(optarg));
                     break;
                 case 9:
                     p.varSP = static_cast<bool>(std::stoi(optarg));
@@ -133,7 +133,7 @@ void processInputArgs(int argc, char **argv, Prms &p, bool &argProblem) {
                     p.fullData = static_cast<bool>(std::stoi(optarg));
                     break;
                 case 18:
-                    p.nTrlData = std::stoi(optarg);
+                    p.nTrlData = static_cast<unsigned long>(std::stoi(optarg));
                     break;
                 case 19:
                     p.stepDelta = std::stoi(optarg);

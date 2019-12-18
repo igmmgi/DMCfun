@@ -12,6 +12,10 @@
 #' @param x Output from dmcSim
 #' @param figType summary1, summary2, summary3, activation, trials, pdf, cdf, caf, delta, rtCorrect, rtErrors, errorRate, all
 #' @param newFig TRUE/FALSE
+#' @param ylimitCAF
+#' @param ylimitDelta
+#' @param ylimitRt
+#' @param ylimitErr
 #' @param errorBars TRUE/FALSE
 #' @param ... pars
 #'
@@ -43,6 +47,10 @@
 plot.dmcsim <- function(x,
                         figType = "summary1",
                         newFig = TRUE,
+                        ylimitCAF = c(0, 1),
+                        ylimitDelta = c(-50, 150),
+                        ylimitRt = c(200, 800),
+                        ylimitErr = c(0, 20),
                         errorBars = TRUE,
                         ...) {
 
@@ -76,8 +84,8 @@ plot.dmcsim <- function(x,
     plot(x, figType = "trials",     newFig = FALSE)
     plot(x, figType = "pdf",        newFig = FALSE)
     plot(x, figType = "cdf",        newFig = FALSE)
-    plot(x, figType = "caf",        newFig = FALSE)
-    plot(x, figType = "delta",      newFig = FALSE)
+    plot(x, figType = "caf",        newFig = FALSE, ylimitCAF = ylimitCAF)
+    plot(x, figType = "delta",      newFig = FALSE, ylimitDelta = ylimitDelta)
 
     resetFig <- TRUE
 
@@ -97,8 +105,8 @@ plot.dmcsim <- function(x,
 
     plot(x, figType = "pdf",   newFig = FALSE)
     plot(x, figType = "cdf",   newFig = FALSE)
-    plot(x, figType = "caf",   newFig = FALSE)
-    plot(x, figType = "delta", newFig = FALSE)
+    plot(x, figType = "caf",   newFig = FALSE, ylimitCAF = ylimitCAF)
+    plot(x, figType = "delta", newFig = FALSE, ylimitDelta = ylimitDelta)
 
     resetFig <- TRUE
 
@@ -107,9 +115,9 @@ plot.dmcsim <- function(x,
      if (newFig) {
       par(mar = c(4, 4, 2, 2), mfrow=c(3, 1))
     }
-    plot(x, figType = "rtCorrect", newFig = FALSE, errorBars = errorBars)
-    plot(x, figType = "rtErrors",  newFig = FALSE, errorBars = errorBars)
-    plot(x, figType = "errorRate", newFig = FALSE)  # TO DO: add standard deviation
+    plot(x, figType = "rtCorrect", newFig = FALSE, ylimitRt = ylimitRt, errorBars = errorBars)
+    plot(x, figType = "rtErrors",  newFig = FALSE, ylimitRt = ylimitRt, errorBars = errorBars)
+    plot(x, figType = "errorRate", newFig = FALSE, ylimitErr = ylimitErr)
 
     resetFig <- TRUE
 
@@ -167,7 +175,7 @@ plot.dmcsim <- function(x,
     plot(x$caf$accPer[x$caf$Comp == "comp"],
          type = "b", col = "green",
          xlab = "RT Bin", xaxt = "n",
-         ylim = c(0, 1), ylab = "CAF", yaxt = "n")
+         ylim = ylimitCAF, ylab = "CAF", yaxt = "n")
     lines(x$caf$accPer[x$caf$Comp == "incomp"], type = "b", col = "red")
     legend("bottomright", legend = c("Comp", "Incomp"),
            col = c("green", "red"), lty = c(1, 1), inset = c(0.05, 0.05))
@@ -179,13 +187,12 @@ plot.dmcsim <- function(x,
     plot(x$delta$meanBin, x$delta$meanEffect,
          type = "b",
          xlim = c(0, x$prms$tmax), xlab = "Time [ms]",
-         ylab = expression(Delta), yaxt = "n", ylim = c(-50, 150))
-    axis(2, at = c(-50, 0, 50, 100, 150), labels = c("-50", "0", "50", "100", "150"))
+         ylab = expression(Delta), ylim = ylimitDelta)
 
    } else if (figType == "rtCorrect") {
 
     plot(c(1, 2), x$summary$rtCor, type = "b",
-         ylim = c(200, 800), xlim = c(0.5, 2.5),
+         ylim = ylimitRt, xlim = c(0.5, 2.5),
          ylab = "RT Correct [ms]", xlab = "", xaxt = "n", cex = 1)
     axis(1, at = c(1, 2), labels = c("Comp", "Incomp"))
 
@@ -196,14 +203,14 @@ plot.dmcsim <- function(x,
   } else if (figType == "errorRate") {
 
     plot(c(1, 2), x$summary$perErr, type = "b",
-         ylim = c(0, 20), xlim = c(0.5, 2.5),
+         ylim = ylimitErr, xlim = c(0.5, 2.5),
          ylab = "Error Rate [%]", xlab = "", xaxt = "n", cex = 1)
     axis(1, at = c(1, 2), labels = c("Comp", "Incomp"))
 
   } else if (figType == "rtErrors") {
 
     plot(c(1, 2), x$summary$rtErr, type = "b",
-         ylim = c(200, 800), xlim = c(0.5, 2.5),
+         ylim = ylimitRt, xlim = c(0.5, 2.5),
          ylab = "RT Error [ms]", xlab = "", xaxt = "n", cex = 1)
     axis(1, at = c(1, 2), labels = c("Comp", "Incomp"))
 
@@ -217,21 +224,21 @@ plot.dmcsim <- function(x,
     plot(x, figType = "trials",     newFig = TRUE)
     plot(x, figType = "pdf",        newFig = TRUE)
     plot(x, figType = "cdf",        newFig = TRUE)
-    plot(x, figType = "caf",        newFig = TRUE)
-    plot(x, figType = "delta",      newFig = TRUE)
-    plot(x, figType = "rtCorrect",  newFig = FALSE, errorBars = errorBars)
-    plot(x, figType = "rtErrors",   newFig = FALSE, errorBars = errorBars)
-    plot(x, figType = "errorRate",  newFig = FALSE)
+    plot(x, figType = "caf",        newFig = TRUE, ylimitCAF = ylimitCAF)
+    plot(x, figType = "delta",      newFig = TRUE, ylimitDelta = ylimitDelta)
+    plot(x, figType = "rtCorrect",  newFig = TRUE, ylimitRt = ylimitRt, errorBars = errorBars)
+    plot(x, figType = "rtErrors",   newFig = TRUE, ylimitRt = ylimitRt, errorBars = errorBars)
+    plot(x, figType = "errorRate",  newFig = TRUE, ylimitErr = ylimitErr)
 
   } else if (figType == "all" & length(x) == 5) {
 
-    plot(x, figType = "pdf",   newFig = TRUE)
-    plot(x, figType = "cdf",   newFig = TRUE)
-    plot(x, figType = "caf",   newFig = TRUE)
-    plot(x, figType = "delta", newFig = TRUE)
-    plot(x, figType = "rtCorrect", newFig = FALSE, errorBars = errorBars)
-    plot(x, figType = "rtErrors",  newFig = FALSE, errorBars = errorBars)
-    plot(x, figType = "errorRate", newFig = FALSE)
+    plot(x, figType = "pdf",       newFig = TRUE)
+    plot(x, figType = "cdf",       newFig = TRUE)
+    plot(x, figType = "caf",       newFig = TRUE)
+    plot(x, figType = "delta",     newFig = TRUE)
+    plot(x, figType = "rtCorrect", newFig = TRUE, ylimitRt = ylimitRt, errorBars = errorBars)
+    plot(x, figType = "rtErrors",  newFig = TRUE, ylimitRt = ylimitRt, errorBars = errorBars)
+    plot(x, figType = "errorRate", newFig = TRUE, ylimitErr = ylimitErr)
 
   }
 

@@ -74,8 +74,7 @@ void runDMCsim_t(
     std::vector<double> rts;
     std::vector<double> errs;
     std::vector<double> activation_sum(p.tmax);
-    std::vector<std::vector<double>> trial_matrix(p.nTrlData,
-                                                  std::vector<double>(p.tmax));  // needed if plotting individual trials
+    std::vector<std::vector<double>> trial_matrix(p.nTrlData, std::vector<double>(p.tmax));  // needed if plotting individual trials
 
     std::vector<double> mu_vec(p.tmax);
     for (auto i = 0u; i < mu_vec.size(); i++) {
@@ -103,6 +102,7 @@ void runDMCsim_t(
 
     simulation["activation_" + comp] = activation_sum;
     simulation["rts_" + comp] = rts;
+    simulation["errs_" + comp] = errs;
     trials["trials_" + comp] = trial_matrix;
 
     calculate_summary(rts, errs, p.nTrl, resSummary, comp);

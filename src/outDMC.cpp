@@ -26,8 +26,7 @@ void printResults(
               << round(resSum["resSum_incomp"][1]) << "\t"
               << resSum["resSum_incomp"][2] << "\t"
               << round(resSum["resSum_incomp"][3]) << "\t"
-              << round(resSum["resSum_incomp"][4]);
-    Rcpp::Rcout << std::endl;
+              << round(resSum["resSum_incomp"][4]) << "\n";
     Rcpp::Rcout << std::endl;
 
     // results delta distribution
@@ -57,8 +56,7 @@ void printResults(
 
     Rcpp::Rcout << "effect" << "\t";
     for (unsigned int i = 0; i < resDelta["delta_pct_delta"].size(); i++) {
-        Rcpp::Rcout << std::fixed << std::setprecision(1) << std::right << std::setw(5)
-                  << resDelta["delta_pct_delta"][i] << "\t";
+        Rcpp::Rcout << std::fixed << std::setprecision(1) << std::right << std::setw(5) << resDelta["delta_pct_delta"][i] << "\t";
     }
     Rcpp::Rcout << std::endl;
     Rcpp::Rcout << std::endl;
@@ -72,14 +70,12 @@ void printResults(
 
     Rcpp::Rcout << "comp" << "\t";
     for (unsigned int i = 0; i < resCAF["caf_comp"].size(); i++) {
-        Rcpp::Rcout << std::fixed << std::setprecision(3) << std::right << std::setw(7)
-                  << resCAF["caf_comp"][i] << "\t";
+        Rcpp::Rcout << std::fixed << std::setprecision(3) << std::right << std::setw(7) << resCAF["caf_comp"][i] << "\t";
     }
     Rcpp::Rcout << std::endl;
     Rcpp::Rcout << "incomp" << "\t";
     for (unsigned int i = 0; i < resCAF["caf_incomp"].size(); i++) {
-        Rcpp::Rcout << std::fixed << std::setprecision(3) << std::right << std::setw(7)
-                  << resCAF["caf_incomp"][i] << "\t";
+        Rcpp::Rcout << std::fixed << std::setprecision(3) << std::right << std::setw(7) << resCAF["caf_incomp"][i] << "\t";
     }
     Rcpp::Rcout << std::endl;
 

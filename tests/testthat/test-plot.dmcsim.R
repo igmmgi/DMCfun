@@ -14,6 +14,9 @@ test_that("plot.dmcsim", {
   testthat::expect_error(plot(dmc, figType = "cdf"), NA)
   testthat::expect_error(plot(dmc, figType = "caf"), NA)
   testthat::expect_error(plot(dmc, figType = "delta"), NA)
+  testthat::expect_error(plot(dmc, figType = "rtCorrect"), NA)
+  testthat::expect_error(plot(dmc, figType = "rtErrors"), NA)
+  testthat::expect_error(plot(dmc, figType = "errorRate"), NA)
   testthat::expect_error(plot(dmc, figType = "all"), NA)
 
   # test 2
@@ -24,6 +27,9 @@ test_that("plot.dmcsim", {
   testthat::expect_error(plot(dmc, figType = "cdf"), NA)
   testthat::expect_error(plot(dmc, figType = "caf"), NA)
   testthat::expect_error(plot(dmc, figType = "delta"), NA)
+  testthat::expect_error(plot(dmc, figType = "rtCorrect"), NA)
+  testthat::expect_error(plot(dmc, figType = "rtErrors"), NA)
+  testthat::expect_error(plot(dmc, figType = "errorRate"), NA)
   testthat::expect_error(plot(dmc, figType = "all"), NA)
 
 })

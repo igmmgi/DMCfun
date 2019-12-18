@@ -93,15 +93,14 @@ dmcObservedDataRaw <- function(datafile,
     dplyr::group_by(VP, Comp) %>%
     dplyr::do(tibble::as_tibble(t(quantile(.$RT, seq(stepDelta, 100 - stepDelta, stepDelta)/100, type = quantileType))))  %>%
     setNames(c("VP", "Comp", seq(1, length(seq(stepDelta, 100 - stepDelta, stepDelta))))) %>%
-    tidyr::gather(bin, rt_VP, -c("VP", "Comp")) %>%
-    tidyr::spread(Comp, rt_VP) %>%
-    dplyr::mutate(meanCompVP   = comp,
+    tidyr::pivot_longer(., -c(VP, Comp), names_to = "bin") %>%
+    tidyr::pivot_wider(., id_cols = c(VP, bin), names_from = c(Comp)) %>%
+    dplyr::mutate(bin          = as.integer(bin),
+                  meanCompVP   = comp,
                   meanIncompVP = incomp,
                   meanBinVP    = (comp + incomp)/2,
                   meanEffectVP = (incomp - comp)) %>%
-    dplyr::select(-dplyr::one_of("comp", "incomp")) %>%
-    dplyr::mutate(bin = as.integer(bin)) %>%
-    dplyr::arrange(VP, bin)
+    dplyr::select(VP, bin, meanCompVP, meanIncompVP, meanBinVP, meanEffectVP)
 
   datAgg_dec <- datVP_dec %>%
     dplyr::group_by(bin) %>%
