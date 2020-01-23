@@ -9,8 +9,8 @@ R/Cpp implementation of the diffusion process model (Diffusion Model for Conflic
 devtools::install_github("igmmgi/DMCfun")
 ```
 
+---
 ## Basic Examples
-
 ``` r
 dmc <- dmcSim(fullData = TRUE)
 plot(dmc)
@@ -22,4 +22,11 @@ dmc <- dmcSim(fullData = TRUE, tau = 150)
 plot(dmc)
 ```
 ![alt text](/figures/figure2.png)     
+
+``` r
+params <- list(tau = seq(20, 170, 10))
+dmc <- dmcSims(params)
+plot(dmc, ncol = 2, col = c("red", "green")
+```
+![alt text](/figures/figure3.png)     
 

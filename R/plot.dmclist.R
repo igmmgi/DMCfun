@@ -10,9 +10,12 @@
 #' that dmcSim is run with fullData = TRUE.
 #'
 #' @param x Output from dmcSims
-#' @param ylimitDelta
-#' @param errorBars TRUE/FALSE
-#' @param ... pars
+#' @param ylimit ylimit for delta plot
+#' @param xlimit xlimit for delta plot
+#' @param col # color range start/end color
+#' @param lineType line type ("l", "b", "o") for delta plot
+#' @param legendPos legend position
+#' @param ... pars for legend
 #'
 #' @return NULL
 #'
@@ -21,28 +24,42 @@
 #' library(DMCfun)
 #'
 #' # Example 1
-#' dmc = dmcSims()
+#' params <- list(amp = seq(20, 30, 2), tau = c(20, 250))
+#' dmc = dmcSims(params)
 #' plot(dmc)
+#'
+#' # Example 2
+#' params <- list(amp=c(10, 20), tau = seq(20, 100, 20), mu = seq(0.2, 0.5, 0.1))
+#' dmc = dmcSims(params)
+#' plot(dmc, ncol = 3, col=c("green", "blue"), lineType = "l")
 #'
 #' }
 #'
 #' @export
 plot.dmclist <- function(x,
-                         ylimitDelta = c(-50, 150),
+                         ylimit = c(-50, 150),
+                         xlimit = NULL,
                          col=c("black", "lightgrey"),
-                         ppars = ...,
-                         lpars = list()) {
+                         lineType = "l",
+                         legendPos = "topleft",
+                         ...) {
 
-    cols <- colorRampPalette(col)(length(x))
+  # default xlimit
+  if (is.null(xlimit)) {
+    xlimit <- c(0, x[[1]]$prms$tmax)
+  }
 
-    # plot(x[[1]], figType = "delta", col = cols[1], type = "l", dots[names(dots) %in% pnames])
-    do.call(plot, x[[1]], figType = "delta", col = cols[1], type = "l", ppars)
-    #plot(x[[1]], figType = "delta", col = cols[1], type = "l")
-    legendText <- paste0(paste0(names(x[[1]]$params[[1]]), "=", x[[1]]$params[[1]], collapse = ", "))
-    for (i in 2:length(x)) {
-      lines(x[[i]]$delta$meanBin, x[[i]]$delta$meanEffect, col = cols[i])
-      legendText <- c(legendText, paste0(paste0(names(x[[i]]$params[[i]]), "=", x[[i]]$params[[i]], collapse = ", ")))
-    }
-    # legend(1, 150, legend = legendText, col=cols, lty=1, ...)
+  # color range
+  cols <- colorRampPalette(col)(length(x))
+
+  # plot
+  plot(x[[1]]$delta$meanBin, x[[1]]$delta$meanEffect,
+       xlim = xlimit, xlab = "Time [ms]",
+       ylab = expression(Delta), ylim = ylimit, type = lineType, col = cols[1])
+  legendText <- paste0(paste0(names(x[[1]]$params[[1]]), "=", x[[1]]$params[[1]], collapse = ", "))
+  for (i in 2:length(x)) {
+    lines(x[[i]]$delta$meanBin, x[[i]]$delta$meanEffect, col = cols[i], type = lineType)
+    legendText <- c(legendText, paste0(paste0(names(x[[i]]$params[[i]]), "=", x[[i]]$params[[i]], collapse = ", ")))
+  }
+  legend(legendPos, legend = legendText, col=cols, lty=1, ...)
 }
-

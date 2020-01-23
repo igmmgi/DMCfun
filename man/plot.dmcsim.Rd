@@ -4,7 +4,17 @@
 \alias{plot.dmcsim}
 \title{plot.dmcsim}
 \usage{
-\method{plot}{dmcsim}(x, figType = "summary1", newFig = TRUE, errorBars = TRUE, ...)
+\method{plot}{dmcsim}(
+  x,
+  figType = "summary1",
+  newFig = TRUE,
+  ylimitCAF = c(0, 1),
+  ylimitDelta = c(-50, 150),
+  ylimitRt = c(200, 800),
+  ylimitErr = c(0, 20),
+  errorBars = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{Output from dmcSim}
@@ -12,6 +22,14 @@
 \item{figType}{summary1, summary2, summary3, activation, trials, pdf, cdf, caf, delta, rtCorrect, rtErrors, errorRate, all}
 
 \item{newFig}{TRUE/FALSE}
+
+\item{ylimitCAF}{ylimit for CAF plot}
+
+\item{ylimitDelta}{ylimit for delta plot}
+
+\item{ylimitRt}{ylimit for rt plot}
+
+\item{ylimitErr}{ylimit for er plot}
 
 \item{errorBars}{TRUE/FALSE}
 

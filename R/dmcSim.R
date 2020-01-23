@@ -17,8 +17,7 @@
 #' @param varSP true/false variable starting point
 #' @param spShape shape parameter of starting point
 #' @param spLim limit range of distribution of starting point
-#' @param varDR true/false variable drift rate NB. In DMC, drift rate across trials is always
-#' constant.
+#' @param varDR true/false variable drift rate NB. In DMC, drift rate across trials is always constant.
 #' @param drShape shape parameter of drift rate
 #' @param drLim limit range of distribution of drift rate
 #' @param fullData TRUE/FALSE

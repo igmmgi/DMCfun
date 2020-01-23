@@ -20,7 +20,8 @@ Imports:
   readr,
   testthat,
   tibble,
-  tidyr
+  tidyr,
+  usethis
 LinkingTo: Rcpp, BH
 RoxygenNote: 7.0.2
 LazyData: true

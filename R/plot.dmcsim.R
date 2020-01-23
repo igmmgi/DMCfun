@@ -12,10 +12,10 @@
 #' @param x Output from dmcSim
 #' @param figType summary1, summary2, summary3, activation, trials, pdf, cdf, caf, delta, rtCorrect, rtErrors, errorRate, all
 #' @param newFig TRUE/FALSE
-#' @param ylimitCAF
-#' @param ylimitDelta
-#' @param ylimitRt
-#' @param ylimitErr
+#' @param ylimitCAF ylimit for CAF plot
+#' @param ylimitDelta ylimit for delta plot
+#' @param ylimitRt ylimit for rt plot
+#' @param ylimitErr ylimit for er plot
 #' @param errorBars TRUE/FALSE
 #' @param ... pars
 #'
@@ -85,7 +85,7 @@ plot.dmcsim <- function(x,
     plot(x, figType = "pdf",        newFig = FALSE)
     plot(x, figType = "cdf",        newFig = FALSE)
     plot(x, figType = "caf",        newFig = FALSE, ylimitCAF = ylimitCAF)
-    plot(x, figType = "delta",      newFig = FALSE, ylimitDelta = ylimitDelta, ...)
+    plot(x, figType = "delta",      newFig = FALSE, ylimitDelta = ylimitDelta)
 
     resetFig <- TRUE
 
@@ -106,7 +106,7 @@ plot.dmcsim <- function(x,
     plot(x, figType = "pdf",   newFig = FALSE)
     plot(x, figType = "cdf",   newFig = FALSE, ...)
     plot(x, figType = "caf",   newFig = FALSE, ylimitCAF = ylimitCAF)
-    plot(x, figType = "delta", newFig = FALSE, ylimitDelta = ylimitDelta, ...)
+    plot(x, figType = "delta", newFig = FALSE, ylimitDelta = ylimitDelta)
 
     resetFig <- TRUE
 
@@ -132,7 +132,7 @@ plot.dmcsim <- function(x,
     lines(c(1:x$prms$tmax), x$sim$activation_comp, col = "green")
     lines(c(1:x$prms$tmax), x$sim$activation_incomp, col = "red")
     legend("bottomright", legend = c("Comp", "Incomp"),
-           col = c("green", "red"), lty = c(1, 1), inset = c(0.05, 0.05), ...)
+           col = c("green", "red"), lty = c(1, 1), inset = c(0.05, 0.05))
 
   } else if (figType == "trials") {
 
@@ -159,7 +159,7 @@ plot.dmcsim <- function(x,
     lines(density(x$sim$rts_incomp), col = "red", type = "l")
     legend("topright", legend = c("Comp", "Incomp"),
            col = c("green", "red"), lty = c(1, 1), inset = c(0.05, 0.05))
-    axis(2, at = c(0, 0.005, 0.01), labels = c("0", ".005", ".001") )
+    axis(2, at = c(0, 0.005, 0.01), labels = c("0", ".005", ".001"))
 
   } else if (figType == "cdf") {
 
@@ -169,7 +169,7 @@ plot.dmcsim <- function(x,
     lines(ecdf(x$sim$rts_incomp), col = "red")
     legend("bottomright", legend = c("Comp", "Incomp"), col = c("green", "red"),
            lty = c(1, 1), inset = c(0.05, 0.05))
-    axis(2, at = c(0, 0.25, 0.5, 0.75, 1), labels = c("0", ".25", ".5", ".75", "1") )
+    axis(2, at = c(0, 0.25, 0.5, 0.75, 1), labels = c("0", ".25", ".5", ".75", "1"))
 
   } else if (figType == "caf") {
 
@@ -181,13 +181,13 @@ plot.dmcsim <- function(x,
     legend("bottomright", legend = c("Comp", "Incomp"),
            col = c("green", "red"), lty = c(1, 1), inset = c(0.05, 0.05))
     axis(1, at = seq(1, nrow(x$caf)/2, 1))
-    axis(2, at = c(0, 0.25, 0.5, 0.75, 1), labels = c("0", ".25", ".5", ".75", "1") )
+    axis(2, at = c(0, 0.25, 0.5, 0.75, 1), labels = c("0", ".25", ".5", ".75", "1"))
 
   } else if (figType == "delta") {
 
     plot(x$delta$meanBin, x$delta$meanEffect,
          xlim = c(0, x$prms$tmax), xlab = "Time [ms]",
-         ylab = expression(Delta), ylim = ylimitDelta, ...)
+         ylab = expression(Delta), ylim = ylimitDelta, type = "o")
 
    } else if (figType == "rtCorrect") {
 

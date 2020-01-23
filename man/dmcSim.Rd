@@ -57,8 +57,7 @@ dmcSim(
 
 \item{spLim}{limit range of distribution of starting point}
 
-\item{varDR}{true/false variable drift rate NB. In DMC, drift rate across trials is always
-constant.}
+\item{varDR}{true/false variable drift rate NB. In DMC, drift rate across trials is always constant.}
 
 \item{drShape}{shape parameter of drift rate}
 
