@@ -5,8 +5,6 @@
 #include "outDMC.h"
 #include "runDMC.h"
 
-typedef boost::mt19937 RNGType;
-
 int main(int argc, char *argv[]) {
 
     Prms p;

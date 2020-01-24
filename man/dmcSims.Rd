@@ -4,10 +4,14 @@
 \alias{dmcSims}
 \title{dmcSims}
 \usage{
-dmcSims(params)
+dmcSims(params, printInputArgs = FALSE, printResults = FALSE)
 }
 \arguments{
 \item{params}{(list of parameters to dmcSim)}
+
+\item{printInputArgs}{Print DMC input arguments to console}
+
+\item{printResults}{Print DMC output to console}
 }
 \value{
 list of dmcsim

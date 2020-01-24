@@ -59,7 +59,7 @@ plot.dmclist <- function(x,
   legendText <- paste0(paste0(names(x[[1]]$params[[1]]), "=", x[[1]]$params[[1]], collapse = ", "))
   for (i in 2:length(x)) {
     lines(x[[i]]$delta$meanBin, x[[i]]$delta$meanEffect, col = cols[i], type = lineType)
-    legendText <- c(legendText, paste0(paste0(names(x[[i]]$params[[i]]), "=", x[[i]]$params[[i]], collapse = ", ")))
+    legendText <- c(legendText, paste0(names(x[[i]]$params[[i]]), "=", x[[i]]$params[[i]], collapse = ", "))
   }
   legend(legendPos, legend = legendText, col=cols, lty=1, ...)
 }
