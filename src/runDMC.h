@@ -37,15 +37,15 @@ void calculate_percentile(
         int nDelta,
         std::vector<double> &rts,
         std::map<std::string,
-                std::vector<double> > &resDistribution,
+        std::vector<double> > &resDistribution,
         std::string cond
 );
 
 void calculate_delta(std::map<std::string, std::vector<double> > &resDistribution);
 
-void variable_drift_rate(Prms &p, std::vector<double> &dr, std::vector<double> &dr_mean);
+void variable_drift_rate(Prms &p, std::vector<double> &dr, std::vector<double> &dr_mean, int sign);
 
-void variable_starting_point(Prms &p, std::vector<double> &sp, std::vector<double> &sp_mean);
+void variable_starting_point(Prms &p, std::vector<double> &sp, std::vector<double> &sp_mean, int sign);
 
 void calculate_caf(
         std::vector<double> &rts,
@@ -63,7 +63,8 @@ void run_simulation(
         std::vector<double> &sp,
         std::vector<double> &dr,
         std::vector<double> &rts,
-        std::vector<double> &errs
+        std::vector<double> &errs,
+        int sign
 );
 
 void run_simulation(
@@ -72,7 +73,8 @@ void run_simulation(
         std::vector<double> &sp,
         std::vector<double> &dr,
         std::vector<double> &rts,
-        std::vector<double> &errs
+        std::vector<double> &errs,
+        int sign
 );
 
 #endif //CPP_RUNDMCSIM_HPP

@@ -84,20 +84,20 @@ void runDMCsim_t(
     // variable drift rate?
     std::vector<double> dr(p.nTrl, p.mu);
     if (p.varDR) {
-        variable_drift_rate(p, dr, dr_mean);
+        variable_drift_rate(p, dr, dr_mean, sign);
     }
 
     // variable starting point?
     std::vector<double> sp(p.nTrl);
     if (p.varSP) {
-        variable_starting_point(p, sp, sp_mean);
+        variable_starting_point(p, sp, sp_mean, sign);
     }
 
     // run simulation and store rts for correct/incorrect trials
     if (p.fullData) {
-        run_simulation(p, activation_sum, trial_matrix, mu_vec, sp, dr, rts, errs);
+        run_simulation(p, activation_sum, trial_matrix, mu_vec, sp, dr, rts, errs, sign);
     } else {
-        run_simulation(p, mu_vec, sp, dr, rts, errs);
+        run_simulation(p, mu_vec, sp, dr, rts, errs, sign);
     }
 
     simulation["activation_" + comp] = activation_sum;
@@ -111,10 +111,10 @@ void runDMCsim_t(
 
 }
 
-void variable_drift_rate(Prms &p, std::vector<double> &dr, std::vector<double> &dr_mean) {
+void variable_drift_rate(Prms &p, std::vector<double> &dr, std::vector<double> &dr_mean, int sign) {
     typedef boost::mt19937 RNGType;
     const uint32_t s = p.setSeed ? 1 : std::time(nullptr);
-    RNGType rng(s);
+    RNGType rng(s + sign);
 
     boost::random::beta_distribution<> bdDR(p.drShape, p.drShape); // beta distribution with defined shape a, shape b
     boost::variate_generator<RNGType, boost::random::beta_distribution<> > betaDistDR(rng, bdDR);
@@ -123,10 +123,10 @@ void variable_drift_rate(Prms &p, std::vector<double> &dr, std::vector<double> &
     dr_mean.push_back(accumulate(dr.begin(), dr.end(), 0.0) / dr.size());
 }
 
-void variable_starting_point(Prms &p, std::vector<double> &sp, std::vector<double> &sp_mean) {
+void variable_starting_point(Prms &p, std::vector<double> &sp, std::vector<double> &sp_mean, int sign) {
     typedef boost::mt19937 RNGType;
     const uint32_t s = p.setSeed ? 1 : std::time(nullptr);
-    RNGType rng(s);
+    RNGType rng(s + sign);
 
     boost::random::beta_distribution<> bdSP(p.spShape, p.spShape); // beta distribution with defined shape a, shape b
     boost::variate_generator<RNGType, boost::random::beta_distribution<> > betaDistSP(rng, bdSP);
@@ -142,12 +142,13 @@ void run_simulation(
         std::vector<double> &sp,
         std::vector<double> &dr,
         std::vector<double> &rts,
-        std::vector<double> &errs
+        std::vector<double> &errs,
+        int sign
 ) {
 
     typedef boost::mt19937 RNGType;
     const uint32_t s = p.setSeed ? 1 : std::time(nullptr);
-    RNGType rng(s);
+    RNGType rng(s + sign);
 
     boost::normal_distribution<> snd(0.0, 1.0);  // standard normal distribution
     boost::normal_distribution<> nd_mean_sd(p.resMean, p.resSD);   // normal distribution with given mean/SD
@@ -176,12 +177,13 @@ void run_simulation(
         std::vector<double> &sp,
         std::vector<double> &dr,
         std::vector<double> &rts,
-        std::vector<double> &errs
+        std::vector<double> &errs,
+        int sign
 ) {
 
     typedef boost::mt19937 RNGType;
     const uint32_t s = p.setSeed ? 1 : std::time(nullptr);
-    RNGType rng(s);
+    RNGType rng(s + sign);
 
     boost::normal_distribution<> snd(0.0, 1.0);  // standard normal distributoin
     boost::normal_distribution<> nd_mean_sd(p.resMean, p.resSD);   // normal distribution with given mean/SD
