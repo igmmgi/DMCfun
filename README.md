@@ -32,7 +32,8 @@ plot(dmc, ncol = 2, col = c("red", "green"))
 
 ## Basic Examples DMC Fit
 ``` r
-fit <- dmcFitAgg(flankerData) # 
+fit <- dmcFitAgg(flankerData) # flanker data from Ulrich et al. (2015)
+# fit <- dmcFitAgg(simonData) # simon data from Ulrich et al. (2015)
 plot(fit, flankerData1)
 summary(fit)
 ```
