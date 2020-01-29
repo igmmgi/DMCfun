@@ -10,7 +10,7 @@ devtools::install_github("igmmgi/DMCfun")
 ```
 
 ---
-## Basic Examples
+## Basic Examples DMC Simulation
 ``` r
 dmc <- dmcSim(fullData = TRUE)
 plot(dmc)
@@ -26,7 +26,14 @@ plot(dmc)
 ``` r
 params <- list(tau = seq(20, 170, 10))
 dmc <- dmcSims(params)
-plot(dmc, ncol = 2, col = c("red", "green")
+plot(dmc, ncol = 2, col = c("red", "green"))
 ```
 ![alt text](/figures/figure3.png)     
 
+## Basic Examples DMC Fit
+``` r
+fit <- dmcFitAgg(flankerData) # 
+plot(fit, flankerData1)
+summary(fit)
+```
+![alt text](/figures/figure4.png)     
