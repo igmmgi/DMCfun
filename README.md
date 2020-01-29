@@ -36,4 +36,5 @@ fit <- dmcFitAgg(flankerData) #
 plot(fit, flankerData1)
 summary(fit)
 ```
+
 ![alt text](/figures/figure4.png)     
