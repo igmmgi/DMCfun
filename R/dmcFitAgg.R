@@ -47,13 +47,13 @@
 #' summary(fit)
 #'
 #' # Example 5: Simulated Data
-#' dat <- createDF(nVP = 50, nTrl = 100,
+#' dat <- createDF(nVP = 50, nTrl = 150,
 #'                 design = list("Comp" = c("comp", "incomp")))
 #' dat <- addDataDF(dat,
 #'                  RT = list(list(c("Comp:comp"), vals = c(510, 100, 100)),
-#'                            list(c("Comp:incomp"), vals = c(540, 100, 120))),
+#'                            list(c("Comp:incomp"), vals = c(540, 120, 150))),
 #'                  Error = list(list(c("Comp:comp"), vals = c(3, 2, 2, 1, 1)),
-#'                             list(c("Comp:incomp"), vals = c(25, 3, 2, 1, 1))))
+#'                             list(c("Comp:incomp"), vals = c(20, 3, 2, 1, 1))))
 #' datOb <- dmcObservedData(dat)
 #' plot(datOb)
 #' fit <- dmcFitAgg(datOb)
