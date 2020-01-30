@@ -112,26 +112,24 @@ void runDMCsim_t(
 }
 
 void variable_drift_rate(Prms &p, std::vector<double> &dr, std::vector<double> &dr_mean, int sign) {
-    typedef boost::mt19937 RNGType;
-    const uint32_t s = p.setSeed ? 1 : std::time(nullptr);
-    RNGType rng(s + sign);
 
-    boost::random::beta_distribution<> bdDR(p.drShape, p.drShape); // beta distribution with defined shape a, shape b
-    boost::variate_generator<RNGType, boost::random::beta_distribution<> > betaDistDR(rng, bdDR);
+    const uint32_t s = p.setSeed ? 1 : std::time(nullptr); 
 
-    for (auto &i : dr) i = betaDistDR() * (p.drLimHigh - p.drLimLow) + p.drLimLow;
+    boost::random::mt19937_64 rng(s + sign);
+    boost::random::beta_distribution<double> bdDR(p.drShape, p.drShape);
+
+    for (auto &i : dr) i = bdDR(rng) * (p.drLimHigh - p.drLimLow) + p.drLimLow;
     dr_mean.push_back(accumulate(dr.begin(), dr.end(), 0.0) / dr.size());
 }
 
 void variable_starting_point(Prms &p, std::vector<double> &sp, std::vector<double> &sp_mean, int sign) {
-    typedef boost::mt19937 RNGType;
-    const uint32_t s = p.setSeed ? 1 : std::time(nullptr);
-    RNGType rng(s + sign);
 
-    boost::random::beta_distribution<> bdSP(p.spShape, p.spShape); // beta distribution with defined shape a, shape b
-    boost::variate_generator<RNGType, boost::random::beta_distribution<> > betaDistSP(rng, bdSP);
+    const uint32_t s = p.setSeed ? 1 : std::time(nullptr); 
 
-    for (auto &i : sp) i = betaDistSP() * (p.spLimHigh - p.spLimLow) + p.spLimLow;
+    boost::random::mt19937_64 rng(s + sign);
+    boost::random::beta_distribution<double> bdSP(p.spShape, p.spShape);
+
+    for (auto &i : sp) i = bdSP(rng) * (p.spLimHigh - p.spLimLow) + p.spLimLow;
     sp_mean.push_back(accumulate(sp.begin(), sp.end(), 0.0) / sp.size());
 }
 
@@ -146,22 +144,19 @@ void run_simulation(
         int sign
 ) {
 
-    typedef boost::mt19937 RNGType;
-    const uint32_t s = p.setSeed ? 1 : std::time(nullptr);
-    RNGType rng(s + sign);
+    const uint32_t s = p.setSeed ? 1 : std::time(nullptr); 
 
-    boost::normal_distribution<> snd(0.0, 1.0);  // standard normal distribution
-    boost::normal_distribution<> nd_mean_sd(p.resMean, p.resSD);   // normal distribution with given mean/SD
-    boost::variate_generator<RNGType, boost::normal_distribution<> > randDist(rng, snd);
-    boost::variate_generator<RNGType, boost::normal_distribution<> > resDist(rng, nd_mean_sd);
+    boost::random::mt19937_64 rng(s + sign);
+    boost::random::normal_distribution<double> snd(0.0, 1.0);
+    boost::random::normal_distribution<double> nd_mean_sd(p.resMean, p.resSD);
 
     double activation_trial = 0;
     for (auto trl = 0u; trl < p.nTrl; trl++) {
         activation_trial = sp[trl];
         for (auto i = 0u; i < p.tmax; i++) {
-            activation_trial += mu_vec[i] + dr[trl] + (p.sigma * randDist());
+            activation_trial += mu_vec[i] + dr[trl] + (p.sigma * snd(rng));
             if (fabs(activation_trial) > p.bnds) {
-                (activation_trial > p.bnds ? rts : errs).push_back(i + resDist() + 1); // zero index
+                (activation_trial > p.bnds ? rts : errs).push_back(i + nd_mean_sd(rng) + 1); // zero index
                 break;
             }
         }
@@ -181,25 +176,22 @@ void run_simulation(
         int sign
 ) {
 
-    typedef boost::mt19937 RNGType;
-    const uint32_t s = p.setSeed ? 1 : std::time(nullptr);
-    RNGType rng(s + sign);
+    const uint32_t s = p.setSeed ? 1 : std::time(nullptr); 
 
-    boost::normal_distribution<> snd(0.0, 1.0);  // standard normal distributoin
-    boost::normal_distribution<> nd_mean_sd(p.resMean, p.resSD);   // normal distribution with given mean/SD
-    boost::variate_generator<RNGType, boost::normal_distribution<> > randDist(rng, snd);
-    boost::variate_generator<RNGType, boost::normal_distribution<> > resDist(rng, nd_mean_sd);
+    boost::random::mt19937_64 rng(s + sign);
+    boost::random::normal_distribution<double> snd(0.0, 1.0);
+    boost::random::normal_distribution<double> nd_mean_sd(p.resMean, p.resSD);
 
     std::vector<double> activation_trial(p.tmax);
     bool criterion;
     for (auto trl = 0u; trl < p.nTrl; trl++) {
         criterion = false;
-        activation_trial[0] = mu_vec[0] + sp[trl] + dr[trl] + (p.sigma * randDist());
+        activation_trial[0] = mu_vec[0] + sp[trl] + dr[trl] + (p.sigma * snd(rng));
         activation_sum[0] += activation_trial[0];
         for (auto i = 1u; i < activation_trial.size(); i++) {
-            activation_trial[i] = activation_trial[i - 1] + mu_vec[i] + dr[trl] + (p.sigma * randDist());
+            activation_trial[i] = activation_trial[i - 1] + mu_vec[i] + dr[trl] + (p.sigma * snd(rng));
             if (!criterion && fabs(activation_trial[i]) > p.bnds) {
-                (activation_trial[i] > p.bnds ? rts : errs).push_back(i + resDist() + 1); // zero index
+                (activation_trial[i] > p.bnds ? rts : errs).push_back(i + nd_mean_sd(rng) + 1); // zero index
                 criterion = true;
             }
             if (trl < p.nTrlData) trial_matrix[trl][i] = activation_trial[i];
