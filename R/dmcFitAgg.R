@@ -54,7 +54,7 @@
 #'                            list(c("Comp:incomp"), vals = c(540, 120, 150))),
 #'                  Error = list(list(c("Comp:comp"), vals = c(3, 2, 2, 1, 1)),
 #'                             list(c("Comp:incomp"), vals = c(20, 3, 2, 1, 1))))
-#' datOb <- dmcObservedData(dat)
+#' datOb <- dmcObservedData(dat, columns = c("vp", "comp", "rt", "error"))
 #' plot(datOb)
 #' fit <- dmcFitAgg(datOb)
 #' plot(fit, datOb)
@@ -112,7 +112,7 @@ dmcFitAgg <- function(resOb,
   ############################# FIT PROCEDURE ##################################
   if (fitInitialTau) {
     lowestCostValue <- Inf
-    for (t in seq(10, 200, 10)) {
+    for (t in seq(minVals[2], maxVals[2], 10)) {
       resTh <- dmcSim(amp = startVals[1], tau = t, mu = startVals[3],
                       bnds = startVals[4], startVals[5], startVals[6],
                       aaShape = startVals[7],
@@ -126,8 +126,9 @@ dmcFitAgg <- function(resOb,
       }
     }
     startVals[2] <- startTau
-    minVals[2]   <- max(5, startTau - 20)
-    maxVals[2]   <- min(300, startTau + 20)
+    # minVals[2]   <- max(minVals[2], startTau - 20)
+    # maxVals[2]   <- min(maxVals[2], startTau + 20)
+
   }
 
   fit <- optimr::optimr(par = startVals[!as.logical(fixed)], fn = minimizeCostValue,

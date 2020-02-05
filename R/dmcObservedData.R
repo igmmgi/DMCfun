@@ -102,10 +102,33 @@ dmcObservedData <- function(dat,
                             stepCAF = 20,
                             stepDelta = 5,
                             outlier = c(200, 1200),
-                            quantileType = 5) {
+                            quantileType = 5,
+                            columns = c("VP", "Comp", "RT", "Error"),
+                            compCoding = c("comp", "incomp"),
+                            errorCoding = c(0, 1)) {
 
   if (is.character(dat)) {
     dat <- readr::read_tsv(dat, col_names = TRUE)
+  }
+
+  # select required columns
+  dat <- dat %>%
+    dplyr::select(all_of(columns))
+  if (ncol(dat) < 4) {
+    stop("dat does not contain required/requested columns!")
+  }
+
+  # create default column names
+  if (all(names(dat) != c("VP", "Comp", "RT", "Error"))) {
+    names(dat) = c("VP", "Comp", "RT", "Error")
+  }
+
+  # create default column values for comp and error coding
+  if (all(compCoding != c("comp", "incomp"))) {
+    dat$Comp <- ifelse(dat$Comp == compCoding[1], "comp", "incomp")
+  }
+  if (all(errorCoding != c(0, 1))) {
+    dat$Error <- ifelse(dat$Error == errorCoding[1], 0, 1)
   }
 
   rtMin  <- outlier[1]
