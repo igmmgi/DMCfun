@@ -14,8 +14,13 @@
 #' @param newFig TRUE/FALSE
 #' @param VP NULL (aggregated data across all participants) or integer for participant number
 #' @param errorBars TRUE(default)/FALSE Plot errorbars
-#' @param errorBarType sd(default), or se, or ...
-#' @param ... pars
+#' @param errorBarType sd(default), or se
+#' @param ylimRt y-limit for Rt plots
+#' @param ylimEr y-limit for error rate plots
+#' @param ylimCAF y-limit for CAF plot
+#' @param ylimDelta ylimit for delta plot
+#' @param xlimDelta xlimit for delta plot
+#' @param ... additional plot pars
 #'
 #' @return NULL
 #'
@@ -64,7 +69,16 @@ plot.dmcob <- function(x,
                        VP = NULL,
                        errorBars = FALSE,
                        errorBarType = "sd",
+                       ylimRt = c(200, 800),
+                       ylimEr = c(0, 20),
+                       ylimCAF = c(0, 1),
+                       ylimDelta = c(-50, 100),
+                       xlimDelta = c(200, 1000),
                        ...) {
+
+  if (!figType %in% c("summary", "rtCorrect", "errorRate", "rtErrors", "cdf", "caf", "delta", "all")) {
+      stop("figType must be one of \"summary\", \"rtCorrect\", \"errorRate\", \"rtErrors\", \"cdf\", \"delta\" or \"all\"!")
+  }
 
   resetFig = FALSE
   if (newFig) {
@@ -72,6 +86,7 @@ plot.dmcob <- function(x,
   }
 
   if (!is.null(VP)) {
+    # select individual dataset
     if (!VP %in% x$summaryVP$VP) {
       stop("datOb does not contain requested VP!")
     }
@@ -97,21 +112,22 @@ plot.dmcob <- function(x,
                     nrow = 3, ncol = 2, byrow = TRUE))
     }
 
-    plot(x, figType = "rtCorrect", newFig = FALSE, VP = VP, errorBars = errorBars, errorBarType = errorBarType)
-    plot(x, figType = "errorRate", newFig = FALSE, VP = VP, errorBars = errorBars, errorBarType = errorBarType)
-    plot(x, figType = "rtErrors",  newFig = FALSE, VP = VP, errorBars = errorBars, errorBarType = errorBarType)
-    plot(x, figType = "cdf",       newFig = FALSE, VP = VP, errorBars = errorBars, errorBarType = errorBarType)
-    plot(x, figType = "caf",       newFig = FALSE, VP = VP, errorBars = errorBars, errorBarType = errorBarType)
-    plot(x, figType = "delta",     newFig = FALSE, VP = VP, errorBars = errorBars, errorBarType = errorBarType)
+    plot(x, figType = "rtCorrect", newFig = FALSE, VP = VP, errorBars = errorBars, errorBarType = errorBarType, ylimRt = ylimRt, ...)
+    plot(x, figType = "errorRate", newFig = FALSE, VP = VP, errorBars = errorBars, errorBarType = errorBarType, ylimEr = ylimEr, ...)
+    plot(x, figType = "rtErrors",  newFig = FALSE, VP = VP, errorBars = errorBars, errorBarType = errorBarType, ylimRt = ylimRt, ...)
+    plot(x, figType = "cdf",       newFig = FALSE, VP = VP, errorBars = errorBars, errorBarType = errorBarType, ...)
+    plot(x, figType = "caf",       newFig = FALSE, VP = VP, errorBars = errorBars, errorBarType = errorBarType, ylimCAF = ylimCAF, ...)
+    plot(x, figType = "delta",     newFig = FALSE, VP = VP, errorBars = errorBars, errorBarType = errorBarType, ylimDelta = ylimDelta, xlimDelta = xlimDelta, ...)
 
     resetFig <- TRUE
 
   } else if (figType == "rtCorrect") {
 
-    plot(c(1, 2), x$summary$rtCor, type = "b",
-         ylim = c(200, 800), xlim = c(0.5, 2.5),
-         ylab = "RT Correct [ms]", xlab = "", xaxt = "n", cex = 1)
-    axis(1, at = c(1, 2), labels = c("Comp", "Incomp"))
+    plot(c(1, 2), x$summary$rtCor, type = "o",
+         ylim = ylimRt, xlim = c(0.5, 2.5),
+         ylab = "RT Correct [ms]", xlab = "",
+         xaxt = "n", ...)
+    axis(1, at = c(1, 2), labels = c("Compatible", "Incompatible"))
 
     if (errorBars) {
       addErrorBars(c(1,2), x$summary$rtCor, x$summary[[paste0(errorBarType, "RtCor")]])
@@ -119,10 +135,11 @@ plot.dmcob <- function(x,
 
   } else if (figType == "errorRate") {
 
-    plot(c(1, 2), x$summary$perErr, type = "b",
-         ylim = c(0, 20), xlim = c(0.5, 2.5),
-         ylab = "Error Rate [%]", xlab = "", xaxt = "n", cex = 1)
-    axis(1, at = c(1, 2), labels = c("Comp", "Incomp"))
+    plot(c(1, 2), x$summary$perErr, type = "o",
+         ylim = ylimEr, xlim = c(0.5, 2.5),
+         ylab = "Error Rate [%]", xlab = "",
+         xaxt = "n", ...)
+    axis(1, at = c(1, 2), labels = c("Compatible", "Incompatible"))
 
     if (errorBars) {
       addErrorBars(c(1, 2), x$summary$perErr, x$summary[[paste0(errorBarType, "PerErr")]])
@@ -130,10 +147,11 @@ plot.dmcob <- function(x,
 
   } else if (figType == "rtErrors") {
 
-    plot(c(1, 2), x$summary$rtErr, type = "b",
-         ylim = c(200, 800), xlim = c(0.5, 2.5),
-         ylab = "RT Error [ms]", xlab = "", xaxt = "n", cex = 1)
-    axis(1, at = c(1, 2), labels = c("Comp", "Incomp"))
+    plot(c(1, 2), x$summary$rtErr, type = "o",
+         ylim = ylimRt, xlim = c(0.5, 2.5),
+         ylab = "RT Error [ms]", xlab = "",
+         xaxt = "n", ...)
+    axis(1, at = c(1, 2), labels = c("Compatible", "Incompatible"))
 
     if (errorBars) {
       addErrorBars(c(1, 2), x$summary$rtErr, x$summary[[paste0(errorBarType, "RtErr")]])
@@ -143,33 +161,35 @@ plot.dmcob <- function(x,
 
     seqStep <- 100 / (nrow(x$delta) + 1)
 
-    plot(x$delta$meanComp, seq(seqStep, 100 - seqStep, seqStep)/100,
-         type = "b", ylim = c(0, 1), xlim = c(200, 1000),
-         col = "green", ylab = "CDF", xlab = "t [ms]", yaxt = "n", cex = 2)
-    lines(x$delta$meanIncomp, seq(seqStep, 100 - seqStep, seqStep)/100,
-          type = "b", col = "red", cex = 2)
+    plot(x$delta$meanComp, seq(seqStep, 100 - seqStep, seqStep)/100, type = "o",
+         ylim = c(0, 1), xlim = c(200, 1000),
+         ylab = "CDF", xlab = "t [ms]",
+          col = "green",  yaxt = "n", ...)
+    lines(x$delta$meanIncomp, seq(seqStep, 100 - seqStep, seqStep)/100, type = "o", col = "red", ...)
     legend("bottomright", inset = c(0.025, 0.05),
            legend = c("Comp", "Incomp"),
-           lty = c(1, 1), col = c("green", "red"), pch = c(1, 1), cex = 1)
-    axis(2, at = c(0, 0.25, 0.5, 0.75, 1), labels = c("0", ".25", ".5", ".75", "1") )
+           lty = c(1, 1), col = c("green", "red"), pch = c(1, 1))
+    axis(2, at = c(0, 0.25, 0.5, 0.75, 1), labels = c("0", ".25", ".5", ".75", "1"))
 
   } else if (figType == "caf") {
 
-    plot(x$caf$accPer[x$caf$Comp == "comp"],  type = "b", col = "green",
-         ylab = "CAF", ylim = c(0, 1), yaxt = "n",
-         xlab = "RT Bin", xaxt = "n", cex = 2)
-    lines(x$caf$accPer[x$caf$Comp == "incomp"],  type = "b", col = "red", cex = 2)
+    plot(x$caf$accPer[x$caf$Comp == "comp"],  type = "o",
+         ylim = ylimCAF,
+         ylab = "CAF", xlab = "RT Bin",
+         col = "green", yaxt = "n", ...)
+    lines(x$caf$accPer[x$caf$Comp == "incomp"],  type = "b", col = "red", ...)
     legend("bottomright", inset = c(0.025, 0.05),
            legend = c("Comp", "Incomp"),
-           lty = c(1, 1), col = c("green", "red"), pch = c(1, 1), cex = 1)
+           lty = c(1, 1), col = c("green", "red"), pch = c(1, 1))
     axis(1, at = seq(1, nrow(x$caf)/2, 1))
     axis(2, at = c(0, 0.25, 0.5, 0.75, 1), labels = c("0", ".25", ".5", ".75", "1") )
 
   } else if (figType == "delta") {
 
-    plot(x$delta$meanBin, x$delta$meanEffect, type = "b",
-         ylim = c(-50, 150), xlim = c(200, 1000),
-         ylab = expression("Delta"), xlab = "t [ms]", cex = 1)
+    plot(x$delta$meanBin, x$delta$meanEffect, type = "o",
+         ylim = ylimDelta, xlim = xlimDelta,
+         ylab = expression("Delta"), xlab = "t [ms]",
+         ...)
 
     if (errorBars) {
       errorBarCol <- which(grepl(errorBarType, colnames(x$delta)))
@@ -181,12 +201,12 @@ plot.dmcob <- function(x,
 
   } else if (figType == "all") {
 
-    plot(x, figType = "rtCorrect", newFig = TRUE, VP = VP, errorBars = errorBars, errorBarType = errorBarType)
-    plot(x, figType = "errorRate", newFig = TRUE, VP = VP, errorBars = errorBars, errorBarType = errorBarType)
-    plot(x, figType = "rtErrors",  newFig = TRUE, VP = VP, errorBars = errorBars, errorBarType = errorBarType)
-    plot(x, figType = "cdf",       newFig = TRUE, VP = VP, errorBars = errorBars, errorBarType = errorBarType)
-    plot(x, figType = "caf",       newFig = TRUE, VP = VP, errorBars = errorBars, errorBarType = errorBarType)
-    plot(x, figType = "delta",     newFig = TRUE, VP = VP, errorBars = errorBars, errorBarType = errorBarType)
+    plot(x, figType = "rtCorrect", newFig = TRUE, VP = VP, errorBars = errorBars, errorBarType = errorBarType, ylimRt = ylimRt, ...)
+    plot(x, figType = "errorRate", newFig = TRUE, VP = VP, errorBars = errorBars, errorBarType = errorBarType, ylimEr = ylimEr, ...)
+    plot(x, figType = "rtErrors",  newFig = TRUE, VP = VP, errorBars = errorBars, errorBarType = errorBarType, ylimRt = ylimRt, ...)
+    plot(x, figType = "cdf",       newFig = TRUE, VP = VP, errorBars = errorBars, errorBarType = errorBarType, ...)
+    plot(x, figType = "caf",       newFig = TRUE, VP = VP, errorBars = errorBars, errorBarType = errorBarType, ylimCAF = ylimCAF, ...)
+    plot(x, figType = "delta",     newFig = TRUE, VP = VP, errorBars = errorBars, errorBarType = errorBarType, ylimDelta = ylimDelta, xlimDelta = xlimDelta, ...)
 
   }
 
