@@ -169,7 +169,7 @@ plot.dmcob <- function(x,
     legend("bottomright", inset = c(0.025, 0.05),
            legend = c("Comp", "Incomp"),
            lty = c(1, 1), col = c("green", "red"), pch = c(1, 1))
-    axis(2, at = c(0, 0.25, 0.5, 0.75, 1), labels = c("0", ".25", ".5", ".75", "1"))
+    axis(2, at = seq(0, 1, 0.25), labels = as.character(seq(0, 1, 0.25)))
 
   } else if (figType == "caf") {
 
@@ -182,7 +182,7 @@ plot.dmcob <- function(x,
            legend = c("Comp", "Incomp"),
            lty = c(1, 1), col = c("green", "red"), pch = c(1, 1))
     axis(1, at = seq(1, nrow(x$caf)/2, 1))
-    axis(2, at = c(0, 0.25, 0.5, 0.75, 1), labels = c("0", ".25", ".5", ".75", "1") )
+    axis(2, at = seq(0, 1, 0.2), labels = as.character(seq(0, 1, 0.2)))
 
   } else if (figType == "delta") {
 
