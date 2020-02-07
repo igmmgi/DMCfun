@@ -119,15 +119,15 @@ dmcObservedData <- function(dat,
   }
 
   # create default column names
-  if (all(names(dat) != c("VP", "Comp", "RT", "Error"))) {
+  if (any(names(dat) != c("VP", "Comp", "RT", "Error"))) {
     names(dat) = c("VP", "Comp", "RT", "Error")
   }
 
   # create default column values for comp and error coding
-  if (all(compCoding != c("comp", "incomp"))) {
+  if (any(compCoding != c("comp", "incomp"))) {
     dat$Comp <- ifelse(dat$Comp == compCoding[1], "comp", "incomp")
   }
-  if (all(errorCoding != c(0, 1))) {
+  if (any(errorCoding != c(0, 1))) {
     dat$Error <- ifelse(dat$Error == errorCoding[1], 0, 1)
   }
 
