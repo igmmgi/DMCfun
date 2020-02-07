@@ -14,7 +14,12 @@
 #' @param figType summary, rtCorrect, errorRate, rtErrors, cdf, caf, delta, all
 #' @param newFig TRUE/FALSE
 #' @param VP NULL (aggregated data across all participants) or integer for participant number
-#' @param ... pars
+#' @param ylimRt ylimit for Rt plots
+#' @param ylimEr ylimit for error rate plots
+#' @param ylimCAF ylimit for CAF plot
+#' @param ylimDelta ylimit for delta plot
+#' @param xlimDelta xlimit for delta plot
+#' @param ... additional plot pars
 #'
 #' @return NULL
 #'
@@ -24,7 +29,7 @@
 #'
 #' # Example 1
 #' resTh <- dmcFitAgg(flankerData1, nTrl = 5000)
-#' plot(resTh, flankerData1, cex = 1)
+#' plot(resTh, flankerData1)
 #'
 #' # Example 2
 #' resTh <- dmcFitAgg(flankerData2, nTrl = 5000)
@@ -47,7 +52,16 @@ plot.dmcfit <- function(x,
                         figType = "summary",
                         newFig = TRUE,
                         VP     = NULL,
+                        ylimRt = c(200, 800),
+                        ylimEr = c(0, 20),
+                        ylimCAF = c(0, 1),
+                        ylimDelta = c(-50, 100),
+                        xlimDelta = c(200, 1000),
                         ...) {
+
+  if (!figType %in% c("summary", "rtCorrect", "errorRate", "rtErrors", "cdf", "caf", "delta", "all")) {
+      stop("figType must be one of \"summary\", \"rtCorrect\", \"errorRate\", \"rtErrors\", \"cdf\", \"delta\" or \"all\"!")
+  }
 
   resetFig = FALSE
   if (newFig) {
@@ -79,20 +93,20 @@ plot.dmcfit <- function(x,
                     nrow = 3, ncol = 2, byrow = TRUE))
     }
 
-    plot(x, y, figType = "rtCorrect", newFig = FALSE, VP = VP, ...)
-    plot(x, y, figType = "errorRate", newFig = FALSE, VP = VP, ...)
-    plot(x, y, figType = "rtErrors",  newFig = FALSE, VP = VP, ...)
+    plot(x, y, figType = "rtCorrect", newFig = FALSE, VP = VP, ylimRt = ylimRt, ...)
+    plot(x, y, figType = "errorRate", newFig = FALSE, VP = VP, ylimEr = ylimEr, ...)
+    plot(x, y, figType = "rtErrors",  newFig = FALSE, VP = VP, ylimRt = ylimRt, ...)
     plot(x, y, figType = "cdf",       newFig = FALSE, VP = VP, ...)
-    plot(x, y, figType = "caf",       newFig = FALSE, VP = VP, ...)
-    plot(x, y, figType = "delta",     newFig = FALSE, VP = VP, ...)
+    plot(x, y, figType = "caf",       newFig = FALSE, VP = VP, ylimCAF = ylimCAF, ...)
+    plot(x, y, figType = "delta",     newFig = FALSE, VP = VP, ylimDelta = ylimDelta, xlimDelta = xlimDelta, ...)
 
     resetFig <- TRUE
 
   } else if (figType == "rtCorrect") {
 
     plot(y$summary$rtCor, type = "o",
-         ylim = c(200, 800), ylab = "RT Correct [ms]",
-         xlim = c(0.5, 2.5), xlab = "", xaxt = "n", ...)
+         ylim = ylimRt, xlim = c(0.5, 2.5),
+         ylab = "RT Correct [ms]", xlab = "", xaxt = "n", ...)
 
     lines(c(x[[1]]$summary$rtCor), type = "o", lty = 2, ...)
     axis(1, at = c(1, 2), labels = c("Comp", "Incomp"))
@@ -103,9 +117,8 @@ plot.dmcfit <- function(x,
   } else if (figType == "errorRate") {
 
     plot(y$summary$perErr, type = "o",
-         ylim = c(0, 20), xlim = c(0.5, 2.5),
-         ylab = "Error Rate [%]", xlab = "",
-         xaxt = "n", ...)
+         ylim = ylimEr, xlim = c(0.5, 2.5),
+         ylab = "Error Rate [%]", xlab = "", xaxt = "n", ...)
     lines(x[[1]]$summary$perErr, type = "b", lty = 2, ...)
     axis(1, at = c(1, 2), labels = c("Compatible", "Incompatible"))
     legend("topleft", inset = c(0.025, 0.05),
@@ -115,9 +128,8 @@ plot.dmcfit <- function(x,
   } else if (figType == "rtErrors") {
 
     plot(y$summary$rtErr, type = "o",
-         ylim = c(200, 800), xlim = c(0.5, 2.5),
-         ylab = "RT Error [ms]", xlab = "",
-         xaxt = "n", ...)
+         ylim = ylimRt, xlim = c(0.5, 2.5),
+         ylab = "RT Error [ms]", xlab = "", xaxt = "n", ...)
     lines(x[[1]]$summary$rtErr, type = "b", lty = 2, ...)
     axis(1, at = c(1, 2), labels = c("Compatible", "Incompatible"))
     legend("topleft", inset = c(0.025, 0.05),
@@ -143,7 +155,7 @@ plot.dmcfit <- function(x,
   } else if (figType == "caf") {
 
     plot(y$caf$accPer[y$caf$Comp == "comp"], type = "p",
-         ylim = c(0, 1),
+         ylim = ylimCAF,
          ylab = "CAF", xlab = "RT Bin",
          yaxt = "n", xaxt = "n",
          col = "green", ...)
@@ -160,7 +172,7 @@ plot.dmcfit <- function(x,
   } else if (figType == "delta") {
 
     plot(y$delta$meanBin, y$delta$meanEffect,
-         ylim = c(-50, 150), xlim = c(200, 1000),
+         ylim = ylimDelta, xlim = xlimDelta,
          ylab = expression("Delta"), xlab = "t [ms]", ...)
     lines(x$delta$meanBin, x$delta$meanEffect, ...)
     legend("bottomright", inset = c(0.025, 0.05),
@@ -169,12 +181,12 @@ plot.dmcfit <- function(x,
 
   } else if (figType == "all") {
 
-    plot(x, y, figType = "rtCorrect", newFig = TRUE, VP = VP, ...)
-    plot(x, y, figType = "errorRate", newFig = TRUE, VP = VP, ...)
-    plot(x, y, figType = "rtErrors",  newFig = TRUE, VP = VP, ...)
+    plot(x, y, figType = "rtCorrect", newFig = TRUE, VP = VP, ylimRt = ylimRt, ...)
+    plot(x, y, figType = "errorRate", newFig = TRUE, VP = VP, ylimEr = ylimEr, ...)
+    plot(x, y, figType = "rtErrors",  newFig = TRUE, VP = VP, ylimRt = ylimRt, ...)
     plot(x, y, figType = "cdf",       newFig = TRUE, VP = VP, ...)
-    plot(x, y, figType = "caf",       newFig = TRUE, VP = VP, ...)
-    plot(x, y, figType = "delta",     newFig = TRUE, VP = VP, ...)
+    plot(x, y, figType = "caf",       newFig = TRUE, VP = VP, ylimCAF = ylimCAF, ...)
+    plot(x, y, figType = "delta",     newFig = TRUE, VP = VP, ylimDelta = ylimDelta, xlimDelta = xlimDelta, ...)
 
   }
 

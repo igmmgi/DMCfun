@@ -6,8 +6,8 @@
 \usage{
 \method{plot}{dmclist}(
   x,
-  ylimit = c(-50, 150),
-  xlimit = NULL,
+  ylim = c(-50, 150),
+  xlim = NULL,
   col = c("black", "lightgrey"),
   lineType = "l",
   legendPos = "topleft",
@@ -17,9 +17,9 @@
 \arguments{
 \item{x}{Output from dmcSims}
 
-\item{ylimit}{ylimit for delta plot}
+\item{ylim}{ylimit for delta plot}
 
-\item{xlimit}{xlimit for delta plot}
+\item{xlim}{xlimit for delta plot}
 
 \item{col}{# color range start/end color}
 
@@ -46,7 +46,7 @@ library(DMCfun)
 # Example 1
 params <- list(amp = seq(20, 30, 2), tau = c(20, 250))
 dmc = dmcSims(params)
-plot(dmc)
+plot(dmc, ncol = 2, xlim = c(0, 1300), ylim = c(-100, 200))
 
 # Example 2
 params <- list(amp=c(10, 20), tau = seq(20, 100, 20), mu = seq(0.2, 0.5, 0.1))

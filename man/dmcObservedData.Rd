@@ -9,7 +9,10 @@ dmcObservedData(
   stepCAF = 20,
   stepDelta = 5,
   outlier = c(200, 1200),
-  quantileType = 5
+  quantileType = 5,
+  columns = c("VP", "Comp", "RT", "Error"),
+  compCoding = c("comp", "incomp"),
+  errorCoding = c(0, 1)
 )
 }
 \arguments{
@@ -24,6 +27,12 @@ in 19 CAF bins positioned at 5, 10, 15, ... 85, 90, 95\%.}
 \item{outlier}{Outlier limits e.g., c(200, 1200)}
 
 \item{quantileType}{Argument (1-9) from R function quantile specifying the algorithm (?quantile)}
+
+\item{columns}{Name of required columns DEFAULT = c("VP", "Comp", "RT", "Error")}
+
+\item{compCoding}{Conding for compatibility DEFAULT = c("comp", "incomp")}
+
+\item{errorCoding}{Coding for errors DEFAULT = c(0, 1))}
 }
 \value{
 DataFrame

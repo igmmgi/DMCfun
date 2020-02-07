@@ -8,10 +8,10 @@
   x,
   figType = "summary1",
   newFig = TRUE,
-  ylimitCAF = c(0, 1),
-  ylimitDelta = c(-50, 150),
-  ylimitRt = c(200, 800),
-  ylimitErr = c(0, 20),
+  ylimCAF = c(0, 1),
+  ylimDelta = c(-50, 150),
+  ylimRt = c(200, 800),
+  ylimErr = c(0, 20),
   errorBars = TRUE,
   ...
 )
@@ -23,17 +23,17 @@
 
 \item{newFig}{TRUE/FALSE}
 
-\item{ylimitCAF}{ylimit for CAF plot}
+\item{ylimCAF}{ylimit for CAF plot}
 
-\item{ylimitDelta}{ylimit for delta plot}
+\item{ylimDelta}{ylimit for delta plot}
 
-\item{ylimitRt}{ylimit for rt plot}
+\item{ylimRt}{ylimit for rt plot}
 
-\item{ylimitErr}{ylimit for er plot}
+\item{ylimErr}{ylimit for er plot}
 
 \item{errorBars}{TRUE/FALSE}
 
-\item{...}{pars}
+\item{...}{additional plot pars}
 }
 \description{
 Plot the simulation results from the output of dmcSim. The plot

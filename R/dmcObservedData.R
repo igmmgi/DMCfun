@@ -11,6 +11,9 @@
 #' in 19 CAF bins positioned at 5, 10, 15, ... 85, 90, 95\%.
 #' @param outlier Outlier limits e.g., c(200, 1200)
 #' @param quantileType Argument (1-9) from R function quantile specifying the algorithm (?quantile)
+#' @param columns Name of required columns DEFAULT = c("VP", "Comp", "RT", "Error")
+#' @param compCoding Conding for compatibility DEFAULT = c("comp", "incomp")
+#' @param errorCoding Coding for errors DEFAULT = c(0, 1))
 #'
 #' @return DataFrame
 #'
@@ -113,7 +116,7 @@ dmcObservedData <- function(dat,
 
   # select required columns
   dat <- dat %>%
-    dplyr::select(all_of(columns))
+    dplyr::select(tidyselect::all_of(columns))
   if (ncol(dat) < 4) {
     stop("dat does not contain required/requested columns!")
   }

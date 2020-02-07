@@ -4,7 +4,19 @@
 \alias{plot.dmcfit}
 \title{plot.dmcfit}
 \usage{
-\method{plot}{dmcfit}(x, y, figType = "summary", newFig = TRUE, VP = NULL, ...)
+\method{plot}{dmcfit}(
+  x,
+  y,
+  figType = "summary",
+  newFig = TRUE,
+  VP = NULL,
+  ylimRt = c(200, 800),
+  ylimEr = c(0, 20),
+  ylimCAF = c(0, 1),
+  ylimDelta = c(-50, 100),
+  xlimDelta = c(200, 1000),
+  ...
+)
 }
 \arguments{
 \item{x}{Output from dmcFit}
@@ -17,7 +29,17 @@
 
 \item{VP}{NULL (aggregated data across all participants) or integer for participant number}
 
-\item{...}{pars}
+\item{ylimRt}{ylimit for Rt plots}
+
+\item{ylimEr}{ylimit for error rate plots}
+
+\item{ylimCAF}{ylimit for CAF plot}
+
+\item{ylimDelta}{ylimit for delta plot}
+
+\item{xlimDelta}{xlimit for delta plot}
+
+\item{...}{additional plot pars}
 }
 \description{
 Plot the simulation results from the output of dmcSim. The plot

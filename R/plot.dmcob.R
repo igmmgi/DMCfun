@@ -15,9 +15,9 @@
 #' @param VP NULL (aggregated data across all participants) or integer for participant number
 #' @param errorBars TRUE(default)/FALSE Plot errorbars
 #' @param errorBarType sd(default), or se
-#' @param ylimRt y-limit for Rt plots
-#' @param ylimEr y-limit for error rate plots
-#' @param ylimCAF y-limit for CAF plot
+#' @param ylimRt ylimit for Rt plots
+#' @param ylimEr ylimit for error rate plots
+#' @param ylimCAF ylimit for CAF plot
 #' @param ylimDelta ylimit for delta plot
 #' @param xlimDelta xlimit for delta plot
 #' @param ... additional plot pars
