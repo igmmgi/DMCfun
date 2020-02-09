@@ -46,3 +46,7 @@ calculateCAF <- function(dat, stepCAF = 20){
     return(1 - dat$caf)
 
 }
+
+
+
+

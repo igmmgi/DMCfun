@@ -18,7 +18,6 @@
 #' fitAgg <- mean(fitVPs)
 #' summary(fitAgg)
 #' plot(fitAgg, flankerData1)
-#'
 #' }
 #'
 #' @export

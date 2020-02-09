@@ -2,8 +2,8 @@
 #'
 #' @description Add error bars to current plot.
 #'
-#' @param xpos x-position of datapoints
-#' @param ypos y-position of datapoints
+#' @param xpos x-position of data-points
+#' @param ypos y-position of data-points
 #' @param errorSize +- size of error bars
 #' @param arrowSize Width of the errorbar arrow
 #'

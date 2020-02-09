@@ -12,7 +12,7 @@
 #' @param outlier Outlier limits e.g., c(200, 1200)
 #' @param quantileType Argument (1-9) from R function quantile specifying the algorithm (?quantile)
 #' @param columns Name of required columns DEFAULT = c("VP", "Comp", "RT", "Error")
-#' @param compCoding Conding for compatibility DEFAULT = c("comp", "incomp")
+#' @param compCoding Coding for compatibility DEFAULT = c("comp", "incomp")
 #' @param errorCoding Coding for errors DEFAULT = c(0, 1))
 #'
 #' @return DataFrame
