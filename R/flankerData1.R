@@ -3,7 +3,7 @@
 #'
 #' \itemize{
 #'   \item $summary --> Reaction time correct, standard deviation correct, percentage
-#'   error, reaction tiime incorrect, and standard deviation for incorrect trials
+#'   error, reaction time incorrect, and standard deviation for incorrect trials
 #'   for both compatible and incompatible trials
 #'   \item $caf --> Proportion correct for compatible and incompatible trials across
 #'   5 bins

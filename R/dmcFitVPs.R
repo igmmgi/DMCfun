@@ -11,7 +11,7 @@
 #' @param minVals Minimum values for the to-be estimated parameters
 #' @param maxVals Maximum values for the to-be estimated parameters
 #' @param fixed Fix parameter to starting value
-#' @param parScale Scalling values for the to-be estimated parameters
+#' @param parScale Scaling values for the to-be estimated parameters
 #' @param fitInitialTau TRUE/FALSE
 #' @param stepCAF Step size for the CAF bins. For example, a step size of 20 would result
 #' in 5 CAF bins centered on 10, 30, 50, 70, and 90\%.
