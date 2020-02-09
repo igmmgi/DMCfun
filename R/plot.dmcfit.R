@@ -28,7 +28,7 @@
 #' library(DMCfun)
 #'
 #' # Example 1
-#' resTh <- dmcFitAgg(flankerData1, nTrl = 5000)
+#' resTh <- dmcFitAgg(flankerData1, nTrl = 15000)
 #' plot(resTh, flankerData1)
 #'
 #' # Example 2

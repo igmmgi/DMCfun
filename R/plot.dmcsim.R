@@ -168,13 +168,18 @@ plot.dmcsim <- function(x,
 
   } else if (figType == "cdf") {
 
-    plot(ecdf(x$sim$rts_comp), col = "green", main = NA,
-         xlab = "Time [ms]", xlim = c(0, x$prms$tmax),
-         ylab = "CDF", yaxt = "n")
-    lines(ecdf(x$sim$rts_incomp), col = "red")
-    legend("bottomright", legend = c("Compatible", "Incompatible"), col = c("green", "red"),
-           lty = c(1, 1), inset = c(0.05, 0.05))
-    axis(2, at = seq(0, 1, 0.25), labels = as.character(seq(0, 1, 0.25)))
+    density_comp <- density(x$sim$rts_comp)
+    cdf_comp     <- cumsum(density_comp$y * diff(density_comp$x[1:2]))
+
+    density_incomp <- density(x$sim$rts_incomp)
+    cdf_incomp     <- cumsum(density_incomp$y * diff(density_incomp$x[1:2]))
+
+    plot(density_comp$x, cdf_comp, type="l", col = "green",
+         ylab = "CDF", xlab = "Time [ms]",
+         xlim = c(0, x$prms$tmax))
+    lines(density_incomp$x, cdf_incomp, type = "l", col = "red")
+    abline(h = 0, lty = 2)
+    abline(h = 1, lty = 2)
 
   } else if (figType == "caf") {
 
