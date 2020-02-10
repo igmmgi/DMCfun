@@ -3,7 +3,7 @@
 #' @description Draw n random numbers from a beta distribution with shape and
 #' scale between limits
 #'
-#' @param n The number of random number to return.
+#' @param n The number of random numbers to return.
 #' @param shape Shape parameter of the underlying beta distribution
 #' @param lim The min/max limits to which to scale the distribution
 #'
