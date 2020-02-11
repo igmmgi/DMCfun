@@ -127,11 +127,10 @@ plot.dmcsim <- function(x,
 
   } else if (figType == "activation") {
 
-    plot(c(1:x$prms$tmax), x$sim$eq4, type = "l",
+    plot(c(1:x$prms$tmax), x$sim$eq4, type = "l", lty = 2, col = "green",
          ylim = c(-x$prms$bnds - 20, x$prms$bnds + 20),
          xlab = "", ylab = "E[X(t)]", ...)
-    lines(c(1:x$prms$tmax), -x$sim$eq4, type = "l", lty = 2, ...)
-    lines(c(1:x$prms$tmax), -x$sim$eq4, ...)
+    lines(c(1:x$prms$tmax), -x$sim$eq4, type = "l", lty = 2, col = "red", ...)
     lines(c(1:x$prms$tmax), cumsum(rep(mean(x$sim$dr_sp[1]), x$prms$tmax)), ...)
     lines(c(1:x$prms$tmax), x$sim$activation_comp,   col = "green", ...)
     lines(c(1:x$prms$tmax), x$sim$activation_incomp, col = "red", ...)
