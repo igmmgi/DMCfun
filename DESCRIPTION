@@ -22,7 +22,10 @@ Imports:
   tibble,
   tidyr,
   tidyselect,
-  usethis
+  usethis,
+  doSNOW,
+  parallel,
+  doParallel
 LinkingTo: Rcpp, BH
 RoxygenNote: 7.0.2
 LazyData: true

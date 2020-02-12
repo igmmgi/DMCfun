@@ -13,6 +13,7 @@
 #' @param fixed Fix parameter to starting value
 #' @param parScale Scaling values for the to-be estimated parameters
 #' @param fitInitialTau TRUE/FALSE
+#' @param fitInitialGrid TRUE/FALSE
 #' @param stepCAF Step size for the CAF bins. For example, a step size of 20 would result
 #' in 5 CAF bins centered on 10, 30, 50, 70, and 90\%.
 #' @param stepDelta Step size for the Delta bins. For example, a step size of 5 would result
@@ -27,7 +28,7 @@
 #' library(DMCfun)
 #'
 #' # Example 1: Flanker data from Ulrich et al. (2015)
-#' fit <- dmcFitAgg(flankerData1)
+#' fit <- dmcFitAgg(flankerData1, fitInitialTau = FALSE, fitInitialGrid = TRUE)
 #' plot(fit, flankerData1)
 #' summary(fit)
 #'
@@ -71,6 +72,7 @@ dmcFitAgg <- function(resOb,
                       fixed          = c( 0,   0, 0,     0,   0,   0, 0, 0),
                       parScale       = startVals/min(startVals),
                       fitInitialTau  = TRUE,
+                      fitInitialGrid  = FALSE,
                       stepCAF        = 20,
                       stepDelta      = 5,
                       printInputArgs = TRUE,
@@ -111,23 +113,73 @@ dmcFitAgg <- function(resOb,
 
   ############################# FIT PROCEDURE ##################################
   if (fitInitialTau) {
-    lowestCostValue <- Inf
-    for (t in seq(minVals[2], maxVals[2], 10)) {
-      resTh <- dmcSim(amp = startVals[1], tau = t, mu = startVals[3],
-                      bnds = startVals[4], startVals[5], startVals[6],
+
+    cl <- parallel::makeCluster(parallel::detectCores())
+    doSNOW::registerDoSNOW(cl)
+
+    start_vals_tau <- seq(minVals[2], maxVals[2], length.out = 10)
+    message("Searching initial tau gridspace: N = ", length(start_vals_tau))
+
+    # progress bar
+    pb <- txtProgressBar(min = 0, max = length(start_vals_tau), style = 3)
+    progress <- function(n) setTxtProgressBar(pb, n)
+
+    costValue <- foreach(i = start_vals_tau, .packages = "DMCfun", .options.snow = list(progress = progress)) %dopar% {
+
+      resTh <- dmcSim(amp = startVals[1], tau = i, mu = startVals[3],
+                      bnds = startVals[4], resMean = startVals[5], resSD = startVals[6],
                       aaShape = startVals[7],
                       varSP = TRUE, spShape = startVals[8], spLim = c(-startVals[4], startVals[4]),
-                      nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,
+                      nTrl = 10000, stepDelta = stepDelta, stepCAF = stepCAF,
                       printInputArgs = printInputArgs, printResults = FALSE)
-      costValue <- calculateCostValue(resTh, resOb)
-      if (costValue < lowestCostValue) {
-        lowestCostValue <- costValue
-        startTau <- t
-      }
+      return(calculateCostValue(resTh, resOb))
     }
-    startVals[2] <- startTau
+
+    # adjust start, min and max vals
+    startVals[2] <- as.numeric(start_vals_tau[which.min(costValue)])
+    minVals[2]   <- startVals[2] * 0.8
+    maxVals[2]   <- startVals[2] * 1.2
+
+    close(pb)
+    stopCluster(cl)
+
   }
 
+  ############################# FIT PROCEDURE ##################################
+  if (fitInitialGrid) {
+
+    cl <- makeCluster(parallel::detectCores())
+    registerDoSNOW(cl)
+
+    start_vals <- expand.grid(Map(seq, minVals, maxVals, length.out = 5))
+    message("Searching initial parameter gridspace: N = ", nrow(start_vals))
+
+    # progress bar
+    pb <- txtProgressBar(min = 0, max = nrow(start_vals), style = 3)
+    progress <- function(n) setTxtProgressBar(pb, n)
+
+    costValue <- foreach(i = 1:nrow(start_vals), .packages = "DMCfun", .options.snow = list(progress = progress)) %dopar% {
+
+      resTh <- dmcSim(amp = start_vals[i, 1], tau = start_vals[i, 2], mu = start_vals[i, 3],
+                      bnds = start_vals[i, 4], resMean = start_vals[i, 5], resSD = start_vals[i, 6],
+                      aaShape = start_vals[i, 7],
+                      varSP = TRUE, spShape = start_vals[i, 8], spLim = c(-start_vals[i, 4], start_vals[i, 4]),
+                      nTrl = 10000, stepDelta = stepDelta, stepCAF = stepCAF,
+                      printInputArgs = printInputArgs, printResults = FALSE)
+      return(calculateCostValue(resTh, resOb))
+    }
+
+    # adjust start, min and max vals
+    startVals <- as.numeric(start_vals[which.min(costValue), ])
+    minVals <- startVals * 0.8
+    maxVals <- startVals * 1.2
+
+    close(pb)
+    stopCluster(cl)
+
+  }
+
+  # optimize
   fit <- optimr::optimr(par = startVals[!as.logical(fixed)], fn = minimizeCostValue,
                         prms = prms, fixed = fixed, resOb = resOb,
                         nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,
