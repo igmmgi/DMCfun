@@ -28,7 +28,7 @@
 #' library(DMCfun)
 #'
 #' # Example 1: Flanker data from Ulrich et al. (2015)
-#' fit <- dmcFitAgg(flankerData1)
+#' fit <- dmcFitAgg(flankerData1, fitInitialTau = TRUE, fitInitialGrid = TRUE)
 #' plot(fit, flankerData1)
 #' summary(fit)
 #'
@@ -130,7 +130,7 @@ dmcFitAgg <- function(resOb,
                       bnds = startVals[4], resMean = startVals[5], resSD = startVals[6],
                       aaShape = startVals[7],
                       varSP = TRUE, spShape = startVals[8], spLim = c(-startVals[4], startVals[4]),
-                      nTrl = 10000, stepDelta = stepDelta, stepCAF = stepCAF,
+                      nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,
                       printInputArgs = printInputArgs, printResults = FALSE)
       return(calculateCostValue(resTh, resOb))
     }
@@ -149,7 +149,7 @@ dmcFitAgg <- function(resOb,
   if (fitInitialGrid) {
 
     cl <- makeCluster(parallel::detectCores())
-    registerDoSNOW(cl)
+    doSNOW::registerDoSNOW(cl)
 
     start_vals <- expand.grid(Map(seq, minVals, maxVals, length.out = 5))
     message("Searching initial parameter gridspace: N = ", nrow(start_vals))
