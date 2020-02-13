@@ -24,7 +24,6 @@ Imports:
   tidyselect,
   usethis,
   doSNOW,
-  parallel,
   doParallel
 LinkingTo: Rcpp, BH
 RoxygenNote: 7.0.2
