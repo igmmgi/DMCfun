@@ -10,9 +10,11 @@
 #' @param startVals Starting values for to-be estimated parameters
 #' @param minVals Minimum values for the to-be estimated parameters
 #' @param maxVals Maximum values for the to-be estimated parameters
-#' @param fixed Fix parameter to starting value
+#' @param fixedFit Fix parameter to starting value
 #' @param parScale Scaling values for the to-be estimated parameters
-#' @param fitInitialTau TRUE/FALSE
+#' @param fitInitialGrid TRUE/FALSE (NB. overrides fitInitialTau)
+#' @param fitInitialGridN 10
+#' @param fixedGrid Fix parameter for initial grid search
 #' @param stepCAF Step size for the CAF bins. For example, a step size of 20 would result
 #' in 5 CAF bins centered on 10, 30, 50, 70, and 90\%.
 #' @param stepDelta Step size for the Delta bins. For example, a step size of 5 would result
@@ -45,18 +47,20 @@
 #'
 #' @export
 dmcFitVPs <- function(resOb,
-                      nTrl           = 50000,
-                      startVals      = c(20, 100, 0.5,  75, 300,  30, 2, 3),
-                      minVals        = c(10,   5, 0.1,  20, 200,   5, 1, 2),
-                      maxVals        = c(30, 300, 1.0, 150, 800, 100, 3, 4),
-                      fixed          = c(0, 0, 0, 0, 0, 0,  0, 0),
-                      parScale       = startVals/min(startVals),
-                      fitInitialTau  = TRUE,
-                      stepCAF        = 20,
-                      stepDelta      = 5,
-                      VP             = c(),
-                      printInputArgs = TRUE,
-                      printResults   = FALSE) {
+                      nTrl             = 50000,
+                      startVals        = c(20, 100, 0.5,  75, 300,  30, 2, 3),
+                      minVals          = c(10,   5, 0.1,  20, 200,   5, 1, 2),
+                      maxVals          = c(30, 300, 1.0, 150, 800, 100, 3, 4),
+                      fixedFit         = c( 0,   0, 0,     0,   0,   0, 0, 0),
+                      parScale         = startVals/min(startVals),
+                      fitInitialGrid   = TRUE,
+                      fitInitialGridN  = 10,                                    # reduce if grid search 3/4+ parameters
+                      fixedGrid        = c( 1,   0, 1,     1,   1,   1, 1, 1),  # only fit tau
+                      stepCAF          = 20,
+                      stepDelta        = 5,
+                      VP               = c(),
+                      printInputArgs   = TRUE,
+                      printResults     = FALSE) {
 
   if (length(VP) == 0) {
     # fit all individual VPs in data
@@ -70,17 +74,19 @@ dmcFitVPs <- function(resOb,
                     cafAgg = resOb$cafVP[resOb$cafVP$VP == vp,])
 
     dmcfit[[vp]] <- dmcFitAgg(resObVP,
-                              nTrl           = nTrl,
-                              startVals      = startVals,
-                              minVals        = minVals,
-                              maxVals        = maxVals,
-                              fixed          = fixed,
-                              parScale       = parScale,
-                              fitInitialTau  = fitInitialTau,
-                              stepCAF        = stepCAF,
-                              stepDelta      = stepDelta,
-                              printInputArgs = printInputArgs,
-                              printResults   = printResults)
+                              nTrl             = nTrl,
+                              startVals        = startVals,
+                              minVals          = minVals,
+                              maxVals          = maxVals,
+                              fixedFit         = fixedFit,
+                              parScale         = parScale,
+                              fitInitialGrid   = fitInitialGrid,
+                              fitInitialGridN  = fitInitialGridN, # reduce if grid search 3/4+ parameters
+                              fixedGrid        = fixedGrid,       # only fit tau
+                              stepCAF          = stepCAF,
+                              stepDelta        = stepDelta,
+                              printInputArgs   = printInputArgs,
+                              printResults     = printResults)
 
   }
 

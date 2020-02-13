@@ -20,7 +20,7 @@
 #' @examples
 #' \dontrun{
 #' library(psychReport)
-#' requiredPackages(c("DMCfun",  "ez", "dplyr"))
+#' requiredPackages(c("DMCfun", "ez", "dplyr"))
 #'
 #' # Example 1
 #' # datOb <- dmcObservedData("flankerData1.txt")
@@ -89,14 +89,14 @@
 #'
 #' }
 #' # Example 6
-#' dat <- createDF(nVP = 50, nTrl = 50,
+#' dat <- createDF(nVP = 50, nTrl = 500,
 #'                 design = list("Comp" = c("comp", "incomp")))
 #' dat <- addDataDF(dat,
 #'                  RT = list(list(c("Comp:comp"), vals = c(500, 75, 120)),
 #'                            list(c("Comp:incomp"), vals = c(530, 75, 100))),
 #'                  Error = list(list(c("Comp:comp"), vals = c(3, 2, 2, 1, 1)),
 #'                             list(c("Comp:incomp"), vals = c(15, 3, 2, 1, 1))))
-#' datOb <- dmcObservedData(dat)
+#' datOb <- dmcObservedData(dat, stepCAF = 10, stepDelta = 10)
 #' plot(datOb)
 #' plot(datOb, VP = 1)
 #'

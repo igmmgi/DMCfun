@@ -10,9 +10,11 @@ dmcFitVPs(
   startVals = c(20, 100, 0.5, 75, 300, 30, 2, 3),
   minVals = c(10, 5, 0.1, 20, 200, 5, 1, 2),
   maxVals = c(30, 300, 1, 150, 800, 100, 3, 4),
-  fixed = c(0, 0, 0, 0, 0, 0, 0, 0),
+  fixedFit = c(0, 0, 0, 0, 0, 0, 0, 0),
   parScale = startVals/min(startVals),
-  fitInitialTau = TRUE,
+  fitInitialGrid = TRUE,
+  fitInitialGridN = 10,
+  fixedGrid = c(1, 0, 1, 1, 1, 1, 1, 1),
   stepCAF = 20,
   stepDelta = 5,
   VP = c(),
@@ -32,11 +34,15 @@ simonTask1 for data format)}
 
 \item{maxVals}{Maximum values for the to-be estimated parameters}
 
-\item{fixed}{Fix parameter to starting value}
+\item{fixedFit}{Fix parameter to starting value}
 
 \item{parScale}{Scaling values for the to-be estimated parameters}
 
-\item{fitInitialTau}{TRUE/FALSE}
+\item{fitInitialGrid}{TRUE/FALSE (NB. overrides fitInitialTau)}
+
+\item{fitInitialGridN}{10}
+
+\item{fixedGrid}{Fix parameter for initial grid search}
 
 \item{stepCAF}{Step size for the CAF bins. For example, a step size of 20 would result
 in 5 CAF bins centered on 10, 30, 50, 70, and 90\%.}
