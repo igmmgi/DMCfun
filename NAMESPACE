@@ -6,7 +6,7 @@ importFrom("graphics", "plot", "lines", "layout", "par", "axis", "legend", "abli
 importFrom("grDevices", "dev.off", "pdf", "colorRampPalette")
 importFrom("utils", "modifyList", "txtProgressBar", "setTxtProgressBar")
 importFrom("dplyr", "n", "group_by", "summarize", "mutate", "ntile", "%>%")
-importFrom("foreach", "%dopar%")
+importFrom("foreach", "%dopar%", "foreach")
 importFrom("tidyselect", "all_of")
 importFrom("usethis", "use_data")
 importFrom("parallel", "detectCores", "makeCluster", "stopCluster")

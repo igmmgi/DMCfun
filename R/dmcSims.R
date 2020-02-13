@@ -36,9 +36,9 @@ dmcSims <- function(params,
 
   params  <- expand.grid(params)
   uparams <- params[,lengths(lapply(params, unique)) != 1]
-  params <- setNames(split(params, seq(nrow(params))), rownames(params))
-  dmc <- vector("list", length(params))
+  params  <- setNames(split(params, seq(nrow(params))), rownames(params))
 
+  dmc <- vector("list", length(params))
   for (i in 1:length(params)) {
 
     # inputs for each dmcSim call taken from params + add default of not printing individual results
