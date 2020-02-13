@@ -28,7 +28,7 @@
 #' library(DMCfun)
 #'
 #' # Example 1: Flanker data from Ulrich et al. (2015)
-#' fit <- dmcFitAgg(flankerData1, fitInitialTau = FALSE, fitInitialGrid = TRUE)
+#' fit <- dmcFitAgg(flankerData1)
 #' plot(fit, flankerData1)
 #' summary(fit)
 #'
