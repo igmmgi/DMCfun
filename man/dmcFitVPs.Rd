@@ -34,7 +34,7 @@ simonTask1 for data format)}
 
 \item{fixed}{Fix parameter to starting value}
 
-\item{parScale}{Scalling values for the to-be estimated parameters}
+\item{parScale}{Scaling values for the to-be estimated parameters}
 
 \item{fitInitialTau}{TRUE/FALSE}
 

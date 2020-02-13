@@ -24,16 +24,18 @@ Run dmcSim with range of input parameters.
 library(DMCfun)
 
 # Example 1
-params <- list(amp = seq(10, 20, 5), tau = c(50, 100, 150))
+params <- list(amp = seq(10, 20, 5), tau = c(50, 100, 150), nTrl = 50000)
 dmc <- dmcSims(params)
-plot(dmc[[1]])          # combination 1
-plot(dmc, type = "l")   # delta plots for all combinations
+plot(dmc[[1]])    # full combination 1
+plot(dmc)         # delta plots for all combinations
+plot(dmc[c(1:3)]) # delta plots for specific combinations
 
 # Example 2
 params <- list(amp = seq(10, 20, 5), tau = seq(20, 40, 10), bnds = seq(50, 100, 25))
 dmc <- dmcSims(params)
 plot(dmc[[1]])  # combination 1
 plot(dmc)       # delta plots for all combinations
+plot(dmc[c(1:3)]) # delta plots for specific combinations
 
 }
 

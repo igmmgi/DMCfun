@@ -7,9 +7,9 @@
 addErrorBars(xpos, ypos, errorSize, arrowSize = 0.1)
 }
 \arguments{
-\item{xpos}{x-position of datapoints}
+\item{xpos}{x-position of data-points}
 
-\item{ypos}{y-position of datapoints}
+\item{ypos}{y-position of data-points}
 
 \item{errorSize}{+- size of error bars}
 

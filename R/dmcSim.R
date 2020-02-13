@@ -44,7 +44,7 @@
 #' library(DMCfun)
 #'
 #' # Example 1
-#' dmc <- dmcSim(fullData = FALSE)
+#' dmc <- dmcSim(fullData = FALSE, stepDelta = 5, stepCAF = 20)
 #' plot(dmc)
 #'
 #' # Example 2
@@ -64,7 +64,7 @@
 #' plot(dmc, "caf")
 #'
 #' # Example 6
-#' dmc <- dmcSim(fullData = TRUE, stepDelta = 10, stepCAF = 25)
+#' dmc <- dmcSim(fullData = TRUE, stepDelta = 10, stepCAF = 10)
 #' plot(dmc)
 #'
 #' }

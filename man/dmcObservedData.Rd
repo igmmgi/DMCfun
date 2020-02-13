@@ -30,7 +30,7 @@ in 19 CAF bins positioned at 5, 10, 15, ... 85, 90, 95\%.}
 
 \item{columns}{Name of required columns DEFAULT = c("VP", "Comp", "RT", "Error")}
 
-\item{compCoding}{Conding for compatibility DEFAULT = c("comp", "incomp")}
+\item{compCoding}{Coding for compatibility DEFAULT = c("comp", "incomp")}
 
 \item{errorCoding}{Coding for errors DEFAULT = c(0, 1))}
 }

@@ -13,6 +13,7 @@ dmcFitAgg(
   fixed = c(0, 0, 0, 0, 0, 0, 0, 0),
   parScale = startVals/min(startVals),
   fitInitialTau = TRUE,
+  fitInitialGrid = FALSE,
   stepCAF = 20,
   stepDelta = 5,
   printInputArgs = TRUE,
@@ -33,9 +34,11 @@ simonTask1 for data format)}
 
 \item{fixed}{Fix parameter to starting value}
 
-\item{parScale}{Scalling values for the to-be estimated parameters}
+\item{parScale}{Scaling values for the to-be estimated parameters}
 
 \item{fitInitialTau}{TRUE/FALSE}
+
+\item{fitInitialGrid}{TRUE/FALSE}
 
 \item{stepCAF}{Step size for the CAF bins. For example, a step size of 20 would result
 in 5 CAF bins centered on 10, 30, 50, 70, and 90\%.}
@@ -60,7 +63,7 @@ of the CAF and CDF functions.
 library(DMCfun)
 
 # Example 1: Flanker data from Ulrich et al. (2015)
-fit <- dmcFitAgg(flankerData1)
+fit <- dmcFitAgg(flankerData1, fitInitialTau = TRUE, fitInitialGrid = TRUE)
 plot(fit, flankerData1)
 summary(fit)
 

@@ -28,7 +28,6 @@ plot(fitVPs, flankerData1, VP = 1)
 fitAgg <- mean(fitVPs)
 summary(fitAgg)
 plot(fitAgg, flankerData1)
-
 }
 
 }

@@ -99,7 +99,7 @@ Cognitive Psychology, 78, 148-174. This function is essentially a wrapper around
 library(DMCfun)
 
 # Example 1
-dmc <- dmcSim(fullData = FALSE)
+dmc <- dmcSim(fullData = FALSE, stepDelta = 5, stepCAF = 20)
 plot(dmc)
 
 # Example 2
@@ -119,7 +119,7 @@ dmc <- dmcSim(tau = 130, varDR = TRUE)
 plot(dmc, "caf")
 
 # Example 6
-dmc <- dmcSim(fullData = TRUE, stepDelta = 10, stepCAF = 25)
+dmc <- dmcSim(fullData = TRUE, stepDelta = 10, stepCAF = 10)
 plot(dmc)
 
 }

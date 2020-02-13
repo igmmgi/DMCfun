@@ -124,7 +124,7 @@ dmcFitAgg <- function(resOb,
     pb <- txtProgressBar(min = 0, max = length(start_vals_tau), style = 3)
     progress <- function(n) setTxtProgressBar(pb, n)
 
-    costValue <- foreach(i = start_vals_tau, .packages = "DMCfun", .options.snow = list(progress = progress)) %dopar% {
+    costValue <- foreach::foreach(i = start_vals_tau, .packages = "DMCfun", .options.snow = list(progress = progress)) %dopar% {
 
       resTh <- dmcSim(amp = startVals[1], tau = i, mu = startVals[3],
                       bnds = startVals[4], resMean = startVals[5], resSD = startVals[6],
@@ -158,7 +158,7 @@ dmcFitAgg <- function(resOb,
     pb <- txtProgressBar(min = 0, max = nrow(start_vals), style = 3)
     progress <- function(n) setTxtProgressBar(pb, n)
 
-    costValue <- foreach(i = 1:nrow(start_vals), .packages = "DMCfun", .options.snow = list(progress = progress)) %dopar% {
+    costValue <- foreach:.foreach(i = 1:nrow(start_vals), .packages = "DMCfun", .options.snow = list(progress = progress)) %dopar% {
 
       resTh <- dmcSim(amp = start_vals[i, 1], tau = start_vals[i, 2], mu = start_vals[i, 3],
                       bnds = start_vals[i, 4], resMean = start_vals[i, 5], resSD = start_vals[i, 6],
@@ -167,6 +167,7 @@ dmcFitAgg <- function(resOb,
                       nTrl = 10000, stepDelta = stepDelta, stepCAF = stepCAF,
                       printInputArgs = printInputArgs, printResults = FALSE)
       return(calculateCostValue(resTh, resOb))
+
     }
 
     # adjust start, min and max vals

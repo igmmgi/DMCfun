@@ -7,7 +7,7 @@
 randBeta(n = 1, shape = 3, lim = c(0, 1))
 }
 \arguments{
-\item{n}{The number of random number to return.}
+\item{n}{The number of random numbers to return.}
 
 \item{shape}{Shape parameter of the underlying beta distribution}
 

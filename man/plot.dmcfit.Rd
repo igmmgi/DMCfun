@@ -45,8 +45,8 @@
 Plot the simulation results from the output of dmcSim. The plot
 can be an overall summary, or individual plots (activation, trials, pdf, cdf,
 caf, delta, all). Plot type summary1 contains an activation plot, example
-individual trials, the probaility distribution function (PDF), the cumulative
-distribution function (CDF), the conditional accuracy functin (CAF) and
+individual trials, the probability distribution function (PDF), the cumulative
+distribution function (CDF), the conditional accuracy function (CAF) and
 delta plots. This required that dmcSim is run with fullData = TRUE. Plot type
 summary2 contains only the PDF, CDF, CAF and delta plots and does not require
 that dmcSim is run with fullData = TRUE.
@@ -56,7 +56,7 @@ that dmcSim is run with fullData = TRUE.
 library(DMCfun)
 
 # Example 1
-resTh <- dmcFitAgg(flankerData1, nTrl = 5000)
+resTh <- dmcFitAgg(flankerData1, nTrl = 15000)
 plot(resTh, flankerData1)
 
 # Example 2

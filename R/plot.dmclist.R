@@ -56,10 +56,12 @@ plot.dmclist <- function(x,
   plot(x[[1]]$delta$meanBin, x[[1]]$delta$meanEffect, type = lineType,
        ylim = ylim, xlim = xlim,
        ylab = expression(Delta), xlab = "Time [ms]", col = cols[1])
-  legendText <- paste0(paste0(names(x[[1]]$params[[1]]), "=", x[[1]]$params[[1]], collapse = ", "))
+
+  # params <- x[[1]]$params
+  legendText <- paste0(names(x[[1]]$params), "=", x[[1]]$params[1,], collapse = ", ")
   for (i in 2:length(x)) {
     lines(x[[i]]$delta$meanBin, x[[i]]$delta$meanEffect, col = cols[i], type = lineType)
-    legendText <- c(legendText, paste0(names(x[[i]]$params[[i]]), "=", x[[i]]$params[[i]], collapse = ", "))
+    legendText <- c(NULL, legendText, paste0(names(x[[i]]$params), "=", x[[1]]$params[i,], collapse = ", "))
   }
-  legend(legendPos, legend = legendText, col=cols, ...)
+  legend(legendPos, legend = legendText, col=as.vector(cols), lty = 1, ...)
 }
