@@ -29,7 +29,7 @@
 #' library(DMCfun)
 #'
 #' # Example 1: Flanker data from Ulrich et al. (2015)
-#' fit <- dmcFitAgg(flankerData1)
+#' fit <- dmcFitAgg(flankerData1, fitInitialGridN = 20)
 #' plot(fit, flankerData1)
 #' summary(fit)
 #'
@@ -57,9 +57,9 @@
 #'                  Error = list(list(c("Comp:comp"), vals = c(4, 3, 2, 1, 1)),
 #'                             list(c("Comp:incomp"), vals = c(20, 4, 3, 1, 1))))
 #' datOb <- dmcObservedData(dat, columns = c("VP", "Comp", "RT", "Error"),
-#'                          stepCAF = 20, stepDelta = 10)
+#'                          stepCAF = 18, stepDelta = 7)
 #' plot(datOb)
-#' fit <- dmcFitAgg(datOb, stepCAF = 20, stepDelta = 10, fitInitialGrid = TRUE)
+#' fit <- dmcFitAgg(datOb, stepCAF = 18, stepDelta = 7, fitInitialGrid = TRUE)
 #' plot(fit, datOb)
 #' summary(fit)
 #' }
@@ -90,7 +90,7 @@ dmcFitAgg <- function(resOb,
                "spShape" = startVals[8])
 
   # check observed data contains correct number of delta/CAF bins
-  if (nrow(resOb$delta) != length(seq(stepDelta, 100 - stepDelta, stepDelta))) {
+  if (nrow(resOb$delta) != sum(!seq(stepDelta, 100, stepDelta) %in% 100)) {
     stop("Number of delta bins in observed data and nDelta bins are not equal!")
   }
   if ((nrow(resOb$caf)/2) != length(seq(0, 100 - stepCAF, stepCAF))) {
@@ -136,7 +136,7 @@ dmcFitAgg <- function(resOb,
       setTxtProgressBar(pb, n)
     }
 
-    cl <- parallel::makeCluster(parallel::detectCores())
+    cl <- parallel::makeCluster(parallel::detectCores() / 2)
     doSNOW::registerDoSNOW(cl)
     costValue <- foreach::foreach(i = 1:nrow(startValsGrid), .packages = "DMCfun", .options.snow = list(progress = progress)) %dopar% {
 
@@ -155,10 +155,9 @@ dmcFitAgg <- function(resOb,
     # adjust start, min and max vals for subsequent fit
     startVals <- as.numeric(startValsGrid[which.min(costValue), ])
 
-    # move min/max values according to new start values
+    # move min/max values according to new start values?
     # minVals <- startVals * 0.75
     # maxVals <- startVals * 1.25
-
 
   }
 
@@ -167,7 +166,7 @@ dmcFitAgg <- function(resOb,
                         prms = prms, fixedFit = fixedFit, resOb = resOb,
                         nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,
                         printInputArgs = printInputArgs, printResults = printResults,
-                        method = "L-BFGS-B", lower = minVals[!as.logical(fixedFit)], upper = maxVals[!as.logical(fixedFit)],
+                        method = "Nelder-Mead",
                         control = list(parscale = parScale[!as.logical(fixedFit)]))
 
   prms[!as.logical(fixedFit)] <- fit$par

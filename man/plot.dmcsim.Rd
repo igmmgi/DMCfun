@@ -9,6 +9,7 @@
   figType = "summary1",
   newFig = TRUE,
   ylimCAF = c(0, 1),
+  cafBinLabels = FALSE,
   ylimDelta = c(-50, 150),
   ylimRt = c(200, 800),
   ylimErr = c(0, 20),
@@ -24,6 +25,8 @@
 \item{newFig}{TRUE/FALSE}
 
 \item{ylimCAF}{ylimit for CAF plot}
+
+\item{cafBinLabels}{TRUE/FALSE}
 
 \item{ylimDelta}{ylimit for delta plot}
 
@@ -50,7 +53,7 @@ that dmcSim is run with fullData = TRUE.
 library(DMCfun)
 
 # Example 1
-dmc = dmcSim(fullData = TRUE)
+dmc = dmcSim(fullData = TRUE, stepCAF = 10)
 plot(dmc)
 
 # Example 2

@@ -181,11 +181,14 @@ dmcObservedData <- function(dat,
     dplyr::summarize(accPer = mean(accPerVP))
 
   # DELTA
+  deltaSeq <- seq(stepDelta, 100, stepDelta)
+  deltaSeq <- deltaSeq[!deltaSeq %in% 100]
+
   datVP_dec <- dat %>%
     dplyr::filter(Error == 0, RT >= rtMin, RT <= rtMax) %>%
     dplyr::group_by(VP, Comp) %>%
-    dplyr::do(tibble::as_tibble(t(quantile(.$RT, seq(stepDelta, 100 - stepDelta, stepDelta)/100, type = quantileType))))  %>%
-    setNames(c("VP", "Comp", seq(1, length(seq(stepDelta, 100 - stepDelta, stepDelta))))) %>%
+    dplyr::do(tibble::as_tibble(t(quantile(.$RT, deltaSeq/100, type = quantileType))))  %>%
+    setNames(c("VP", "Comp", seq(1, length(deltaSeq)))) %>%
     tidyr::gather(bin, rt_VP, -c("VP", "Comp")) %>%
     tidyr::spread(Comp, rt_VP) %>%
     dplyr::mutate(meanCompVP   = comp,

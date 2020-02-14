@@ -13,6 +13,7 @@
   ylimRt = c(200, 800),
   ylimEr = c(0, 20),
   ylimCAF = c(0, 1),
+  cafBinLabels = FALSE,
   ylimDelta = c(-50, 100),
   xlimDelta = c(200, 1000),
   ...
@@ -35,6 +36,8 @@
 
 \item{ylimCAF}{ylimit for CAF plot}
 
+\item{cafBinLabels}{TRUE/FALSE}
+
 \item{ylimDelta}{ylimit for delta plot}
 
 \item{xlimDelta}{xlimit for delta plot}
@@ -56,7 +59,7 @@ that dmcSim is run with fullData = TRUE.
 library(DMCfun)
 
 # Example 1
-resTh <- dmcFitAgg(flankerData1, nTrl = 15000)
+resTh <- dmcFitAgg(flankerData1, nTrl = 5000)
 plot(resTh, flankerData1)
 
 # Example 2

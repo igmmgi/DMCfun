@@ -29,7 +29,7 @@
 #' plot(dmc, ncol = 2, xlim = c(0, 1300), ylim = c(-100, 200))
 #'
 #' # Example 2
-#' params <- list(amp=c(10, 20), tau = seq(20, 100, 20), mu = seq(0.2, 0.5, 0.1))
+#' params <- list(amp=c(10, 20), tau = seq(20, 80, 20), mu = seq(0.2, 0.6, 0.2), nTrl = 50000)
 #' dmc = dmcSims(params)
 #' plot(dmc, ncol = 3, col=c("green", "blue"), lineType = "l")
 #'
@@ -57,7 +57,6 @@ plot.dmclist <- function(x,
        ylim = ylim, xlim = xlim,
        ylab = expression(Delta), xlab = "Time [ms]", col = cols[1])
 
-  # params <- x[[1]]$params
   legendText <- paste0(names(x[[1]]$params), "=", x[[1]]$params[1,], collapse = ", ")
   for (i in 2:length(x)) {
     lines(x[[i]]$delta$meanBin, x[[i]]$delta$meanEffect, col = cols[i], type = lineType)

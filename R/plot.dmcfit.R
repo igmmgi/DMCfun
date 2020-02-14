@@ -17,6 +17,7 @@
 #' @param ylimRt ylimit for Rt plots
 #' @param ylimEr ylimit for error rate plots
 #' @param ylimCAF ylimit for CAF plot
+#' @param cafBinLabels TRUE/FALSE
 #' @param ylimDelta ylimit for delta plot
 #' @param xlimDelta xlimit for delta plot
 #' @param ... additional plot pars
@@ -28,7 +29,7 @@
 #' library(DMCfun)
 #'
 #' # Example 1
-#' resTh <- dmcFitAgg(flankerData1, nTrl = 15000)
+#' resTh <- dmcFitAgg(flankerData1, nTrl = 5000)
 #' plot(resTh, flankerData1)
 #'
 #' # Example 2
@@ -55,6 +56,7 @@ plot.dmcfit <- function(x,
                         ylimRt = c(200, 800),
                         ylimEr = c(0, 20),
                         ylimCAF = c(0, 1),
+                        cafBinLabels = FALSE,
                         ylimDelta = c(-50, 100),
                         xlimDelta = c(200, 1000),
                         ...) {
@@ -97,7 +99,7 @@ plot.dmcfit <- function(x,
     plot(x, y, figType = "errorRate", newFig = FALSE, VP = VP, ylimEr = ylimEr, ...)
     plot(x, y, figType = "rtErrors",  newFig = FALSE, VP = VP, ylimRt = ylimRt, ...)
     plot(x, y, figType = "cdf",       newFig = FALSE, VP = VP, ...)
-    plot(x, y, figType = "caf",       newFig = FALSE, VP = VP, ylimCAF = ylimCAF, ...)
+    plot(x, y, figType = "caf",       newFig = FALSE, VP = VP, ylimCAF = ylimCAF, cafBinLabels = cafBinLabels, ...)
     plot(x, y, figType = "delta",     newFig = FALSE, VP = VP, ylimDelta = ylimDelta, xlimDelta = xlimDelta, ...)
 
     resetFig <- TRUE
@@ -166,8 +168,16 @@ plot.dmcfit <- function(x,
     legend("bottomright", inset = c(0.025, 0.05),
            legend = c("Compatible Observed", "Incompatible Observed", "Compatible Predicted", "Incompatible Predicted"),
            lty = c(0, 0, 1, 1), col = c("green", "red", "green", "red"), pch = c(1, 1, NA, NA))
-    axis(1, at = seq(1, nrow(x$caf)/2, 1))
-    axis(2, at = seq(0, 1, 0.25), labels = as.character(seq(0, 1, 0.25)))
+
+    nCAF <- length(x$caf$bin) / 2
+    if (cafBinLabels) {
+      stepCAF <- 100 / nCAF
+      cafLabels <- paste0(paste(seq(0, 100 - stepCAF, stepCAF), seq(stepCAF, 100, stepCAF), sep = "-"), "%")
+      axis(1, at = seq(1, nCAF, 1), labels = cafLabels)
+    } else {
+      axis(1, at = seq(1, nCAF, 1))
+    }
+    axis(2, at = seq(0, 1, 0.2), labels = as.character(seq(0, 1, 0.2)))
 
   } else if (figType == "delta") {
 
@@ -185,7 +195,7 @@ plot.dmcfit <- function(x,
     plot(x, y, figType = "errorRate", newFig = TRUE, VP = VP, ylimEr = ylimEr, ...)
     plot(x, y, figType = "rtErrors",  newFig = TRUE, VP = VP, ylimRt = ylimRt, ...)
     plot(x, y, figType = "cdf",       newFig = TRUE, VP = VP, ...)
-    plot(x, y, figType = "caf",       newFig = TRUE, VP = VP, ylimCAF = ylimCAF, ...)
+    plot(x, y, figType = "caf",       newFig = TRUE, VP = VP, ylimCAF = ylimCAF, cafBinLabels = cafBinLabels, ...)
     plot(x, y, figType = "delta",     newFig = TRUE, VP = VP, ylimDelta = ylimDelta, xlimDelta = xlimDelta, ...)
 
   }

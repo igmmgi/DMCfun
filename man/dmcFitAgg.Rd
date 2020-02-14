@@ -94,9 +94,9 @@ dat <- addDataDF(dat,
                  Error = list(list(c("Comp:comp"), vals = c(4, 3, 2, 1, 1)),
                             list(c("Comp:incomp"), vals = c(20, 4, 3, 1, 1))))
 datOb <- dmcObservedData(dat, columns = c("VP", "Comp", "RT", "Error"),
-                         stepCAF = 20, stepDelta = 10)
+                         stepCAF = 18, stepDelta = 7)
 plot(datOb)
-fit <- dmcFitAgg(datOb, stepCAF = 20, stepDelta = 10, fitInitialGrid = TRUE)
+fit <- dmcFitAgg(datOb, stepCAF = 18, stepDelta = 7, fitInitialGrid = TRUE)
 plot(fit, datOb)
 summary(fit)
 }
