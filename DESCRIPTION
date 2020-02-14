@@ -1,7 +1,7 @@
 Package: DMCfun
 Type: Package
 Title: Diffusion model of conflict (DMC) in reaction time tasks
-Version: 0.5
+Version: 0.6
 Date: 2018-05-25
 Authors@R: c(person("Mackenzie G.", "Ian", email="ian.mackenzie@uni-tuebingen.de", role = c("cre", "aut")),
            person("Leuthold", "Hartmut", email="hartmut.leuthold@uni-tuebingen.de", role = c("aut")),
@@ -13,19 +13,19 @@ Encoding: UTF-8
 Depends: R (>= 3.1)
 Imports: 
   Rcpp (>= 0.12.16),
+  doSNOW,
   dplyr,
   ez,
+  foreach,
   optimr,
+  parallel,
   psychReport,
   readr,
   testthat,
   tibble,
   tidyr,
   tidyselect,
-  usethis,
-  doSNOW,
-  doParallel,
-  foreach
+  usethis
 LinkingTo: Rcpp, BH
 RoxygenNote: 7.0.2
 LazyData: true

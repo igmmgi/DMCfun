@@ -10,7 +10,7 @@ test_that("dmcFitVPs", {
   testthat::expect_s3_class(fit[[1]][[1]], "dmcsim")
 
   # test 2
-  fit <- dmcFitVPs(DMCfun::flankerData2, nTrl = 10000, VP = c(1, 2, 3),
+  fit <- dmcFitVPs(DMCfun::flankerData1, nTrl = 10000, VP = c(1, 2, 3),
                    printInputArgs = FALSE, printResults = FALSE)
   testthat::expect_type(fit, "list")
   testthat::expect_s3_class(fit[[1]], "dmcfit")

@@ -29,22 +29,12 @@
 #' library(DMCfun)
 #'
 #' # Example 1: Flanker data from Ulrich et al. (2015)
-#' fit <- dmcFitAgg(flankerData1, fitInitialGridN = 20)
+#' fit <- dmcFitAgg(flankerData1)
 #' plot(fit, flankerData1)
 #' summary(fit)
 #'
 #' # Example 2: Simon data from Ulrich et al. (2015)
 #' fit <- dmcFitAgg(simonData1)
-#' plot(fit, simonData1)
-#' summary(fit)
-#'
-#' # Example 3: Flanker Example Data
-#' fit <- dmcFitAgg(flankerData2)
-#' plot(fit, flankerData1)
-#' summary(fit)
-#'
-#' # Example 4: Simon Example Data
-#' fit <- dmcFitAgg(simonData2)
 #' plot(fit, simonData1)
 #' summary(fit)
 #'
@@ -56,10 +46,9 @@
 #'                            list(c("Comp:incomp"), vals = c(540, 130, 85))),
 #'                  Error = list(list(c("Comp:comp"), vals = c(4, 3, 2, 1, 1)),
 #'                             list(c("Comp:incomp"), vals = c(20, 4, 3, 1, 1))))
-#' datOb <- dmcObservedData(dat, columns = c("VP", "Comp", "RT", "Error"),
-#'                          stepCAF = 18, stepDelta = 7)
+#' datOb <- dmcObservedData(dat, columns = c("VP", "Comp", "RT", "Error"))
 #' plot(datOb)
-#' fit <- dmcFitAgg(datOb, stepCAF = 18, stepDelta = 7, fitInitialGrid = TRUE)
+#' fit <- dmcFitAgg(datOb)
 #' plot(fit, datOb)
 #' summary(fit)
 #' }

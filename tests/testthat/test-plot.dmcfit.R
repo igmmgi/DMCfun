@@ -9,9 +9,9 @@ test_that("plot.dmcfit", {
   testthat::expect_error(plot(resTh, DMCfun::flankerData1), NA)
 
   # test 2
-  resTh <- dmcFitAgg(DMCfun::flankerData2, nTrl = 10000,
+  resTh <- dmcFitAgg(DMCfun::flankerData1, nTrl = 10000,
                      printInputArgs = FALSE, printResults = FALSE)
-  testthat::expect_error(plot(resTh, DMCfun::flankerData2), NA)
+  testthat::expect_error(plot(resTh, DMCfun::flankerData1), NA)
 
   # test 3
   resTh <- dmcFitAgg(DMCfun::simonData1, nTrl = 10000,

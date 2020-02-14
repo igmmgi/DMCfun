@@ -16,6 +16,6 @@ test_that("calculateCostValue", {
   resOb <- dmcSim(tau = 150)
   cost  <- calculateCostValue(resTh, resOb)
 
-  testthat::expect_gt(cost, 30)
+  testthat::expect_gt(cost, 20)
 
 })
