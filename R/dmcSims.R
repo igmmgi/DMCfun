@@ -20,13 +20,11 @@
 #' plot(dmc[c(1:3)]) # delta plots for specific combinations
 #'
 #' # Example 2
-#' params <- list(amp = seq(10, 20, 5), tau = seq(20, 40, 10), bnds = seq(50, 100, 25))
+#' params <- list(amp = seq(10, 20, 5), tau = seq(20, 40, 20), bnds = seq(50, 100, 25))
 #' dmc <- dmcSims(params)
 #' plot(dmc[[1]])  # combination 1
-#' plot(dmc)       # delta plots for all combinations
+#' plot(dmc, ncol = 2)       # delta plots for all combinations
 #' plot(dmc[c(1:3)]) # delta plots for specific combinations
-#
-#'
 #' }
 #'
 #' @export
@@ -35,8 +33,12 @@ dmcSims <- function(params,
                     printResults = FALSE) {
 
   params  <- expand.grid(params)
-  uparams <- params[,lengths(lapply(params, unique)) != 1]
-  params  <- setNames(split(params, seq(nrow(params))), rownames(params))
+  if (ncol(params) > 1)
+    uparams <- params[, lengths(lapply(params, unique)) != 1]
+  else {
+    uparams <- params
+  }
+  params <- setNames(split(params, seq(nrow(params))), rownames(params))
 
   dmc <- vector("list", length(params))
   for (i in 1:length(params)) {
@@ -56,6 +58,3 @@ dmcSims <- function(params,
   return(dmc)
 
 }
-
-
-

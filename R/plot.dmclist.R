@@ -24,7 +24,7 @@
 #' library(DMCfun)
 #'
 #' # Example 1
-#' params <- list(amp = seq(20, 30, 2), tau = c(20, 250))
+#' params <- list(amp = seq(20, 30, 2))
 #' dmc = dmcSims(params)
 #' plot(dmc, ncol = 2, xlim = c(0, 1300), ylim = c(-100, 200))
 #'
@@ -57,10 +57,10 @@ plot.dmclist <- function(x,
        ylim = ylim, xlim = xlim,
        ylab = expression(Delta), xlab = "Time [ms]", col = cols[1])
 
-  legendText <- paste0(names(x[[1]]$params), "=", x[[1]]$params[1,], collapse = ", ")
+  legendText <- paste0(names(x[[1]]$params), "=", x[[1]]$params[1, ], collapse = ", ")
   for (i in 2:length(x)) {
     lines(x[[i]]$delta$meanBin, x[[i]]$delta$meanEffect, col = cols[i], type = lineType)
-    legendText <- c(NULL, legendText, paste0(names(x[[i]]$params), "=", x[[1]]$params[i,], collapse = ", "))
+    legendText <- c(NULL, legendText, paste0(names(x[[i]]$params), "=", x[[1]]$params[i, ], collapse = ", "))
   }
   legend(legendPos, legend = legendText, col=as.vector(cols), lty = 1, ...)
 }
