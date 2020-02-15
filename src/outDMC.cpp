@@ -31,52 +31,44 @@ void printResults(
 
     // results delta distribution
     Rcpp::Rcout << "Delta Values:\n" << "\t";
-    for (auto step = p.stepDelta; step < 100; step += p.stepDelta) {
+    for (auto step = p.stepDelta; step < 100; step += p.stepDelta) 
         Rcpp::Rcout << std::setw(4) << step << "%\t";
-    }
     Rcpp::Rcout << std::endl;
 
     Rcpp::Rcout << "comp" << "\t";
-    for (unsigned int i = 0; i < resDelta["delta_pct_comp"].size(); i++) {
+    for (unsigned int i = 0; i < resDelta["delta_pct_comp"].size(); i++) 
         Rcpp::Rcout << std::fixed << std::setprecision(1) << resDelta["delta_pct_comp"][i] << "\t";
-    }
     Rcpp::Rcout << std::endl;
 
     Rcpp::Rcout << "incomp" << "\t";
-    for (unsigned int i = 0; i < resDelta["delta_pct_incomp"].size(); i++) {
+    for (unsigned int i = 0; i < resDelta["delta_pct_incomp"].size(); i++) 
         Rcpp::Rcout << std::fixed << std::setprecision(1) << resDelta["delta_pct_incomp"][i] << "\t";
-    }
     Rcpp::Rcout << std::endl;
 
     Rcpp::Rcout << "mean" << "\t";
-    for (unsigned int i = 0; i < resDelta["delta_pct_mean"].size(); i++) {
+    for (unsigned int i = 0; i < resDelta["delta_pct_mean"].size(); i++) 
         Rcpp::Rcout << std::fixed << std::setprecision(1) << resDelta["delta_pct_mean"][i] << "\t";
-    }
     Rcpp::Rcout << std::endl;
 
     Rcpp::Rcout << "effect" << "\t";
-    for (unsigned int i = 0; i < resDelta["delta_pct_delta"].size(); i++) {
+    for (unsigned int i = 0; i < resDelta["delta_pct_delta"].size(); i++) 
         Rcpp::Rcout << std::fixed << std::setprecision(1) << std::right << std::setw(5) << resDelta["delta_pct_delta"][i] << "\t";
-    }
     Rcpp::Rcout << std::endl;
     Rcpp::Rcout << std::endl;
 
     // results caf
     Rcpp::Rcout << "CAF Values:\n" << "\t";
-    for (auto step = 0; step < 100; step += p.stepCAF) {
+    for (auto step = 0; step < 100; step += p.stepCAF) 
         Rcpp::Rcout << std::right << std::setw(3) << step << "-" << (step + p.stepCAF) << "%\t";
-    }
     Rcpp::Rcout << std::endl;
 
     Rcpp::Rcout << "comp" << "\t";
-    for (unsigned int i = 0; i < resCAF["caf_comp"].size(); i++) {
+    for (unsigned int i = 0; i < resCAF["caf_comp"].size(); i++) 
         Rcpp::Rcout << std::fixed << std::setprecision(3) << std::right << std::setw(7) << resCAF["caf_comp"][i] << "\t";
-    }
     Rcpp::Rcout << std::endl;
     Rcpp::Rcout << "incomp" << "\t";
-    for (unsigned int i = 0; i < resCAF["caf_incomp"].size(); i++) {
+    for (unsigned int i = 0; i < resCAF["caf_incomp"].size(); i++) 
         Rcpp::Rcout << std::fixed << std::setprecision(3) << std::right << std::setw(7) << resCAF["caf_incomp"][i] << "\t";
-    }
     Rcpp::Rcout << std::endl;
 
 }

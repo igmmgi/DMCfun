@@ -1,6 +1,5 @@
 #include <map>
 #include <vector>
-#include <boost/random.hpp>
 #include "inDMC.h"
 #include "outDMC.h"
 #include "runDMC.h"
