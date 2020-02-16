@@ -17,7 +17,7 @@ void runDMCsim(
 
     // equation 4
     std::vector<double> eq4(p.tmax);
-    for (unsigned int i = 1; i <= p.tmax; i++) 
+    for (unsigned int i = 1; i <= p.tmax; i++)
         eq4[i - 1] = (p.amp * exp(-(i / p.tau))) * pow(((exp(1) * i / (p.aaShape - 1) / p.tau)), (p.aaShape - 1));
     simulation["eq4"] = eq4;
 
@@ -42,7 +42,7 @@ void runDMCsim(
                 std::ref(dr_mean),
                 std::ref(sp_mean));
     }
-    for (auto &thread : threads) 
+    for (auto &thread : threads)
         if (thread.joinable()) thread.join();
 
     // finalize results requiring both comp/incomp
@@ -73,7 +73,7 @@ void runDMCsim_t(
     std::vector<std::vector<double>> trial_matrix(p.nTrlData, std::vector<double>(p.tmax));  // needed if plotting individual trials
 
     std::vector<double> mu_vec(p.tmax);
-    for (auto i = 0u; i < mu_vec.size(); i++) 
+    for (auto i = 0u; i < mu_vec.size(); i++)
         mu_vec[i] = sign * simulation["eq4"][i] * ((p.aaShape - 1) / (i + 1) - 1 / p.tau);
 
     // variable drift rate/starting point?
@@ -102,7 +102,7 @@ void runDMCsim_t(
 
 void variable_drift_rate(Prms &p, std::vector<double> &dr, std::vector<double> &dr_mean, int sign) {
 
-    const uint32_t s = p.setSeed ? 1 : std::time(nullptr); 
+    const uint32_t s = p.setSeed ? 1 : std::time(nullptr);
 
     boost::random::mt19937_64 rng(s + sign);
     boost::random::beta_distribution<double> bdDR(p.drShape, p.drShape);
@@ -113,7 +113,7 @@ void variable_drift_rate(Prms &p, std::vector<double> &dr, std::vector<double> &
 
 void variable_starting_point(Prms &p, std::vector<double> &sp, std::vector<double> &sp_mean, int sign) {
 
-    const uint32_t s = p.setSeed ? 1 : std::time(nullptr); 
+    const uint32_t s = p.setSeed ? 1 : std::time(nullptr);
 
     boost::random::mt19937_64 rng(s + sign);
     boost::random::beta_distribution<double> bdSP(p.spShape, p.spShape);
@@ -133,7 +133,7 @@ void run_simulation(
         int sign
 ) {
 
-    const uint32_t s = p.setSeed ? 1 : std::time(nullptr); 
+    const uint32_t s = p.setSeed ? 1 : std::time(nullptr);
 
     boost::random::mt19937_64 rng(s + sign);
     boost::random::normal_distribution<double> snd(0.0, 1.0);
@@ -165,7 +165,7 @@ void run_simulation(
         int sign
 ) {
 
-    const uint32_t s = p.setSeed ? 1 : std::time(nullptr); 
+    const uint32_t s = p.setSeed ? 1 : std::time(nullptr);
 
     boost::random::mt19937_64 rng(s + sign);
     boost::random::normal_distribution<double> snd(0.0, 1.0);
@@ -187,7 +187,7 @@ void run_simulation(
             activation_sum[i] += activation_trial[i];
         }
     }
-    for (auto i = 0u; i < p.tmax; i++) 
+    for (auto i = 0u; i < p.tmax; i++)
         activation_sum[i] /= p.nTrl;
 
 }
@@ -228,12 +228,12 @@ void calculate_percentile(
     float pct_idx_dec;
     for (auto step = stepDelta; step < 100; step += stepDelta) {
 
-        pct_idx = step / 100.0 * (rts.size() + 1);
+        pct_idx = (step / 100.0) * (rts.size());
         pct_idx_int = int(pct_idx);
-        pct_idx_dec = pct_idx - int(pct_idx);
+        pct_idx_dec = pct_idx - pct_idx_int;
 
         resDelta["delta_pct_" + condition].push_back(
-                rts[pct_idx_int + ((rts[pct_idx_int + 1] - rts[pct_idx_int]) * pct_idx_dec)]);
+                rts[pct_idx_int] + ((rts[pct_idx_int + 1] - rts[pct_idx_int]) * pct_idx_dec));
 
     }
 
@@ -266,15 +266,15 @@ void calculate_caf(
     std::sort(comb.begin(), comb.end());
     std::vector<int> bins(comb.size());
     int nBins = 100 / stepCAF;
-    for (auto i = 0u; i < comb.size(); i++) 
+    for (auto i = 0u; i < comb.size(); i++)
         bins[i] = int(nBins * (i) / comb.size());
 
     std::vector<long int> countErr(nBins, 0);
     std::vector<long int> countCor(nBins, 0);
-    for (auto i = 0u; i < bins.size(); i++) 
+    for (auto i = 0u; i < bins.size(); i++)
         (comb[i].second == 0) ? countCor[bins[i]]++ : countErr[bins[i]]++;
 
-    for (auto i = 0u; i < countCor.size(); i++) 
+    for (auto i = 0u; i < countCor.size(); i++)
         resCAF["caf_" + condition].push_back(1 - (countErr[i] / float(countCor[i] + countErr[i])));
 
 }
