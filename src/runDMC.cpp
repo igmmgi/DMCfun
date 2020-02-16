@@ -1,6 +1,4 @@
-#include <chrono>
 #include <vector>
-#include <utility>
 #include <map>
 #include <boost/random.hpp>
 #include <thread>
@@ -83,11 +81,10 @@ void runDMCsim_t(
     if (p.varSP) variable_starting_point(p, sp, sp_mean, sign);
 
     // run simulation and store rts for correct/incorrect trials
-    if (p.fullData) {
+    if (p.fullData)
         run_simulation(p, activation_sum, trial_matrix, mu_vec, sp, dr, rts, errs, sign);
-    } else {
+    else
         run_simulation(p, mu_vec, sp, dr, rts, errs, sign);
-    }
 
     simulation["activation_" + comp] = activation_sum;
     simulation["rts_" + comp] = rts;
@@ -228,7 +225,7 @@ void calculate_percentile(
     float pct_idx_dec;
     for (auto step = stepDelta; step < 100; step += stepDelta) {
 
-        pct_idx = (step / 100.0) * (rts.size());
+        pct_idx     = (step / 100.0) * (rts.size());
         pct_idx_int = int(pct_idx);
         pct_idx_dec = pct_idx - pct_idx_int;
 
