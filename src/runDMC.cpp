@@ -168,20 +168,19 @@ void run_simulation(
     boost::random::normal_distribution<double> snd(0.0, 1.0);
     boost::random::normal_distribution<double> nd_mean_sd(p.resMean, p.resSD);
 
-    std::vector<double> activation_trial(p.tmax);
+    double activation_trial;
     bool criterion;
     for (auto trl = 0u; trl < p.nTrl; trl++) {
         criterion = false;
-        activation_trial[0] = mu_vec[0] + sp[trl] + dr[trl] + (p.sigma * snd(rng));
-        activation_sum[0] += activation_trial[0];
-        for (auto i = 1u; i < activation_trial.size(); i++) {
-            activation_trial[i] = activation_trial[i - 1] + mu_vec[i] + dr[trl] + (p.sigma * snd(rng));
-            if (!criterion && fabs(activation_trial[i]) > p.bnds) {
-                (activation_trial[i] > p.bnds ? rts : errs).push_back(i + nd_mean_sd(rng) + 1); // zero index
+        activation_trial = sp[trl];
+        for (auto i = 0u; i < activation_sum.size(); i++) {
+            activation_trial += mu_vec[i] + dr[trl] + (p.sigma * snd(rng));
+            if (!criterion && fabs(activation_trial) > p.bnds) {
+                (activation_trial > p.bnds ? rts : errs).push_back(i + nd_mean_sd(rng) + 1); // zero index
                 criterion = true;
             }
-            if (trl < p.nTrlData) trial_matrix[trl][i] = activation_trial[i];
-            activation_sum[i] += activation_trial[i];
+            if (trl < p.nTrlData) trial_matrix[trl][i] = activation_trial;
+            activation_sum[i] += activation_trial;
         }
     }
     for (auto i = 0u; i < p.tmax; i++)
