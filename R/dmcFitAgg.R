@@ -13,7 +13,7 @@
 #' @param fixedFit Fix parameter to starting value
 #' @param parScale Scaling values for the to-be estimated parameters
 #' @param fitInitialGrid TRUE/FALSE (NB. overrides fitInitialTau)
-#' @param fitInitialGridN 10
+#' @param fitInitialGridN 10 reduce if searching more than 1 initial parameter
 #' @param fixedGrid Fix parameter for initial grid search
 #' @param stepCAF Step size for the CAF bins. For example, a step size of 20 would result
 #' in 5 CAF bins centered on 10, 30, 50, 70, and 90\%.
@@ -29,16 +29,16 @@
 #' library(DMCfun)
 #'
 #' # Example 1: Flanker data from Ulrich et al. (2015)
-#' fit <- dmcFitAgg(flankerData1)
-#' plot(fit, flankerData1)
+#' fit <- dmcFitAgg(flankerData)
+#' plot(fit, flankerData)
 #' summary(fit)
 #'
 #' # Example 2: Simon data from Ulrich et al. (2015)
-#' fit <- dmcFitAgg(simonData1)
-#' plot(fit, simonData1)
+#' fit <- dmcFitAgg(simonData)
+#' plot(fit, simonData)
 #' summary(fit)
 #'
-#' # Example 5: Simulated Data (+ve going delta function)
+#' # Example 3: Simulated Data (+ve going delta function)
 #' dat <- createDF(nVP = 20, nTrl = 500,
 #'                 design = list("Comp" = c("comp", "incomp")))
 #' dat <- addDataDF(dat,
@@ -143,10 +143,6 @@ dmcFitAgg <- function(resOb,
 
     # adjust start, min and max vals for subsequent fit
     startVals <- as.numeric(startValsGrid[which.min(costValue), ])
-
-    # move min/max values according to new start values?
-    # minVals <- startVals * 0.75
-    # maxVals <- startVals * 1.25
 
   }
 

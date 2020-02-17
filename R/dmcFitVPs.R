@@ -4,8 +4,7 @@
 #' minimizing the root-mean-square error (RMSE) between a weighted combination
 #' of the CAF and CDF functions.
 #'
-#' @param resOb Observed data (see flankerData1, flankerData2,
-#' simonTask1 for data format)
+#' @param resOb Observed data (see flankerData, simonData for data format)
 #' @param nTrl Number of trials to use within dmcSim
 #' @param startVals Starting values for to-be estimated parameters
 #' @param minVals Minimum values for the to-be estimated parameters
@@ -30,18 +29,18 @@
 #' library(DMCfun)
 #'
 #' # Example 1: Flanker data from Ulrich et al. (2015)
-#' fit <- dmcFitVPs(flankerData1)
-#' plot(fit, flankerData1, VP = 1)
+#' fit <- dmcFitVPs(flankerData)
+#' plot(fit, flankerData, VP = 1)
 #' summary(fit)
 #' fitAgg <- mean(fit)
-#' plot(fitAgg, flankerData1)
+#' plot(fitAgg, flankerData)
 #'
 #' # Example 2: Simon data from Ulrich et al. (2015)
-#' fit <- dmcFitAgg(simonData1)
-#' plot(fit, simonData1, VP = 1)
+#' fit <- dmcFitAgg(simonData)
+#' plot(fit, simonData, VP = 1)
 #' summary(fit)
 #' fitAgg <- mean(fit)
-#' plot(fitAgg, simonData1)
+#' plot(fitAgg, simonData)
 #'
 #' }
 #'

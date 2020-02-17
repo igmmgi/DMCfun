@@ -29,14 +29,14 @@
 #' library(DMCfun)
 #'
 #' # Example 1 (real dataset)
-#' plot(flankerData1)
-#' plot(flankerData1, errorBars = TRUE, errorBarType = "se")
-#' plot(flankerData1, figType = "delta", errorBars = TRUE,  errorBarType = "se")
+#' plot(flankerData)
+#' plot(flankerData, errorBars = TRUE, errorBarType = "se")
+#' plot(flankerData, figType = "delta", errorBars = TRUE,  errorBarType = "se")
 #'
 #' # Example 2 (real dataset)
-#' plot(simonData1)
-#' plot(simonData1, errorBars = TRUE, errorBarType = "se")
-#' plot(simonData1, figType = "delta", errorBars = TRUE, errorBarType = "sd")
+#' plot(simonData)
+#' plot(simonData, errorBars = TRUE, errorBarType = "se")
+#' plot(simonData, figType = "delta", errorBars = TRUE, errorBarType = "sd")
 #'
 #' # Example 3 (simulated dataset)
 #' dat <- createDF(nVP = 50, nTrl = 50,

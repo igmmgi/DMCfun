@@ -1,5 +1,5 @@
-#' A summarised dataset: see raw data file simonData1.txt and dmcObservedData.R
-#' This is the raw Simon Task data from Ulrich et al. (2015)
+#' A summarised dataset: see raw data file flankerDataRaw and dmcObservedData.R
+#' This is the summarised Flanker Task data from Ulrich et al. (2015)
 #'
 #' \itemize{
 #'   \item $summary --> Reaction time correct, standard deviation correct, percentage
@@ -14,7 +14,7 @@
 #'
 #' @docType data
 #' @keywords datasets
-#' @name simonData1
-#' @usage simonData1
+#' @name flankerData
+#' @usage flankerData
 #' @format dmcob
 NULL
