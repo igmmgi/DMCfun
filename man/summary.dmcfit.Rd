@@ -22,15 +22,15 @@ Summary of the simulation results from dmcFitAgg/dmcFitVPs.
 library(DMCfun)
 
 # Example 1
-fitAgg <- dmcFitAgg(flankerData1, nTrl = 1000)
+fitAgg <- dmcFitAgg(flankerData, nTrl = 1000)
 summary(fitAgg)
-plot(fitAgg, flankerData1)
+plot(fitAgg, flankerData)
 
 # Example 2
-fitVPs <- dmcFitVPs(flankerData1, nTrl = 1000)
+fitVPs <- dmcFitVPs(flankerData, nTrl = 1000)
 summary(fitVPs)
 fit <- mean(fitVPs)
-plot(fit, flankerData1)
+plot(fit, flankerData)
 }
 
 }

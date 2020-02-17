@@ -22,12 +22,12 @@ Mean of the simulation results from dmcFitAgg/dmcFitVPs.
 library(DMCfun)
 
 # Example 1: Fit individual data then aggregate
-fitVPs <- dmcFitVPs(flankerData1, nTrl = 1000)
+fitVPs <- dmcFitVPs(flankerData, nTrl = 1000)
 summary(fitVPs)
-plot(fitVPs, flankerData1, VP = 1)
+plot(fitVPs, flankerData, VP = 1)
 fitAgg <- mean(fitVPs)
 summary(fitAgg)
-plot(fitAgg, flankerData1)
+plot(fitAgg, flankerData)
 }
 
 }

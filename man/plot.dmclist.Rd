@@ -44,7 +44,7 @@ that dmcSim is run with fullData = TRUE.
 library(DMCfun)
 
 # Example 1
-params <- list(amp = seq(20, 30, 2), tau = c(20, 250))
+params <- list(amp = seq(20, 30, 2))
 dmc = dmcSims(params)
 plot(dmc, ncol = 2, xlim = c(0, 1300), ylim = c(-100, 200))
 

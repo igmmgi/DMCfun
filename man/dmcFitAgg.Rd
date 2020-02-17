@@ -22,8 +22,7 @@ dmcFitAgg(
 )
 }
 \arguments{
-\item{resOb}{Observed data (see flankerData1, flankerData2,
-simonTask1 for data format)}
+\item{resOb}{Observed data (see flankerData, simonTask for data format)}
 
 \item{nTrl}{Number of trials to use within dmcSim}
 
@@ -39,7 +38,7 @@ simonTask1 for data format)}
 
 \item{fitInitialGrid}{TRUE/FALSE (NB. overrides fitInitialTau)}
 
-\item{fitInitialGridN}{10}
+\item{fitInitialGridN}{10 reduce if searching more than 1 initial parameter}
 
 \item{fixedGrid}{Fix parameter for initial grid search}
 
@@ -66,16 +65,16 @@ of the CAF and CDF functions.
 library(DMCfun)
 
 # Example 1: Flanker data from Ulrich et al. (2015)
-fit <- dmcFitAgg(flankerData1)
-plot(fit, flankerData1)
+fit <- dmcFitAgg(flankerData)
+plot(fit, flankerData)
 summary(fit)
 
 # Example 2: Simon data from Ulrich et al. (2015)
-fit <- dmcFitAgg(simonData1)
-plot(fit, simonData1)
+fit <- dmcFitAgg(simonData)
+plot(fit, simonData)
 summary(fit)
 
-# Example 5: Simulated Data (+ve going delta function)
+# Example 3: Simulated Data (+ve going delta function)
 dat <- createDF(nVP = 20, nTrl = 500,
                 design = list("Comp" = c("comp", "incomp")))
 dat <- addDataDF(dat,

@@ -4,8 +4,7 @@
 #' minimizing the root-mean-square error (RMSE) between a weighted combination
 #' of the CAF and CDF functions.
 #'
-#' @param resOb Observed data (see flankerData1, flankerData2,
-#' simonTask1 for data format)
+#' @param resOb Observed data (see flankerData and simonTask for data format)
 #' @param nTrl Number of trials to use within dmcSim
 #' @param startVals Starting values for to-be estimated parameters
 #' @param minVals Minimum values for the to-be estimated parameters

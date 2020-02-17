@@ -4,12 +4,12 @@ test_that("plot.dmcob", {
 
   # test 1: real datasets
   # just check code does not error
-  testthat::expect_error(plot(DMCfun::flankerData1), NA)
-  testthat::expect_error(plot(DMCfun::flankerData1, errorBars = FALSE), NA)
-  testthat::expect_error(plot(DMCfun::simonData1, errorBars = FALSE), NA)
-  testthat::expect_error(plot(DMCfun::simonData1, errorBarType = "sd"), NA)
-  testthat::expect_error(plot(DMCfun::simonData1, errorBarType = "se"), NA)
-  testthat::expect_error(plot(DMCfun::simonData1), NA)
+  testthat::expect_error(plot(DMCfun::flankerData), NA)
+  testthat::expect_error(plot(DMCfun::flankerData, errorBars = FALSE), NA)
+  testthat::expect_error(plot(DMCfun::simonData, errorBars = FALSE), NA)
+  testthat::expect_error(plot(DMCfun::simonData, errorBarType = "sd"), NA)
+  testthat::expect_error(plot(DMCfun::simonData, errorBarType = "se"), NA)
+  testthat::expect_error(plot(DMCfun::simonData), NA)
 
   # test 2: simulated datasets
   dat <- createDF(nVP = 50, nTrl = 50,

@@ -28,13 +28,13 @@ plot(dmc, ncol = 2, col = c("red", "green"), cex = 1.5)
 dev.off()
 
 # figure 5
-fit <- dmcFitAgg(flankerData1, fitInitialGridN = 30) # flanker data from Ulrich et al. (2015)
+fit <- dmcFitAgg(flankerData, fitInitialGridN = 30) # flanker data from Ulrich et al. (2015)
 png("figures/figure5.png", width = 800, height = 600)
-plot(fit, flankerData1)
+plot(fit, flankerData)
 dev.off()
 
 # figure 6
-fit <- dmcFitAgg(simonData1, fitInitialGridN = 30) # simon data from Ulrich et al. (2015)
+fit <- dmcFitAgg(simonData, fitInitialGridN = 30) # simon data from Ulrich et al. (2015)
 png("figures/figure6.png", width = 800, height = 600)
-plot(fit, simonData1)
+plot(fit, simonData)
 dev.off()

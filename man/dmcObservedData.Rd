@@ -39,8 +39,7 @@ DataFrame
 }
 \description{
 Basic example analysis script to create data object required
-for observed data. Example raw *.txt files are flankerData1.txt, flankerData2.txt,
-and simonData1.txt.
+for observed data. Example raw *.txt files are flankerData.txt and simonData.txt.
 }
 \examples{
 \dontrun{
@@ -48,22 +47,15 @@ library(psychReport)
 requiredPackages(c("DMCfun", "ez", "dplyr"))
 
 # Example 1
-# datOb <- dmcObservedData("flankerData1.txt")
+# datOb <- dmcObservedData("flankerData.txt")
 
 # Example 2
-# datOb <- dmcObservedData("flankerData2.txt")
+# datOb <- dmcObservedData("simonData.txt")
 
-# Example 3
-# datOb <- dmcObservedData("simonData1.txt")
-
-# Example 4
-# datOb <- dmcObservedData("simonData2.txt")
-
-#############################################################################
-# Example 5 (Basic behavioural analysis from Ulrich et al. 2015)
-flankerData1$summaryVP <- tibble::add_column(Task = "flanker", flankerData1$summaryVP, .before = 2)
-simonData1$summaryVP   <- tibble::add_column(Task = "simon", simonData1$summaryVP, .before = 2)
-datAgg <- rbind(rbind(flankerData1$summaryVP, simonData1$summaryVP))
+# Example 3 (Basic behavioural analysis from Ulrich et al. 2015)
+flankerData$summaryVP <- tibble::add_column(Task = "flanker", flankerData$summaryVP, .before = 2)
+simonData$summaryVP   <- tibble::add_column(Task = "simon", simonData$summaryVP, .before = 2)
+datAgg <- rbind(rbind(flankerData$summaryVP, simonData$summaryVP))
 
 datAgg$VP   <- factor(datAgg$VP)
 datAgg$Task <- factor(datAgg$Task)
@@ -80,9 +72,9 @@ aovRt <- aovTable(aovRt)
 aovDispMeans(aovRt)
 
 # Delta
-flankerData1$deltaVP <- tibble::add_column(Task = "flanker", flankerData1$deltaVP, .before = 2)
-simonData1$deltaVP   <- tibble::add_column(Task = "simon", simonData1$deltaVP, .before = 2)
-datDelta             <- rbind(rbind(flankerData1$deltaVP, simonData1$deltaVP))
+flankerData$deltaVP <- tibble::add_column(Task = "flanker", flankerData$deltaVP, .before = 2)
+simonData$deltaVP   <- tibble::add_column(Task = "simon", simonData$deltaVP, .before = 2)
+datDelta             <- rbind(rbind(flankerData$deltaVP, simonData$deltaVP))
 
 datDelta <- datDelta \%>\%
   dplyr::select(-c("meanBin", "meanEffect")) \%>\%
@@ -98,9 +90,9 @@ aovDelta <- ezANOVA(datDelta, dv = .(rt), wid = .(VP), within = .(Task, Comp, bi
 aovDelta <- aovTable(aovDelta)
 
 # CAF
-flankerData1$cafVP <- tibble::add_column(Task = "flanker", flankerData1$cafVP, .before = 2)
-simonData1$cafVP   <- tibble::add_column(Task = "simon", simonData1$cafVP, .before = 2)
-datCaf             <- rbind(rbind(flankerData1$cafVP, simonData1$cafVP))
+flankerData$cafVP <- tibble::add_column(Task = "flanker", flankerData$cafVP, .before = 2)
+simonData$cafVP   <- tibble::add_column(Task = "simon", simonData$cafVP, .before = 2)
+datCaf             <- rbind(rbind(flankerData$cafVP, simonData$cafVP))
 
 datCaf$VP   <- factor(datCaf$VP)
 datCaf$Task <- factor(datCaf$Task)
@@ -113,7 +105,7 @@ aovCaf <- aovTable(aovCaf)
 aovDispMeans(aovCaf)
 
 }
-# Example 6
+# Example 4
 dat <- createDF(nVP = 50, nTrl = 500,
                 design = list("Comp" = c("comp", "incomp")))
 dat <- addDataDF(dat,

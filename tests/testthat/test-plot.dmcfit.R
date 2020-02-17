@@ -4,29 +4,29 @@ test_that("plot.dmcfit", {
 
   # just check code does not error
   # test 1
-  resTh <- dmcFitAgg(DMCfun::flankerData1, nTrl = 10000,
+  resTh <- dmcFitAgg(DMCfun::flankerData, nTrl = 10000,
                      printInputArgs = FALSE, printResults = FALSE)
-  testthat::expect_error(plot(resTh, DMCfun::flankerData1), NA)
+  testthat::expect_error(plot(resTh, DMCfun::flankerData), NA)
 
   # test 2
-  resTh <- dmcFitAgg(DMCfun::flankerData1, nTrl = 10000,
+  resTh <- dmcFitAgg(DMCfun::flankerData, nTrl = 10000,
                      printInputArgs = FALSE, printResults = FALSE)
-  testthat::expect_error(plot(resTh, DMCfun::flankerData1), NA)
+  testthat::expect_error(plot(resTh, DMCfun::flankerData), NA)
 
   # test 3
-  resTh <- dmcFitAgg(DMCfun::simonData1, nTrl = 10000,
+  resTh <- dmcFitAgg(DMCfun::simonData, nTrl = 10000,
                      printInputArgs = FALSE, printResults = FALSE)
-  testthat::expect_error(plot(resTh, DMCfun::simonData1), NA)
+  testthat::expect_error(plot(resTh, DMCfun::simonData), NA)
 
   # test 4
-  resTh <- dmcFitVPs(DMCfun::flankerData1, nTrl = 10000, VP = 10,
+  resTh <- dmcFitVPs(DMCfun::flankerData, nTrl = 10000, VP = 10,
                      printInputArgs = FALSE, printResults = FALSE)
-  testthat::expect_error(plot(resTh, DMCfun::flankerData1, VP = 10), NA)
+  testthat::expect_error(plot(resTh, DMCfun::flankerData, VP = 10), NA)
 
   # test 5
-  resTh <- dmcFitVPs(DMCfun::simonData1, nTrl = 10000, VP = 4,
+  resTh <- dmcFitVPs(DMCfun::simonData, nTrl = 10000, VP = 4,
                      printInputArgs = FALSE, printResults = FALSE)
-  testthat::expect_error(plot(resTh, DMCfun::flankerData1, VP = 4), NA)
+  testthat::expect_error(plot(resTh, DMCfun::flankerData, VP = 4), NA)
 
   # test 6
   dat <- createDF(nVP = 50, nTrl = 50,
