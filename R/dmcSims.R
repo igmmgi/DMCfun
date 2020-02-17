@@ -14,6 +14,7 @@
 #'
 #' # Example 1
 #' params <- list(amp = seq(10, 20, 5), tau = c(50, 100, 150), nTrl = 50000)
+#' params <- list(amp = seq(10, 20, 5))
 #' dmc <- dmcSims(params)
 #' plot(dmc[[1]])    # full combination 1
 #' plot(dmc)         # delta plots for all combinations
@@ -33,9 +34,9 @@ dmcSims <- function(params,
                     printResults = FALSE) {
 
   params  <- expand.grid(params)
-  if (ncol(params) > 1)
+  if (ncol(params) > 1) {
     uparams <- params[, lengths(lapply(params, unique)) != 1]
-  else {
+  } else {
     uparams <- params
   }
   params <- setNames(split(params, seq(nrow(params))), rownames(params))

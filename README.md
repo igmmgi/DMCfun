@@ -28,15 +28,17 @@ params <- list(tau = seq(20, 170, 10))
 dmc <- dmcSims(params)
 plot(dmc, ncol = 2, col = c("red", "green"))
 ```
-![alt text](/figures/figure3.png)     
+![alt text](/figures/figure5.png)     
 
 ## Basic Examples DMC Fit: Real data
 ``` r
-fit <- dmcFitAgg(flankerData) # flanker data from Ulrich et al. (2015)
-# fit <- dmcFitAgg(simonData) # simon data from Ulrich et al. (2015)
+fit <- dmcFitAgg(flankerData1) # flanker data from Ulrich et al. (2015)
 plot(fit, flankerData1)
-summary(fit)
 ```
 
-![alt text](/figures/figure4.png)     
+![alt text](/figures/figure6.png)     
 
+``` r
+fit <- dmcFitAgg(simonData1) # simon data from Ulrich et al. (2015)
+plot(fit, simonData1)
+```
