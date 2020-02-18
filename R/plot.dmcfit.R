@@ -111,7 +111,7 @@ plot.dmcfit <- function(x,
          ylab = "RT Correct [ms]", xlab = "", xaxt = "n", ...)
 
     lines(c(x[[1]]$summary$rtCor), type = "o", lty = 2, ...)
-    axis(1, at = c(1, 2), labels = c("Comp", "Incomp"))
+    axis(1, at = c(1, 2), labels = c("Compatible", "Incompatible"))
     legend("topleft", inset = c(0.025, 0.05),
            legend = c("Observed", "Predicted"),
            lty = c(1, 2), pch = c(1, 1))
