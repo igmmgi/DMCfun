@@ -80,7 +80,6 @@ plot(fit, simonData, VP = 1)
 summary(fit)
 fitAgg <- mean(fit)
 plot(fitAgg, simonData)
-
 }
 
 }

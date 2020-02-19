@@ -22,7 +22,7 @@ dmcFitAgg(
 )
 }
 \arguments{
-\item{resOb}{Observed data (see flankerData, simonTask for data format)}
+\item{resOb}{Observed data (see flankerData and simonTask for data format)}
 
 \item{nTrl}{Number of trials to use within dmcSim}
 

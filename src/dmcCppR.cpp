@@ -18,12 +18,12 @@ List dmcCppR(List r_in) {
   if (r_in.containsElementNamed("bnds"))           p.bnds           = as<double>(r_in["bnds"]);
   if (r_in.containsElementNamed("resMean"))        p.resMean        = as<double>(r_in["resMean"]);
   if (r_in.containsElementNamed("resSD"))          p.resSD          = as<double>(r_in["resSD"]);
-  if (r_in.containsElementNamed("sigma"))          p.sigma          = as<double>(r_in["sigma"]);
   if (r_in.containsElementNamed("aaShape"))        p.aaShape        = as<double>(r_in["aaShape"]);
+  if (r_in.containsElementNamed("spShape"))        p.spShape        = as<double>(r_in["spShape"]);
+  if (r_in.containsElementNamed("sigma"))          p.sigma          = as<double>(r_in["sigma"]);
   if (r_in.containsElementNamed("nTrl"))           p.nTrl           = as<unsigned long>(r_in["nTrl"]);
   if (r_in.containsElementNamed("tmax"))           p.tmax           = as<unsigned long>(r_in["tmax"]);
   if (r_in.containsElementNamed("varSP"))          p.varSP          = as<bool>(r_in["varSP"]);
-  if (r_in.containsElementNamed("spShape"))        p.spShape        = as<double>(r_in["spShape"]);
   if (r_in.containsElementNamed("spLimLow"))       p.spLimLow       = as<double>(r_in["spLimLow"]);
   if (r_in.containsElementNamed("spLimHigh"))      p.spLimHigh      = as<double>(r_in["spLimHigh"]);
   if (r_in.containsElementNamed("varDR"))          p.varDR          = as<bool>(r_in["varDR"]);
@@ -40,26 +40,20 @@ List dmcCppR(List r_in) {
 
   if (p.printInputArgs)  printInputArgs(p);
 
-  std::map<std::string, std::vector<double> > summary;
-  std::map<std::string, std::vector<double> > delta;
-  std::map<std::string, std::vector<double> > caf;
-  std::map<std::string, std::vector<double> > sim;
-  std::map<std::string, std::vector<std::vector<double> > > trials;
+  std::map<std::string, std::vector<double>> summary;
+  std::map<std::string, std::vector<double>> sim;
+  std::map<std::string, std::vector<std::vector<double>>> trials;
 
-  runDMCsim(p, summary, delta, caf, sim, trials);
-  if (p.printResults) printResults(p, summary, delta, caf);
+  runDMCsim(p, summary, sim, trials);
+  if (p.printResults) printResults(p, summary);
 
   List dmc;
   if (p.fullData) {
     dmc["summary"] = summary;
-    dmc["delta"] = delta;
-    dmc["caf"] = caf;
     dmc["sim"] = sim;
     dmc["trials"] = trials;
   } else {
     dmc["summary"] = summary;
-    dmc["delta"] = delta;
-    dmc["caf"] = caf;
     dmc["sim"] = sim;
   }
   return (dmc);

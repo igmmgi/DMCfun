@@ -68,15 +68,8 @@ dmcFitAgg <- function(resOb,
                       printInputArgs   = TRUE,
                       printResults     = FALSE) {
 
-  prms <- list("amp"     = startVals[1],
-               "tau"     = startVals[2],
-               "mu"      = startVals[3],
-               "bnds"    = startVals[4],
-               "resMean" = startVals[5],
-               "resSD"   = startVals[6],
-               "aaShape" = startVals[7],
-               "spShape" = startVals[8])
-
+  prms <- startVals 
+  
   # check observed data contains correct number of delta/CAF bins
   if (nrow(resOb$delta) != sum(!seq(stepDelta, 100, stepDelta) %in% 100)) {
     stop("Number of delta bins in observed data and nDelta bins are not equal!")
@@ -86,17 +79,19 @@ dmcFitAgg <- function(resOb,
   }
 
   # function to minimise
-  minimizeCostValue <- function(x, prms, fixedFit, resOb, nTrl, stepDelta, stepCAF, printInputArgs, printResults) {
+  minimizeCostValue <- function(x, prms, fixedFit, resOb, nTrl, stepDelta, stepCAF, minVals, maxVals, printInputArgs, printResults) {
 
     prms[!as.logical(fixedFit)] <- x
-
-    resTh <- dmcSim(amp = prms$amp, tau = prms$tau, mu = prms$mu,
-                    bnds = prms$bnds, resMean = prms$resMean, resSD = prms$resSD,
-                    aaShape = prms$aaShape,
-                    varSP = TRUE, spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
+   
+    # implement bounds 
+    prms <- pmax(prms, minVals)
+    prms <- pmin(prms, maxVals)
+    
+    resTh <- dmcSim(amp = prms[1], tau = prms[2], mu = prms[3], bnds = prms[4], 
+                    resMean = prms[5], resSD = prms[6], aaShape = prms[7],
+                    varSP = TRUE, spShape = prms[8], spLim = c(-prms[4], prms[4]),
                     nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,
                     printInputArgs = printInputArgs, printResults = printResults)
-
     return(calculateCostValue(resTh, resOb))
 
   }
@@ -118,29 +113,36 @@ dmcFitAgg <- function(resOb,
     startValsGrid <- dplyr::distinct(expand.grid(Map(unique, startValsGrid)))
     message("Searching initial parameter gridspace: N = ", nrow(startValsGrid))
 
-    # progress bar
-    pb <- txtProgressBar(min = 0, max = nrow(startValsGrid), style = 3)
-    progress <- function(n) {
-      setTxtProgressBar(pb, n)
-    }
+     # progress bar
+     pb <- txtProgressBar(min = 0, max = nrow(startValsGrid), style = 3)
+     progress <- function(n) {
+       setTxtProgressBar(pb, n)
+     }
 
-    cl <- parallel::makeCluster(parallel::detectCores() / 2)
-    doSNOW::registerDoSNOW(cl)
-    costValue <- foreach::foreach(i = 1:nrow(startValsGrid), .packages = "DMCfun", .options.snow = list(progress = progress)) %dopar% {
+     # R check limits number of cores to 2 (https://cran.r-project.org/web/packages/policies.html)
+     chk <- Sys.getenv("_R_CHECK_LIMIT_CORES_", "")
+     if (nzchar(chk) && chk == "TRUE") {
+       num_cores <- 2
+     } else {
+       num_cores <- parallel::detectCores() - 2
+     }
+     
+     cl <- parallel::makeCluster(num_cores)
+     doSNOW::registerDoSNOW(cl)
+     costValue <- foreach::foreach(i = 1:nrow(startValsGrid), 
+                                   .packages = "DMCfun", 
+                                   .options.snow = list(progress = progress)) %dopar% {
+       resTh <- dmcSim(amp = startValsGrid[i, 1], tau = startValsGrid[i, 2], mu = startValsGrid[i, 3],
+                       bnds = startValsGrid[i, 4], resMean = startValsGrid[i, 5], resSD = startValsGrid[i, 6],
+                       aaShape = startValsGrid[i, 7],
+                       varSP = TRUE, spShape = startValsGrid[i, 8], spLim = c(-startValsGrid[i, 4], startValsGrid[i, 4]),
+                       nTrl = 10000, stepDelta = stepDelta, stepCAF = stepCAF,
+                       printInputArgs = FALSE, printResults = FALSE)
+       return(calculateCostValue(resTh, resOb))
+     }
+     close(pb)
+     stopCluster(cl)
 
-      resTh <- dmcSim(amp = startValsGrid[i, 1], tau = startValsGrid[i, 2], mu = startValsGrid[i, 3],
-                      bnds = startValsGrid[i, 4], resMean = startValsGrid[i, 5], resSD = startValsGrid[i, 6],
-                      aaShape = startValsGrid[i, 7],
-                      varSP = TRUE, spShape = startValsGrid[i, 8], spLim = c(-startValsGrid[i, 4], startValsGrid[i, 4]),
-                      nTrl = 10000, stepDelta = stepDelta, stepCAF = stepCAF,
-                      printInputArgs = printInputArgs, printResults = FALSE)
-      return(calculateCostValue(resTh, resOb))
-
-    }
-    close(pb)
-    stopCluster(cl)
-
-    # adjust start, min and max vals for subsequent fit
     startVals <- as.numeric(startValsGrid[which.min(costValue), ])
 
   }
@@ -148,23 +150,31 @@ dmcFitAgg <- function(resOb,
   # optimize
   fit <- optimr::optimr(par = startVals[!as.logical(fixedFit)], fn = minimizeCostValue,
                         prms = prms, fixedFit = fixedFit, resOb = resOb,
-                        nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,
+                        nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF, minVals = minVals, maxVals = maxVals,
                         printInputArgs = printInputArgs, printResults = printResults,
-                        method = "Nelder-Mead",
+                        method = "Nelder-Mead", 
                         control = list(parscale = parScale[!as.logical(fixedFit)]))
 
   prms[!as.logical(fixedFit)] <- fit$par
-  fit$par <- as.vector(unlist(prms))
-
-  resTh <- dmcSim(amp = prms$amp, tau = prms$tau, mu = prms$mu,
-                  bnds = prms$bnds, resMean = prms$resMean, resSD = prms$resSD,
-                  aaShape = prms$aaShape,
-                  varSP = TRUE, spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
-                  nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,
-                  printResults = FALSE)
+  
+  # implement bounds 
+  prms <- pmax(prms, minVals)
+  prms <- pmin(prms, maxVals)
+  if (any(prms == minVals) || any(prms == maxVals)) {
+    warning("Parameter estimates at minVals/maxVals bounds!")
+  }
+  
+  fit$par <- prms 
 
   cat(sprintf("RMSE: %.3f\n", fit$value))
-
+  resTh <- dmcSim(amp = prms[1], tau = prms[2], mu = prms[3],
+                  bnds = prms[4], resMean = prms[5], resSD = prms[6],
+                  aaShape = prms[7],
+                  varSP = TRUE, spShape = prms[8], spLim = c(-prms[4], prms[4]),
+                  nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,
+                  printResults = TRUE)
+  resTh$prms[1:8] <- prms 
+  
   dmcfit <- list(resTh, fit)
   class(dmcfit) <- c("dmcfit")
 

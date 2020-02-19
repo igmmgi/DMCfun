@@ -29,7 +29,7 @@
 #' library(DMCfun)
 #'
 #' # Example 1
-#' resTh <- dmcFitAgg(flankerData, nTrl = 5000)
+#' resTh <- dmcFitAgg(flankerData, nTrl = 50000)
 #' plot(resTh, flankerData)
 #'
 #' # Example 2
@@ -42,9 +42,9 @@
 #' plot(resTh, simonData)
 #'
 #' # Example 4
-#' resTh <- dmcFitAgg(simonData, nTrl = 5000, VP = 1)
-#' plot(simonData, VP = 1)
-#' plot(resTh, simonData, VP = 1)
+#' resTh <- dmcFitVPs(simonData, nTrl = 5000, VP = 6)
+#' plot(simonData, VP = 6)
+#' plot(resTh, simonData, VP = 6)
 #' }
 #'
 #' @export
@@ -71,19 +71,19 @@ plot.dmcfit <- function(x,
   }
 
   if (is.null(VP)) {
-    x$summary <- x[[1]]$summary
-    x$delta   <- x[[1]]$delta
-    x$caf     <- x[[1]]$caf
+    x$means <- x[[1]]$means
+    x$delta <- x[[1]]$delta
+    x$caf   <- x[[1]]$caf
   } else {
     if (!VP %in% y$summaryVP$VP) {
       stop("datOb does not contain requested VP!")
     }
-    x$summary <- x[[VP]][[1]]$summary
-    x$delta   <- x[[VP]][[1]]$delta
-    x$caf     <- x[[VP]][[1]]$caf
-    y$summary <- y$summaryVP[y$summaryVP$VP == VP, ]
-    y$delta   <- y$deltaVP[y$deltaVP$VP == VP, ]
-    y$caf     <- y$cafVP[y$cafVP$VP == VP, ]
+    x$means <- x[[VP]][[1]]$means
+    x$delta <- x[[VP]][[1]]$delta
+    x$caf   <- x[[VP]][[1]]$caf
+    y$means <- y$summaryVP[y$summaryVP$VP == VP, ]
+    y$delta <- y$deltaVP[y$deltaVP$VP == VP, ]
+    y$caf   <- y$cafVP[y$cafVP$VP == VP, ]
   }
 
   if (figType == "summary") {
@@ -109,8 +109,7 @@ plot.dmcfit <- function(x,
     plot(y$summary$rtCor, type = "o",
          ylim = ylimRt, xlim = c(0.5, 2.5),
          ylab = "RT Correct [ms]", xlab = "", xaxt = "n", ...)
-
-    lines(c(x[[1]]$summary$rtCor), type = "o", lty = 2, ...)
+    lines(c(x$means$rtCor), type = "o", lty = 2, ...)
     axis(1, at = c(1, 2), labels = c("Compatible", "Incompatible"))
     legend("topleft", inset = c(0.025, 0.05),
            legend = c("Observed", "Predicted"),
@@ -121,7 +120,7 @@ plot.dmcfit <- function(x,
     plot(y$summary$perErr, type = "o",
          ylim = ylimEr, xlim = c(0.5, 2.5),
          ylab = "Error Rate [%]", xlab = "", xaxt = "n", ...)
-    lines(x[[1]]$summary$perErr, type = "b", lty = 2, ...)
+    lines(x$means$perErr, type = "b", lty = 2, ...)
     axis(1, at = c(1, 2), labels = c("Compatible", "Incompatible"))
     legend("topleft", inset = c(0.025, 0.05),
            legend = c("Observed", "Predicted"),
@@ -132,7 +131,7 @@ plot.dmcfit <- function(x,
     plot(y$summary$rtErr, type = "o",
          ylim = ylimRt, xlim = c(0.5, 2.5),
          ylab = "RT Error [ms]", xlab = "", xaxt = "n", ...)
-    lines(x[[1]]$summary$rtErr, type = "b", lty = 2, ...)
+    lines(x$means$rtErr, type = "b", lty = 2, ...)
     axis(1, at = c(1, 2), labels = c("Compatible", "Incompatible"))
     legend("topleft", inset = c(0.025, 0.05),
            legend = c("Observed", "Predicted"),

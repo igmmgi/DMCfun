@@ -41,7 +41,6 @@
 #' summary(fit)
 #' fitAgg <- mean(fit)
 #' plot(fitAgg, simonData)
-#'
 #' }
 #'
 #' @export
@@ -62,8 +61,7 @@ dmcFitVPs <- function(resOb,
                       printResults     = FALSE) {
 
   if (length(VP) == 0) {
-    # fit all individual VPs in data
-    VP = unique(resOb$summaryVP$VP)
+    VP = unique(resOb$summaryVP$VP)  # fit all individual VPs in data
   }
 
   dmcfit <- vector("list", max(VP))

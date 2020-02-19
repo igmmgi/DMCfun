@@ -8,10 +8,7 @@
 
 void printResults(
         Prms &p,
-        std::map<std::string, std::vector<double> > &resSum,
-        std::map<std::string, std::vector<double> > &resDelta,
-        std::map<std::string, std::vector<double> > &resCAF
-) {
+        std::map<std::string, std::vector<double> > &resSum) {
 
     Rcpp::Rcout << "Results Summary:" << std::endl;
     Rcpp::Rcout << "\trtCor\tsdRtCor\tperErr\trtErr\tsdRtErr" << std::endl;
@@ -36,23 +33,23 @@ void printResults(
     Rcpp::Rcout << std::endl;
 
     Rcpp::Rcout << "comp" << "\t";
-    for (unsigned int i = 0; i < resDelta["delta_pct_comp"].size(); i++) 
-        Rcpp::Rcout << std::fixed << std::setprecision(1) << resDelta["delta_pct_comp"][i] << "\t";
+    for (unsigned int i = 0; i < resSum["delta_pct_comp"].size(); i++) 
+        Rcpp::Rcout << std::fixed << std::setprecision(1) << resSum["delta_pct_comp"][i] << "\t";
     Rcpp::Rcout << std::endl;
 
     Rcpp::Rcout << "incomp" << "\t";
-    for (unsigned int i = 0; i < resDelta["delta_pct_incomp"].size(); i++) 
-        Rcpp::Rcout << std::fixed << std::setprecision(1) << resDelta["delta_pct_incomp"][i] << "\t";
+    for (unsigned int i = 0; i < resSum["delta_pct_incomp"].size(); i++) 
+        Rcpp::Rcout << std::fixed << std::setprecision(1) << resSum["delta_pct_incomp"][i] << "\t";
     Rcpp::Rcout << std::endl;
 
     Rcpp::Rcout << "mean" << "\t";
-    for (unsigned int i = 0; i < resDelta["delta_pct_mean"].size(); i++) 
-        Rcpp::Rcout << std::fixed << std::setprecision(1) << resDelta["delta_pct_mean"][i] << "\t";
+    for (unsigned int i = 0; i < resSum["delta_pct_mean"].size(); i++) 
+        Rcpp::Rcout << std::fixed << std::setprecision(1) << resSum["delta_pct_mean"][i] << "\t";
     Rcpp::Rcout << std::endl;
 
     Rcpp::Rcout << "effect" << "\t";
-    for (unsigned int i = 0; i < resDelta["delta_pct_delta"].size(); i++) 
-        Rcpp::Rcout << std::fixed << std::setprecision(1) << std::right << std::setw(5) << resDelta["delta_pct_delta"][i] << "\t";
+    for (unsigned int i = 0; i < resSum["delta_pct_delta"].size(); i++) 
+        Rcpp::Rcout << std::fixed << std::setprecision(1) << std::right << std::setw(5) << resSum["delta_pct_delta"][i] << "\t";
     Rcpp::Rcout << std::endl;
     Rcpp::Rcout << std::endl;
 
@@ -63,12 +60,12 @@ void printResults(
     Rcpp::Rcout << std::endl;
 
     Rcpp::Rcout << "comp" << "\t";
-    for (unsigned int i = 0; i < resCAF["caf_comp"].size(); i++) 
-        Rcpp::Rcout << std::fixed << std::setprecision(3) << std::right << std::setw(7) << resCAF["caf_comp"][i] << "\t";
+    for (unsigned int i = 0; i < resSum["caf_comp"].size(); i++) 
+        Rcpp::Rcout << std::fixed << std::setprecision(3) << std::right << std::setw(7) << resSum["caf_comp"][i] << "\t";
     Rcpp::Rcout << std::endl;
     Rcpp::Rcout << "incomp" << "\t";
-    for (unsigned int i = 0; i < resCAF["caf_incomp"].size(); i++) 
-        Rcpp::Rcout << std::fixed << std::setprecision(3) << std::right << std::setw(7) << resCAF["caf_incomp"][i] << "\t";
+    for (unsigned int i = 0; i < resSum["caf_incomp"].size(); i++) 
+        Rcpp::Rcout << std::fixed << std::setprecision(3) << std::right << std::setw(7) << resSum["caf_incomp"][i] << "\t";
     Rcpp::Rcout << std::endl;
 
 }

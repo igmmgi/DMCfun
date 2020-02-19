@@ -174,17 +174,17 @@ void printInputArgs(Prms &p) {
     Rcpp::Rcout << "bnds: " << p.bnds << "\n";
     Rcpp::Rcout << "resMean: " << p.resMean << "\n";
     Rcpp::Rcout << "resSD: " << p.resSD << "\n";
-    Rcpp::Rcout << "nTrl: " << p.nTrl << "\n";
-    Rcpp::Rcout << "tmax: " << p.tmax << "\n";
+    // Rcpp::Rcout << "nTrl: " << p.nTrl << "\n";
+    // Rcpp::Rcout << "tmax: " << p.tmax << "\n";
     if (p.varSP) {
-        Rcpp::Rcout << "varSP: " << p.varSP << "\n";
+        // Rcpp::Rcout << "varSP: " << p.varSP << "\n";
         Rcpp::Rcout << "spShape: " << p.spShape << "\n";
-        Rcpp::Rcout << "spLims: " << p.spLimLow << " to " << p.spLimHigh << "\n";
+        // Rcpp::Rcout << "spLims: " << p.spLimLow << " to " << p.spLimHigh << "\n";
     }
     if (p.varDR) {
-        Rcpp::Rcout << "varDR: " << p.varDR << "\n";
+        // Rcpp::Rcout << "varDR: " << p.varDR << "\n";
         Rcpp::Rcout << "drShape: " << p.drShape << "\n";
-        Rcpp::Rcout << "drLims: " << p.drLimLow << " to " << p.drLimHigh;
+        // Rcpp::Rcout << "drLims: " << p.drLimLow << " to " << p.drLimHigh;
     }
     Rcpp::Rcout << std::endl;
 }

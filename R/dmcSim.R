@@ -70,48 +70,57 @@
 #' }
 #'
 #' @export
-dmcSim <- function(amp = 20, tau = 30, mu = 0.5, bnds = 75, resMean = 300, resSD = 30,
-                   sigma = 4, aaShape = 2,
-                   nTrl = 100000, tmax = 1000,
-                   varSP = FALSE, spShape = 3, spLim = c(-75, 75),
+dmcSim <- function(amp = 20, tau = 30, mu = 0.5, bnds = 75, resMean = 300, resSD = 30, aaShape = 2, spShape = 3,
+                   sigma = 4,  nTrl = 100000, tmax = 1000,
+                   varSP = FALSE, spLim = c(-75, 75),
                    varDR = FALSE, drShape = 3, drLim = c(0.1, 0.7),
                    fullData = FALSE, nTrlData = 5,
                    stepDelta = 5, stepCAF = 20,
                    printInputArgs = TRUE, printResults = TRUE,
                    setSeed = FALSE) {
-
-  dmc = dmcCppR(r_in = list(amp = amp, tau = tau, mu = mu, bnds = bnds, resMean = resMean, resSD = resSD,
-                            sigma = sigma, aaShape = aaShape,
-                            nTrl = nTrl, tmax = tmax,
-                            varSP = varSP, spShape = spShape, spLimLow = spLim[1], spLimHigh = spLim[2],
-                            varDR = varDR, drShape = drShape, drLimLow = drLim[1], drLimHigh = drLim[2],
+  
+  dmc <- dmcCppR(r_in = list(amp = amp, tau = tau, mu = mu, bnds = bnds, resMean = resMean, resSD = resSD, aaShape = aaShape, spShape = spShape,
+                            sigma = sigma,  nTrl = nTrl, tmax = tmax,
+                            varSP = varSP, spLimLow = spLim[1], spLimHigh = spLim[2],
+                            varDR = varDR, drShape = 3, drLimLow = drLim[1], drLimHigh = drLim[2],
                             fullData = fullData, nTrlData = nTrlData,
                             stepDelta = stepDelta, stepCAF = stepCAF,
                             printInputArgs = printInputArgs, printResults = printResults,
                             setSeed = setSeed))
 
   # summary
-  dmc$summary <- tibble::as_tibble(rbind(dmc$summary$resSum_comp, dmc$summary$resSum_incomp))
-  colnames(dmc$summary) <- c("rtCor", "sdRtCor", "perErr", "rtErr", "sdRtErr")
-  dmc$summary <- tibble::add_column(Comp = c("comp", "incomp"), dmc$summary, .before = TRUE)
+  summary <- dmc$summary 
+  
+  dmc$means <- tibble::as_tibble(rbind(summary$resSum_comp, summary$resSum_incomp), .names_repair = "minimal")
+  colnames(dmc$means) <- c("rtCor", "sdRtCor", "perErr", "rtErr", "sdRtErr")
+  dmc$means <- tibble::add_column(Comp = c("comp", "incomp"), dmc$means, .before = TRUE)
 
   # caf
-  nCAF    <- length(dmc$caf$caf_comp)
-  dmc$caf <- tibble::tibble(accPer = c(dmc$caf$caf_comp, dmc$caf$caf_incomp))
+  if(length(summary$caf_comp) != 5) {
+    save(dmc, file = "xy.Rdata")
+    stop()
+  }
+  nCAF    <- length(summary$caf_comp)
+  dmc$caf <- tibble::tibble(accPer = c(summary$caf_comp, summary$caf_incomp))
   dmc$caf <- tibble::add_column(bin = rep(1:nCAF, each = 1, times = 2), dmc$caf, .before = TRUE)
   dmc$caf <- tibble::add_column(Comp = rep(c("comp", "incomp"), each = nCAF), dmc$caf, .before = TRUE)
 
   # delta
-  nDelta    <- length(dmc$delta$delta_pct_comp)
-  dmc$delta <- tibble::tibble("meanComp" = dmc$delta$delta_pct_comp,
-                              "meanIncomp" = dmc$delta$delta_pct_incomp,
-                              "meanBin" = dmc$delta$delta_pct_mean,
-                              "meanEffect" = dmc$delta$delta_pct_delta)
+  if(length(summary$delta_pct_comp) != 19) {
+    save(dmc, file = "xy.Rdata")
+    stop()
+  }
+  nDelta    <- length(summary$delta_pct_comp)
+  dmc$delta <- tibble::tibble("meanComp" = summary$delta_pct_comp,
+                              "meanIncomp" = summary$delta_pct_incomp,
+                              "meanBin" = summary$delta_pct_mean,
+                              "meanEffect" = summary$delta_pct_delta)
   dmc$delta <- tibble::add_column("Bin" = rep(1:nDelta, each = 1, times = 1), dmc$delta, .before = TRUE)
-
+  
   # store parameters used to call function
   dmc$prms <- modifyList(as.list(formals(dmcSim)), as.list(sys.call()))
 
+  dmc$summary <- NULL
   class(dmc) <- "dmcsim"
   return(dmc)
 

@@ -133,7 +133,14 @@ plot.dmcsim <- function(x,
          ylim = c(-x$prms$bnds - 20, x$prms$bnds + 20),
          xlab = "", ylab = "E[X(t)]", ...)
     lines(c(1:x$prms$tmax), -x$sim$eq4, type = "l", lty = 2, col = "red", ...)
-    lines(c(1:x$prms$tmax), cumsum(rep(mean(x$sim$dr_sp[1]), x$prms$tmax)), ...)
+    
+    if (x$prms$varDR) {
+      dr <- mean(as.numeric(as.character(x$prms$drLim)[2:3]))
+    } else {
+      dr <- x$prms$mu
+    }
+    
+    lines(c(1:x$prms$tmax), cumsum(rep(dr, x$prms$tmax)), ...)
     lines(c(1:x$prms$tmax), x$sim$activation_comp,   col = "green", ...)
     lines(c(1:x$prms$tmax), x$sim$activation_incomp, col = "red", ...)
     legend("bottomright", legend = c("Compatible", "Incompatible"),
@@ -147,10 +154,10 @@ plot.dmcsim <- function(x,
     lines(c(0, x$prms$tmax), c(-x$prms$bnds, -x$prms$bnds), type = "l", ...)
 
     for (trl in c(1:x$prms$nTrlData)) {
-      idx <- which(abs(x$trials$trials_comp[[trl]]) >= x$prms$bnds)[1]
-      lines(x$trials$trials_comp[[trl]][1:idx], type = "l", col = "green", ...)
-      idx <- which(abs(x$trials$trials_incomp[[trl]]) >= x$prms$bnds)[1]
-      lines(x$trials$trials_incomp[[trl]][1:idx], type = "l", col = "red", ...)
+      idx <- which(abs(x$trials$comp[[trl]]) >= x$prms$bnds)[1]
+      lines(x$trials$comp[[trl]][1:idx], type = "l", col = "green", ...)
+      idx <- which(abs(x$trials$incomp[[trl]]) >= x$prms$bnds)[1]
+      lines(x$trials$incomp[[trl]][1:idx], type = "l", col = "red", ...)
     }
 
     legend("bottomright", legend = c("Compatible", "Incompatible"), col = c("green", "red"),
@@ -211,19 +218,19 @@ plot.dmcsim <- function(x,
 
   } else if (figType == "rtCorrect") {
 
-    plot(c(1, 2), x$summary$rtCor, type = "o",
+    plot(c(1, 2), x$means$rtCor, type = "o",
          ylim = ylimRt, xlim = c(0.5, 2.5),
          ylab = "RT Correct [ms]", xlab = "",
          xaxt = "n", ...)
     axis(1, at = c(1, 2), labels = c("Compatible", "Incompatible"))
 
     if (errorBars) {
-      addErrorBars(c(1, 2), x$summary$rtCor, x$summary$sdRtCor)
+      addErrorBars(c(1, 2), x$means$rtCor, x$means$sdRtCor)
     }
 
   } else if (figType == "errorRate") {
 
-    plot(c(1, 2), x$summary$perErr, type = "o",
+    plot(c(1, 2), x$means$perErr, type = "o",
          ylim = ylimErr, xlim = c(0.5, 2.5),
          ylab = "Error Rate [%]", xlab = "",
          xaxt = "n", ...)
@@ -231,14 +238,14 @@ plot.dmcsim <- function(x,
 
   } else if (figType == "rtErrors") {
 
-    plot(c(1, 2), x$summary$rtErr, type = "o",
+    plot(c(1, 2), x$means$rtErr, type = "o",
          ylim = ylimRt, xlim = c(0.5, 2.5),
          ylab = "RT Error [ms]", xlab = "",
          xaxt = "n", ...)
     axis(1, at = c(1, 2), labels = c("Compatible", "Incompatible"))
 
     if (errorBars) {
-      addErrorBars(c(1, 2), x$summary$rtErr, x$summary$sdRtErr)
+      addErrorBars(c(1, 2), x$means$rtErr, x$means$sdRtErr)
     }
 
   } else if (figType == "all" & length(x) == 6) {

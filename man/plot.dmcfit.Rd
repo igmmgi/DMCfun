@@ -59,7 +59,7 @@ that dmcSim is run with fullData = TRUE.
 library(DMCfun)
 
 # Example 1
-resTh <- dmcFitAgg(flankerData, nTrl = 5000)
+resTh <- dmcFitAgg(flankerData, nTrl = 50000)
 plot(resTh, flankerData)
 
 # Example 2
@@ -72,9 +72,9 @@ resTh <- dmcFitAgg(simonData, nTrl = 5000)
 plot(resTh, simonData)
 
 # Example 4
-resTh <- dmcFitAgg(simonData, nTrl = 5000, VP = 1)
-plot(simonData, VP = 1)
-plot(resTh, simonData, VP = 1)
+resTh <- dmcFitVPs(simonData, nTrl = 5000, VP = 6)
+plot(simonData, VP = 6)
+plot(resTh, simonData, VP = 6)
 }
 
 }

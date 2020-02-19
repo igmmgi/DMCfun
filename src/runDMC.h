@@ -5,54 +5,52 @@
 
 void runDMCsim(
         Prms &p,
-        std::map<std::string, std::vector<double> > &resSummary,
-        std::map<std::string, std::vector<double> > &resDistribution,
-        std::map<std::string, std::vector<double> > &resCAF,
-        std::map<std::string, std::vector<double> > &simulation,
+        std::map<std::string, std::vector<double>> &resSum,
+        std::map<std::string, std::vector<double>> &sim,
         std::map<std::string, std::vector<std::vector<double>>> &trials
 );
 
-void runDMCsim_t(
+void runDMCsim_ci(
         Prms &p,
-        std::map<std::string, std::vector<double> > &resSummary,
-        std::map<std::string, std::vector<double> > &resDistribution,
-        std::map<std::string, std::vector<double> > &resCAF,
-        std::map<std::string, std::vector<double> > &simulation,
+        std::map<std::string, std::vector<double>> &resSum,
+        std::map<std::string, std::vector<double>> &sim,
         std::map<std::string, std::vector<std::vector<double>>> &trials,
         std::string comp,
-        int sign,
-        std::vector<double> dr_mean,
-        std::vector<double> sp_mean
+        int sign
 );
 
-void calculate_summary(
+std::vector<double> calculate_summary(
         std::vector<double> &rts,
         std::vector<double> &errs,
-        unsigned long nTrl,
-        std::map<std::string, std::vector<double> > &resSum,
-        std::string cond
+        unsigned long nTrl
 );
 
-void calculate_percentile(
+std::vector<double> calculate_percentile(
         int nDelta,
-        std::vector<double> &rts,
-        std::map<std::string,
-        std::vector<double> > &resDistribution,
-        std::string cond
+        std::vector<double> rts
 );
 
-void calculate_delta(std::map<std::string, std::vector<double> > &resDistribution);
+void calculate_delta(
+        std::map<std::string, 
+        std::vector<double> > &resDelta
+);
 
-void variable_drift_rate(Prms &p, std::vector<double> &dr, std::vector<double> &dr_mean, int sign);
+void variable_drift_rate(
+        Prms &p,
+        std::vector<double> &dr,
+        int sign
+);
 
-void variable_starting_point(Prms &p, std::vector<double> &sp, std::vector<double> &sp_mean, int sign);
+void variable_starting_point(
+        Prms &p,
+        std::vector<double> &sp,
+        int sign
+);
 
-void calculate_caf(
+std::vector<double> calculate_caf(
         std::vector<double> &rts,
         std::vector<double> &errs,
-        int nBins,
-        std::map<std::string, std::vector<double> > &resCAF,
-        std::string cond
+        int nBins
 );
 
 void run_simulation(

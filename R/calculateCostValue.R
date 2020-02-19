@@ -32,6 +32,7 @@ calculateCostValue <- function(resTh, resOb) {
   costRT  <- sqrt((1/n_rt)  * sum((resTh$delta[c("meanComp", "meanIncomp")] - resOb$delta[c("meanComp", "meanIncomp")])**2))
 
   costValue <- (((1 - (n_rt/(n_rt + n_err))) * 1500) * costCAF) + costRT
+  
   cat(sprintf("RMSE: %.3f\n", costValue))
 
   return(costValue)

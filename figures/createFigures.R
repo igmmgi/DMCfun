@@ -17,7 +17,7 @@ dev.off()
 params <- list(tau = seq(20, 170, 10))
 dmc <- dmcSims(params)
 png("figures/figure3.png", width = 800, height = 600)
-plot(dmc, ncol = 2, col = c("red", "green"), cex = 2.0)
+plot(dmc, ncol = 2, col = c("red", "green"), cex = 1.0)
 dev.off()
 
 # figure 4

@@ -11,12 +11,12 @@ dmcSim(
   bnds = 75,
   resMean = 300,
   resSD = 30,
-  sigma = 4,
   aaShape = 2,
+  spShape = 3,
+  sigma = 4,
   nTrl = 1e+05,
   tmax = 1000,
   varSP = FALSE,
-  spShape = 3,
   spLim = c(-75, 75),
   varDR = FALSE,
   drShape = 3,
@@ -43,17 +43,17 @@ dmcSim(
 
 \item{resSD}{standard deviation of non-decisional component}
 
-\item{sigma}{diffusion constant}
-
 \item{aaShape}{shape parameter of automatic activation}
+
+\item{spShape}{shape parameter of starting point}
+
+\item{sigma}{diffusion constant}
 
 \item{nTrl}{number of trials}
 
 \item{tmax}{number of time points per trial}
 
 \item{varSP}{true/false variable starting point}
-
-\item{spShape}{shape parameter of starting point}
 
 \item{spLim}{limit range of distribution of starting point}
 
