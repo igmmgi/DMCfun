@@ -10,7 +10,7 @@ void runDMCsim(
         std::map<std::string, std::vector<std::vector<double>>> &trials
 );
 
-void runDMCsim_ci(
+void runDMCsim_ci (
         Prms &p,
         std::map<std::string, std::vector<double>> &resSum,
         std::map<std::string, std::vector<double>> &sim,

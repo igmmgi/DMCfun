@@ -1,7 +1,12 @@
 #include <vector>
 #include <map>
 #include <boost/random.hpp>
+#include <thread>
 #include "runDMC.h"
+#include <mutex>
+
+
+std::mutex m;
 
 void runDMCsim(
         Prms &p,
@@ -16,11 +21,27 @@ void runDMCsim(
     sim["eq4"] = eq4;
     
     // run comp and incomp simulation 
+    std::vector<std::thread> threads(2);
     std::vector<std::string> compatibility{"comp", "incomp"};
     std::vector<int> sign{1, -1};
+    
     for (int i = 0; i < 2; i++) {
-        runDMCsim_ci(p, resSum, sim, trials, compatibility[i], sign[i]);
-    } 
+        threads.emplace_back(runDMCsim_ci,                                      
+                             std::ref(p),                                                    
+                             std::ref(resSum),                                               
+                             std::ref(sim),                                                  
+                             std::ref(trials),                                               
+                             std::ref(compatibility[i]),                                     
+                             std::ref(sign[i]));      
+    }    
+   
+   for (auto &thread : threads) {
+       if (thread.joinable()) thread.join();
+   } 
+   
+//for (int i = 0; i < 2; i++) {
+//    runDMCsim_ci(p, resSum, sim, trials, compatibility[i], sign[i]);
+//} 
     calculate_delta(resSum); // finalise results requiring both comp/incomp
     
 }
@@ -57,12 +78,14 @@ void runDMCsim_ci(
         run_simulation(p, mu_vec, sp, dr, rts, errs, sign);
     }
     
+    m.lock();
     sim["activation_" + comp]   = activation_sum;
     sim["rts_" + comp]          = rts;
     sim["errs_" + comp]         = errs;
     resSum["resSum_" + comp]    = calculate_summary(rts, errs, p.nTrl );
     resSum["delta_pct_" + comp] = calculate_percentile(p.stepDelta, rts);
     resSum["caf_" + comp]       = calculate_caf(rts, errs, p.stepCAF);
+    m.unlock();
 
 }
 
@@ -189,7 +212,6 @@ std::vector<double> calculate_percentile(
 
     }
     return res;
-    
 }
 
 

@@ -124,7 +124,7 @@ dmcFitAgg <- function(resOb,
      if (nzchar(chk) && chk == "TRUE") {
        num_cores <- 2
      } else {
-       num_cores <- parallel::detectCores() - 2
+       num_cores <- parallel::detectCores() / 2
      }
      
      cl <- parallel::makeCluster(num_cores)

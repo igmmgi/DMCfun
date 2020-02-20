@@ -91,7 +91,6 @@ dmcSim <- function(amp = 20, tau = 30, mu = 0.5, bnds = 75, resMean = 300, resSD
   # summary
   summary <- dmc$summary 
   
-  
   dmc$means <- tibble::as_tibble(rbind(summary$resSum_comp, summary$resSum_incomp), .names_repair = "minimal")
   colnames(dmc$means) <- c("rtCor", "sdRtCor", "perErr", "rtErr", "sdRtErr")
   dmc$means <- tibble::add_column(Comp = c("comp", "incomp"), dmc$means, .before = TRUE)

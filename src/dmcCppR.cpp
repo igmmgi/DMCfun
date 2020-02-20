@@ -4,11 +4,14 @@
 #include "outDMC.h"
 #include "runDMC.h"
 #include <Rcpp.h>
+
 using namespace Rcpp;
 
 // [[Rcpp::plugins(cpp11)]]
 // [[Rcpp::depends(BH)]]
 // [[Rcpp::export]]
+
+
 List dmcCppR(List r_in) {
 
   Prms p; // default parameters
