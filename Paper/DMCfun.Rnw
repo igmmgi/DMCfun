@@ -485,5 +485,7 @@ this model to observed behavioural data from within conflict-like tasks.
 \section*{Conflict of interest}
 The authors declare that they have no conflict of interest.
 
+\section*{The code and data used are available at https://github.com/igmmgi/DMCfun}
+
 \printbibliography
 \end{document}

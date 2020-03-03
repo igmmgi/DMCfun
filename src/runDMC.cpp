@@ -5,7 +5,6 @@
 #include "runDMC.h"
 #include <mutex>
 
-
 std::mutex m;
 
 void runDMCsim(
@@ -35,13 +34,10 @@ void runDMCsim(
                              std::ref(sign[i]));      
     }    
    
-   for (auto &thread : threads) {
-       if (thread.joinable()) thread.join();
-   } 
+    for (auto &thread : threads) {
+        if (thread.joinable()) thread.join();
+    } 
    
-//for (int i = 0; i < 2; i++) {
-//    runDMCsim_ci(p, resSum, sim, trials, compatibility[i], sign[i]);
-//} 
     calculate_delta(resSum); // finalise results requiring both comp/incomp
     
 }
@@ -168,7 +164,7 @@ void run_simulation(
             activation_sum[i] += activation_trial;
         }
     }
-    for (auto i = 0u; i < p.tmax; i++)
+    for (auto i = 0u; i < p.tmax; i++) 
         activation_sum[i] /= p.nTrl;
 
 }
@@ -240,14 +236,17 @@ std::vector<double> calculate_caf(
     std::sort(comb.begin(), comb.end());
     std::vector<int> bins(comb.size());
     int nBins = 100 / stepCAF;
-    for (auto i = 0u; i < comb.size(); i++) bins[i] = int(nBins * (i) / comb.size());
+    for (auto i = 0u; i < comb.size(); i++) 
+        bins[i] = int(nBins * (i) / comb.size());
 
     std::vector<long int> countErr(nBins, 0);
     std::vector<long int> countCor(nBins, 0);
-    for (auto i = 0u; i < bins.size(); i++) (comb[i].second == 0) ? countCor[bins[i]]++ : countErr[bins[i]]++;
+    for (auto i = 0u; i < bins.size(); i++) 
+        (comb[i].second == 0) ? countCor[bins[i]]++ : countErr[bins[i]]++;
 
     std::vector<double> res;
-    for (auto i = 0u; i < countCor.size(); i++) res.push_back(1 - (countErr[i] / float(countCor[i] + countErr[i])));
+    for (auto i = 0u; i < countCor.size(); i++) 
+        res.push_back(1 - (countErr[i] / float(countCor[i] + countErr[i])));
     
     return res;
 
