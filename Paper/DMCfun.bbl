@@ -63,6 +63,77 @@
       \field{pages}{731\bibrangedash 750}
       \range{pages}{20}
     \endentry
+    \entry{eddelbuettel2011rcpp}{article}{}
+      \name{author}{8}{}{%
+        {{uniquename=0,uniquepart=base,hash=19c16a29c7c1db67796fdee712478912}{%
+           family={Eddelbuettel},
+           familyi={E\bibinitperiod},
+           given={Dirk},
+           giveni={D\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=3bd2c624a8715b2aeffcecaa24f3d017}{%
+           family={Fran{ç}ois},
+           familyi={F\bibinitperiod},
+           given={Romain},
+           giveni={R\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=a02c65fe532361bd5b3322939aae0684}{%
+           family={Allaire},
+           familyi={A\bibinitperiod},
+           given={J},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=067f2e01322d1b0cb9c65d573ad37d1e}{%
+           family={Ushey},
+           familyi={U\bibinitperiod},
+           given={Kevin},
+           giveni={K\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=3ec0a0f9e4328134c51d51575b356e05}{%
+           family={Kou},
+           familyi={K\bibinitperiod},
+           given={Qiang},
+           giveni={Q\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=106077795dd84fb910bd1df4f59c6608}{%
+           family={Russel},
+           familyi={R\bibinitperiod},
+           given={N},
+           giveni={N\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=c7b55993e00a5dd0f3fd17acb04ee962}{%
+           family={Chambers},
+           familyi={C\bibinitperiod},
+           given={John},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=3d2e3922795dd87c96e97a7f43cc98ab}{%
+           family={Bates},
+           familyi={B\bibinitperiod},
+           given={D},
+           giveni={D\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{9ea455e0dd2c0b2323babd22baaff277}
+      \strng{fullhash}{39dd372bea34c1cfcb94bdb2ca9f0e6b}
+      \strng{bibnamehash}{4b205cd124fa79c07c03f77edec031e4}
+      \strng{authorbibnamehash}{4b205cd124fa79c07c03f77edec031e4}
+      \strng{authornamehash}{9ea455e0dd2c0b2323babd22baaff277}
+      \strng{authorfullhash}{39dd372bea34c1cfcb94bdb2ca9f0e6b}
+      \field{sortinit}{E}
+      \field{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Statistical Software}
+      \field{title}{Rcpp: Seamless {R} and {C}++ integration}
+      \field{volume}{40}
+      \field{year}{2011}
+      \field{pages}{1\bibrangedash 18}
+      \range{pages}{18}
+    \endentry
     \entry{eriksen1974effects}{article}{}
       \name{author}{2}{}{%
         {{uniquename=1,uniquepart=given,hash=58313810fb333f7070e52d934528f448}{%

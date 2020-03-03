@@ -1,11 +1,11 @@
 # Fdb version 3
-["biber DMCfun"] 1583157338 "DMCfun.bcf" "DMCfun.bbl" "DMCfun" 1583158024
-  "DMCfun.bcf" 1583158023 99669 24f3e8dc5301aeed4c9f0bf898b7b4c8 "pdflatex"
-  "bibfile.bib" 1582192126 6535 e1e27e3318f7e8582bf3903af1bcb9e6 ""
+["biber DMCfun"] 1583250151 "DMCfun.bcf" "DMCfun.bbl" "DMCfun" 1583250243
+  "DMCfun.bcf" 1583250243 99905 eae9a9dcdf3f051f604794546ce0bea8 "pdflatex"
+  "bibfile.bib" 1583246802 6889 4cf5ab3c751ec16ac3b3dcfc0b1515e8 ""
   (generated)
   "DMCfun.bbl"
   "DMCfun.blg"
-["pdflatex"] 1583158021 "DMCfun.tex" "DMCfun.pdf" "DMCfun" 1583158024
+["pdflatex"] 1583250241 "DMCfun.tex" "DMCfun.pdf" "DMCfun" 1583250243
   "../figures/figure1.png" 1582141816 46766 7a6075365d9a9cef8127b8f7b6828289 ""
   "../figures/figure4.png" 1581922723 48230 68d97ba17132efc2d2771a4a05bcd8a9 ""
   "../figures/figure5.png" 1581922816 46614 4f021726e1ce64f90f581ef8f33fccc4 ""
@@ -201,20 +201,20 @@
   "/usr/share/texmf/tex/latex/lm/t1lmtt.fd" 1256929440 2681 354015af3b61e7be30009f084986375a ""
   "/usr/share/texmf/web2c/texmf.cnf" 1562720991 35073 2a40cfca74fcd5e2568b569ccaadf3f1 ""
   "/var/lib/texmf/web2c/xetex/xelatex.fmt" 1575404890 3754059 8834e091d334a4b2354da6622de6b753 ""
-  "DMCfun.aux" 1583158023 12989 b1917581d474cf6042bd243775102361 "pdflatex"
-  "DMCfun.bbl" 1583157339 33053 3e98fc2529feb3af30e51fe6b7f54f52 "biber DMCfun"
-  "DMCfun.out" 1583158023 147 e34980df356626ded676487b19100983 "pdflatex"
-  "DMCfun.run.xml" 1583158023 2473 f999eefd9c21256100818de778526edd "pdflatex"
-  "DMCfun.tex" 1583158017 24450 5391ba344b87352191e627ea1826ad7d ""
-  "DMCfun.xwm" 1583158023 86 bb72789d9548f16a9fad8594c106d4ce "pdflatex"
+  "DMCfun.aux" 1583250243 13563 9a6e642bb28a298e526584dbe54f8c80 "pdflatex"
+  "DMCfun.bbl" 1583250151 35879 ba34ed51181a01c354700965bd2ac417 "biber DMCfun"
+  "DMCfun.out" 1583250243 151 5e7a6391776fb508d2a4b60710a9cae3 "pdflatex"
+  "DMCfun.run.xml" 1583250243 2473 f999eefd9c21256100818de778526edd "pdflatex"
+  "DMCfun.tex" 1583250239 25762 daaaf8d78e65538dbfc8a11aecddaca5 ""
+  "DMCfun.xwm" 1583250243 86 bb72789d9548f16a9fad8594c106d4ce "pdflatex"
   "example.eps" 1582184022 286 240e01e547b56ebd62e19ba1e85adf80 ""
   "svglov3.clo" 1261135514 3809 f8e29af71acd1bd1b2a58b6166058c66 ""
   "svjour3.cls" 1526284628 47679 993de5be39389e8a2c40c32e48f0687c ""
   (generated)
-  "DMCfun.aux"
-  "DMCfun.log"
   "DMCfun.pdf"
-  "DMCfun.bcf"
-  "DMCfun.run.xml"
-  "DMCfun.xwm"
   "DMCfun.out"
+  "DMCfun.xwm"
+  "DMCfun.aux"
+  "DMCfun.run.xml"
+  "DMCfun.bcf"
+  "DMCfun.log"

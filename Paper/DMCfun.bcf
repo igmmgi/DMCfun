@@ -2170,17 +2170,21 @@
     <bcf:citekey order="18">ratcliff2013parameter</bcf:citekey>
     <bcf:citekey order="19">ulrich2015automatic</bcf:citekey>
     <bcf:citekey order="20">nelder1965simplex</bcf:citekey>
-    <bcf:citekey order="21">ulrich2015automatic</bcf:citekey>
-    <bcf:citekey order="22">ulrich2015automatic</bcf:citekey>
-    <bcf:citekey order="23">optimr</bcf:citekey>
+    <bcf:citekey order="21">eddelbuettel2011rcpp</bcf:citekey>
+    <bcf:citekey order="22">optimr</bcf:citekey>
+    <bcf:citekey order="23">ulrich2015automatic</bcf:citekey>
     <bcf:citekey order="24">ulrich2015automatic</bcf:citekey>
-    <bcf:citekey order="25">hubnerimproving</bcf:citekey>
+    <bcf:citekey order="25">ulrich2015automatic</bcf:citekey>
     <bcf:citekey order="26">ulrich2015automatic</bcf:citekey>
-    <bcf:citekey order="27">ulrich2015automatic</bcf:citekey>
+    <bcf:citekey order="27">optimr</bcf:citekey>
     <bcf:citekey order="28">ulrich2015automatic</bcf:citekey>
-    <bcf:citekey order="29">ulrich2015automatic</bcf:citekey>
+    <bcf:citekey order="29">hubnerimproving</bcf:citekey>
     <bcf:citekey order="30">ulrich2015automatic</bcf:citekey>
     <bcf:citekey order="31">ulrich2015automatic</bcf:citekey>
+    <bcf:citekey order="32">ulrich2015automatic</bcf:citekey>
+    <bcf:citekey order="33">ulrich2015automatic</bcf:citekey>
+    <bcf:citekey order="34">ulrich2015automatic</bcf:citekey>
+    <bcf:citekey order="35">ulrich2015automatic</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nyt">

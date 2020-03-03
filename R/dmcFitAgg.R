@@ -11,7 +11,7 @@
 #' @param maxVals Maximum values for the to-be estimated parameters
 #' @param fixedFit Fix parameter to starting value
 #' @param parScale Scaling values for the to-be estimated parameters
-#' @param fitInitialGrid TRUE/FALSE (NB. overrides fitInitialTau)
+#' @param fitInitialGrid TRUE/FALSE 
 #' @param fitInitialGridN 10 reduce if searching more than 1 initial parameter
 #' @param fixedGrid Fix parameter for initial grid search
 #' @param stepCAF Step size for the CAF bins. For example, a step size of 20 would result
@@ -54,10 +54,10 @@
 #'
 #' @export
 dmcFitAgg <- function(resOb,
-                      nTrl             = 50000,
+                      nTrl             = 100000,
                       startVals        = c(20, 100, 0.5,  75, 300,  30, 2, 3),
                       minVals          = c(10,   5, 0.1,  20, 200,   5, 1, 2),
-                      maxVals          = c(30, 300, 1.0, 150, 800, 100, 3, 4),
+                      maxVals          = c(40, 300, 1.0, 150, 800, 100, 3, 4),
                       fixedFit         = c( 0,   0, 0,     0,   0,   0, 0, 0),
                       parScale         = startVals/min(startVals),
                       fitInitialGrid   = TRUE,
@@ -136,7 +136,7 @@ dmcFitAgg <- function(resOb,
                        bnds = startValsGrid[i, 4], resMean = startValsGrid[i, 5], resSD = startValsGrid[i, 6],
                        aaShape = startValsGrid[i, 7],
                        varSP = TRUE, spShape = startValsGrid[i, 8], spLim = c(-startValsGrid[i, 4], startValsGrid[i, 4]),
-                       nTrl = 10000, stepDelta = stepDelta, stepCAF = stepCAF,
+                       nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,
                        printInputArgs = FALSE, printResults = FALSE)
        return(calculateCostValue(resTh, resOb))
      }

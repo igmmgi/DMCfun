@@ -1,15 +1,15 @@
 [0] Config.pm:304> INFO - This is Biber 2.12
 [0] Config.pm:307> INFO - Logfile is 'DMCfun.blg'
-[18] biber:315> INFO - === Mo Mär  2, 2020, 14:55:38
-[30] Biber.pm:371> INFO - Reading 'DMCfun.bcf'
-[71] Biber.pm:889> INFO - Found 19 citekeys in bib section 0
-[79] Biber.pm:4093> INFO - Processing section 0
-[84] Biber.pm:4254> INFO - Looking for bibtex format file 'bibfile.bib' for section 0
-[85] bibtex.pm:1512> INFO - LaTeX decoding ...
-[99] bibtex.pm:1329> INFO - Found BibTeX data source 'bibfile.bib'
-[183] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[183] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
-[183] Biber.pm:3921> INFO - Sorting list 'nyt/global//global/global' of type 'entry' with template 'nyt' and locale 'en-US'
-[183] Biber.pm:3927> INFO - No sort tailoring available for locale 'en-US'
-[198] bbl.pm:636> INFO - Writing 'DMCfun.bbl' with encoding 'UTF-8'
-[206] bbl.pm:739> INFO - Output to DMCfun.bbl
+[17] biber:315> INFO - === Di Mär  3, 2020, 16:42:31
+[28] Biber.pm:371> INFO - Reading 'DMCfun.bcf'
+[70] Biber.pm:889> INFO - Found 20 citekeys in bib section 0
+[78] Biber.pm:4093> INFO - Processing section 0
+[83] Biber.pm:4254> INFO - Looking for bibtex format file 'bibfile.bib' for section 0
+[84] bibtex.pm:1512> INFO - LaTeX decoding ...
+[100] bibtex.pm:1329> INFO - Found BibTeX data source 'bibfile.bib'
+[190] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[190] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[190] Biber.pm:3921> INFO - Sorting list 'nyt/global//global/global' of type 'entry' with template 'nyt' and locale 'en-US'
+[190] Biber.pm:3927> INFO - No sort tailoring available for locale 'en-US'
+[206] bbl.pm:636> INFO - Writing 'DMCfun.bbl' with encoding 'UTF-8'
+[215] bbl.pm:739> INFO - Output to DMCfun.bbl

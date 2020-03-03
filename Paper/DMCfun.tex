@@ -328,8 +328,7 @@ compatible trials.
         the compatibility effect (incompatible - compatible).
     }
     \label{fig:1}
-\end{figure}
-
+\end{figure}=
 \textcite{ulrich2015automatic} collected data from both a flanker task and a
 simon task and fitted this data to DMC. Here, the delta (RT) and CAF (accuracy)
 values from the observed and predicted data were calculated. The model was
@@ -337,9 +336,19 @@ fitted by minimising the root-mean-square error (RMSE) weighted difference
 between the predicted and observed delta and CAF values using the SIMPLEX
 minimization routine of \textcite{nelder1965simplex}.
 
-\section{R Package: DMCfun}
-The R-package DMCfun provides functionality allowing both the simulation of the
-DMC model and fitting the model to observed data.
+\section{R Package: DMCfun} The R-package DMCfun provides functionality
+allowing both the simulation of the DMC model and fitting the model to observed
+data. The simulation code is written in C++ utilising the R-package Rcpp
+\parencite{eddelbuettel2011rcpp}.  The use of C++ gives a significant
+performance boost over base R whilst the Rcpp interface allows convienient use
+from within the standard R environment and also direct access to plotting
+facilities within R. The fitting procedure uses the R-package optimr
+\textcite{optimr} with method = "Nelder-Mead". As in
+\textcite{ulrich2015automatic} the model fit was evaluated by calculating the
+RMSE weighted difference between the predicted and observed delta/CAF values.
+The following sections will provide a tutorial-type overview of using the
+package, both for running the basic simulation and also fitting the observed
+data from \textcite{ulrich2015automatic}.
 
 \label{dmc_fun}
 \subsection{Gettting Started}
@@ -360,14 +369,15 @@ devtools package (via install\_github, see Code Example 1).
 
 \subsection{DMC Simulation}
 \label{dmc_simulation}
-The simulation code is within the functions dmcSim (see Code Example 2). The
+The simulation code is within the functions dmcSim (see Code Example 2).  The
 function dmcSim() allows the user to specify parameter values using named
-arguments (?dmcSim). The function dmcSims allows the user to specify a list of
-input parameters in order to run multiple simulations. For example,
-\textcite{ulrich2015automatic} observed that in parameter tau ($\tau$) largely
-determined the slope to the delta function. In Code Example 3, the DMC
-simulation is run using tau starting parameters from 20 to 170 in steps of 10
-(see Figure \ref{fig:2}).
+arguments (?dmcSim). A single simulation run with 100,000 trials in each
+compatibility condition takes approximately < 150 ms (standard desktop PC).
+The function dmcSims allows the user to specify a list of input parameters in
+order to run multiple simulations. For example, \textcite{ulrich2015automatic}
+observed that the parameter tau ($\tau$) largely determined the slope to the
+delta function. In Code Example 3, the DMC simulation is run using tau starting
+parameters from 20 to 170 in steps of 10 (see Figure \ref{fig:2}).
 
 \begin{minipage}{\linewidth}
     \begin{lstlisting}[style = R, title = {R Code Example 2}, captionpos = t]
@@ -402,23 +412,24 @@ dmcFit* uses the R-package optimr \textcite{optimr} with method = "Nelder-Mead"
 and allow the specification of a number of options including which parameters
 to fit and their starting values. \textcite{ulrich2015automatic} observed that
 model fit was highly influenced by the tau parameter. The function dmcFit*
-first searches a grid space within this single parameter to find the "best"
-starting value of tau before the simplex minimisation routine is implemented.
-An initial search of a parameter space has been shown to improve parameter
-recovery \parencite{hubnerimproving}. It is also possible to search the initial
-grid space across multiple parameters with the search space being determined by
-the input arguments minVals, maxVals, and fitInitialGridN. It should be noted
-that increasing the size of the initial grid space will increase computational
-time prior to the simplex minimisation routine dramatically. For example,
-searching 6 parameters within a gridspace of 6, results in 46,656 initial
-parameter sets.  Although these are independent and are run in parallel, such
-an initial grid space takes approximately 3 minutes (tested on 12 core desktop
-PC). As a results, the default setting is to perform the initial search the tau
-space only. Such a procedure produced consistently good fits with the data of
-\textcite{ulrich2015automatic} (RMSE < 15), although this does not exclude the
-possibility that other datasets would benefit from an extended search grid (or
-alternative starting values) regarding the initial values for the simplex
-routine.
+first searches a grid space (N = 10) within this single parameter to find the
+"best" starting value of tau before the simplex minimisation routine is
+implemented. An initial search of a parameter space has been shown to improve
+parameter recovery \parencite{hubnerimproving}. Such a initial search grid and
+subsequent fitting procedure takes < 1 minute. It is also possible to search
+the initial grid space across multiple parameters with the search space being
+determined by the input arguments minVals, maxVals, and fitInitialGridN. It
+should be noted that increasing the size of the initial grid space will
+increase computational time prior to the simplex minimisation routine
+dramatically. For example, searching 6 parameters within a gridspace of 6,
+results in 46,656 initial parameter sets. Although these are independent and
+are run in parallel, such an initial grid space takes approximately 20 minutes
+(tested on 12 core desktop PC). As a result, the default setting is to perform
+the initial search in the tau space only. Such a procedure produced consistently
+good fits with the data of \textcite{ulrich2015automatic} (RMSE < 15), although
+this does not exclude the possibility that other datasets would benefit from an
+extended search grid (or alternative starting values) regarding the initial
+values for the simplex routine.
 
 \begin{minipage}{\linewidth}
     \begin{lstlisting}[style = R, title = {R Code Example 3}, captionpos = t]
@@ -437,11 +448,13 @@ column names and column codings can be specified using function arguments.
 
 \begin{minipage}{\linewidth}
     \begin{lstlisting}[style = R, title = {R Code Example 4}, captionpos = t]
-    flankerDataRaw    # raw flanker data
-    flankerData       # summarised flanker data
+    flankerDataRaw      # raw flanker data
+    flankerData         # summarised flanker data
+    flankerData$summary # aggregated flanker data
     plot(flankerData)
-    simonDataRaw      # raw simon data
-    simonData         # summarised simon data
+    simonDataRaw        # raw simon data
+    simonData           # summarised simon data
+    simonData$summary   # aggregated simon data
     plot(simonData)
     \end{lstlisting}
 \end{minipage}
@@ -486,7 +499,7 @@ column names and column codings can be specified using function arguments.
 \end{minipage}
 
 % latex table generated in R 3.6.1 by xtable 1.8-4 package
-% Mon Mar  2 15:06:57 2020
+% Tue Mar  3 16:43:59 2020
 \begin{longtable}{rlrr}
 \caption{Raw Data file example} \\ 
   \hline
@@ -515,10 +528,11 @@ VP & Comp & RT & Error \\
     \label{fig:6}
 \end{figure}
 
-\section{Summary}
+\section{Conclusions}
 \label{summary}
-TO DO!
-
+To summarize, the R-package DMCfun provides users with an easy-to-use interface
+for both simulating the DMC model with various input parameters and fitting
+this model to observed behavioural data from within conflict-like tasks. 
 
 \begin{acknowledgements}
     We would like to thank Rolf Ulrich for providing the raw data from
