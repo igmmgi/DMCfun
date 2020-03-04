@@ -46,14 +46,14 @@
 #' @export
 dmcFitVPs <- function(resOb,
                       nTrl             = 50000,
-                      startVals        = c(20, 100, 0.5,  75, 300,  30, 2, 3),
-                      minVals          = c(10,   5, 0.1,  20, 200,   5, 1, 2),
-                      maxVals          = c(30, 300, 1.0, 150, 800, 100, 3, 4),
-                      fixedFit         = c( 0,   0, 0,     0,   0,   0, 0, 0),
+                      startVals        = c(20, 100, 0.5,  75, 300,  30, 2, 3, 4),
+                      minVals          = c(10,   5, 0.1,  20, 200,   5, 1, 2, 1),
+                      maxVals          = c(30, 300, 1.0, 150, 800, 100, 3, 4, 10),
+                      fixedFit         = c( 0,   0, 0,     0,   0,   0, 0, 0, 1),
                       parScale         = startVals/min(startVals),
                       fitInitialGrid   = TRUE,
-                      fitInitialGridN  = 10,                                    # reduce if grid search 3/4+ parameters
-                      fixedGrid        = c( 1,   0, 1,     1,   1,   1, 1, 1),  # only fit tau
+                      fitInitialGridN  = 10,                                       # reduce if grid search 3/4+ parameters
+                      fixedGrid        = c( 1,   0, 1,     1,   1,   1, 1, 1, 1),  # only initial search tau
                       stepCAF          = 20,
                       stepDelta        = 5,
                       VP               = c(),

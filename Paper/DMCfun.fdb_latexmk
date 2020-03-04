@@ -1,11 +1,11 @@
 # Fdb version 3
-["biber DMCfun"] 1583250151 "DMCfun.bcf" "DMCfun.bbl" "DMCfun" 1583250243
-  "DMCfun.bcf" 1583250243 99905 eae9a9dcdf3f051f604794546ce0bea8 "pdflatex"
+["biber DMCfun"] 1583250151 "DMCfun.bcf" "DMCfun.bbl" "DMCfun" 1583316717
+  "DMCfun.bcf" 1583316717 99905 eae9a9dcdf3f051f604794546ce0bea8 "pdflatex"
   "bibfile.bib" 1583246802 6889 4cf5ab3c751ec16ac3b3dcfc0b1515e8 ""
   (generated)
   "DMCfun.bbl"
   "DMCfun.blg"
-["pdflatex"] 1583250241 "DMCfun.tex" "DMCfun.pdf" "DMCfun" 1583250243
+["pdflatex"] 1583316715 "DMCfun.tex" "DMCfun.pdf" "DMCfun" 1583316717
   "../figures/figure1.png" 1582141816 46766 7a6075365d9a9cef8127b8f7b6828289 ""
   "../figures/figure4.png" 1581922723 48230 68d97ba17132efc2d2771a4a05bcd8a9 ""
   "../figures/figure5.png" 1581922816 46614 4f021726e1ce64f90f581ef8f33fccc4 ""
@@ -201,20 +201,20 @@
   "/usr/share/texmf/tex/latex/lm/t1lmtt.fd" 1256929440 2681 354015af3b61e7be30009f084986375a ""
   "/usr/share/texmf/web2c/texmf.cnf" 1562720991 35073 2a40cfca74fcd5e2568b569ccaadf3f1 ""
   "/var/lib/texmf/web2c/xetex/xelatex.fmt" 1575404890 3754059 8834e091d334a4b2354da6622de6b753 ""
-  "DMCfun.aux" 1583250243 13563 9a6e642bb28a298e526584dbe54f8c80 "pdflatex"
+  "DMCfun.aux" 1583316717 13616 9682baa3af3e32336e83d22ecc45a180 "pdflatex"
   "DMCfun.bbl" 1583250151 35879 ba34ed51181a01c354700965bd2ac417 "biber DMCfun"
-  "DMCfun.out" 1583250243 151 5e7a6391776fb508d2a4b60710a9cae3 "pdflatex"
-  "DMCfun.run.xml" 1583250243 2473 f999eefd9c21256100818de778526edd "pdflatex"
-  "DMCfun.tex" 1583250239 25762 daaaf8d78e65538dbfc8a11aecddaca5 ""
-  "DMCfun.xwm" 1583250243 86 bb72789d9548f16a9fad8594c106d4ce "pdflatex"
+  "DMCfun.out" 1583316717 151 5e7a6391776fb508d2a4b60710a9cae3 "pdflatex"
+  "DMCfun.run.xml" 1583316717 2473 f999eefd9c21256100818de778526edd "pdflatex"
+  "DMCfun.tex" 1583316707 25847 6d9c82cad95a1db8e465a35ed83ff413 ""
+  "DMCfun.xwm" 1583316717 138 4308f54b59bc2c874321f18a0373f9ee "pdflatex"
   "example.eps" 1582184022 286 240e01e547b56ebd62e19ba1e85adf80 ""
   "svglov3.clo" 1261135514 3809 f8e29af71acd1bd1b2a58b6166058c66 ""
   "svjour3.cls" 1526284628 47679 993de5be39389e8a2c40c32e48f0687c ""
   (generated)
-  "DMCfun.pdf"
-  "DMCfun.out"
-  "DMCfun.xwm"
+  "DMCfun.log"
   "DMCfun.aux"
+  "DMCfun.out"
+  "DMCfun.pdf"
   "DMCfun.run.xml"
   "DMCfun.bcf"
-  "DMCfun.log"
+  "DMCfun.xwm"

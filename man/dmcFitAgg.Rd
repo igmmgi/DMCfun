@@ -6,15 +6,15 @@
 \usage{
 dmcFitAgg(
   resOb,
-  nTrl = 50000,
-  startVals = c(20, 100, 0.5, 75, 300, 30, 2, 3),
-  minVals = c(10, 5, 0.1, 20, 200, 5, 1, 2),
-  maxVals = c(30, 300, 1, 150, 800, 100, 3, 4),
-  fixedFit = c(0, 0, 0, 0, 0, 0, 0, 0),
+  nTrl = 1e+05,
+  startVals = c(20, 100, 0.5, 75, 300, 30, 2, 3, 4),
+  minVals = c(10, 5, 0.1, 20, 200, 5, 1, 2, 1),
+  maxVals = c(40, 300, 1, 150, 800, 100, 3, 4, 10),
+  fixedFit = c(0, 0, 0, 0, 0, 0, 0, 0, 1),
   parScale = startVals/min(startVals),
   fitInitialGrid = TRUE,
   fitInitialGridN = 10,
-  fixedGrid = c(1, 0, 1, 1, 1, 1, 1, 1),
+  fixedGrid = c(1, 0, 1, 1, 1, 1, 1, 1, 1),
   stepCAF = 20,
   stepDelta = 5,
   printInputArgs = TRUE,
@@ -26,21 +26,22 @@ dmcFitAgg(
 
 \item{nTrl}{Number of trials to use within dmcSim}
 
-\item{startVals}{Starting values for to-be estimated parameters}
+\item{startVals}{Starting values for to-be estimated parameters. This needs to be vector of length 9 
+with the following order: amp, tau, mu, bnds, resMean, resSD, aaShape, spShape, sigma}
 
-\item{minVals}{Minimum values for the to-be estimated parameters}
+\item{minVals}{Minimum values for the to-be estimated parameters (see startVals)}
 
-\item{maxVals}{Maximum values for the to-be estimated parameters}
+\item{maxVals}{Maximum values for the to-be estimated parameters (see startVals)}
 
-\item{fixedFit}{Fix parameter to starting value}
+\item{fixedFit}{Fix parameter to starting value (bool vector of length 9)}
 
 \item{parScale}{Scaling values for the to-be estimated parameters}
 
-\item{fitInitialGrid}{TRUE/FALSE (NB. overrides fitInitialTau)}
+\item{fitInitialGrid}{TRUE/FALSE}
 
 \item{fitInitialGridN}{10 reduce if searching more than 1 initial parameter}
 
-\item{fixedGrid}{Fix parameter for initial grid search}
+\item{fixedGrid}{Fix parameter for initial grid search (bool vector of length 9)}
 
 \item{stepCAF}{Step size for the CAF bins. For example, a step size of 20 would result
 in 5 CAF bins centered on 10, 30, 50, 70, and 90\%.}
@@ -65,18 +66,17 @@ of the CAF and CDF functions.
 library(DMCfun)
 
 # Example 1: Flanker data from Ulrich et al. (2015)
-fit <- dmcFitAgg(flankerData)
+fit <- dmcFitAgg(flankerData)  # only initial search tau
 plot(fit, flankerData)
 summary(fit)
 
 # Example 2: Simon data from Ulrich et al. (2015)
-fit <- dmcFitAgg(simonData)
+fit <- dmcFitAgg(simonData)    # only initial search tau
 plot(fit, simonData)
 summary(fit)
 
 # Example 3: Simulated Data (+ve going delta function)
-dat <- createDF(nVP = 20, nTrl = 500,
-                design = list("Comp" = c("comp", "incomp")))
+dat <- createDF(nVP = 20, nTrl = 500, design = list("Comp" = c("comp", "incomp")))
 dat <- addDataDF(dat,
                  RT = list(list(c("Comp:comp"), vals = c(510, 100, 100)),
                            list(c("Comp:incomp"), vals = c(540, 130, 85))),

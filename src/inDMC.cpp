@@ -13,6 +13,7 @@ void print_input_args(Prms &p) {
     Rcpp::Rcout << "bnds: " << p.bnds << "\n";
     Rcpp::Rcout << "resMean: " << p.resMean << "\n";
     Rcpp::Rcout << "resSD: " << p.resSD << "\n";
+    Rcpp::Rcout << "sigma: " << p.sigma << "\n";
     if (p.varSP) Rcpp::Rcout << "spShape: " << p.spShape << "\n";
     if (p.varDR) Rcpp::Rcout << "drShape: " << p.drShape << "\n";
     Rcpp::Rcout << std::endl;

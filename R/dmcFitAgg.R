@@ -6,14 +6,15 @@
 #'
 #' @param resOb Observed data (see flankerData and simonTask for data format)
 #' @param nTrl Number of trials to use within dmcSim
-#' @param startVals Starting values for to-be estimated parameters
-#' @param minVals Minimum values for the to-be estimated parameters
-#' @param maxVals Maximum values for the to-be estimated parameters
-#' @param fixedFit Fix parameter to starting value
+#' @param startVals Starting values for to-be estimated parameters. This needs to be vector of length 9 
+#' with the following order: amp, tau, mu, bnds, resMean, resSD, aaShape, spShape, sigma
+#' @param minVals Minimum values for the to-be estimated parameters (see startVals)
+#' @param maxVals Maximum values for the to-be estimated parameters (see startVals)
+#' @param fixedFit Fix parameter to starting value (bool vector of length 9)
 #' @param parScale Scaling values for the to-be estimated parameters
 #' @param fitInitialGrid TRUE/FALSE 
 #' @param fitInitialGridN 10 reduce if searching more than 1 initial parameter
-#' @param fixedGrid Fix parameter for initial grid search
+#' @param fixedGrid Fix parameter for initial grid search (bool vector of length 9)
 #' @param stepCAF Step size for the CAF bins. For example, a step size of 20 would result
 #' in 5 CAF bins centered on 10, 30, 50, 70, and 90\%.
 #' @param stepDelta Step size for the Delta bins. For example, a step size of 5 would result
@@ -28,18 +29,17 @@
 #' library(DMCfun)
 #'
 #' # Example 1: Flanker data from Ulrich et al. (2015)
-#' fit <- dmcFitAgg(flankerData)
+#' fit <- dmcFitAgg(flankerData)  # only initial search tau
 #' plot(fit, flankerData)
 #' summary(fit)
 #'
 #' # Example 2: Simon data from Ulrich et al. (2015)
-#' fit <- dmcFitAgg(simonData)
+#' fit <- dmcFitAgg(simonData)    # only initial search tau
 #' plot(fit, simonData)
 #' summary(fit)
 #'
 #' # Example 3: Simulated Data (+ve going delta function)
-#' dat <- createDF(nVP = 20, nTrl = 500,
-#'                 design = list("Comp" = c("comp", "incomp")))
+#' dat <- createDF(nVP = 20, nTrl = 500, design = list("Comp" = c("comp", "incomp")))
 #' dat <- addDataDF(dat,
 #'                  RT = list(list(c("Comp:comp"), vals = c(510, 100, 100)),
 #'                            list(c("Comp:incomp"), vals = c(540, 130, 85))),
@@ -55,14 +55,14 @@
 #' @export
 dmcFitAgg <- function(resOb,
                       nTrl             = 100000,
-                      startVals        = c(20, 100, 0.5,  75, 300,  30, 2, 3),
-                      minVals          = c(10,   5, 0.1,  20, 200,   5, 1, 2),
-                      maxVals          = c(40, 300, 1.0, 150, 800, 100, 3, 4),
-                      fixedFit         = c( 0,   0, 0,     0,   0,   0, 0, 0),
+                      startVals        = c(20, 100, 0.5,  75, 300,  30, 2, 3, 4),
+                      minVals          = c(10,   5, 0.1,  20, 200,   5, 1, 2, 1),
+                      maxVals          = c(40, 300, 1.0, 150, 800, 100, 3, 4, 10),
+                      fixedFit         = c( 0,   0, 0,     0,   0,   0, 0, 0, 1),
                       parScale         = startVals/min(startVals),
                       fitInitialGrid   = TRUE,
-                      fitInitialGridN  = 10,                                    # reduce if grid search 3/4+ parameters
-                      fixedGrid        = c( 1,   0, 1,     1,   1,   1, 1, 1),  # only fit tau
+                      fitInitialGridN  = 10,                                       # reduce if grid search 3/4+ parameters
+                      fixedGrid        = c( 1,   0, 1,     1,   1,   1, 1, 1, 1),  # only initial search tau
                       stepCAF          = 20,
                       stepDelta        = 5,
                       printInputArgs   = TRUE,
@@ -89,7 +89,7 @@ dmcFitAgg <- function(resOb,
     
     resTh <- dmcSim(amp = prms[1], tau = prms[2], mu = prms[3], bnds = prms[4], 
                     resMean = prms[5], resSD = prms[6], aaShape = prms[7],
-                    varSP = TRUE, spShape = prms[8], spLim = c(-prms[4], prms[4]),
+                    varSP = TRUE, spShape = prms[8], sigma = prms[9], spLim = c(-prms[4], prms[4]),
                     nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,
                     printInputArgs = printInputArgs, printResults = printResults)
     return(calculateCostValue(resTh, resOb))
@@ -134,8 +134,8 @@ dmcFitAgg <- function(resOb,
                                    .options.snow = list(progress = progress)) %dopar% {
        resTh <- dmcSim(amp = startValsGrid[i, 1], tau = startValsGrid[i, 2], mu = startValsGrid[i, 3],
                        bnds = startValsGrid[i, 4], resMean = startValsGrid[i, 5], resSD = startValsGrid[i, 6],
-                       aaShape = startValsGrid[i, 7],
-                       varSP = TRUE, spShape = startValsGrid[i, 8], spLim = c(-startValsGrid[i, 4], startValsGrid[i, 4]),
+                       aaShape = startValsGrid[i, 7], varSP = TRUE, spShape = startValsGrid[i, 8], 
+                       sigma = startValsGrid[i, 9],  spLim = c(-startValsGrid[i, 4], startValsGrid[i, 4]),
                        nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,
                        printInputArgs = FALSE, printResults = FALSE)
        return(calculateCostValue(resTh, resOb))
@@ -149,7 +149,7 @@ dmcFitAgg <- function(resOb,
 
   # optimize
   fit <- optimr::optimr(par = startVals[!as.logical(fixedFit)], fn = minimizeCostValue,
-                        prms = prms, fixedFit = fixedFit, resOb = resOb,
+                        prms = prms, fixedFit = fixedFit, resOb = resOb, 
                         nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF, minVals = minVals, maxVals = maxVals,
                         printInputArgs = printInputArgs, printResults = printResults,
                         method = "Nelder-Mead", 
@@ -169,11 +169,11 @@ dmcFitAgg <- function(resOb,
   cat(sprintf("RMSE: %.3f\n", fit$value))
   resTh <- dmcSim(amp = prms[1], tau = prms[2], mu = prms[3],
                   bnds = prms[4], resMean = prms[5], resSD = prms[6],
-                  aaShape = prms[7],
+                  aaShape = prms[7], sigma = prms[9],
                   varSP = TRUE, spShape = prms[8], spLim = c(-prms[4], prms[4]),
                   nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,
                   printResults = TRUE)
-  resTh$prms[1:8] <- prms 
+  resTh$prms[1:9] <- prms 
   
   dmcfit <- list(resTh, fit)
   class(dmcfit) <- c("dmcfit")

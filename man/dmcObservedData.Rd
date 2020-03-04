@@ -42,78 +42,40 @@ Basic example analysis script to create data object required
 for observed data. Example raw *.txt files are flankerData.txt and simonData.txt.
 }
 \examples{
-\dontrun{
-library(psychReport)
-requiredPackages(c("DMCfun", "ez", "dplyr"))
+library(DMCfun)
+library(dplyr)
 
 # Example 1
-# datOb <- dmcObservedData("flankerData.txt")
+plot(flankerData)  # flanker data from Ulrich et al. (2015)
 
 # Example 2
-# datOb <- dmcObservedData("simonData.txt")
+plot(simonData)    # simon data from Ulrich et al. (2015)
 
 # Example 3 (Basic behavioural analysis from Ulrich et al. 2015)
-flankerData$summaryVP <- tibble::add_column(Task = "flanker", flankerData$summaryVP, .before = 2)
-simonData$summaryVP   <- tibble::add_column(Task = "simon", simonData$summaryVP, .before = 2)
-datAgg <- rbind(rbind(flankerData$summaryVP, simonData$summaryVP))
+flankerDat <- tibble::add_column(Task = "flanker", flankerData$summaryVP, .before = 2)
+simonDat   <- tibble::add_column(Task = "simon",   simonData$summaryVP,   .before = 2)
+datAgg     <- rbind(rbind(flankerDat, simonDat))
 
 datAgg$VP   <- factor(datAgg$VP)
 datAgg$Task <- factor(datAgg$Task)
 datAgg$Comp <- factor(datAgg$Comp)
 
-aovErr <- ezANOVA(datAgg, dv = .(perErr), wid = .(VP), within = .(Comp, Task),
-                  detailed = TRUE, return_aov = TRUE)
-aovErr <- aovTable(aovErr)
-aovDispMeans(aovErr)
+aovErr <- aov(perErr ~ Comp*Task + Error(VP/(Comp*Task)), datAgg)
+summary(aovErr)
+model.tables(aovErr, type = "mean")
 
-aovRt <- ezANOVA(datAgg, dv = .(rtCor), wid = .(VP), within = .(Comp, Task),
-                 detailed = TRUE, return_aov = TRUE)
-aovRt <- aovTable(aovRt)
-aovDispMeans(aovRt)
+aovRt <- aov(rtCor ~ Comp*Task + Error(VP/(Comp*Task)), datAgg)
+summary(aovRt)
+model.tables(aovRt, type = "mean")
 
-# Delta
-flankerData$deltaVP <- tibble::add_column(Task = "flanker", flankerData$deltaVP, .before = 2)
-simonData$deltaVP   <- tibble::add_column(Task = "simon", simonData$deltaVP, .before = 2)
-datDelta             <- rbind(rbind(flankerData$deltaVP, simonData$deltaVP))
-
-datDelta <- datDelta \%>\%
-  dplyr::select(-c("meanBin", "meanEffect")) \%>\%
-  tidyr::gather(Comp, rt, -c("VP", "Task", "bin"))
-
-datDelta$VP   <- factor(datDelta$VP)
-datDelta$Task <- factor(datDelta$Task)
-datDelta$bin  <- factor(datDelta$bin)
-datDelta$Comp <- factor(datDelta$Comp)
-
-aovDelta <- ezANOVA(datDelta, dv = .(rt), wid = .(VP), within = .(Task, Comp, bin),
-                    detailed = TRUE, return_aov = TRUE)
-aovDelta <- aovTable(aovDelta)
-
-# CAF
-flankerData$cafVP <- tibble::add_column(Task = "flanker", flankerData$cafVP, .before = 2)
-simonData$cafVP   <- tibble::add_column(Task = "simon", simonData$cafVP, .before = 2)
-datCaf             <- rbind(rbind(flankerData$cafVP, simonData$cafVP))
-
-datCaf$VP   <- factor(datCaf$VP)
-datCaf$Task <- factor(datCaf$Task)
-datCaf$bin  <- factor(datCaf$bin)
-datCaf$Comp <- factor(datCaf$Comp)
-
-aovCaf <- ezANOVA(datCaf, dv = .(accPer), wid = .(VP), within = .(Task, Comp, bin),
-                  detailed = TRUE, return_aov = TRUE)
-aovCaf <- aovTable(aovCaf)
-aovDispMeans(aovCaf)
-
-}
 # Example 4
-dat <- createDF(nVP = 50, nTrl = 500,
-                design = list("Comp" = c("comp", "incomp")))
+dat <- createDF(nVP = 50, nTrl = 500, design = list("Comp" = c("comp", "incomp")))
 dat <- addDataDF(dat,
                  RT = list(list(c("Comp:comp"), vals = c(500, 75, 120)),
                            list(c("Comp:incomp"), vals = c(530, 75, 100))),
                  Error = list(list(c("Comp:comp"), vals = c(3, 2, 2, 1, 1)),
-                            list(c("Comp:incomp"), vals = c(15, 3, 2, 1, 1))))
-datOb <- dmcObservedData(dat, stepCAF = 10, stepDelta = 10)
+                            list(c("Comp:incomp"), vals = c(10, 3, 2, 1, 1))))
+datOb <- dmcObservedData(dat, stepCAF = 20, stepDelta = 5)
 plot(datOb)
 plot(datOb, VP = 1)
 

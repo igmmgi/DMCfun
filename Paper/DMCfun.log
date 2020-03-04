@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/Debian) (preloaded format=xelatex 2019.12.3)  3 MAR 2020 16:44
+This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/Debian) (preloaded format=xelatex 2019.12.3)  4 MAR 2020 11:11
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1888,17 +1888,17 @@ File: ../figures/figure6.png Graphic file (type bmp)
 <../figures/figure6.png>
 
 [8] [9]
-Overfull \hbox (2.82166pt too wide) in paragraph at lines 548--548
+Overfull \hbox (2.82166pt too wide) in paragraph at lines 550--550
 \T1/Tempora-TLF/m/n/9.5 diffusion mod-els for use in es-ti-mat-ing cog-ni-tive 
 pro-cesses: A parameter-recovery study.
  []
 
 [10]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 548.
-Package atveryend Info: Executing hook `AfterLastShipout' on input line 548.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 550.
+Package atveryend Info: Executing hook `AfterLastShipout' on input line 550.
  (./DMCfun.xwm) (./DMCfun.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 548.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 548.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 550.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 550.
 Package rerunfilecheck Info: File `DMCfun.out' has not changed.
 (rerunfilecheck)             Checksum: 5E7A6391776FB508D2A4B60710A9CAE3.
 Package logreq Info: Writing requests to 'DMCfun.run.xml'.
@@ -1908,7 +1908,7 @@ Package logreq Info: Writing requests to 'DMCfun.run.xml'.
 Here is how much of TeX's memory you used:
  33971 strings out of 492909
  610870 string characters out of 6135047
- 1303939 words of memory out of 5000000
+ 1304044 words of memory out of 5000000
  37533 multiletter control sequences out of 15000+600000
  47134 words of font info for 51 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191

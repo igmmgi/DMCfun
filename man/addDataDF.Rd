@@ -30,15 +30,13 @@ hist(dat$RT, 100)
 table(dat$Error)
 
 # Example 2: defined overall RT parameters
-dat <- createDF(nVP = 50, nTrl = 50,
-                design = list("Comp" = c("comp", "incomp")))
+dat <- createDF(nVP = 50, nTrl = 50, design = list("Comp" = c("comp", "incomp")))
 dat <- addDataDF(dat, RT = c(500, 150, 100))
 boxplot(dat$RT ~ dat$Comp)
 table(dat$Comp, dat$Error)
 
 # Example 3: defined RT + Error parameters across conditions
-dat <- createDF(nVP = 50, nTrl = 50,
-                design = list("Comp" = c("comp", "incomp")))
+dat <- createDF(nVP = 50, nTrl = 50, design = list("Comp" = c("comp", "incomp")))
 dat <- addDataDF(dat,
                  RT = list(list(c("Comp:comp"), vals = c(500, 80, 100)),
                            list(c("Comp:incomp"), vals = c(550, 80, 140))),
@@ -49,8 +47,7 @@ table(dat$Comp, dat$Error)
 
 # Example 4:
 # create dataframe with defined RT + Error parameters across different conditions
-dat <- createDF(nVP = 50, nTrl = 50,
-                design = list("Comp" = c("comp", "incomp")))
+dat <- createDF(nVP = 50, nTrl = 50, design = list("Comp" = c("comp", "incomp")))
 dat <- addDataDF(dat,
                  RT = list(list(c("Comp:comp"), vals = c(500, 150, 150)),
                            list(c("Comp:incomp"), vals = c(550, 150, 100))),

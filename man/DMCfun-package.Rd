@@ -11,10 +11,4 @@ DMC model simulation detailed in Ulrich, R., Schroeter, H., Leuthold, H., & Birn
 \author{
 \strong{Maintainer}: Mackenzie G. Ian \email{ian.mackenzie@uni-tuebingen.de}
 
-Authors:
-\itemize{
-  \item Leuthold Hartmut \email{hartmut.leuthold@uni-tuebingen.de}
-  \item Ulrich Rolf \email{rolf.ulrich@uni-tuebingen.de}
-}
-
 }
