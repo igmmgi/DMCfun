@@ -11,7 +11,6 @@ using namespace Rcpp;
 // [[Rcpp::depends(BH)]]
 // [[Rcpp::export]]
 
-
 List dmcCppR(List r_in) {
 
   Prms p; // default parameters
@@ -41,23 +40,23 @@ List dmcCppR(List r_in) {
   if (r_in.containsElementNamed("printResults"))   p.printResults   = as<bool>(r_in["printResults"]);
   if (r_in.containsElementNamed("setSeed"))        p.setSeed        = as<bool>(r_in["setSeed"]);
 
-  if (p.printInputArgs)  printInputArgs(p);
+  if (p.printInputArgs) print_input_args(p);
 
-  std::map<std::string, std::vector<double>> summary;
-  std::map<std::string, std::vector<double>> sim;
-  std::map<std::string, std::vector<std::vector<double>>> trials;
+  std::map<std::string, std::vector<double>> rsum;                 // results summary
+  std::map<std::string, std::vector<double>> rsim;                 // results simulation
+  std::map<std::string, std::vector<std::vector<double>>> trials;  // individual trials
 
-  runDMCsim(p, summary, sim, trials);
-  if (p.printResults) printResults(p, summary);
+  run_dmc_sim(p, rsum, rsim, trials);
+  if (p.printResults) print_results(p, rsum);
 
   List dmc;
   if (p.fullData) {
-    dmc["summary"] = summary;
-    dmc["sim"] = sim;
-    dmc["trials"] = trials;
+    dmc["summary"] = rsum;
+    dmc["sim"]     = rsim;
+    dmc["trials"]  = trials;
   } else {
-    dmc["summary"] = summary;
-    dmc["sim"] = sim;
+    dmc["summary"] = rsum;
+    dmc["sim"]     = rsim;
   }
   return (dmc);
 }

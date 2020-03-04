@@ -3,17 +3,17 @@
 
 #include "inDMC.h"
 
-void runDMCsim(
+void run_dmc_sim(
         Prms &p,
         std::map<std::string, std::vector<double>> &resSum,
         std::map<std::string, std::vector<double>> &sim,
         std::map<std::string, std::vector<std::vector<double>>> &trials
 );
 
-void runDMCsim_ci (
+void run_dmc_sim_ci(
         Prms &p,
-        std::map<std::string, std::vector<double>> &resSum,
-        std::map<std::string, std::vector<double>> &sim,
+        std::map<std::string, std::vector<double>> &rsum,
+        std::map<std::string, std::vector<double>> &rsim,
         std::map<std::string, std::vector<std::vector<double>>> &trials,
         std::string comp,
         int sign
@@ -32,7 +32,7 @@ std::vector<double> calculate_percentile(
 
 void calculate_delta(
         std::map<std::string, 
-        std::vector<double> > &resDelta
+        std::vector<double>> &resDelta
 );
 
 void variable_drift_rate(

@@ -6,24 +6,22 @@
 #include "inDMC.h"
 #include "Rcpp.h"
 
-void printResults(
-        Prms &p,
-        std::map<std::string, std::vector<double> > &resSum) {
+void print_results(Prms &p, std::map<std::string, std::vector<double> > &rsum) {
 
     Rcpp::Rcout << "Results Summary:" << std::endl;
     Rcpp::Rcout << "\trtCor\tsdRtCor\tperErr\trtErr\tsdRtErr" << std::endl;
     Rcpp::Rcout << "comp\t"
-              << round(resSum["resSum_comp"][0]) << "\t"
-              << round(resSum["resSum_comp"][1]) << "\t"
-              << resSum["resSum_comp"][2] << "\t"
-              << round(resSum["resSum_comp"][3]) << "\t"
-              << round(resSum["resSum_comp"][4]) << std::endl;
+              << round(rsum["resSum_comp"][0]) << "\t"
+              << round(rsum["resSum_comp"][1]) << "\t"
+              << rsum["resSum_comp"][2] << "\t"
+              << round(rsum["resSum_comp"][3]) << "\t"
+              << round(rsum["resSum_comp"][4]) << std::endl;
     Rcpp::Rcout << "incomp\t"
-              << round(resSum["resSum_incomp"][0]) << "\t"
-              << round(resSum["resSum_incomp"][1]) << "\t"
-              << resSum["resSum_incomp"][2] << "\t"
-              << round(resSum["resSum_incomp"][3]) << "\t"
-              << round(resSum["resSum_incomp"][4]) << "\n";
+              << round(rsum["resSum_incomp"][0]) << "\t"
+              << round(rsum["resSum_incomp"][1]) << "\t"
+              << rsum["resSum_incomp"][2] << "\t"
+              << round(rsum["resSum_incomp"][3]) << "\t"
+              << round(rsum["resSum_incomp"][4]) << "\n";
     Rcpp::Rcout << std::endl;
 
     // results delta distribution
@@ -33,23 +31,23 @@ void printResults(
     Rcpp::Rcout << std::endl;
 
     Rcpp::Rcout << "comp" << "\t";
-    for (unsigned int i = 0; i < resSum["delta_pct_comp"].size(); i++) 
-        Rcpp::Rcout << std::fixed << std::setprecision(1) << resSum["delta_pct_comp"][i] << "\t";
+    for (unsigned int i = 0; i < rsum["delta_pct_comp"].size(); i++) 
+        Rcpp::Rcout << std::fixed << std::setprecision(1) << rsum["delta_pct_comp"][i] << "\t";
     Rcpp::Rcout << std::endl;
 
     Rcpp::Rcout << "incomp" << "\t";
-    for (unsigned int i = 0; i < resSum["delta_pct_incomp"].size(); i++) 
-        Rcpp::Rcout << std::fixed << std::setprecision(1) << resSum["delta_pct_incomp"][i] << "\t";
+    for (unsigned int i = 0; i < rsum["delta_pct_incomp"].size(); i++) 
+        Rcpp::Rcout << std::fixed << std::setprecision(1) << rsum["delta_pct_incomp"][i] << "\t";
     Rcpp::Rcout << std::endl;
 
     Rcpp::Rcout << "mean" << "\t";
-    for (unsigned int i = 0; i < resSum["delta_pct_mean"].size(); i++) 
-        Rcpp::Rcout << std::fixed << std::setprecision(1) << resSum["delta_pct_mean"][i] << "\t";
+    for (unsigned int i = 0; i < rsum["delta_pct_mean"].size(); i++) 
+        Rcpp::Rcout << std::fixed << std::setprecision(1) << rsum["delta_pct_mean"][i] << "\t";
     Rcpp::Rcout << std::endl;
 
     Rcpp::Rcout << "effect" << "\t";
-    for (unsigned int i = 0; i < resSum["delta_pct_delta"].size(); i++) 
-        Rcpp::Rcout << std::fixed << std::setprecision(1) << std::right << std::setw(5) << resSum["delta_pct_delta"][i] << "\t";
+    for (unsigned int i = 0; i < rsum["delta_pct_delta"].size(); i++) 
+        Rcpp::Rcout << std::fixed << std::setprecision(1) << std::right << std::setw(5) << rsum["delta_pct_delta"][i] << "\t";
     Rcpp::Rcout << std::endl;
     Rcpp::Rcout << std::endl;
 
@@ -60,12 +58,12 @@ void printResults(
     Rcpp::Rcout << std::endl;
 
     Rcpp::Rcout << "comp" << "\t";
-    for (unsigned int i = 0; i < resSum["caf_comp"].size(); i++) 
-        Rcpp::Rcout << std::fixed << std::setprecision(3) << std::right << std::setw(7) << resSum["caf_comp"][i] << "\t";
+    for (unsigned int i = 0; i < rsum["caf_comp"].size(); i++) 
+        Rcpp::Rcout << std::fixed << std::setprecision(3) << std::right << std::setw(7) << rsum["caf_comp"][i] << "\t";
     Rcpp::Rcout << std::endl;
     Rcpp::Rcout << "incomp" << "\t";
-    for (unsigned int i = 0; i < resSum["caf_incomp"].size(); i++) 
-        Rcpp::Rcout << std::fixed << std::setprecision(3) << std::right << std::setw(7) << resSum["caf_incomp"][i] << "\t";
+    for (unsigned int i = 0; i < rsum["caf_incomp"].size(); i++) 
+        Rcpp::Rcout << std::fixed << std::setprecision(3) << std::right << std::setw(7) << rsum["caf_incomp"][i] << "\t";
     Rcpp::Rcout << std::endl;
 
 }

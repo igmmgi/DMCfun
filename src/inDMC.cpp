@@ -3,7 +3,7 @@
 #include "inDMC.h"
 #include "Rcpp.h"
 
-void showHelp() {
+void show_help() {
     Rcpp::Rcout << "DMC model simulation\n"
                  "Ulrich, R., Schröter, H., Leuthold, H., & Birngruber, T. (2015).\n"
                  "Automatic and controlled stimulus processing in conflict tasks: Superimposed\n"
@@ -42,7 +42,7 @@ void showHelp() {
                  "./dmcSim --varSP 1 // Results from Figure 7" << std::endl;
 }
 
-void processInputArgs(int argc, char **argv, Prms &p, bool &argProblem) {
+void process_input_args(int argc, char **argv, Prms &p, bool &arg_problem) {
 
     const struct option long_opts[] = {
             {"amp",            1, nullptr, 0},
@@ -74,9 +74,9 @@ void processInputArgs(int argc, char **argv, Prms &p, bool &argProblem) {
     };
 
     int option;
-    int idxOption = 0;
+    int idx_option = 0;
     try {
-        while ((option = getopt_long(argc, argv, "", long_opts, &idxOption)) != -1) {
+        while ((option = getopt_long(argc, argv, "", long_opts, &idx_option)) != -1) {
             switch (option) {
                 case 0:
                     p.amp = std::stod(optarg);
@@ -151,21 +151,21 @@ void processInputArgs(int argc, char **argv, Prms &p, bool &argProblem) {
                     p.setSeed = static_cast<bool>(std::stoi(optarg));
                     break;
                 case 24:
-                    showHelp();
-                    argProblem = true;
+                    show_help();
+                    arg_problem = true;
                     break;
                 default:
                     Rcpp::Rcout << "Input option not recognized!:" << option << "\n";
-                    argProblem = true;
+                    arg_problem = true;
             }
         }
     } catch (...) {
-        Rcpp::Rcout << "Input option not recognized:" << long_opts[idxOption].name << ":" << optarg << std::endl;
-        argProblem = true;
+        Rcpp::Rcout << "Input option not recognized:" << long_opts[idx_option].name << ":" << optarg << std::endl;
+        arg_problem = true;
     }
 }
 
-void printInputArgs(Prms &p) {
+void print_input_args(Prms &p) {
     Rcpp::Rcout << "\nDMC Parameters:" << "\n";
     Rcpp::Rcout << "amp: " << p.amp << "\n";
     Rcpp::Rcout << "tau: " << p.tau << "\n";
@@ -174,18 +174,8 @@ void printInputArgs(Prms &p) {
     Rcpp::Rcout << "bnds: " << p.bnds << "\n";
     Rcpp::Rcout << "resMean: " << p.resMean << "\n";
     Rcpp::Rcout << "resSD: " << p.resSD << "\n";
-    // Rcpp::Rcout << "nTrl: " << p.nTrl << "\n";
-    // Rcpp::Rcout << "tmax: " << p.tmax << "\n";
-    if (p.varSP) {
-        // Rcpp::Rcout << "varSP: " << p.varSP << "\n";
-        Rcpp::Rcout << "spShape: " << p.spShape << "\n";
-        // Rcpp::Rcout << "spLims: " << p.spLimLow << " to " << p.spLimHigh << "\n";
-    }
-    if (p.varDR) {
-        // Rcpp::Rcout << "varDR: " << p.varDR << "\n";
-        Rcpp::Rcout << "drShape: " << p.drShape << "\n";
-        // Rcpp::Rcout << "drLims: " << p.drLimLow << " to " << p.drLimHigh;
-    }
+    if (p.varSP) Rcpp::Rcout << "spShape: " << p.spShape << "\n";
+    if (p.varDR) Rcpp::Rcout << "drShape: " << p.drShape << "\n";
     Rcpp::Rcout << std::endl;
 }
 

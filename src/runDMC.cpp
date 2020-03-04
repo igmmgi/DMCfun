@@ -7,17 +7,17 @@
 
 std::mutex m;
 
-void runDMCsim(
+void run_dmc_sim(
         Prms &p,
-        std::map<std::string, std::vector<double>> &resSum,
-        std::map<std::string, std::vector<double>> &sim,
+        std::map<std::string, std::vector<double>> &rsum,
+        std::map<std::string, std::vector<double>> &rsim,
         std::map<std::string, std::vector<std::vector<double>>> &trials) {
     
     // equation 4
     std::vector<double> eq4(p.tmax);
     for (unsigned int i = 1; i <= p.tmax; i++)
         eq4[i - 1] = (p.amp * exp(-(i / p.tau))) * pow(((exp(1) * i / (p.aaShape - 1) / p.tau)), (p.aaShape - 1));
-    sim["eq4"] = eq4;
+    rsim["eq4"] = eq4;
     
     // run comp and incomp simulation 
     std::vector<std::thread> threads(2);
@@ -25,10 +25,10 @@ void runDMCsim(
     std::vector<int> sign{1, -1};
     
     for (int i = 0; i < 2; i++) {
-        threads.emplace_back(runDMCsim_ci,                                      
+        threads.emplace_back(run_dmc_sim_ci,                                      
                              std::ref(p),                                                    
-                             std::ref(resSum),                                               
-                             std::ref(sim),                                                  
+                             std::ref(rsum),                                               
+                             std::ref(rsim),                                                  
                              std::ref(trials),                                               
                              std::ref(compatibility[i]),                                     
                              std::ref(sign[i]));      
@@ -38,15 +38,15 @@ void runDMCsim(
         if (thread.joinable()) thread.join();
     } 
    
-    calculate_delta(resSum); // finalise results requiring both comp/incomp
+    calculate_delta(rsum); // finalise results requiring both comp/incomp
     
 }
 
 
-void runDMCsim_ci(
+void run_dmc_sim_ci(
         Prms &p,
-        std::map<std::string, std::vector<double>> &resSum,
-        std::map<std::string, std::vector<double>> &sim,
+        std::map<std::string, std::vector<double>> &rsum,
+        std::map<std::string, std::vector<double>> &rsim,
         std::map<std::string, std::vector<std::vector<double>>> &trials,
         std::string comp,
         int sign) {
@@ -58,7 +58,7 @@ void runDMCsim_ci(
 
     std::vector<double> mu_vec(p.tmax);
     for (auto i = 0u; i < mu_vec.size(); i++)
-        mu_vec[i] = sign * sim["eq4"][i] * ((p.aaShape - 1) / (i + 1) - 1 / p.tau);
+        mu_vec[i] = sign * rsim["eq4"][i] * ((p.aaShape - 1) / (i + 1) - 1 / p.tau);
 
     // variable drift rate/starting point?
     std::vector<double> dr(p.nTrl, p.mu);
@@ -75,12 +75,12 @@ void runDMCsim_ci(
     }
     
     m.lock();
-    sim["activation_" + comp]   = activation_sum;
-    sim["rts_" + comp]          = rts;
-    sim["errs_" + comp]         = errs;
-    resSum["resSum_" + comp]    = calculate_summary(rts, errs, p.nTrl );
-    resSum["delta_pct_" + comp] = calculate_percentile(p.stepDelta, rts);
-    resSum["caf_" + comp]       = calculate_caf(rts, errs, p.stepCAF);
+    rsim["activation_" + comp] = activation_sum;
+    rsim["rts_" + comp]        = rts;
+    rsim["errs_" + comp]       = errs;
+    rsum["resSum_" + comp]     = calculate_summary(rts, errs, p.nTrl );
+    rsum["delta_pct_" + comp]  = calculate_percentile(p.stepDelta, rts);
+    rsum["caf_" + comp]        = calculate_caf(rts, errs, p.stepCAF);
     m.unlock();
 
 }

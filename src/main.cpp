@@ -8,19 +8,19 @@
 int main(int argc, char *argv[]) {
 
     Prms p;
-    bool argProb = false;
-    processInputArgs(argc, argv, p, argProb);
+    bool arg_problem = false;
+    process_input_args(argc, argv, p, arg_problem);
 
-    if (argProb) return 0;
-    if (p.printInputArgs) printInputArgs(p);
+    if (arg_problem) return 0;
+    if (p.printInputArgs) print_input_args(p);
+    
+    std::map<std::string, std::vector<double>> rsum;                 // results summary
+    std::map<std::string, std::vector<double>> rsim;                 // results simulation
+    std::map<std::string, std::vector<std::vector<double>>> trials;  // individual trials
 
-    std::map<std::string, std::vector<double>> resSum;
-    std::map<std::string, std::vector<double>> sim;
-    std::map<std::string, std::vector<std::vector<double>>> trials;
+    run_dmc_sim(p, rsum, rsim, trials);
 
-    runDMCsim(p, resSum, sim, trials);
-
-    if (p.printResults) printResults(p, resSum);
+    if (p.printResults) print_results(p, rsum);
 
     return 0;
 

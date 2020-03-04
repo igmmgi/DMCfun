@@ -28,11 +28,10 @@ struct Prms {
     bool printInputArgs = true;
     bool printResults = true;
     bool setSeed = false; // if true, use RNGType rng(1) called
-
 };
 
-void showHelp();
-void processInputArgs(int argc, char** argv, Prms &p, bool &argProblem);
-void printInputArgs(Prms &p);
+void show_help();
+void process_input_args(int argc, char** argv, Prms &p, bool &arg_problem);
+void print_input_args(Prms &p);
 
 #endif //CPP_INPUTS_HPP
