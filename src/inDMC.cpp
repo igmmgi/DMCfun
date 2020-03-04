@@ -1,7 +1,8 @@
-#include <iostream>
+#include <Rcpp.h>
 #include <getopt.h>
+#include <iostream>
+
 #include "inDMC.h"
-#include "Rcpp.h"
 
 void print_input_args(Prms &p) {
     Rcpp::Rcout << "\nDMC Parameters:" << "\n";

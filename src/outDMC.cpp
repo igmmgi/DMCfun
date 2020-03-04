@@ -1,12 +1,13 @@
-#include <iostream>
-#include <iomanip>
-#include <vector>
-#include <map>
+#include <Rcpp.h>
 #include <cmath>
-#include "inDMC.h"
-#include "Rcpp.h"
+#include <iomanip>
+#include <iostream>
+#include <map>
+#include <vector>
 
-void print_results(Prms &p, std::map<std::string, std::vector<double> > &rsum) {
+#include "inDMC.h"
+
+void print_results(Prms &p, std::map<std::string, std::vector<double>> &rsum) {
 
     Rcpp::Rcout << "Results Summary:" << std::endl;
     Rcpp::Rcout << "\trtCor\tsdRtCor\tperErr\trtErr\tsdRtErr" << std::endl;

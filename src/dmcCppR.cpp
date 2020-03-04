@@ -1,9 +1,10 @@
+#include <Rcpp.h>
 #include <map>
 #include <vector>
+
 #include "inDMC.h"
 #include "outDMC.h"
 #include "runDMC.h"
-#include <Rcpp.h>
 
 using namespace Rcpp;
 

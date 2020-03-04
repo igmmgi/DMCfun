@@ -1,9 +1,10 @@
-#include <vector>
-#include <map>
 #include <boost/random.hpp>
-#include <thread>
-#include "runDMC.h"
+#include <map>
 #include <mutex>
+#include <thread>
+#include <vector>
+
+#include "runDMC.h"
 
 std::mutex m;
 
@@ -228,7 +229,7 @@ std::vector<double> calculate_caf(
         std::vector<double> &errs,
         int stepCAF) {
 
-    std::vector<std::pair<double, bool> > comb;
+    std::vector<std::pair<double, bool>> comb;
     comb.reserve(rts.size() + errs.size());
     for (double & rt : rts)   comb.emplace_back(std::make_pair(rt, false));
     for (double & err : errs) comb.emplace_back(std::make_pair(err, true));
@@ -239,14 +240,14 @@ std::vector<double> calculate_caf(
     for (auto i = 0u; i < comb.size(); i++) 
         bins[i] = int(nBins * (i) / comb.size());
 
-    std::vector<long int> countErr(nBins, 0);
-    std::vector<long int> countCor(nBins, 0);
+    std::vector<long int> nErr(nBins, 0);
+    std::vector<long int> nCor(nBins, 0);
     for (auto i = 0u; i < bins.size(); i++) 
-        (comb[i].second == 0) ? countCor[bins[i]]++ : countErr[bins[i]]++;
+        (comb[i].second == 0) ? nCor[bins[i]]++ : nErr[bins[i]]++;
 
     std::vector<double> res;
-    for (auto i = 0u; i < countCor.size(); i++) 
-        res.push_back(1 - (countErr[i] / float(countCor[i] + countErr[i])));
+    for (auto i = 0u; i < nCor.size(); i++) 
+        res.push_back(1 - (nErr[i] / float(nCor[i] + nErr[i])));
     
     return res;
 
