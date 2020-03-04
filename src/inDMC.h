@@ -30,8 +30,6 @@ struct Prms {
     bool setSeed = false; // if true, use RNGType rng(1) called
 };
 
-void show_help();
-void process_input_args(int argc, char** argv, Prms &p, bool &arg_problem);
 void print_input_args(Prms &p);
 
 #endif //CPP_INPUTS_HPP

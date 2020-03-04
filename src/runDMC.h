@@ -5,8 +5,8 @@
 
 void run_dmc_sim(
         Prms &p,
-        std::map<std::string, std::vector<double>> &resSum,
-        std::map<std::string, std::vector<double>> &sim,
+        std::map<std::string, std::vector<double>> &rsum,
+        std::map<std::string, std::vector<double>> &rsim,
         std::map<std::string, std::vector<std::vector<double>>> &trials
 );
 
@@ -32,7 +32,7 @@ std::vector<double> calculate_percentile(
 
 void calculate_delta(
         std::map<std::string, 
-        std::vector<double>> &resDelta
+        std::vector<double>> &rdelta
 );
 
 void variable_drift_rate(

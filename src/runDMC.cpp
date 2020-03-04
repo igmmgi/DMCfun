@@ -177,11 +177,11 @@ std::vector<double> calculate_summary(
 
     // rtCor, sdRtCor, perErr, rtErr, sdRtErr
     std::vector<double> res(5);
-    res[0] = round(accumulate(rts.begin(), rts.end(), 0.0) / rts.size());
-    res[1] = round(std::sqrt(std::inner_product(rts.begin(), rts.end(), rts.begin(), 0.0) / rts.size() - res[0] * res[0]));
+    res[0] = accumulate(rts.begin(), rts.end(), 0.0) / rts.size();
+    res[1] = std::sqrt(std::inner_product(rts.begin(), rts.end(), rts.begin(), 0.0) / rts.size() - res[0] * res[0]);
     res[2] = (errs.size() / static_cast<float>(nTrl)) * 100;
-    res[3] = round(accumulate(errs.begin(), errs.end(), 0.0) / errs.size());
-    res[4] = round(std::sqrt(std::inner_product(errs.begin(), errs.end(), errs.begin(), 0.0) / errs.size() - res[3] * res[3]));
+    res[3] = accumulate(errs.begin(), errs.end(), 0.0) / errs.size();
+    res[4] = std::sqrt(std::inner_product(errs.begin(), errs.end(), errs.begin(), 0.0) / errs.size() - res[3] * res[3]);
 
     return res;
 
@@ -213,11 +213,11 @@ std::vector<double> calculate_percentile(
 
 void calculate_delta(
         std::map<std::string, 
-        std::vector<double> > &resDelta) {
+        std::vector<double> > &rdelta) {
     
-    for (auto i = 0u; i < resDelta["delta_pct_comp"].size(); i++) {
-        resDelta["delta_pct_mean"].push_back((resDelta["delta_pct_comp"][i]   + resDelta["delta_pct_incomp"][i]) / 2);
-        resDelta["delta_pct_delta"].push_back(resDelta["delta_pct_incomp"][i] - resDelta["delta_pct_comp"][i]);
+    for (auto i = 0u; i < rdelta["delta_pct_comp"].size(); i++) {
+        rdelta["delta_pct_mean"].push_back((rdelta["delta_pct_comp"][i]   + rdelta["delta_pct_incomp"][i]) / 2);
+        rdelta["delta_pct_delta"].push_back(rdelta["delta_pct_incomp"][i] - rdelta["delta_pct_comp"][i]);
     }
     
 }
