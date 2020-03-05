@@ -18,6 +18,7 @@ plot(dmc)
 ![alt text](/figures/figure1.png)     
 
 ``` r
+dmc$means
 # A tibble: 2 x 6
   Comp   rtCor sdRtCor perErr rtErr sdRtErr
   <chr>  <dbl>   <dbl>  <dbl> <dbl>   <dbl>
@@ -32,6 +33,7 @@ plot(dmc)
 ![alt text](/figures/figure2.png)     
 
 ``` r
+dmc$means
 # A tibble: 2 x 6
   Comp   rtCor sdRtCor perErr rtErr sdRtErr
   <chr>  <dbl>   <dbl>  <dbl> <dbl>   <dbl>
