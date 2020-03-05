@@ -8,11 +8,10 @@
 
 std::mutex m;
 
-void run_dmc_sim(
-        Prms &p,
-        std::map<std::string, std::vector<double>> &rsum,
-        std::map<std::string, std::vector<double>> &rsim,
-        std::map<std::string, std::vector<std::vector<double>>> &trials) {
+void run_dmc_sim(Prms &p, 
+                 std::map<std::string, std::vector<double>> &rsum, 
+                 std::map<std::string, std::vector<double>> &rsim, 
+                 std::map<std::string, std::vector<std::vector<double>>> &trials) {
     
     // equation 4
     std::vector<double> eq4(p.tmax);
@@ -35,22 +34,20 @@ void run_dmc_sim(
                              std::ref(sign[i]));      
     }    
    
-    for (auto &thread : threads) {
+    for (auto &thread : threads) 
         if (thread.joinable()) thread.join();
-    } 
    
     calculate_delta(rsum); // finalise results requiring both comp/incomp
     
 }
 
 
-void run_dmc_sim_ci(
-        Prms &p,
-        std::map<std::string, std::vector<double>> &rsum,
-        std::map<std::string, std::vector<double>> &rsim,
-        std::map<std::string, std::vector<std::vector<double>>> &trials,
-        std::string comp,
-        int sign) {
+void run_dmc_sim_ci(Prms &p, 
+                    std::map<std::string, std::vector<double>> &rsum, 
+                    std::map<std::string, std::vector<double>> &rsim, 
+                    std::map<std::string, std::vector<std::vector<double>>> &trials, 
+                    std::string comp, 
+                    int sign) {
 
     std::vector<double> rts;
     std::vector<double> errs;
@@ -105,17 +102,15 @@ void variable_starting_point(Prms &p, std::vector<double> &sp, int sign) {
 }
 
 
-void run_simulation(
-        Prms &p,
-        std::vector<double> &mu_vec,
-        std::vector<double> &sp,
-        std::vector<double> &dr,
-        std::vector<double> &rts,
-        std::vector<double> &errs,
-        int sign ) {
+void run_simulation(Prms &p, 
+                    std::vector<double> &mu_vec, 
+                    std::vector<double> &sp, 
+                    std::vector<double> &dr, 
+                    std::vector<double> &rts, 
+                    std::vector<double> &errs, 
+                    int sign) {
 
     const uint32_t s = p.setSeed ? 1 : std::time(nullptr);
-
     boost::random::mt19937_64 rng(s + sign);
     boost::random::normal_distribution<double> snd(0.0, 1.0);
     boost::random::normal_distribution<double> nd_mean_sd(p.resMean, p.resSD);
@@ -134,16 +129,15 @@ void run_simulation(
 
 }
 
-void run_simulation(
-        Prms &p,
-        std::vector<double> &activation_sum,
-        std::vector<std::vector<double>> &trial_matrix,
-        std::vector<double> &mu_vec,
-        std::vector<double> &sp,
-        std::vector<double> &dr,
-        std::vector<double> &rts,
-        std::vector<double> &errs,
-        int sign ) {
+void run_simulation(Prms &p, 
+                    std::vector<double> &activation_sum, 
+                    std::vector<std::vector<double>> &trial_matrix, 
+                    std::vector<double> &mu_vec, 
+                    std::vector<double> &sp, 
+                    std::vector<double> &dr, 
+                    std::vector<double> &rts, 
+                    std::vector<double> &errs, 
+                    int sign ) {
 
     const uint32_t s = p.setSeed ? 1 : std::time(nullptr);
     boost::random::mt19937_64 rng(s + sign);
@@ -170,11 +164,7 @@ void run_simulation(
 
 }
 
-
-std::vector<double> calculate_summary(
-        std::vector<double> &rts,
-        std::vector<double> &errs,
-        unsigned long nTrl ) {
+std::vector<double> calculate_summary(std::vector<double> &rts, std::vector<double> &errs, unsigned long nTrl) {
 
     // rtCor, sdRtCor, perErr, rtErr, sdRtErr
     std::vector<double> res(5);
@@ -188,10 +178,7 @@ std::vector<double> calculate_summary(
 
 }
 
-
-std::vector<double> calculate_percentile(
-        int stepDelta,
-        std::vector<double> rts ) {
+std::vector<double> calculate_percentile( int stepDelta, std::vector<double> rts ) {
 
     std::sort(rts.begin(), rts.end());
 
@@ -211,10 +198,7 @@ std::vector<double> calculate_percentile(
     return res;
 }
 
-
-void calculate_delta(
-        std::map<std::string, 
-        std::vector<double> > &rdelta) {
+void calculate_delta( std::map<std::string, std::vector<double> > &rdelta) {
     
     for (auto i = 0u; i < rdelta["delta_pct_comp"].size(); i++) {
         rdelta["delta_pct_mean"].push_back((rdelta["delta_pct_comp"][i]   + rdelta["delta_pct_incomp"][i]) / 2);
@@ -223,11 +207,7 @@ void calculate_delta(
     
 }
 
-
-std::vector<double> calculate_caf(
-        std::vector<double> &rts,
-        std::vector<double> &errs,
-        int stepCAF) {
+std::vector<double> calculate_caf(std::vector<double> &rts, std::vector<double> &errs, int stepCAF) {
 
     std::vector<std::pair<double, bool>> comb;
     comb.reserve(rts.size() + errs.size());
@@ -252,4 +232,3 @@ std::vector<double> calculate_caf(
     return res;
 
 }
-
