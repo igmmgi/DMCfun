@@ -57,12 +57,12 @@ opts_chunk$set(echo=FALSE, include=FALSE, cache=FALSE)
 \definecolor{black}{rgb}{0.0,0.0,0.0}
 \definecolor{white}{rgb}{1.0, 1.0, 1.0}
 
-% https://tex.stackexchange.com/questions/132582/transparent-foreground-watermark
-\usepackage{tikz}
-\usepackage[printwatermark]{xwatermark}
-\newsavebox\mybox
-\savebox\mybox{\tikz[color=gray, opacity=0.5]\node{DRAFT};}
-\newwatermark*[ allpages, angle=45, scale=10, xpos=-50, ypos=50 ]{\usebox\mybox}
+% % https://tex.stackexchange.com/questions/132582/transparent-foreground-watermark
+% \usepackage{tikz}
+% \usepackage[printwatermark]{xwatermark}
+% \newsavebox\mybox
+% \savebox\mybox{\tikz[color=gray, opacity=0.5]\node{DRAFT};}
+% \newwatermark*[ allpages, angle=45, scale=10, xpos=-50, ypos=50 ]{\usebox\mybox}
 
 \lstdefinestyle{R}
 {
@@ -88,9 +88,7 @@ opts_chunk$set(echo=FALSE, include=FALSE, cache=FALSE)
 \titlerunning{DMCfun}
 
 \author{Ian G. Mackenzie \and
-    AAA \and
-    BBB \and
-    CCC
+    Carolin Dudschig
 }
 
 \institute{Ian G. Mackenzie \at
@@ -147,7 +145,7 @@ dimensions indicate the same response (compatible) than when they indicate
 different responses (incompatible). The longer reaction time and larger error
 rate in incompatible trials indicates that task-irrelevant information
 interferes with the processing of the task relevant information.
-
+    
 This compatibility effect pattern is consistent across all conflict-like tasks.
 However, when the size of the effect (incompatible - compatible) is compared
 across different percentiles of the RT distribution, different patterns can
@@ -281,7 +279,7 @@ compatible trials.
         the compatibility effect (incompatible - compatible).
     }
     \label{fig:1}
-\end{figure}=
+\end{figure}
 \textcite{ulrich2015automatic} collected data from both a flanker task and a
 simon task and fitted this data to DMC. Here, the delta (RT) and CAF (accuracy)
 values from the observed and predicted data were calculated. The model was
@@ -289,14 +287,14 @@ fitted by minimising the root-mean-square error (RMSE) weighted difference
 between the predicted and observed delta and CAF values using the SIMPLEX
 minimization routine of \textcite{nelder1965simplex}.
 
-\section{R Package: DMCfun} The R-package DMCfun provides functionality
-allowing both the simulation of the DMC model and fitting the model to observed
-data. The simulation code is written in C++ utilising the R-package Rcpp
-\parencite{eddelbuettel2011rcpp}.  The use of C++ gives a significant
-performance boost over base R whilst the Rcpp interface allows convienient use
-from within the standard R environment and also direct access to plotting
-facilities within R. The fitting procedure uses the R-package optimr
-\textcite{optimr} with method = "Nelder-Mead". As in
+\section{R Package: DMCfun} 
+The R-package DMCfun provides functionality allowing both the simulation of the
+DMC model and fitting the model to observed data. The simulation code is
+written in C++ utilising the R-package Rcpp \parencite{eddelbuettel2011rcpp}.
+The use of C++ gives a significant performance boost over base R whilst the
+Rcpp interface allows convienient use from within the standard R environment
+and also direct access to plotting facilities within R. The fitting procedure
+uses the R-package optimr \textcite{optimr} with method = "Nelder-Mead". As in
 \textcite{ulrich2015automatic} the model fit was evaluated by calculating the
 RMSE weighted difference between the predicted and observed delta/CAF values.
 The following sections will provide a tutorial-type overview of using the
