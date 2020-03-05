@@ -1,8 +1,3 @@
----
-output:
-  html_document:
-    df_print: paged
----
 # DMCfun
 R/Cpp implementation of the diffusion process model (Diffusion Model for Conflict Tasks, DMC) presented in Automatic and controlled stimulus processing in conflict tasks: Superimposed diffusion processes and delta functions (https://www.sciencedirect.com/science/article/pii/S0010028515000195)
 
@@ -23,10 +18,26 @@ plot(dmc)
 ![alt text](/figures/figure1.png)     
 
 ``` r
+# A tibble: 2 x 6
+  Comp   rtCor sdRtCor perErr rtErr sdRtErr
+  <chr>  <dbl>   <dbl>  <dbl> <dbl>   <dbl>
+1 comp    440.   105.   0.633  479.   104. 
+2 incomp  459.    94.8  1.38   406.    95.2
+```
+
+``` r
 dmc <- dmcSim(fullData = TRUE, tau = 150)
 plot(dmc)
 ```
 ![alt text](/figures/figure2.png)     
+
+``` r
+# A tibble: 2 x 6
+  Comp   rtCor sdRtCor perErr rtErr sdRtErr
+  <chr>  <dbl>   <dbl>  <dbl> <dbl>   <dbl>
+1 comp    421.    90.4  0.259  504.   119. 
+2 incomp  484.   103.   2.37   425.    82.7
+```
 
 ``` r
 params <- list(tau = seq(20, 170, 10))
