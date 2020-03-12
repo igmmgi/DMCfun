@@ -10,6 +10,9 @@
   figType = "summary",
   newFig = TRUE,
   VP = NULL,
+  legend = TRUE,
+  labels = c("Compatible", "Incompatible", "Observed", "Predicted"),
+  cols = c("green", "red"),
   ylimRt = c(200, 800),
   ylimEr = c(0, 20),
   ylimCAF = c(0, 1),
@@ -29,6 +32,12 @@
 \item{newFig}{TRUE/FALSE}
 
 \item{VP}{NULL (aggregated data across all participants) or integer for participant number}
+
+\item{legend}{TRUE/FALSE plot default legend on each plot}
+
+\item{labels}{Condition labels c("Compatible", "Incompatible", "Observed", "Predicted") default}
+
+\item{cols}{Condition colours c("green", "red") default}
 
 \item{ylimRt}{ylimit for Rt plots}
 
@@ -59,7 +68,7 @@ that dmcSim is run with fullData = TRUE.
 library(DMCfun)
 
 # Example 1
-resTh <- dmcFitAgg(flankerData, nTrl = 50000)
+resTh <- dmcFitAgg(flankerData, nTrl = 500)
 plot(resTh, flankerData)
 
 # Example 2

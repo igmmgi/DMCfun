@@ -13,6 +13,9 @@
   ylimDelta = c(-50, 150),
   ylimRt = c(200, 800),
   ylimErr = c(0, 20),
+  legend = TRUE,
+  labels = c("Compatible", "Incompatible"),
+  cols = c("green", "red"),
   errorBars = TRUE,
   ...
 )
@@ -33,6 +36,12 @@
 \item{ylimRt}{ylimit for rt plot}
 
 \item{ylimErr}{ylimit for er plot}
+
+\item{legend}{TRUE/FALSE plot default legend on each plot}
+
+\item{labels}{Condition labels c("Compatible", "Incompatible") default}
+
+\item{cols}{Condition colours c("green", "red") default}
 
 \item{errorBars}{TRUE/FALSE}
 

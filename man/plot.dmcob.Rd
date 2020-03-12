@@ -9,6 +9,9 @@
   figType = "summary",
   newFig = TRUE,
   VP = NULL,
+  legend = TRUE,
+  labels = c("Compatible", "Incompatible"),
+  cols = c("green", "red"),
   errorBars = FALSE,
   errorBarType = "sd",
   ylimRt = c(200, 800),
@@ -27,6 +30,12 @@
 \item{newFig}{TRUE/FALSE}
 
 \item{VP}{NULL (aggregated data across all participants) or integer for participant number}
+
+\item{legend}{TRUE/FALSE plot default legend on each plot}
+
+\item{labels}{Condition labels c("Compatible", "Incompatible") default}
+
+\item{cols}{Condition colours c("green", "red") default}
 
 \item{errorBars}{TRUE(default)/FALSE Plot errorbars}
 
@@ -59,7 +68,7 @@ that dmcSim is run with fullData = TRUE.
 library(DMCfun)
 
 # Example 1 (real dataset)
-plot(flankerData)
+plot(flankerData, cols = c("blue", "purple"), legend = FALSE)
 plot(flankerData, errorBars = TRUE, errorBarType = "se")
 plot(flankerData, figType = "delta", errorBars = TRUE,  errorBarType = "se")
 

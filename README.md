@@ -1,5 +1,8 @@
 # DMCfun
-R/Cpp implementation of the diffusion process model (Diffusion Model for Conflict Tasks, DMC) presented in Automatic and controlled stimulus processing in conflict tasks: Superimposed diffusion processes and delta functions (https://www.sciencedirect.com/science/article/pii/S0010028515000195)
+R/Cpp implementation of the diffusion process model (Diffusion Model for
+Conflict Tasks, DMC) presented in Automatic and controlled stimulus processing
+in conflict tasks: Superimposed diffusion processes and delta functions
+(https://www.sciencedirect.com/science/article/pii/S0010028515000195)
 
 ## Installation
 
@@ -15,7 +18,7 @@ devtools::install_github("igmmgi/DMCfun")
 dmc <- dmcSim(fullData = TRUE)
 plot(dmc)
 ```
-![alt text](/figures/figure1.png)     
+![alt text](figures/figure1.png)     
 
 ``` r
 dmc$means
@@ -30,7 +33,7 @@ dmc$means
 dmc <- dmcSim(fullData = TRUE, tau = 150)
 plot(dmc)
 ```
-![alt text](/figures/figure2.png)     
+![alt text](figures/figure2.png)     
 
 ``` r
 dmc$means
@@ -46,14 +49,14 @@ params <- list(tau = seq(20, 170, 10))
 dmc <- dmcSims(params)
 plot(dmc, ncol = 2, col = c("red", "green"))
 ```
-![alt text](/figures/figure4.png)     
+![alt text](figures/figure4.png)     
 
 ## Basic Examples DMC Fit: Real data
 ``` r
 fit <- dmcFitAgg(flankerData) # flanker data from Ulrich et al. (2015)
 plot(fit, flankerData)
 ```
-![alt text](/figures/figure5.png)     
+![alt text](figures/figure5.png)     
 
 ``` r
 summary(fit)
@@ -67,7 +70,7 @@ summary(fit)
 fit <- dmcFitAgg(simonData) # simon data from Ulrich et al. (2015)
 plot(fit, simonData)
 ```
-![alt text](/figures/figure6.png)     
+![alt text](figures/figure6.png)     
 
 ``` r
 # A tibble: 1 x 10
