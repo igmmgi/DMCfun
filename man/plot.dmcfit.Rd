@@ -30,7 +30,7 @@
 
 \item{VP}{NULL (aggregated data across all participants) or integer for participant number}
 
-\item{legend}{TRUE/FALSE plot default legend on each plot}
+\item{legend}{TRUE/FALSE (or FUNCTION) plot legend on each plot}
 
 \item{labels}{Condition labels c("Compatible", "Incompatible", "Observed", "Predicted") default}
 

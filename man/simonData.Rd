@@ -5,7 +5,9 @@
 \alias{simonData}
 \title{A summarised dataset: see raw data file simonDataRaw and dmcObservedData.R
 This is the summarised Simon Task data from Ulrich et al. (2015)}
-\format{dmcob}
+\format{
+dmcob
+}
 \usage{
 simonData
 }

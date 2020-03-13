@@ -34,7 +34,7 @@
 
 \item{ylimErr}{ylimit for er plot}
 
-\item{legend}{TRUE/FALSE plot default legend on each plot}
+\item{legend}{TRUE/FALSE (or FUNCTION) plot legend on each plot}
 
 \item{labels}{Condition labels c("Compatible", "Incompatible") default}
 
@@ -60,7 +60,7 @@ library(DMCfun)
 
 # Example 1
 dmc = dmcSim(fullData = TRUE)
-plot(dmc)
+plot(dmc, legend = FALSE)
 
 # Example 2
 dmc = dmcSim()

@@ -22,6 +22,6 @@ Imports:
   tidyr,
   tidyselect
 LinkingTo: Rcpp, BH
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 LazyData: true
 SystemRequirements: C++11

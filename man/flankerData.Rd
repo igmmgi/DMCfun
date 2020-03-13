@@ -5,7 +5,9 @@
 \alias{flankerData}
 \title{A summarised dataset: see raw data file flankerDataRaw and dmcObservedData.R
 This is the summarised Flanker Task data from Ulrich et al. (2015)}
-\format{dmcob}
+\format{
+dmcob
+}
 \usage{
 flankerData
 }
