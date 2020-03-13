@@ -195,4 +195,7 @@ plot.dmcob <- function(x,
     }
   }
   
+  # reset par
+  par(mfrow=c(1,1))
+  
 }

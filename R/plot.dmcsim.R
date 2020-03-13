@@ -30,7 +30,7 @@
 #'
 #' # Example 1
 #' dmc = dmcSim(fullData = TRUE)
-#' plot(dmc)
+#' plot(dmc, legend = message("hello"))
 #'
 #' # Example 2
 #' dmc = dmcSim()
@@ -263,4 +263,7 @@ plot.dmcsim <- function(x,
     }
   }
 
+  # reset par
+  par(mfrow=c(1,1))
+  
 }
