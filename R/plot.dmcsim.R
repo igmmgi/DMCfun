@@ -30,7 +30,7 @@
 #'
 #' # Example 1
 #' dmc = dmcSim(fullData = TRUE)
-#' plot(dmc, legend = message("hello"))
+#' plot(dmc, legend = FALSE)
 #'
 #' # Example 2
 #' dmc = dmcSim()
@@ -70,7 +70,10 @@ plot.dmcsim <- function(x,
   if (figType %in% c("trials", "activation") & !("trials" %in% names(x))) {
     stop("plotting trials/activation data requires dmcSim with fullData = TRUE")
   }
-  
+  if (!(is.function(legend)) && !(legend %in% c(TRUE, FALSE))) {
+    stop("legend must be TRUE/FALSE or a function")
+  } 
+   
   showFig = rep(FALSE, 9)
   if (figType == "summary1") {
     par(mar = c(4, 4, 2, 2))
@@ -128,6 +131,7 @@ plot.dmcsim <- function(x,
     lines(c(0, x$prms$tmax), c( x$prms$bnds,  x$prms$bnds), type = "l", col = "darkgrey", ...)
     lines(c(0, x$prms$tmax), c(-x$prms$bnds, -x$prms$bnds), type = "l", col = "darkgrey", ...)
     
+    message(is.function(legend))
     if (is.function(legend)) {
       legend()
     } else if (!is.list(legend) && legend == TRUE) {
@@ -151,6 +155,7 @@ plot.dmcsim <- function(x,
       lines(x$trials$incomp[[trl]][1:idx], type = "l", col = cols[2], ...)
     }
     
+    message(is.function(legend))
     if (is.function(legend)) {
       legend()
     } else if (!is.list(legend) && legend == TRUE) {
