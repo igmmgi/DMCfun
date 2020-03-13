@@ -7,7 +7,6 @@
 \method{plot}{dmcsim}(
   x,
   figType = "summary1",
-  newFig = TRUE,
   ylimCAF = c(0, 1),
   cafBinLabels = FALSE,
   ylimDelta = c(-50, 150),
@@ -24,8 +23,6 @@
 \item{x}{Output from dmcSim}
 
 \item{figType}{summary1, summary2, summary3, activation, trials, pdf, cdf, caf, delta, rtCorrect, rtErrors, errorRate, all}
-
-\item{newFig}{TRUE/FALSE}
 
 \item{ylimCAF}{ylimit for CAF plot}
 
@@ -62,7 +59,7 @@ that dmcSim is run with fullData = TRUE.
 library(DMCfun)
 
 # Example 1
-dmc = dmcSim(fullData = TRUE, stepCAF = 10)
+dmc = dmcSim(fullData = TRUE)
 plot(dmc)
 
 # Example 2
