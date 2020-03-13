@@ -18,6 +18,7 @@
   cafBinLabels = FALSE,
   ylimDelta = c(-50, 100),
   xlimDelta = c(200, 1000),
+  resetLayout = TRUE,
   ...
 )
 }
@@ -47,6 +48,8 @@
 \item{ylimDelta}{ylimit for delta plot}
 
 \item{xlimDelta}{xlimit for delta plot}
+
+\item{resetLayout}{TRUE (default)/FALSE Set to FALSE if using custom par(mfrow=c()) before calling plot}
 
 \item{...}{additional plot pars}
 }

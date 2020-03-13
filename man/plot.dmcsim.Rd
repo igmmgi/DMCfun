@@ -16,6 +16,7 @@
   labels = c("Compatible", "Incompatible"),
   cols = c("green", "red"),
   errorBars = TRUE,
+  resetLayout = TRUE,
   ...
 )
 }
@@ -41,6 +42,8 @@
 \item{cols}{Condition colours c("green", "red") default}
 
 \item{errorBars}{TRUE/FALSE}
+
+\item{resetLayout}{TRUE (default)/FALSE Set to FALSE if using custom par(mfrow=c()) before calling plot}
 
 \item{...}{additional plot pars}
 }

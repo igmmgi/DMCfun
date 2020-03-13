@@ -22,6 +22,7 @@
 #' @param ylimCAF ylimit for CAF plot
 #' @param ylimDelta ylimit for delta plot
 #' @param xlimDelta xlimit for delta plot
+#' @param resetLayout TRUE (default)/FALSE Set to FALSE if using custom par(mfrow=c()) before calling plot
 #' @param ... additional plot pars
 #'
 #' @return NULL
@@ -78,6 +79,7 @@ plot.dmcob <- function(x,
                        ylimCAF = c(0, 1),
                        ylimDelta = c(-50, 100),
                        xlimDelta = c(200, 1000),
+                       resetLayout = TRUE,
                        ...) {
   
   figTypes <- c("summary", "all", "rtCorrect", "errorRate", "rtErrors", "cdf", "caf", "delta") 
@@ -207,6 +209,8 @@ plot.dmcob <- function(x,
   }
   
   # reset par
-  par(mfrow=c(1,1))
+  if (resetLayout) {
+    par(mfrow=c(1, 1))
+  }
   
 }

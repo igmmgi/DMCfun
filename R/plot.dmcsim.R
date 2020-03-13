@@ -20,6 +20,7 @@
 #' @param labels Condition labels c("Compatible", "Incompatible") default
 #' @param cols Condition colours c("green", "red") default
 #' @param errorBars TRUE/FALSE
+#' @param resetLayout TRUE (default)/FALSE Set to FALSE if using custom par(mfrow=c()) before calling plot
 #' @param ... additional plot pars
 #'
 #' @return NULL
@@ -58,6 +59,7 @@ plot.dmcsim <- function(x,
                         labels = c("Compatible", "Incompatible"),
                         cols = c("green", "red"),
                         errorBars = TRUE,
+                        resetLayout = TRUE,
                         ...) {
   
   figTypes <- c("summary1", "summary2", "summary3", "all", "activation", "trials", "pdf", "cdf", "caf", "delta", "rtCorrect", "rtErrors", "errorRate")
@@ -267,6 +269,8 @@ plot.dmcsim <- function(x,
   }
 
   # reset par
-  par(mfrow=c(1,1))
+  if (resetLayout) {
+    par(mfrow=c(1, 1))
+  }
   
 }
