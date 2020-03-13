@@ -7,7 +7,6 @@
 \method{plot}{dmcob}(
   x,
   figType = "summary",
-  newFig = TRUE,
   VP = NULL,
   legend = TRUE,
   labels = c("Compatible", "Incompatible"),
@@ -26,8 +25,6 @@
 \item{x}{Output from fitDMC}
 
 \item{figType}{summary, rtCorrect, errorRate, rtErrors, cdf, caf, delta, all}
-
-\item{newFig}{TRUE/FALSE}
 
 \item{VP}{NULL (aggregated data across all participants) or integer for participant number}
 

@@ -60,14 +60,13 @@ plot.dmcsim <- function(x,
                         errorBars = TRUE,
                         ...) {
   
-  if (!figType %in% c("summary1", "summary2", "summary3",  "activation", "trials", "pdf", "cdf", "caf", "delta", "rtCorrect", "rtErrors", "errorRate", "all")) {
-    stop("figType must be one of \"summary1\", \"summary2\", \"summary3\", \"activation\", \"trials\", \"pdf\", \"cdf\", \"caf\", \"delta\", \"rtCorrect\", \"rtErrors\", \"errorRate\",  or \"all\"!")
+  figTypes <- c("summary1", "summary2", "summary3", "all", "activation", "trials", "pdf", "cdf", "caf", "delta", "rtCorrect", "rtErrors", "errorRate")
+  if (length(figType) > 1 || !figType %in% figTypes) {
+    stop("figType must be one of:", paste0(figTypes, collapse = ", "))
   }
-
-  if (figType == "summary1" & !("trials" %in% names(x))) {
+  if ("summary1" %in% figType  & !("trials" %in% names(x))) {
     figType = "summary2"
   }
-
   if (figType %in% c("trials", "activation") & !("trials" %in% names(x))) {
     stop("plotting trials/activation data requires dmcSim with fullData = TRUE")
   }
@@ -105,26 +104,10 @@ plot.dmcsim <- function(x,
     showFig[1:9] = TRUE
   } else if (figType == "all" & length(x) == 5) {
     showFig[4:9] = TRUE 
-  } else if (figType == "activation") {
-    showFig[1] = TRUE
-  } else if (figType == "trials") {
-    showFig[2] = TRUE
-  } else if (figType == "odf") {
-    showFig[3] = TRUE 
-  } else if (figType == "cdf") {
-    showFig[4] = TRUE
-  } else if (figType == "caf") {
-    showFig[5] = TRUE
-  } else if (figType == "delta") {
-    showFig[6] = TRUE
-  } else if (figType == "rtCorrect") {
-    showFig[7] = TRUE
-  } else if (figType == "rtErrors") {
-    showFig[8] = TRUE
-  } else if (figType == "errorRate") {
-    showFig[9] = TRUE
+  } else {
+    showFig[figTypes[5:13] %in% figType] = TRUE
   }
-
+ 
   # activation  
   if (showFig[1]) {
     # automatic 
