@@ -13,7 +13,7 @@
 #' @param y Observed data
 #' @param figType summary, rtCorrect, errorRate, rtErrors, cdf, caf, delta, all
 #' @param VP NULL (aggregated data across all participants) or integer for participant number
-#' @param legend TRUE/FALSE plot default legend on each plot
+#' @param legend TRUE/FALSE (or FUNCTION) plot legend on each plot
 #' @param labels Condition labels c("Compatible", "Incompatible", "Observed", "Predicted") default
 #' @param cols Condition colours c("green", "red") default
 #' @param ylimRt ylimit for Rt plots
@@ -69,6 +69,9 @@ plot.dmcfit <- function(x,
   if (length(figType) > 1 || !figType %in% figTypes) {
     stop("figType must be one of:", paste0(figTypes, collapse = ", "))
   }
+  if (!(is.function(legend)) && !(legend %in% c(TRUE, FALSE))) {
+    stop("legend must be TRUE/FALSE or a function")
+  } 
   
   if (is.null(VP)) {
     x$means <- x[[1]]$means
@@ -108,9 +111,13 @@ plot.dmcfit <- function(x,
          ylab = "RT Correct [ms]", xlab = "", xaxt = "n", ...)
     lines(c(x$means$rtCor), type = "o", lty = 2, ...)
     axis(1, at = c(1, 2), labels = labels[1:2])
-    if (legend) {
+    
+    if (is.function(legend)) {
+      legend()
+    } else if (!is.list(legend) && legend == TRUE) {
       legend("topleft", inset = c(0.025, 0.05), legend = labels[3:4], lty = c(1, 2), pch = c(1, 1))
     }
+    
   }
   
   # errorRate 
@@ -120,9 +127,13 @@ plot.dmcfit <- function(x,
          ylab = "Error Rate [%]", xlab = "", xaxt = "n", ...)
     lines(x$means$perErr, type = "b", lty = 2, ...)
     axis(1, at = c(1, 2), labels = labels[1:2])
-    if (legend) {
+    
+    if (is.function(legend)) {
+      legend()
+    } else if (!is.list(legend) && legend == TRUE) {
       legend("topleft", inset = c(0.025, 0.05), legend = labels[3:4], lty = c(1, 2), pch = c(1, 1))
     }
+    
   }
   
   # rt Error 
@@ -132,9 +143,13 @@ plot.dmcfit <- function(x,
          ylab = "RT Error [ms]", xlab = "", xaxt = "n", ...)
     lines(x$means$rtErr, type = "b", lty = 2, ...)
     axis(1, at = c(1, 2), labels = labels[1:2])
-    if (legend) {
+    
+    if (is.function(legend)) {
+      legend()
+    } else if (!is.list(legend) && legend == TRUE) {
       legend("topleft", inset = c(0.025, 0.05), legend = labels[3:4], lty = c(1, 2), pch = c(1, 1))
     }
+    
   }
   
   # cdf 
@@ -148,7 +163,10 @@ plot.dmcfit <- function(x,
     lines(x$delta$meanComp,   seq(seqStep, 100 - seqStep, seqStep)/100, type = "l", col = cols[1], ...)
     lines(x$delta$meanIncomp, seq(seqStep, 100 - seqStep, seqStep)/100, type = "l", col = cols[2], ...)
     axis(2, at = seq(0, 1, 0.25), labels = as.character(seq(0, 1, 0.25)))
-    if (legend) {
+    
+    if (is.function(legend)) {
+      legend()
+    } else if (!is.list(legend) && legend == TRUE) {
       legend("bottomright", inset = c(0.025, 0.05),
              legend = c(paste(labels[1], labels[3], sep = " "), 
                         paste(labels[2], labels[3], sep = " "),
@@ -156,6 +174,7 @@ plot.dmcfit <- function(x,
                         paste(labels[2], labels[4], sep = " ")),
              lty = c(0, 0, 1, 1), col = c(cols[1], cols[2], cols[1], cols[2]), pch = c(1, 1, NA, NA))
     }
+    
   }
   
   # caf
@@ -177,7 +196,10 @@ plot.dmcfit <- function(x,
       axis(1, at = seq(1, nCAF, 1))
     }
     axis(2, at = seq(0, 1, 0.2), labels = as.character(seq(0, 1, 0.2)))
-    if (legend) { 
+    
+    if (is.function(legend)) {
+      legend()
+    } else if (!is.list(legend) && legend == TRUE) {
       legend("bottomright", inset = c(0.025, 0.05),
              legend = c(paste(labels[1], labels[3], sep = " "), 
                         paste(labels[2], labels[3], sep = " "),
@@ -193,9 +215,13 @@ plot.dmcfit <- function(x,
          ylim = ylimDelta, xlim = xlimDelta,
          ylab = expression("Delta"), xlab = "t [ms]", ...)
     lines(x$delta$meanBin, x$delta$meanEffect, ...)
-    if (legend) { 
+    
+    if (is.function(legend)) {
+      legend()
+    } else if (!is.list(legend) && legend == TRUE) {
       legend("bottomright", inset = c(0.025, 0.05), legend = labels[3:4], lty = c(0, 1), pch = c(1, NA))
     }
+    
   }
   
   # reset par

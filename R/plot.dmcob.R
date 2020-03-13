@@ -12,7 +12,7 @@
 #' @param x Output from fitDMC
 #' @param figType summary, rtCorrect, errorRate, rtErrors, cdf, caf, delta, all
 #' @param VP NULL (aggregated data across all participants) or integer for participant number
-#' @param legend TRUE/FALSE plot default legend on each plot
+#' @param legend TRUE/FALSE (or FUNCTION) plot legend on each plot
 #' @param labels Condition labels c("Compatible", "Incompatible") default
 #' @param cols Condition colours c("green", "red") default
 #' @param errorBars TRUE(default)/FALSE Plot errorbars
@@ -31,7 +31,7 @@
 #' library(DMCfun)
 #'
 #' # Example 1 (real dataset)
-#' plot(flankerData, cols = c("blue", "purple"), legend = FALSE)
+#' plot(flankerData, cols = c("blue", "red"))
 #' plot(flankerData, errorBars = TRUE, errorBarType = "se")
 #' plot(flankerData, figType = "delta", errorBars = TRUE,  errorBarType = "se")
 #'
@@ -84,7 +84,10 @@ plot.dmcob <- function(x,
   if (length(figType) > 1 || !figType %in% figTypes) {
     stop("figType must be one of:", paste0(figTypes, collapse = ", "))
   }
-  
+  if (!(is.function(legend)) && !(legend %in% c(TRUE, FALSE))) {
+    stop("legend must be TRUE/FALSE or a function")
+  } 
+   
   if (!is.null(VP)) {
     # select individual dataset
     if (!VP %in% x$summaryVP$VP) {
@@ -162,9 +165,13 @@ plot.dmcob <- function(x,
          col = cols[1],  yaxt = "n", ...)
     lines(x$delta$meanIncomp, seq(seqStep, 100 - seqStep, seqStep)/100, type = "o", col = cols[2], ...)
     axis(2, at = seq(0, 1, 0.25), labels = as.character(seq(0, 1, 0.25)))
-    if (legend) {
+    
+    if (is.function(legend)) {
+      legend()
+    } else if (!is.list(legend) && legend == TRUE) {
       legend("bottomright", inset = c(0.025, 0.05), legend = labels, lty = c(1, 1), col = cols, pch = c(1, 1))
     }
+    
   }
   
   # caf  
@@ -176,9 +183,13 @@ plot.dmcob <- function(x,
     lines(x$caf$accPer[x$caf$Comp == "incomp"],  type = "b", col = cols[2], ...)
     axis(1, at = seq(1, nrow(x$caf)/2, 1))
     axis(2, at = seq(0, 1, 0.2), labels = as.character(seq(0, 1, 0.2)))
-    if (legend) {
+    
+    if (is.function(legend)) {
+      legend()
+    } else if (!is.list(legend) && legend == TRUE) {
       legend("bottomright", inset = c(0.025, 0.05), legend = labels, lty = c(1, 1), col = cols, pch = c(1, 1))
     }
+    
   }
   
   if (showFig[6]) {
