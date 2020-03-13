@@ -8,7 +8,6 @@
   x,
   y,
   figType = "summary",
-  newFig = TRUE,
   VP = NULL,
   legend = TRUE,
   labels = c("Compatible", "Incompatible", "Observed", "Predicted"),
@@ -28,8 +27,6 @@
 \item{y}{Observed data}
 
 \item{figType}{summary, rtCorrect, errorRate, rtErrors, cdf, caf, delta, all}
-
-\item{newFig}{TRUE/FALSE}
 
 \item{VP}{NULL (aggregated data across all participants) or integer for participant number}
 
