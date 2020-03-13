@@ -71,9 +71,6 @@ plot.dmcsim <- function(x,
     stop("plotting trials/activation data requires dmcSim with fullData = TRUE")
   }
   
-  # figure parameters
-  par(mfrow = c(1, 1))
-  
   showFig = rep(FALSE, 9)
   if (figType == "summary1") {
     par(mar = c(4, 4, 2, 2))
@@ -101,8 +98,10 @@ plot.dmcsim <- function(x,
     par(mar = c(4, 4, 2, 2), mfrow=c(3, 1))
     showFig[7:9] = TRUE 
   } else if (figType == "all" & length(x) == 6) {
+    par(mar = c(4, 4, 2, 2), mfrow=c(1, 1))
     showFig[1:9] = TRUE
   } else if (figType == "all" & length(x) == 5) {
+    par(mar = c(4, 4, 2, 2), mfrow=c(1, 1))
     showFig[4:9] = TRUE 
   } else {
     showFig[figTypes[5:13] %in% figType] = TRUE
