@@ -1,3 +1,5 @@
+*.Rnw linguist-detectable=false
+*.tex linguist-detectable=false
 *.Rd linguist-detectable=false
 *.cpp linguist-detectable=false
 *.R linguist-detectable=true
