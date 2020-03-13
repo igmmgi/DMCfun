@@ -85,9 +85,6 @@ plot.dmcob <- function(x,
     stop("figType must be one of:", paste0(figTypes, collapse = ", "))
   }
   
-  # figure parameters
-  par(mfrow = c(1, 1))
-  
   if (!is.null(VP)) {
     # select individual dataset
     if (!VP %in% x$summaryVP$VP) {
@@ -114,6 +111,7 @@ plot.dmcob <- function(x,
                   nrow = 3, ncol = 2, byrow = TRUE))
     showFig[1:6] = TRUE
   } else if (figType == "all") {
+    par(mar = c(4, 4, 2, 2), mfrow=c(1, 1))
     showFig[1:6] = TRUE
   } else {
     showFig[figTypes[3:8] %in% figType] = TRUE
