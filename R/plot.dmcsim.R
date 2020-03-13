@@ -16,7 +16,7 @@
 #' @param ylimDelta ylimit for delta plot
 #' @param ylimRt ylimit for rt plot
 #' @param ylimErr ylimit for er plot
-#' @param legend TRUE/FALSE plot default legend on each plot
+#' @param legend TRUE/FALSE (or FUNCTION) plot legend on each plot
 #' @param labels Condition labels c("Compatible", "Incompatible") default
 #' @param cols Condition colours c("green", "red") default
 #' @param errorBars TRUE/FALSE
@@ -70,7 +70,7 @@ plot.dmcsim <- function(x,
   if (figType %in% c("trials", "activation") & !("trials" %in% names(x))) {
     stop("plotting trials/activation data requires dmcSim with fullData = TRUE")
   }
-
+  
   # figure parameters
   par(mfrow = c(1, 1))
   
@@ -128,9 +128,13 @@ plot.dmcsim <- function(x,
     # bounds
     lines(c(0, x$prms$tmax), c( x$prms$bnds,  x$prms$bnds), type = "l", col = "darkgrey", ...)
     lines(c(0, x$prms$tmax), c(-x$prms$bnds, -x$prms$bnds), type = "l", col = "darkgrey", ...)
-    if (legend) {
+    
+    if (is.function(legend)) {
+      legend()
+    } else if (!is.list(legend) && legend == TRUE) {
       legend("bottomright", legend = labels, col = cols, lty = c(1, 1), inset = c(0.05, 0.2))
     }
+    
   }
 
   # individual trials
@@ -147,9 +151,13 @@ plot.dmcsim <- function(x,
       idx <- which(abs(x$trials$incomp[[trl]]) >= x$prms$bnds)[1]
       lines(x$trials$incomp[[trl]][1:idx], type = "l", col = cols[2], ...)
     }
-    if (legend) {
+    
+    if (is.function(legend)) {
+      legend()
+    } else if (!is.list(legend) && legend == TRUE) {
       legend("bottomright", legend = labels, col = cols, lty = c(1, 1), inset = c(0.05, 0.2))
     }
+    
   }
 
   # PDF
@@ -158,10 +166,14 @@ plot.dmcsim <- function(x,
          ylim = c(0, 0.01), xlim = c(0, x$prms$tmax),
          ylab = "PDF", xlab = "Time [ms]", yaxt = "n", ...)
     lines(density(x$sim$rts_incomp), col = cols[2], type = "l", ...)
-    if (legend) { 
+    axis(2, at = c(0, 0.005, 0.01), labels = c("0", ".005", ".001"))
+    
+    if (is.function(legend)) {
+      legend()
+    } else if (!is.list(legend) && legend == TRUE) {
       legend("topright", legend = labels, col = cols, lty = c(1, 1), inset = c(0.05, 0.05))
     }
-    axis(2, at = c(0, 0.005, 0.01), labels = c("0", ".005", ".001"))
+    
   }
    
   # CDF 
@@ -177,9 +189,13 @@ plot.dmcsim <- function(x,
     abline(h = 0, lty = 2)
     abline(h = 1, lty = 2)
     axis(2, at = seq(0, 1, 0.5), labels = as.character(seq(0, 1, 0.5)))
-    if (legend) {
+    
+    if (is.function(legend)) {
+      legend()
+    } else if (!is.list(legend) && legend == TRUE) {
       legend("topright", legend = labels, col = cols, lty = c(1, 1), inset = c(0.05, 0.05))
     }
+    
   }
   
   # CAF 
@@ -190,10 +206,6 @@ plot.dmcsim <- function(x,
          xaxt = "n",  yaxt = "n",
          col = cols[1], ...)
     lines(x$caf$accPer[x$caf$Comp == "incomp"], col = cols[2], type = "o", ...)
-    if (legend) {
-      legend("bottomright", legend = labels, col = cols, lty = c(1, 1), inset = c(0.05, 0.05))
-    }
-    # labels
     nCAF <- length(x$caf$bin) / 2
     if (cafBinLabels) {
       stepCAF <- 100 / nCAF
@@ -203,6 +215,13 @@ plot.dmcsim <- function(x,
       axis(1, at = seq(1, nCAF, 1))
     }
     axis(2, at = seq(0, 1, 0.2), labels = as.character(seq(0, 1, 0.2)))
+    
+    if (is.function(legend)) {
+      legend()
+    } else if (!is.list(legend) && legend == TRUE) {
+      legend("bottomright", legend = labels, col = cols, lty = c(1, 1), inset = c(0.05, 0.05))
+    }
+    
   }
 
   # delta
