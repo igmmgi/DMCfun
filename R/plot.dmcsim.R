@@ -70,7 +70,7 @@ plot.dmcsim <- function(x,
   if (figType %in% c("trials", "activation") & !("trials" %in% names(x))) {
     stop("plotting trials/activation data requires dmcSim with fullData = TRUE")
   }
-  if (!(is.function(legend)) && !(legend %in% c(TRUE, FALSE))) {
+  if (!is.function(legend) && !legend %in% c(TRUE, FALSE)) {
     stop("legend must be TRUE/FALSE or a function")
   } 
    
@@ -131,7 +131,6 @@ plot.dmcsim <- function(x,
     lines(c(0, x$prms$tmax), c( x$prms$bnds,  x$prms$bnds), type = "l", col = "darkgrey", ...)
     lines(c(0, x$prms$tmax), c(-x$prms$bnds, -x$prms$bnds), type = "l", col = "darkgrey", ...)
     
-    message(is.function(legend))
     if (is.function(legend)) {
       legend()
     } else if (!is.list(legend) && legend == TRUE) {
