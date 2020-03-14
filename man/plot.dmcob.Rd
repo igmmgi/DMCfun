@@ -16,8 +16,13 @@
   ylimRt = c(200, 800),
   ylimEr = c(0, 20),
   ylimCAF = c(0, 1),
+  cafBinLabels = FALSE,
   ylimDelta = c(-50, 100),
   xlimDelta = c(200, 1000),
+  xlabs = TRUE,
+  ylabs = TRUE,
+  xaxts = TRUE,
+  yaxts = TRUE,
   resetLayout = TRUE,
   ...
 )
@@ -45,9 +50,19 @@
 
 \item{ylimCAF}{ylimit for CAF plot}
 
+\item{cafBinLabels}{TRUE/FALSE}
+
 \item{ylimDelta}{ylimit for delta plot}
 
 \item{xlimDelta}{xlimit for delta plot}
+
+\item{xlabs}{TRUE/FALSE}
+
+\item{ylabs}{TRUE/FALSE}
+
+\item{xaxts}{TRUE/FALSE}
+
+\item{yaxts}{TRUE/FALSE}
 
 \item{resetLayout}{TRUE (default)/FALSE Set to FALSE if using custom par(mfrow=c()) before calling plot}
 

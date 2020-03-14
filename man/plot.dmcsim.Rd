@@ -74,8 +74,8 @@ that dmcSim is run with fullData = TRUE.
 library(DMCfun)
 
 # Example 1
-dmc = dmcSim(fullData = TRUE)
-plot(dmc)
+dmc = dmcSim(fullData = TRUE, mar = c(4,4,3,3))
+plot(dmc, mar = c(4,4,3,3))
 
 # Example 2
 dmc = dmcSim()
