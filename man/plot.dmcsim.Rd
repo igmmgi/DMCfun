@@ -16,6 +16,10 @@
   labels = c("Compatible", "Incompatible"),
   cols = c("green", "red"),
   errorBars = TRUE,
+  xlabs = TRUE,
+  ylabs = TRUE,
+  xaxts = TRUE,
+  yaxts = TRUE,
   resetLayout = TRUE,
   ...
 )
@@ -43,6 +47,14 @@
 
 \item{errorBars}{TRUE/FALSE}
 
+\item{xlabs}{TRUE/FALSE}
+
+\item{ylabs}{TRUE/FALSE}
+
+\item{xaxts}{TRUE/FALSE}
+
+\item{yaxts}{TRUE/FALSE}
+
 \item{resetLayout}{TRUE (default)/FALSE Set to FALSE if using custom par(mfrow=c()) before calling plot}
 
 \item{...}{additional plot pars}
@@ -63,7 +75,7 @@ library(DMCfun)
 
 # Example 1
 dmc = dmcSim(fullData = TRUE)
-plot(dmc, legend = FALSE)
+plot(dmc)
 
 # Example 2
 dmc = dmcSim()

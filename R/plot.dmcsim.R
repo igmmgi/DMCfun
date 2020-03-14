@@ -22,6 +22,8 @@
 #' @param errorBars TRUE/FALSE
 #' @param xlabs TRUE/FALSE
 #' @param ylabs TRUE/FALSE
+#' @param xaxts TRUE/FALSE
+#' @param yaxts TRUE/FALSE
 #' @param resetLayout TRUE (default)/FALSE Set to FALSE if using custom par(mfrow=c()) before calling plot
 #' @param ... additional plot pars
 #'
