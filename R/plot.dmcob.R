@@ -37,7 +37,7 @@
 #' library(DMCfun)
 #'
 #' # Example 1 (real dataset)
-#' plot(flankerData, cols = c("blue", "red"))
+#' plot(flankerData, cols = c("blue", "red"), xaxts = FALSE, xlabs = FALSE)
 #' plot(flankerData, errorBars = TRUE, errorBarType = "se")
 #' plot(flankerData, figType = "delta", errorBars = TRUE,  errorBarType = "se")
 #'
@@ -147,7 +147,7 @@ plot.dmcob <- function(x,
                   nrow = 3, ncol = 2, byrow = TRUE))
     showFig[1:6] = TRUE
   } else if (figType == "all") {
-    par(mar = c(4, 4, 2, 2), mfrow=c(1, 1), ...)
+    par(mar = c(4, 4, 1, 1), mfrow=c(1, 1), ...)
     showFig[1:6] = TRUE
   } else {
     showFig[figTypes[3:8] %in% figType] = TRUE
