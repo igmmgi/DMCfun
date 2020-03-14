@@ -34,8 +34,8 @@
 #' library(DMCfun)
 #'
 #' # Example 1
-#' dmc = dmcSim(fullData = TRUE)
-#' plot(dmc)
+#' dmc = dmcSim(fullData = TRUE, mar = c(4,4,3,3))
+#' plot(dmc, mar = c(4,4,3,3))
 #'
 #' # Example 2
 #' dmc = dmcSim()
@@ -166,7 +166,7 @@ plot.dmcsim <- function(x,
     if (is.function(legend)) {
       legend()
     } else if (!is.list(legend) && legend == TRUE) {
-      legend("bottomright", legend = labels, col = cols, lty = c(1, 1), inset = c(0.05, 0.2), ...)
+      legend("bottomright", legend = labels, col = cols, lty = c(1, 1), inset = c(0.05, 0.2))
     }
 
   }
@@ -192,7 +192,7 @@ plot.dmcsim <- function(x,
     if (is.function(legend)) {
       legend()
     } else if (!is.list(legend) && legend == TRUE) {
-      legend("bottomright", legend = labels, col = cols, lty = c(1, 1), inset = c(0.05, 0.2), ...)
+      legend("bottomright", legend = labels, col = cols, lty = c(1, 1), inset = c(0.05, 0.2))
     }
 
   }
@@ -210,7 +210,7 @@ plot.dmcsim <- function(x,
     if (is.function(legend)) {
       legend()
     } else if (!is.list(legend) && legend == TRUE) {
-      legend("topright", legend = labels, col = cols, lty = c(1, 1), inset = c(0.05, 0.05), ...)
+      legend("topright", legend = labels, col = cols, lty = c(1, 1), inset = c(0.05, 0.05))
     }
 
   }
@@ -234,7 +234,7 @@ plot.dmcsim <- function(x,
     if (is.function(legend)) {
       legend()
     } else if (!is.list(legend) && legend == TRUE) {
-      legend("topright", legend = labels, col = cols, lty = c(1, 1), inset = c(0.05, 0.05), ...)
+      legend("topright", legend = labels, col = cols, lty = c(1, 1), inset = c(0.05, 0.05))
     }
 
   }
@@ -264,7 +264,7 @@ plot.dmcsim <- function(x,
     if (is.function(legend)) {
       legend()
     } else if (!is.list(legend) && legend == TRUE) {
-      legend("bottomright", legend = labels, col = cols, lty = c(1, 1), inset = c(0.05, 0.05), ...)
+      legend("bottomright", legend = labels, col = cols, lty = c(1, 1), inset = c(0.05, 0.05))
     }
 
   }
