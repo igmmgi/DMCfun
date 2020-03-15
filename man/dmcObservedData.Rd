@@ -71,10 +71,10 @@ model.tables(aovRt, type = "mean")
 # Example 4
 dat <- createDF(nVP = 50, nTrl = 500, design = list("Comp" = c("comp", "incomp")))
 dat <- addDataDF(dat,
-                 RT = list(list(c("Comp:comp"), vals = c(500, 75, 120)),
-                           list(c("Comp:incomp"), vals = c(530, 75, 100))),
-                 Error = list(list(c("Comp:comp"), vals = c(3, 2, 2, 1, 1)),
-                            list(c("Comp:incomp"), vals = c(10, 3, 2, 1, 1))))
+                 RT = list("Comp_comp"    = c(500, 75, 120),
+                           "Comp_incomp"  = c(530, 75, 100)),
+                 Error = list("Comp_comp" = c(3, 2, 2, 1, 1),
+                            "Comp_incomp" = c(21, 3, 2, 1, 1)))
 datOb <- dmcObservedData(dat, stepCAF = 20, stepDelta = 5)
 plot(datOb)
 plot(datOb, VP = 1)

@@ -26,7 +26,7 @@ dmcFitAgg(
 
 \item{nTrl}{Number of trials to use within dmcSim}
 
-\item{startVals}{Starting values for to-be estimated parameters. This needs to be vector of length 9 
+\item{startVals}{Starting values for to-be estimated parameters. This needs to be vector of length 9
 with the following order: amp, tau, mu, bnds, resMean, resSD, aaShape, spShape, sigma}
 
 \item{minVals}{Minimum values for the to-be estimated parameters (see startVals)}
@@ -78,10 +78,10 @@ summary(fit)
 # Example 3: Simulated Data (+ve going delta function)
 dat <- createDF(nVP = 20, nTrl = 500, design = list("Comp" = c("comp", "incomp")))
 dat <- addDataDF(dat,
-                 RT = list(list(c("Comp:comp"), vals = c(510, 100, 100)),
-                           list(c("Comp:incomp"), vals = c(540, 130, 85))),
-                 Error = list(list(c("Comp:comp"), vals = c(4, 3, 2, 1, 1)),
-                            list(c("Comp:incomp"), vals = c(20, 4, 3, 1, 1))))
+                 RT = list("Comp_comp"   = c(510, 100, 100),
+                           "Comp_incomp" = c(540, 130, 85)),
+                 Error = list("Comp_comp"   = c(4, 3, 2, 1, 1),
+                              "Comp_incomp" = c(20, 4, 3, 1, 1)))
 datOb <- dmcObservedData(dat, columns = c("VP", "Comp", "RT", "Error"))
 plot(datOb)
 fit <- dmcFitAgg(datOb)

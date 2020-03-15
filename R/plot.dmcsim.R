@@ -223,7 +223,7 @@ plot.dmcsim <- function(x,
     cdf_incomp     <- cumsum(density_incomp$y * diff(density_incomp$x[1:2]))
     plot(density_comp$x, cdf_comp, type="l", col = cols[1],
          ylab = ylabs[4], xlab = xlabs[4],
-         ylim = c(0, 1.5), xaxt = xaxts, yaxt = "n", xlim = c(0, x$prms$tmax))
+         ylim = c(0, 1), xaxt = xaxts, yaxt = "n", xlim = c(0, x$prms$tmax))
     lines(density_incomp$x, cdf_incomp, type = "l", col = cols[2])
     abline(h = 0, lty = 2)
     abline(h = 1, lty = 2)
@@ -234,7 +234,7 @@ plot.dmcsim <- function(x,
     if (is.function(legend)) {
       legend()
     } else if (!is.list(legend) && legend == TRUE) {
-      legend("topright", legend = labels, col = cols, lty = c(1, 1), inset = c(0.05, 0.05))
+      legend("bottomright", legend = labels, col = cols, lty = c(1, 1), inset = c(0.05, 0.05))
     }
 
   }

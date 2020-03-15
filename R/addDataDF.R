@@ -12,6 +12,7 @@
 #'
 #' @examples
 #' library(DMCfun)
+#'
 #' # Example 1: default dataframe
 #' dat <- createDF()
 #' dat <- addDataDF(dat)
@@ -27,28 +28,50 @@
 #' # Example 3: defined RT + Error parameters across conditions
 #' dat <- createDF(nVP = 50, nTrl = 50, design = list("Comp" = c("comp", "incomp")))
 #' dat <- addDataDF(dat,
-#'                  RT = list(list(c("Comp:comp"), vals = c(500, 80, 100)),
-#'                            list(c("Comp:incomp"), vals = c(550, 80, 140))),
-#'                  Error = list(list(c("Comp:comp"), vals = c(5)),
-#'                               list(c("Comp:incomp"), vals = c(10))))
+#'                  RT = list("Comp_comp"   = c(500, 80, 100),
+#'                            "Comp_incomp" = c(550, 80, 140)),
+#'                  Error = list("Comp_comp"   = 5,
+#'                               "Comp_incomp" = 10))
 #' boxplot(dat$RT ~ dat$Comp)
 #' table(dat$Comp, dat$Error)
 #'
 #' # Example 4:
 #' # create dataframe with defined RT + Error parameters across different conditions
-#' dat <- createDF(nVP = 50, nTrl = 50, design = list("Comp" = c("comp", "incomp")))
+#' dat <- createDF(nVP = 50, nTrl = 50, design = list("Comp" = c("comp", "incomp", "neutral")))
 #' dat <- addDataDF(dat,
-#'                  RT = list(list(c("Comp:comp"), vals = c(500, 150, 150)),
-#'                            list(c("Comp:incomp"), vals = c(550, 150, 100))),
-#'                  Error = list(list(c("Comp:comp"), vals = c(5, 4, 2, 2, 1)),
-#'                             list(c("Comp:incomp"), vals = c(25, 8, 5, 2, 2))))
+#'                  RT = list("Comp_comp"      = c(500, 150, 100),
+#'                            "Comp_neutral"   = c(550, 150, 100),
+#'                            "Comp_incomp"    = c(600, 150, 100)),
+#'                  Error = list("Comp_comp"    =  5,
+#'                               "Comp_neutral" = 10,
+#'                               "Comp_incomp"  = 15))
 #' boxplot(dat$RT ~ dat$Comp)
 #' table(dat$Comp, dat$Error)
 #'
+#' # Example 5:
+#' # create dataframe with defined RT + Error parameters across different conditions
+#' dat <- createDF(nVP = 50, nTrl = 50,
+#'                 design = list("Hand" = c("left", "right"),
+#'                               "Side" = c("left", "right")))
+#' dat <- addDataDF(dat,
+#'                  RT = list("Hand:Side_left:left"   = c(400, 150, 100),
+#'                            "Hand:Side_left:right"  = c(500, 150, 100),
+#'                            "Hand:Side_right:left"  = c(500, 150, 100),
+#'                            "Hand:Side_right:right" = c(400, 150, 100)),
+#'                  Error = list("Hand:Side_left:left"   = c(5,4,2,2,1),
+#'                               "Hand:Side_left:right"  = c(15,4,2,2,1),
+#'                               "Hand:Side_right:left"  = c(15,7,4,2,1),
+#'                               "Hand:Side_right:right" = c(5,8,5,3,1)))
+#'
+#' boxplot(dat$RT ~ dat$Hand + dat$Side)
+#' table(dat$Error, dat$Hand, dat$Side)
+#
 #' @export
+
 addDataDF <- function(dat, RT=NULL, Error=NULL) {
 
   # reaction time
+  dat$RT <- 0
   if (is.null(RT)) {
     dat$RT <- rtDist(n = nrow(dat))
   } else if (!is.null(RT) & is.double(RT)) {
@@ -56,54 +79,58 @@ addDataDF <- function(dat, RT=NULL, Error=NULL) {
   } else if (!is.null(RT) & is.list(RT)) {
 
     for (i in c(1:length(RT))) {
-      numFactors = unlist(lapply(RT[[i]][1], length)[1])
-      idx = NULL
-      for (fct in c(1:numFactors)) {
-        level <- strsplit(RT[[i]][[1]][fct], split = ":", fixed = TRUE)
-        idx   <- cbind(idx, dat[level[[1]][1]] == level[[1]][2])
+
+      fcts_levls <- unlist(strsplit(names(RT[i]),  split = "_"))
+      fcts       <- unlist(strsplit(fcts_levls[1], split = ":"))
+      levls      <- unlist(strsplit(fcts_levls[2], split = ":"))
+
+      idx <- NULL
+      for (fct in c(1:length(fcts))) {
+        idx <- cbind(idx, dat[fcts[fct]] == levls[fct])
       }
       idx         <- apply(idx, 1, all)
-      vals        <- RT[[i]]$vals
-      dat$RT[idx] <- rtDist(n = sum(idx), vals[1], vals[2], vals[3])
+      dat$RT[idx] <- rtDist(n = sum(idx), RT[[i]][1], RT[[i]][2], RT[[i]][3])
 
     }
 
   }
 
   # error rate
+  dat$Error <- 0
+  dat$bins  <- 0
   if (is.null(Error)) {
     dat$Error <- errDist(n = nrow(dat))
   } else if (!is.null(Error) & is.double(Error)) {
     dat$Error <- errDist(n = nrow(dat), Error)
   } else if (!is.null(Error) & is.list(Error)) {
 
-    dat <- dat %>%
-      dplyr::group_by_(names(dat)[2:(ncol(dat) - 1)]) %>%
-      dplyr::mutate(bin = dplyr::ntile(RT, length(Error[[1]]$vals))) %>%
-      as.data.frame()
+    for (i in c(1:length(Error))) {
 
-    for (i in c(1:length(Error[[1]]$vals)))  {
-      for (j in c(1:length(Error))) {
+      fcts_levls <- unlist(strsplit(names(Error[i]), split = "_"))
+      fcts       <- unlist(strsplit(fcts_levls[1],   split = ":"))
+      levls      <- unlist(strsplit(fcts_levls[2],   split = ":"))
 
-        numFactors = unlist(lapply(Error[[j]][1], length)[1])
-        idx = NULL
-        for (fct in c(1:numFactors)) {
-          level <- strsplit(Error[[j]][[1]][fct], split = ":", fixed = TRUE)
-          idx   <- cbind(idx, dat[level[[1]][1]] == level[[1]][2] & dat$bin == i)
-        }
-
-        idx            <- apply(idx, 1, all)
-        vals           <- Error[[j]]$vals
-        dat$Error[idx] <- errDist(n = sum(idx), vals[i])
+      idx <- NULL
+      for (fct in c(1:length(fcts))) {
+        idx <- cbind(idx, dat[fcts[fct]] == levls[fct])
       }
-    }
+      idx <- apply(idx, 1, all)
 
+      dat$bins[idx] <- dplyr::ntile(dat$RT[idx], length(Error[[1]]))
+      for (bin in 1:length(Error[[1]])) {
+        idx_bin <- dat$bins == bin & idx
+        dat$Error[idx_bin] <- errDist(n = sum(idx_bin), Error[[i]][bin])
+      }
+
+    }
   }
 
-  if ("bin" %in% names(dat)) {
-    dat <- dat[ , -which(names(dat) %in% c("bin"))]
+  if ("bins" %in% names(dat)) {
+    dat <- dat[ , -which(names(dat) %in% c("bins"))]
   }
 
   return(dat)
 
 }
+
+

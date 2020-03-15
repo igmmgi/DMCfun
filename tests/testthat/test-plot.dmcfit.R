@@ -32,10 +32,10 @@ test_that("plot.dmcfit", {
   dat <- createDF(nVP = 50, nTrl = 50,
                   design = list("Comp" = c("comp", "incomp")))
   dat <- addDataDF(dat,
-                   RT = list(list(c("Comp:comp"), vals = c(500, 150, 100)),
-                             list(c("Comp:incomp"), vals = c(530, 150, 150))),
-                   Error = list(list(c("Comp:comp"), vals = c(5, 3, 2, 1, 1)),
-                              list(c("Comp:incomp"), vals = c(15, 12, 5, 2, 1))))
+                   RT = list("Comp_comp"   = c(500, 150, 100),
+                             "Comp_incomp" = c(530, 150, 150)),
+                   Error = list("Comp_comp"   = c(5, 3, 2, 1, 1),
+                                "Comp_incomp" = c(15, 12, 5, 2, 1)))
   datOb <- dmcObservedData(dat)
 
   resTh <- dmcFitAgg(datOb, nTrl = 5000, printInputArgs = FALSE, printResults = FALSE)
@@ -45,10 +45,10 @@ test_that("plot.dmcfit", {
   dat <- createDF(nVP = 2, nTrl = 10000,
                   design = list("Comp" = c("comp", "incomp")))
   dat <- addDataDF(dat,
-                   RT = list(list(c("Comp:comp"), vals = c(500, 30, 100)),
-                             list(c("Comp:incomp"), vals = c(530, 30, 130))),
-                   Error = list(list(c("Comp:comp"), vals = c(5, 3, 2, 1, 1)),
-                              list(c("Comp:incomp"), vals = c(15, 12, 5, 2, 1))))
+                   RT = list("Comp_comp"   = c(500, 30, 100),
+                             "Comp_incomp" = c(530, 30, 130)),
+                   Error = list("Comp_comp"   = c(5, 3, 2, 1, 1),
+                                "Comp_incomp" = c(15, 12, 5, 2, 1)))
   datOb <- dmcObservedData(dat)
 
   resTh <- dmcFitVPs(datOb, nTrl = 10000, VP = 2,

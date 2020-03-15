@@ -33,7 +33,7 @@
 #' datAgg$VP   <- factor(datAgg$VP)
 #' datAgg$Task <- factor(datAgg$Task)
 #' datAgg$Comp <- factor(datAgg$Comp)
-#' 
+#'
 #' aovErr <- aov(perErr ~ Comp*Task + Error(VP/(Comp*Task)), datAgg)
 #' summary(aovErr)
 #' model.tables(aovErr, type = "mean")
@@ -45,10 +45,10 @@
 #' # Example 4
 #' dat <- createDF(nVP = 50, nTrl = 500, design = list("Comp" = c("comp", "incomp")))
 #' dat <- addDataDF(dat,
-#'                  RT = list(list(c("Comp:comp"), vals = c(500, 75, 120)),
-#'                            list(c("Comp:incomp"), vals = c(530, 75, 100))),
-#'                  Error = list(list(c("Comp:comp"), vals = c(3, 2, 2, 1, 1)),
-#'                             list(c("Comp:incomp"), vals = c(10, 3, 2, 1, 1))))
+#'                  RT = list("Comp_comp"    = c(500, 75, 120),
+#'                            "Comp_incomp"  = c(530, 75, 100)),
+#'                  Error = list("Comp_comp" = c(3, 2, 2, 1, 1),
+#'                             "Comp_incomp" = c(21, 3, 2, 1, 1)))
 #' datOb <- dmcObservedData(dat, stepCAF = 20, stepDelta = 5)
 #' plot(datOb)
 #' plot(datOb, VP = 1)
@@ -136,7 +136,7 @@ dmcObservedData <- function(dat,
   # DELTA
   deltaSeq <- seq(stepDelta, 100, stepDelta)
   deltaSeq <- deltaSeq[!deltaSeq %in% 100]
-  
+
   datVP_dec <- dat %>%
     dplyr::filter(Error == 0, RT >= rtMin, RT <= rtMax) %>%
     dplyr::group_by(VP, Comp) %>%

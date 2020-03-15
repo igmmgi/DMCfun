@@ -15,10 +15,10 @@ test_that("plot.dmcob", {
   dat <- createDF(nVP = 50, nTrl = 50,
                   design = list("Comp" = c("comp", "incomp")))
   dat <- addDataDF(dat,
-                   RT = list(list(c("Comp:comp"), vals = c(420, 100, 80)),
-                             list(c("Comp:incomp"), vals = c(470, 100, 95))),
-                   Error = list(list(c("Comp:comp"), vals = c(5, 3, 2, 1, 2)),
-                                list(c("Comp:incomp"), vals = c(15, 8, 4, 2, 2))))
+                   RT = list("Comp_comp"   = c(420, 100, 80),
+                             "Comp_incomp" = c(470, 100, 95)),
+                   Error = list("Comp_comp"   = c(5, 3, 2, 1, 2),
+                                "Comp_incomp" = c(15, 8, 4, 2, 2)))
   datOb <- dmcObservedData(dat)
 
   testthat::expect_error(plot(datOb), NA)
