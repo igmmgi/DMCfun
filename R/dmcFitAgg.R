@@ -29,7 +29,7 @@
 #' library(DMCfun)
 #'
 #' # Example 1: Flanker data from Ulrich et al. (2015)
-#' fit <- dmcFitAgg(flankerData)  # only initial search tau
+#' fit <- dmcFitAgg(flankerData, nTrl = 5000)  # only initial search tau
 #' plot(fit, flankerData)
 #' summary(fit)
 #'
@@ -47,7 +47,7 @@
 #'                               "Comp_incomp" = c(20, 4, 3, 1, 1)))
 #' datOb <- dmcObservedData(dat, columns = c("VP", "Comp", "RT", "Error"))
 #' plot(datOb)
-#' fit <- dmcFitAgg(datOb)
+#' fit <- dmcFitAgg(datOb, nTrl = 5000)
 #' plot(fit, datOb)
 #' summary(fit)
 #' }
@@ -175,8 +175,8 @@ dmcFitAgg <- function(resOb,
                   printResults = TRUE)
   resTh$prms[1:9] <- prms
 
-  dmcfit <- list(resTh, fit)
-  class(dmcfit) <- c("dmcfit")
+  dmcfit        <- list(resTh, fit)
+  class(dmcfit) <- "dmcfit"
 
   return(dmcfit)
 

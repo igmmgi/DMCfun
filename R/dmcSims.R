@@ -14,7 +14,6 @@
 #'
 #' # Example 1
 #' params <- list(amp = seq(10, 20, 5), tau = c(50, 100, 150), nTrl = 50000)
-#' params <- list(amp = seq(10, 20, 5))
 #' dmc <- dmcSims(params)
 #' plot(dmc[[1]])    # full combination 1
 #' plot(dmc)         # delta plots for all combinations

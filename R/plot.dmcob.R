@@ -37,9 +37,10 @@
 #' library(DMCfun)
 #'
 #' # Example 1 (real dataset)
-#' plot(flankerData, cols = c("blue", "red"), xaxts = FALSE, xlabs = FALSE)
+#' plot(flankerData)
 #' plot(flankerData, errorBars = TRUE, errorBarType = "se")
-#' plot(flankerData, figType = "delta", errorBars = TRUE,  errorBarType = "se")
+#' plot(flankerData, figType = "delta")
+#' plot(flankerData, figType = "caf")
 #'
 #' # Example 2 (real dataset)
 #' plot(simonData)
@@ -50,10 +51,10 @@
 #' dat <- createDF(nVP = 50, nTrl = 50,
 #'                 design = list("Comp" = c("comp", "incomp")))
 #' dat <- addDataDF(dat,
-#'                  RT = list(list(c("Comp:comp"), vals = c(420, 100, 80)),
-#'                            list(c("Comp:incomp"), vals = c(470, 100, 95))),
-#'                  Error = list(list(c("Comp:comp"), vals = c(5, 3, 2, 1, 2)),
-#'                          list(c("Comp:incomp"), vals = c(15, 8, 4, 2, 2))))
+#'                  RT = list("Comp_comp"   = c(420, 100, 80),
+#'                            "Comp_incomp" = c(470, 100, 95)),
+#'                  Error = list("Comp_comp"   = c(5, 3, 2, 1, 2),
+#'                               "Comp_incomp" = c(15, 8, 4, 2, 2)))
 #' datOb <- dmcObservedData(dat)
 #' plot(datOb, errorBars = TRUE, errorBarType = "sd")
 #'
@@ -61,13 +62,12 @@
 #' dat <- createDF(nVP = 50, nTrl = 50,
 #'                 design = list("Comp" = c("comp", "incomp")))
 #' dat <- addDataDF(dat,
-#'                  RT = list(list(c("Comp:comp"), vals = c(420, 100, 150)),
-#'                            list(c("Comp:incomp"), vals = c(470, 100, 120))),
-#'                  Error = list(list(c("Comp:comp"), vals = c(5, 3, 2, 1)),
-#'                          list(c("Comp:incomp"), vals = c(15, 8, 4, 2))))
+#'                  RT = list("Comp_comp"   = c(420, 100, 150),
+#'                            "Comp_incomp" = c(470, 100, 120)),
+#'                  Error = list("Comp_comp"   = c(5, 3, 2, 1),
+#'                               "Comp_incomp" = c(15, 8, 4, 2)))
 #' datOb <- dmcObservedData(dat, stepCAF = 25)
 #' plot(datOb)
-#' plot(datOb, VP = 1)
 #' }
 #'
 #' @export
@@ -76,7 +76,7 @@ plot.dmcob <- function(x,
                        VP = NULL,
                        legend = TRUE,
                        labels = c("Compatible", "Incompatible"),
-                       cols = c("green", "red"),
+                       cols = c("black", "green", "red"),
                        errorBars = FALSE,
                        errorBarType = "sd",
                        ylimRt = c(200, 800),
@@ -155,7 +155,7 @@ plot.dmcob <- function(x,
 
   # rtCorrect
   if (showFig[1]) {
-    plot(c(1, 2), x$summary$rtCor, type = "o",
+    plot(c(1, 2), x$summary$rtCor, type = "o", col = cols[1],
          ylim = ylimRt, xlim = c(0.5, 2.5),
          ylab = ylabs[1], xlab = xlabs[1],
          xaxt = "n", yaxt = yaxts, ...)
@@ -169,7 +169,7 @@ plot.dmcob <- function(x,
 
   # errorRate
   if (showFig[2]) {
-    plot(c(1, 2), x$summary$perErr, type = "o",
+    plot(c(1, 2), x$summary$perErr, type = "o", col = cols[1],
          ylim = ylimEr, xlim = c(0.5, 2.5),
          ylab = ylabs[2], xlab = xlabs[2],
          xaxt = "n", yaxt = yaxts, ...)
@@ -183,7 +183,7 @@ plot.dmcob <- function(x,
 
   # rtError
   if (showFig[3]) {
-    plot(c(1, 2), x$summary$rtErr, type = "o",
+    plot(c(1, 2), x$summary$rtErr, type = "o", col = cols[1],
          ylim = ylimRt, xlim = c(0.5, 2.5),
          ylab = ylabs[3], xlab = xlabs[3],
          xaxt = "n", yaxt = yaxts, ...)
@@ -201,9 +201,9 @@ plot.dmcob <- function(x,
     plot(x$delta$meanComp, seq(seqStep, 100 - seqStep, seqStep)/100, type = "o",
          ylim = c(0, 1), xlim = c(200, 1000),
          ylab = ylabs[4], xlab = xlabs[4],
-         col = cols[1],
+         col = tail(cols, 2)[1],
          xaxt = xaxts, yaxt = "n", ...)
-    lines(x$delta$meanIncomp, seq(seqStep, 100 - seqStep, seqStep)/100, type = "o", col = cols[2], ...)
+    lines(x$delta$meanIncomp, seq(seqStep, 100 - seqStep, seqStep)/100, type = "o", col = tail(cols, 2)[2], ...)
     if (yaxts ==  "s") {
       axis(2, at = seq(0, 1, 0.25), labels = as.character(seq(0, 1, 0.25)))
     }
@@ -211,7 +211,7 @@ plot.dmcob <- function(x,
     if (is.function(legend)) {
       legend()
     } else if (!is.list(legend) && legend == TRUE) {
-      legend("bottomright", inset = c(0.025, 0.05), legend = labels, lty = c(1, 1), col = cols, pch = c(1, 1))
+      legend("bottomright", inset = c(0.025, 0.05), legend = labels, lty = c(1, 1), col = tail(cols, 2), pch = c(1, 1))
     }
 
   }
@@ -221,9 +221,9 @@ plot.dmcob <- function(x,
     plot(x$caf$accPer[x$caf$Comp == "comp"],  type = "o",
          ylim = ylimCAF,
          ylab = ylabs[5], xlab = xlabs[5],
-         col = cols[1],
+         col = tail(cols, 2)[1],
          xaxt = "n", yaxt = yaxts, ...)
-    lines(x$caf$accPer[x$caf$Comp == "incomp"],  type = "b", col = cols[2], ...)
+    lines(x$caf$accPer[x$caf$Comp == "incomp"],  type = "b", col = tail(cols, 2)[2], ...)
     if (xaxts == "s") {
       nCAF <- length(x$caf$bin) / 2
       if (cafBinLabels) {
@@ -241,13 +241,13 @@ plot.dmcob <- function(x,
     if (is.function(legend)) {
       legend()
     } else if (!is.list(legend) && legend == TRUE) {
-      legend("bottomright", inset = c(0.025, 0.05), legend = labels, lty = c(1, 1), col = cols, pch = c(1, 1))
+      legend("bottomright", inset = c(0.025, 0.05), legend = labels, lty = c(1, 1), col = tail(cols, 2), pch = c(1, 1))
     }
 
   }
 
   if (showFig[6]) {
-    plot(x$delta$meanBin, x$delta$meanEffect, type = "o",
+    plot(x$delta$meanBin, x$delta$meanEffect, type = "o", col = cols[1],
          ylim = ylimDelta, xlim = xlimDelta,
          ylab = ylabs[6], xlab = xlabs[6],
          xaxt = xaxts, yaxt = yaxts, ...)

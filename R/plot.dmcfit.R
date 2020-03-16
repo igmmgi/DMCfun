@@ -36,7 +36,7 @@
 #' library(DMCfun)
 #'
 #' # Example 1
-#' resTh <- dmcFitAgg(flankerData, nTrl = 500)
+#' resTh <- dmcFitAgg(flankerData, nTrl = 5000)
 #' plot(resTh, flankerData)
 #'
 #' # Example 2
@@ -61,7 +61,7 @@ plot.dmcfit <- function(x,
                         VP     = NULL,
                         legend = TRUE,
                         labels = c("Compatible", "Incompatible", "Observed", "Predicted"),
-                        cols = c("green", "red"),
+                        cols = c("black", "green", "red"),
                         ylimRt = c(200, 800),
                         ylimEr = c(0, 20),
                         ylimCAF = c(0, 1),
@@ -74,6 +74,8 @@ plot.dmcfit <- function(x,
                         yaxts = TRUE,
                         resetLayout = TRUE,
                         ...) {
+  
+  message(list(...))
 
   figTypes <- c("summary", "all", "rtCorrect", "errorRate", "rtErrors", "cdf", "caf", "delta")
   if (length(figType) > 1 || !figType %in% figTypes) {
@@ -137,7 +139,7 @@ plot.dmcfit <- function(x,
 
   # rtCorrect
   if (showFig[1]) {
-    plot(y$summary$rtCor, type = "o",
+    plot(c(1,2), y$summary$rtCor, type = "o", col = cols[1],
          ylim = ylimRt, xlim = c(0.5, 2.5),
          ylab = ylabs[1], xlab = xlabs[1],
          xaxt = "n", yaxt = yaxts, ...)
@@ -156,7 +158,7 @@ plot.dmcfit <- function(x,
 
   # errorRate
   if (showFig[2]) {
-    plot(y$summary$perErr, type = "o",
+    plot(c(1,2), y$summary$perErr, type = "o", col = cols[1],
          ylim = ylimEr, xlim = c(0.5, 2.5),
          ylab = ylabs[2], xlab = xlabs[2],
          xaxt = "n", yaxt = yaxts, ...)
@@ -175,7 +177,7 @@ plot.dmcfit <- function(x,
 
   # rt Error
   if (showFig[3]) {
-    plot(y$summary$rtErr, type = "o",
+    plot(c(1,2), y$summary$rtErr, type = "o", col = cols[1],
          ylim = ylimRt, xlim = c(0.5, 2.5),
          ylab = ylabs[3], xlab = xlabs[3],
          xaxt = "n", yaxt = yaxts, ...)
@@ -198,11 +200,11 @@ plot.dmcfit <- function(x,
     plot(y$delta$meanComp, seq(seqStep, 100 - seqStep, seqStep)/100, type = "p",
          ylim = c(0, 1), xlim = c(200, 1000),
          ylab = ylabs[4], xlab = xlabs[4],
-         yaxt = "n", col = cols[1],
+         yaxt = "n", col = tail(cols, 2)[1],
          xaxt = xaxts, yaxt = "n", ...)
-    lines(y$delta$meanIncomp, seq(seqStep, 100 - seqStep, seqStep)/100, type = "p", col = cols[2], ...)
-    lines(x$delta$meanComp,   seq(seqStep, 100 - seqStep, seqStep)/100, type = "l", col = cols[1], ...)
-    lines(x$delta$meanIncomp, seq(seqStep, 100 - seqStep, seqStep)/100, type = "l", col = cols[2], ...)
+    lines(y$delta$meanIncomp, seq(seqStep, 100 - seqStep, seqStep)/100, type = "p", col = tail(cols, 2)[2], ...)
+    lines(x$delta$meanComp,   seq(seqStep, 100 - seqStep, seqStep)/100, type = "l", col = tail(cols, 2)[1], ...)
+    lines(x$delta$meanIncomp, seq(seqStep, 100 - seqStep, seqStep)/100, type = "l", col = tail(cols, 2)[2], ...)
     if (yaxts ==  "s") {
       axis(2, at = seq(0, 1, 0.25), labels = as.character(seq(0, 1, 0.25)))
     }
@@ -215,7 +217,7 @@ plot.dmcfit <- function(x,
                         paste(labels[2], labels[3], sep = " "),
                         paste(labels[1], labels[4], sep = " "),
                         paste(labels[2], labels[4], sep = " ")),
-             lty = c(0, 0, 1, 1), col = c(cols[1], cols[2], cols[1], cols[2]), pch = c(1, 1, NA, NA))
+             lty = c(0, 0, 1, 1), col = tail(col, 2), pch = c(1, 1, NA, NA))
     }
 
   }
@@ -226,10 +228,10 @@ plot.dmcfit <- function(x,
          ylim = ylimCAF,
          ylab = ylabs[5], xlab = xlabs[5],
          yaxt = "n", xaxt = "n",
-         col = cols[1], ...)
-    lines(y$caf$accPer[y$caf$Comp == "incomp"], type = "p", col = cols[2], ...)
-    lines(x$caf$accPer[x$caf$Comp == "comp"],   type = "l", col = cols[1], ...)
-    lines(x$caf$accPer[x$caf$Comp == "incomp"], type = "l", col = cols[2], ...)
+         col = tail(cols, 2)[1], ...)
+    lines(y$caf$accPer[y$caf$Comp == "incomp"], type = "p", col = tail(cols, 2)[2], ...)
+    lines(x$caf$accPer[x$caf$Comp == "comp"],   type = "l", col = tail(cols, 2)[1], ...)
+    lines(x$caf$accPer[x$caf$Comp == "incomp"], type = "l", col = tail(cols, 2)[2], ...)
     if (xaxts == "s") {
       nCAF <- length(x$caf$bin) / 2
       if (cafBinLabels) {
@@ -252,13 +254,13 @@ plot.dmcfit <- function(x,
                         paste(labels[2], labels[3], sep = " "),
                         paste(labels[1], labels[4], sep = " "),
                         paste(labels[2], labels[4], sep = " ")),
-             lty = c(0, 0, 1, 1), col = c(cols[1], cols[2], cols[1], cols[2]), pch = c(1, 1, NA, NA))
+             lty = c(0, 0, 1, 1), col = tail(cols, 2), pch = c(1, 1, NA, NA))
     }
   }
 
   # delta
   if (showFig[6]) {
-    plot(y$delta$meanBin, y$delta$meanEffect,
+    plot(y$delta$meanBin, y$delta$meanEffect, col = cols[1],
          ylim = ylimDelta, xlim = xlimDelta,
          ylab = ylabs[6], xlab = xlabs[6],
          xaxt = xaxts, yaxt = yaxts, ...)

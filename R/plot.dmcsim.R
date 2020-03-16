@@ -34,8 +34,8 @@
 #' library(DMCfun)
 #'
 #' # Example 1
-#' dmc = dmcSim(fullData = TRUE, mar = c(4,4,3,3))
-#' plot(dmc, mar = c(4,4,3,3))
+#' dmc = dmcSim(fullData = TRUE)
+#' plot(dmc)
 #'
 #' # Example 2
 #' dmc = dmcSim()
@@ -61,14 +61,14 @@ plot.dmcsim <- function(x,
                         ylimErr = c(0, 20),
                         legend = TRUE,
                         labels = c("Compatible", "Incompatible"),
-                        cols = c("green", "red"),
+                        cols = c("black", "green", "red"),
                         errorBars = TRUE,
                         xlabs = TRUE,
                         ylabs = TRUE,
                         xaxts = TRUE,
                         yaxts = TRUE,
-                        resetLayout = TRUE,
-                        ...) {
+                        resetLayout = TRUE, 
+                        ...)  {
 
   figTypes <- c("summary1", "summary2", "summary3", "all", "activation", "trials", "pdf", "cdf", "caf", "delta", "rtCorrect", "rtErrors", "errorRate")
   if (length(figType) > 1 || !figType %in% figTypes) {
@@ -145,19 +145,19 @@ plot.dmcsim <- function(x,
   if (showFig[1]) {
 
     # automatic
-    plot(c(1:x$prms$tmax), x$sim$eq4, type = "l", lty = 2, col = cols[1],
+    plot(c(1:x$prms$tmax), x$sim$eq4, type = "l", lty = 2, col = tail(cols, 2)[1],
          ylim = c(-x$prms$bnds - 20, x$prms$bnds + 20),
          xlab = xlabs[1], ylab = ylabs[1],
          xaxt = xaxts, yaxt = yaxts, ...)
-    lines(c(1:x$prms$tmax), -x$sim$eq4, type = "l", lty = 2, col = cols[2], ...)
+    lines(c(1:x$prms$tmax), -x$sim$eq4, type = "l", lty = 2, col = tail(cols, 2)[1], ...)
 
     # controlled
     dr <- ifelse(x$prms$varDR, mean(as.numeric(as.character(x$prms$drLim)[2:3])), x$prms$mu)
     lines(c(1:x$prms$tmax), cumsum(rep(dr, x$prms$tmax)), ...)
 
     # superimposed automatic + controlled comp/incomp
-    lines(c(1:x$prms$tmax), x$sim$activation_comp,   col = cols[1], ...)
-    lines(c(1:x$prms$tmax), x$sim$activation_incomp, col = cols[2], ...)
+    lines(c(1:x$prms$tmax), x$sim$activation_comp,   col = tail(cols, 2)[1], ...)
+    lines(c(1:x$prms$tmax), x$sim$activation_incomp, col = tail(cols, 2)[2], ...)
 
     # bounds
     lines(c(0, x$prms$tmax), c( x$prms$bnds,  x$prms$bnds), type = "l", col = "darkgrey", ...)
@@ -166,7 +166,7 @@ plot.dmcsim <- function(x,
     if (is.function(legend)) {
       legend()
     } else if (!is.list(legend) && legend == TRUE) {
-      legend("bottomright", legend = labels, col = cols, lty = c(1, 1), inset = c(0.05, 0.2))
+      legend("bottomright", legend = labels, col = tail(cols, 2), lty = c(1, 1), inset = c(0.05, 0.2))
     }
 
   }
@@ -184,25 +184,25 @@ plot.dmcsim <- function(x,
     # individual trials until bounds
     for (trl in c(1:x$prms$nTrlData)) {
       idx <- which(abs(x$trials$comp[[trl]]) >= x$prms$bnds)[1]
-      lines(x$trials$comp[[trl]][1:idx], type = "l", col = cols[1], ...)
+      lines(x$trials$comp[[trl]][1:idx], type = "l", col = tail(cols, 2)[1], ...)
       idx <- which(abs(x$trials$incomp[[trl]]) >= x$prms$bnds)[1]
-      lines(x$trials$incomp[[trl]][1:idx], type = "l", col = cols[2], ...)
+      lines(x$trials$incomp[[trl]][1:idx], type = "l", col = tail(cols, 2)[2], ...)
     }
 
     if (is.function(legend)) {
       legend()
     } else if (!is.list(legend) && legend == TRUE) {
-      legend("bottomright", legend = labels, col = cols, lty = c(1, 1), inset = c(0.05, 0.2))
+      legend("bottomright", legend = labels, col = tail(cols, 2), lty = c(1, 1), inset = c(0.05, 0.2))
     }
 
   }
 
   # PDF
   if (showFig[3]) {
-    plot(density(x$sim$rts_comp), col = cols[1], main = NA, type = "l",
+    plot(density(x$sim$rts_comp), col = tail(cols, 2)[1], main = NA, type = "l",
          ylim = c(0, 0.01), xlim = c(0, x$prms$tmax),
          ylab = ylabs[3], xlab = xlabs[3], xaxt = xaxts, yaxt = "n", ...)
-    lines(density(x$sim$rts_incomp), col = cols[2], type = "l", ...)
+    lines(density(x$sim$rts_incomp), col = tail(cols, 2)[2], type = "l", ...)
     if (yaxts == "s") {
       axis(2, at = c(0, 0.005, 0.01), labels = c("0", ".005", ".001"))
     }
@@ -210,7 +210,7 @@ plot.dmcsim <- function(x,
     if (is.function(legend)) {
       legend()
     } else if (!is.list(legend) && legend == TRUE) {
-      legend("topright", legend = labels, col = cols, lty = c(1, 1), inset = c(0.05, 0.05))
+      legend("topright", legend = labels, col = tail(cols, 2), lty = c(1, 1), inset = c(0.05, 0.05))
     }
 
   }
@@ -221,10 +221,10 @@ plot.dmcsim <- function(x,
     cdf_comp       <- cumsum(density_comp$y * diff(density_comp$x[1:2]))
     density_incomp <- density(x$sim$rts_incomp)
     cdf_incomp     <- cumsum(density_incomp$y * diff(density_incomp$x[1:2]))
-    plot(density_comp$x, cdf_comp, type="l", col = cols[1],
+    plot(density_comp$x, cdf_comp, type="l", col = tail(cols, 2)[1],
          ylab = ylabs[4], xlab = xlabs[4],
          ylim = c(0, 1), xaxt = xaxts, yaxt = "n", xlim = c(0, x$prms$tmax))
-    lines(density_incomp$x, cdf_incomp, type = "l", col = cols[2])
+    lines(density_incomp$x, cdf_incomp, type = "l", col = tail(cols, 2)[2])
     abline(h = 0, lty = 2)
     abline(h = 1, lty = 2)
     if (yaxts == "s") {
@@ -234,7 +234,7 @@ plot.dmcsim <- function(x,
     if (is.function(legend)) {
       legend()
     } else if (!is.list(legend) && legend == TRUE) {
-      legend("bottomright", legend = labels, col = cols, lty = c(1, 1), inset = c(0.05, 0.05))
+      legend("bottomright", legend = labels, col = tail(cols, 2), lty = c(1, 1), inset = c(0.05, 0.05))
     }
 
   }
@@ -245,8 +245,8 @@ plot.dmcsim <- function(x,
          ylim = ylimCAF,
          ylab = ylabs[5],  xlab = xlabs[5],
          xaxt = xaxts,  yaxt = "n",
-         col = cols[1], ...)
-    lines(x$caf$accPer[x$caf$Comp == "incomp"], col = cols[2], type = "o", ...)
+         col = tail(cols, 2)[1], ...)
+    lines(x$caf$accPer[x$caf$Comp == "incomp"], col = tail(cols, 2)[2], type = "o", ...)
     if (xaxts == "s") {
       nCAF <- length(x$caf$bin) / 2
       if (cafBinLabels) {
@@ -264,14 +264,14 @@ plot.dmcsim <- function(x,
     if (is.function(legend)) {
       legend()
     } else if (!is.list(legend) && legend == TRUE) {
-      legend("bottomright", legend = labels, col = cols, lty = c(1, 1), inset = c(0.05, 0.05))
+      legend("bottomright", legend = labels, col = tail(cols, 2), lty = c(1, 1), inset = c(0.05, 0.05))
     }
 
   }
 
   # delta
   if (showFig[6]) {
-    plot(x$delta$meanBin, x$delta$meanEffect, type = "o",
+    plot(x$delta$meanBin, x$delta$meanEffect, type = "o", col = cols[1],
          ylim = ylimDelta, xlim = c(0, x$prms$tmax),
          ylab = ylabs[6],  xlab = xlabs[6],
          xaxt = xaxts, yaxt = yaxts, ...)
@@ -279,7 +279,7 @@ plot.dmcsim <- function(x,
 
   # rtCorrect
   if (showFig[7]) {
-    plot(c(1, 2), x$means$rtCor, type = "o",
+    plot(c(1, 2), x$means$rtCor, type = "o", col = cols[1],
          ylim = ylimRt, xlim = c(0.5, 2.5),
          ylab = ylabs[7], xlab = xlabs[7],
          xaxt = "n", yaxt = yaxts, ...)
@@ -291,7 +291,7 @@ plot.dmcsim <- function(x,
 
   # error rate
   if (showFig[8]) {
-    plot(c(1, 2), x$means$perErr, type = "o",
+    plot(c(1, 2), x$means$perErr, type = "o", col = cols[1],
          ylim = ylimErr, xlim = c(0.5, 2.5),
          ylab = ylabs[8], xlab = xlabs[8],
          xaxt = "n", yaxt = yaxts, ...)
@@ -300,7 +300,7 @@ plot.dmcsim <- function(x,
 
   # rtError
   if (showFig[9]) {
-    plot(c(1, 2), x$means$rtErr, type = "o",
+    plot(c(1, 2), x$means$rtErr, type = "o", col = cols[1],
          ylim = ylimRt, xlim = c(0.5, 2.5),
          ylab = ylabs[9], xlab = xlabs[9],
          xaxt = "n",  yaxt = yaxts, ...)

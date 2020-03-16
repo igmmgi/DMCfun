@@ -7,7 +7,7 @@
 #' @param shape Shape parameter of the underlying beta distribution
 #' @param lim The min/max limits to which to scale the distribution
 #'
-#' @return vector
+#' @return double
 #'
 #' @examples
 #' library(DMCfun)

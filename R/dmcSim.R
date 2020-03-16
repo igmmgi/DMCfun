@@ -79,7 +79,18 @@ dmcSim <- function(amp = 20, tau = 30, mu = 0.5, bnds = 75, resMean = 300, resSD
                    printInputArgs = TRUE, printResults = TRUE,
                    setSeed = FALSE) {
 
+  dmc <- dmcCppR(r_in = list(amp = amp, tau = tau, mu = mu, bnds = bnds, resMean = resMean, resSD = resSD, aaShape = aaShape, spShape = spShape,
+                             sigma = sigma,  nTrl = nTrl, tmax = tmax,
+                             varSP = varSP, spLimLow = spLim[1], spLimHigh = spLim[2],
+                             varDR = varDR, drShape = 3, drLimLow = drLim[1], drLimHigh = drLim[2],
+                             fullData = fullData, nTrlData = nTrlData,
+                             stepDelta = stepDelta, stepCAF = stepCAF,
+                             printInputArgs = printInputArgs, printResults = printResults,
+                             setSeed = setSeed))
+  
   # summary
+  summary <- dmc$summary 
+  
   dmc$means <- tibble::as_tibble(rbind(summary$resSum_comp, summary$resSum_incomp), .name_repair = "minimal")
   colnames(dmc$means) <- c("rtCor", "sdRtCor", "perErr", "rtErr", "sdRtErr")
   dmc$means <- tibble::add_column(Comp = c("comp", "incomp"), dmc$means, .before = TRUE)
@@ -102,7 +113,7 @@ dmcSim <- function(amp = 20, tau = 30, mu = 0.5, bnds = 75, resMean = 300, resSD
   dmc$prms <- c(as.list(environment()))
 
   dmc$summary <- NULL
-  class(dmc) <- c("list", "dmcsim")
+  class(dmc) <- "dmcsim"
   return(dmc)
 
 }
