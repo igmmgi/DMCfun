@@ -66,7 +66,7 @@ of the CAF and CDF functions.
 library(DMCfun)
 
 # Example 1: Flanker data from Ulrich et al. (2015)
-fit <- dmcFitAgg(flankerData)  # only initial search tau
+fit <- dmcFitAgg(flankerData, nTrl = 5000)  # only initial search tau
 plot(fit, flankerData)
 summary(fit)
 
@@ -84,7 +84,7 @@ dat <- addDataDF(dat,
                               "Comp_incomp" = c(20, 4, 3, 1, 1)))
 datOb <- dmcObservedData(dat, columns = c("VP", "Comp", "RT", "Error"))
 plot(datOb)
-fit <- dmcFitAgg(datOb)
+fit <- dmcFitAgg(datOb, nTrl = 5000)
 plot(fit, datOb)
 summary(fit)
 }

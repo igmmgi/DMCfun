@@ -11,7 +11,7 @@
   VP = NULL,
   legend = TRUE,
   labels = c("Compatible", "Incompatible", "Observed", "Predicted"),
-  cols = c("green", "red"),
+  cols = c("black", "green", "red"),
   ylimRt = c(200, 800),
   ylimEr = c(0, 20),
   ylimCAF = c(0, 1),
@@ -80,7 +80,7 @@ that dmcSim is run with fullData = TRUE.
 library(DMCfun)
 
 # Example 1
-resTh <- dmcFitAgg(flankerData, nTrl = 500)
+resTh <- dmcFitAgg(flankerData, nTrl = 5000)
 plot(resTh, flankerData)
 
 # Example 2

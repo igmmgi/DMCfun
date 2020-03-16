@@ -14,7 +14,7 @@ randBeta(n = 1, shape = 3, lim = c(0, 1))
 \item{lim}{The min/max limits to which to scale the distribution}
 }
 \value{
-vector
+double
 }
 \description{
 Draw n random numbers from a beta distribution with shape and

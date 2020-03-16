@@ -14,7 +14,7 @@
   ylimErr = c(0, 20),
   legend = TRUE,
   labels = c("Compatible", "Incompatible"),
-  cols = c("green", "red"),
+  cols = c("black", "green", "red"),
   errorBars = TRUE,
   xlabs = TRUE,
   ylabs = TRUE,
@@ -74,8 +74,8 @@ that dmcSim is run with fullData = TRUE.
 library(DMCfun)
 
 # Example 1
-dmc = dmcSim(fullData = TRUE, mar = c(4,4,3,3))
-plot(dmc, mar = c(4,4,3,3))
+dmc = dmcSim(fullData = TRUE)
+plot(dmc)
 
 # Example 2
 dmc = dmcSim()

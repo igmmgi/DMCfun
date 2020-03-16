@@ -10,7 +10,7 @@
   VP = NULL,
   legend = TRUE,
   labels = c("Compatible", "Incompatible"),
-  cols = c("green", "red"),
+  cols = c("black", "green", "red"),
   errorBars = FALSE,
   errorBarType = "sd",
   ylimRt = c(200, 800),
@@ -83,9 +83,10 @@ that dmcSim is run with fullData = TRUE.
 library(DMCfun)
 
 # Example 1 (real dataset)
-plot(flankerData, cols = c("blue", "red"), xaxts = FALSE, xlabs = FALSE)
+plot(flankerData)
 plot(flankerData, errorBars = TRUE, errorBarType = "se")
-plot(flankerData, figType = "delta", errorBars = TRUE,  errorBarType = "se")
+plot(flankerData, figType = "delta")
+plot(flankerData, figType = "caf")
 
 # Example 2 (real dataset)
 plot(simonData)
@@ -96,10 +97,10 @@ plot(simonData, figType = "delta", errorBars = TRUE, errorBarType = "sd")
 dat <- createDF(nVP = 50, nTrl = 50,
                 design = list("Comp" = c("comp", "incomp")))
 dat <- addDataDF(dat,
-                 RT = list(list(c("Comp:comp"), vals = c(420, 100, 80)),
-                           list(c("Comp:incomp"), vals = c(470, 100, 95))),
-                 Error = list(list(c("Comp:comp"), vals = c(5, 3, 2, 1, 2)),
-                         list(c("Comp:incomp"), vals = c(15, 8, 4, 2, 2))))
+                 RT = list("Comp_comp"   = c(420, 100, 80),
+                           "Comp_incomp" = c(470, 100, 95)),
+                 Error = list("Comp_comp"   = c(5, 3, 2, 1, 2),
+                              "Comp_incomp" = c(15, 8, 4, 2, 2)))
 datOb <- dmcObservedData(dat)
 plot(datOb, errorBars = TRUE, errorBarType = "sd")
 
@@ -107,13 +108,12 @@ plot(datOb, errorBars = TRUE, errorBarType = "sd")
 dat <- createDF(nVP = 50, nTrl = 50,
                 design = list("Comp" = c("comp", "incomp")))
 dat <- addDataDF(dat,
-                 RT = list(list(c("Comp:comp"), vals = c(420, 100, 150)),
-                           list(c("Comp:incomp"), vals = c(470, 100, 120))),
-                 Error = list(list(c("Comp:comp"), vals = c(5, 3, 2, 1)),
-                         list(c("Comp:incomp"), vals = c(15, 8, 4, 2))))
+                 RT = list("Comp_comp"   = c(420, 100, 150),
+                           "Comp_incomp" = c(470, 100, 120)),
+                 Error = list("Comp_comp"   = c(5, 3, 2, 1),
+                              "Comp_incomp" = c(15, 8, 4, 2)))
 datOb <- dmcObservedData(dat, stepCAF = 25)
 plot(datOb)
-plot(datOb, VP = 1)
 }
 
 }
