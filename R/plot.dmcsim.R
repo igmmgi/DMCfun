@@ -149,7 +149,7 @@ plot.dmcsim <- function(x,
          ylim = c(-x$prms$bnds - 20, x$prms$bnds + 20),
          xlab = xlabs[1], ylab = ylabs[1],
          xaxt = xaxts, yaxt = yaxts, ...)
-    lines(c(1:x$prms$tmax), -x$sim$eq4, type = "l", lty = 2, col = tail(cols, 2)[1], ...)
+    lines(c(1:x$prms$tmax), -x$sim$eq4, type = "l", lty = 2, col = tail(cols, 2)[2], ...)
 
     # controlled
     dr <- ifelse(x$prms$varDR, mean(as.numeric(as.character(x$prms$drLim)[2:3])), x$prms$mu)
