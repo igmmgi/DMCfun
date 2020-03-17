@@ -37,7 +37,7 @@
 #' library(DMCfun)
 #'
 #' # Example 1 (real dataset)
-#' plot(flankerData)
+#' plot(flankerData, labels = c("a", "b", "c"))
 #' plot(flankerData, errorBars = TRUE, errorBarType = "se")
 #' plot(flankerData, figType = "delta")
 #' plot(flankerData, figType = "caf")
@@ -96,6 +96,9 @@ plot.dmcob <- function(x,
   if (length(figType) > 1 || !figType %in% figTypes) {
     stop("figType must be one of:", paste0(figTypes, collapse = ", "))
   }
+  if (length(labels) != 2) {
+    stop("labels must be length 2")
+  }
   if (!(is.function(legend)) && !(legend %in% c(TRUE, FALSE))) {
     stop("legend must be TRUE/FALSE or a function")
   }
@@ -122,6 +125,7 @@ plot.dmcob <- function(x,
   # xlabels
   if (xlabs) {
     xlabs          <- rep("", 6)
+    xlabs[c(1, 2)] <- labels
     xlabs[c(4, 6)] <- c("Time [ms]")
     xlabs[c(5)]    <- c("RT Bin")
   } else {
@@ -157,11 +161,10 @@ plot.dmcob <- function(x,
   if (showFig[1]) {
     plot(c(1, 2), x$summary$rtCor, type = "o", col = cols[1],
          ylim = ylimRt, xlim = c(0.5, 2.5),
-         ylab = ylabs[1], xlab = xlabs[1],
+         ylab = ylabs[1], xlab = "",
          xaxt = "n", yaxt = yaxts, ...)
-    if (xaxts == "s") {
-      axis(1, at = c(1, 2), labels = labels)
-    }
+    axis(1, at = c(1, 2), labels = xlabs[1:2])
+    axis(2, labels = FALSE)
     if (errorBars) {
       addErrorBars(c(1,2), x$summary$rtCor, x$summary[[paste0(errorBarType, "RtCor")]])
     }
@@ -171,11 +174,10 @@ plot.dmcob <- function(x,
   if (showFig[2]) {
     plot(c(1, 2), x$summary$perErr, type = "o", col = cols[1],
          ylim = ylimEr, xlim = c(0.5, 2.5),
-         ylab = ylabs[2], xlab = xlabs[2],
+         ylab = ylabs[2], xlab = "",
          xaxt = "n", yaxt = yaxts, ...)
-    if (xaxts == "s") {
-      axis(1, at = c(1, 2), labels = labels)
-    }
+    axis(1, at = c(1, 2), labels = xlabs[1:2])
+    axis(2, labels = FALSE)
     if (errorBars) {
       addErrorBars(c(1, 2), x$summary$perErr, x$summary[[paste0(errorBarType, "PerErr")]])
     }
@@ -185,11 +187,10 @@ plot.dmcob <- function(x,
   if (showFig[3]) {
     plot(c(1, 2), x$summary$rtErr, type = "o", col = cols[1],
          ylim = ylimRt, xlim = c(0.5, 2.5),
-         ylab = ylabs[3], xlab = xlabs[3],
+         ylab = ylabs[3], xlab = "",
          xaxt = "n", yaxt = yaxts, ...)
-    if (xaxts == "s") {
-      axis(1, at = c(1, 2), labels = labels)
-    }
+    axis(1, at = c(1, 2), labels = xlabs[1:2])
+    axis(2, labels = FALSE)
     if (errorBars) {
       addErrorBars(c(1, 2), x$summary$rtErr, x$summary[[paste0(errorBarType, "RtErr")]])
     }
@@ -203,6 +204,9 @@ plot.dmcob <- function(x,
          ylab = ylabs[4], xlab = xlabs[4],
          col = tail(cols, 2)[1],
          xaxt = xaxts, yaxt = "n", ...)
+    if (xaxts == "n") axis(side=1, labels = FALSE)  # keep tick marks
+    if (yaxts == "n") axis(side=2, labels = FALSE)  # keep tick marks
+    
     lines(x$delta$meanIncomp, seq(seqStep, 100 - seqStep, seqStep)/100, type = "o", col = tail(cols, 2)[2], ...)
     if (yaxts ==  "s") {
       axis(2, at = seq(0, 1, 0.25), labels = as.character(seq(0, 1, 0.25)))
@@ -222,7 +226,10 @@ plot.dmcob <- function(x,
          ylim = ylimCAF,
          ylab = ylabs[5], xlab = xlabs[5],
          col = tail(cols, 2)[1],
-         xaxt = "n", yaxt = yaxts, ...)
+         xaxt = "n", yaxt = "n", ...)
+    if (xaxts == "n") axis(side=1, labels = FALSE)  # keep tick marks
+    if (yaxts == "n") axis(side=2, labels = FALSE)  # keep tick marks
+    
     lines(x$caf$accPer[x$caf$Comp == "incomp"],  type = "b", col = tail(cols, 2)[2], ...)
     if (xaxts == "s") {
       nCAF <- length(x$caf$bin) / 2
@@ -233,6 +240,8 @@ plot.dmcob <- function(x,
       } else {
         axis(1, at = seq(1, nCAF, 1))
       }
+    } else {
+      axis(side = 1,labels = FALSE) 
     }
     if (yaxts == "s") {
       axis(2, at = seq(0, 1, 0.2), labels = as.character(seq(0, 1, 0.2)))
@@ -251,6 +260,8 @@ plot.dmcob <- function(x,
          ylim = ylimDelta, xlim = xlimDelta,
          ylab = ylabs[6], xlab = xlabs[6],
          xaxt = xaxts, yaxt = yaxts, ...)
+    axis(side = 1,labels = FALSE) 
+    axis(2, labels = FALSE)
     if (errorBars) {
       errorBarCol <- which(grepl(errorBarType, colnames(x$delta)))
       addErrorBars(x$delta$meanBin,

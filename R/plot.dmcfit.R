@@ -74,8 +74,6 @@ plot.dmcfit <- function(x,
                         yaxts = TRUE,
                         resetLayout = TRUE,
                         ...) {
-  
-  message(list(...))
 
   figTypes <- c("summary", "all", "rtCorrect", "errorRate", "rtErrors", "cdf", "caf", "delta")
   if (length(figType) > 1 || !figType %in% figTypes) {
@@ -83,6 +81,9 @@ plot.dmcfit <- function(x,
   }
   if (!(is.function(legend)) && !(legend %in% c(TRUE, FALSE))) {
     stop("legend must be TRUE/FALSE or a function")
+  }
+  if (length(labels) != 4) {
+    stop("labels must be length 4")
   }
 
   if (is.null(VP)) {
@@ -106,6 +107,7 @@ plot.dmcfit <- function(x,
   # xlabels
   if (xlabs) {
     xlabs          <- rep("", 6)
+    xlabs[c(1, 2)] <- c(labels[1], labels[2])
     xlabs[c(4, 6)] <- c("Time [ms]")
     xlabs[c(5)]    <- c("RT Bin")
   } else {
@@ -141,12 +143,11 @@ plot.dmcfit <- function(x,
   if (showFig[1]) {
     plot(c(1,2), y$summary$rtCor, type = "o", col = cols[1],
          ylim = ylimRt, xlim = c(0.5, 2.5),
-         ylab = ylabs[1], xlab = xlabs[1],
+         ylab = ylabs[1], xlab = "",
          xaxt = "n", yaxt = yaxts, ...)
     lines(c(x$means$rtCor), type = "o", lty = 2, ...)
-    if (xaxts == "s") {
-      axis(1, at = c(1, 2), labels = labels[1:2])
-    }
+    axis(1, at = c(1, 2), labels = xlabs[1:2])
+    axis(2, labels = FALSE)
 
     if (is.function(legend)) {
       legend()
@@ -160,12 +161,11 @@ plot.dmcfit <- function(x,
   if (showFig[2]) {
     plot(c(1,2), y$summary$perErr, type = "o", col = cols[1],
          ylim = ylimEr, xlim = c(0.5, 2.5),
-         ylab = ylabs[2], xlab = xlabs[2],
+         ylab = ylabs[2], xlab = "",
          xaxt = "n", yaxt = yaxts, ...)
     lines(x$means$perErr, type = "b", lty = 2, ...)
-    if (xaxts == "s") {
-      axis(1, at = c(1, 2), labels = labels[1:2])
-    }
+    axis(1, at = c(1, 2), labels = xlabs[1:2])
+    axis(2, labels = FALSE)
 
     if (is.function(legend)) {
       legend()
@@ -179,12 +179,11 @@ plot.dmcfit <- function(x,
   if (showFig[3]) {
     plot(c(1,2), y$summary$rtErr, type = "o", col = cols[1],
          ylim = ylimRt, xlim = c(0.5, 2.5),
-         ylab = ylabs[3], xlab = xlabs[3],
+         ylab = ylabs[3], xlab = "",
          xaxt = "n", yaxt = yaxts, ...)
     lines(x$means$rtErr, type = "b", lty = 2, ...)
-    if (xaxts == "s") {
-      axis(1, at = c(1, 2), labels = labels[1:2])
-    }
+    axis(1, at = c(1, 2), labels = xlabs[1:2])
+    axis(2, labels = FALSE)
 
     if (is.function(legend)) {
       legend()
@@ -202,6 +201,9 @@ plot.dmcfit <- function(x,
          ylab = ylabs[4], xlab = xlabs[4],
          yaxt = "n", col = tail(cols, 2)[1],
          xaxt = xaxts, yaxt = "n", ...)
+    if (xaxts == "n") axis(side=1, labels = FALSE)  # keep tick marks
+    if (yaxts == "n") axis(side=2, labels = FALSE)  # keep tick marks
+    
     lines(y$delta$meanIncomp, seq(seqStep, 100 - seqStep, seqStep)/100, type = "p", col = tail(cols, 2)[2], ...)
     lines(x$delta$meanComp,   seq(seqStep, 100 - seqStep, seqStep)/100, type = "l", col = tail(cols, 2)[1], ...)
     lines(x$delta$meanIncomp, seq(seqStep, 100 - seqStep, seqStep)/100, type = "l", col = tail(cols, 2)[2], ...)
@@ -229,6 +231,9 @@ plot.dmcfit <- function(x,
          ylab = ylabs[5], xlab = xlabs[5],
          yaxt = "n", xaxt = "n",
          col = tail(cols, 2)[1], ...)
+    if (xaxts == "n") axis(side=1, labels = FALSE)  # keep tick marks
+    if (yaxts == "n") axis(side=2, labels = FALSE)  # keep tick marks
+    
     lines(y$caf$accPer[y$caf$Comp == "incomp"], type = "p", col = tail(cols, 2)[2], ...)
     lines(x$caf$accPer[x$caf$Comp == "comp"],   type = "l", col = tail(cols, 2)[1], ...)
     lines(x$caf$accPer[x$caf$Comp == "incomp"], type = "l", col = tail(cols, 2)[2], ...)
@@ -267,7 +272,8 @@ plot.dmcfit <- function(x,
          ylab = ylabs[6], xlab = xlabs[6],
          xaxt = xaxts, yaxt = yaxts, ...)
     lines(x$delta$meanBin, x$delta$meanEffect, ...)
-    axis(side=1,labels=F) 
+    axis(side=1, labels = FALSE) 
+    axis(side=2, labels = FALSE) 
 
     if (is.function(legend)) {
       legend()

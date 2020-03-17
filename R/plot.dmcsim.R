@@ -35,7 +35,7 @@
 #'
 #' # Example 1
 #' dmc = dmcSim(fullData = TRUE)
-#' plot(dmc)
+#' plot(dmc, labels = c("a", "b"))
 #'
 #' # Example 2
 #' dmc = dmcSim()
@@ -80,6 +80,9 @@ plot.dmcsim <- function(x,
   if (figType %in% c("trials", "activation") & !("trials" %in% names(x))) {
     stop("plotting trials/activation data requires dmcSim with fullData = TRUE")
   }
+  if (length(labels) != 2) {
+    stop("labels must be length 2")
+  }
   if (!(is.function(legend)) && !(legend %in% c(TRUE, FALSE))) {
     stop("legend must be TRUE/FALSE or a function")
   }
@@ -91,6 +94,7 @@ plot.dmcsim <- function(x,
     xlabs           <- rep("", 9)
     xlabs[c(1:4,6)] <- c("Time [ms]")
     xlabs[c(5)]     <- c("RT Bin")
+    xlabs[c(8:9)]   <- c(labels)
   } else {
     xlabs <- rep("", 9)
   }
@@ -149,6 +153,9 @@ plot.dmcsim <- function(x,
          ylim = c(-x$prms$bnds - 20, x$prms$bnds + 20),
          xlab = xlabs[1], ylab = ylabs[1],
          xaxt = xaxts, yaxt = yaxts, ...)
+    if (xaxts == "n") axis(side=1, labels = FALSE)  # keep tick marks
+    if (yaxts == "n") axis(side=2, labels = FALSE)  # keep tick marks
+    
     lines(c(1:x$prms$tmax), -x$sim$eq4, type = "l", lty = 2, col = tail(cols, 2)[2], ...)
 
     # controlled
@@ -179,6 +186,9 @@ plot.dmcsim <- function(x,
          ylim = c(-x$prms$bnds - 20, x$prms$bnds + 20),
          xlab = xlabs[2], ylab = ylabs[2],
          xaxt = xaxts, yaxt = yaxts, ...)
+    if (xaxts == "n") axis(side=1, labels = FALSE)  # keep tick marks
+    if (yaxts == "n") axis(side=2, labels = FALSE)  # keep tick marks
+    
     lines(c(0, x$prms$tmax), c(-x$prms$bnds, -x$prms$bnds), type = "l", col = "darkgrey", ...)
 
     # individual trials until bounds
@@ -202,7 +212,11 @@ plot.dmcsim <- function(x,
     plot(density(x$sim$rts_comp), col = tail(cols, 2)[1], main = NA, type = "l",
          ylim = c(0, 0.01), xlim = c(0, x$prms$tmax),
          ylab = ylabs[3], xlab = xlabs[3], xaxt = xaxts, yaxt = "n", ...)
+    if (xaxts == "n") axis(side=1, labels = FALSE)  # keep tick marks
+    if (yaxts == "n") axis(side=2, labels = FALSE)  # keep tick marks
+    
     lines(density(x$sim$rts_incomp), col = tail(cols, 2)[2], type = "l", ...)
+    
     if (yaxts == "s") {
       axis(2, at = c(0, 0.005, 0.01), labels = c("0", ".005", ".001"))
     }
@@ -224,9 +238,12 @@ plot.dmcsim <- function(x,
     plot(density_comp$x, cdf_comp, type="l", col = tail(cols, 2)[1],
          ylab = ylabs[4], xlab = xlabs[4],
          ylim = c(0, 1), xaxt = xaxts, yaxt = "n", xlim = c(0, x$prms$tmax))
+    if (xaxts == "n") axis(side=1, labels = FALSE)  # keep tick marks
+    if (yaxts == "n") axis(side=2, labels = FALSE)  # keep tick marks
+    
     lines(density_incomp$x, cdf_incomp, type = "l", col = tail(cols, 2)[2])
-    abline(h = 0, lty = 2)
-    abline(h = 1, lty = 2)
+    abline(h = 0, lty = 2); abline(h = 1, lty = 2)
+    
     if (yaxts == "s") {
       axis(2, at = seq(0, 1, 0.5), labels = as.character(seq(0, 1, 0.5)))
     }
@@ -246,6 +263,9 @@ plot.dmcsim <- function(x,
          ylab = ylabs[5],  xlab = xlabs[5],
          xaxt = xaxts,  yaxt = "n",
          col = tail(cols, 2)[1], ...)
+    if (xaxts == "n") axis(side=1, labels = FALSE)  # keep tick marks
+    if (yaxts == "n") axis(side=2, labels = FALSE)  # keep tick marks
+    
     lines(x$caf$accPer[x$caf$Comp == "incomp"], col = tail(cols, 2)[2], type = "o", ...)
     if (xaxts == "s") {
       nCAF <- length(x$caf$bin) / 2
@@ -277,16 +297,18 @@ plot.dmcsim <- function(x,
          ylim = ylimDelta, xlim = c(0, x$prms$tmax),
          ylab = ylabs[6],  xlab = xlabs[6],
          xaxt = xaxts, yaxt = yaxts, ...)
-    axis(side=1,labels=F) 
+    axis(side=1,labels = FALSE) 
+    axis(side=2,labels = FALSE) 
   }
 
   # rtCorrect
   if (showFig[7]) {
     plot(c(1, 2), x$means$rtCor, type = "o", col = cols[1],
          ylim = ylimRt, xlim = c(0.5, 2.5),
-         ylab = ylabs[7], xlab = xlabs[7],
+         ylab = ylabs[7], xlab = "",
          xaxt = "n", yaxt = yaxts, ...)
-    axis(1, at = c(1, 2), labels = labels)
+    axis(1, at = c(1, 2), labels = xlabs[8:9])
+    axis(2, labels = FALSE)
     if (errorBars) {
       addErrorBars(c(1, 2), x$means$rtCor, x$means$sdRtCor)
     }
@@ -296,18 +318,20 @@ plot.dmcsim <- function(x,
   if (showFig[8]) {
     plot(c(1, 2), x$means$perErr, type = "o", col = cols[1],
          ylim = ylimErr, xlim = c(0.5, 2.5),
-         ylab = ylabs[8], xlab = xlabs[8],
+         ylab = ylabs[8], xlab = "",
          xaxt = "n", yaxt = yaxts, ...)
-    axis(1, at = c(1, 2), labels = labels)
+    axis(1, at = c(1, 2), labels = xlabs[8:9])
+    axis(2, labels = FALSE)
   }
 
   # rtError
   if (showFig[9]) {
     plot(c(1, 2), x$means$rtErr, type = "o", col = cols[1],
          ylim = ylimRt, xlim = c(0.5, 2.5),
-         ylab = ylabs[9], xlab = xlabs[9],
+         ylab = ylabs[9], xlab = "",
          xaxt = "n",  yaxt = yaxts, ...)
-    axis(1, at = c(1, 2), labels = labels)
+    axis(1, at = c(1, 2), labels = xlabs[8:9])
+    axis(2, labels = FALSE)
     if (errorBars) {
       addErrorBars(c(1, 2), x$means$rtErr, x$means$sdRtErr)
     }
