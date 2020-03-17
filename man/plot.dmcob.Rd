@@ -83,7 +83,7 @@ that dmcSim is run with fullData = TRUE.
 library(DMCfun)
 
 # Example 1 (real dataset)
-plot(flankerData)
+plot(flankerData, labels = c("a", "b", "c"))
 plot(flankerData, errorBars = TRUE, errorBarType = "se")
 plot(flankerData, figType = "delta")
 plot(flankerData, figType = "caf")

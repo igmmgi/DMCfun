@@ -35,7 +35,7 @@
 #'
 #' # Example 1
 #' dmc = dmcSim(fullData = TRUE)
-#' plot(dmc, labels = c("a", "b"))
+#' plot(dmc)
 #'
 #' # Example 2
 #' dmc = dmcSim()

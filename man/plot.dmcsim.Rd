@@ -15,7 +15,7 @@
   legend = TRUE,
   labels = c("Compatible", "Incompatible"),
   cols = c("black", "green", "red"),
-  errorBars = TRUE,
+  errorBars = FALSE,
   xlabs = TRUE,
   ylabs = TRUE,
   xaxts = TRUE,
