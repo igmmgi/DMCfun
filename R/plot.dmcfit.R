@@ -217,7 +217,7 @@ plot.dmcfit <- function(x,
                         paste(labels[2], labels[3], sep = " "),
                         paste(labels[1], labels[4], sep = " "),
                         paste(labels[2], labels[4], sep = " ")),
-             lty = c(0, 0, 1, 1), col = tail(col, 2), pch = c(1, 1, NA, NA))
+             lty = c(0, 0, 1, 1), col = tail(cols, 2), pch = c(1, 1, NA, NA))
     }
 
   }
@@ -241,6 +241,8 @@ plot.dmcfit <- function(x,
       } else {
         axis(1, at = seq(1, nCAF, 1))
       }
+    } else {
+      axis(side=1,labels=F) 
     }
     if (yaxts == "s") {
       axis(2, at = seq(0, 1, 0.2), labels = as.character(seq(0, 1, 0.2)))
@@ -265,6 +267,7 @@ plot.dmcfit <- function(x,
          ylab = ylabs[6], xlab = xlabs[6],
          xaxt = xaxts, yaxt = yaxts, ...)
     lines(x$delta$meanBin, x$delta$meanEffect, ...)
+    axis(side=1,labels=F) 
 
     if (is.function(legend)) {
       legend()
