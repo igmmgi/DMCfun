@@ -256,6 +256,8 @@ plot.dmcsim <- function(x,
       } else {
         axis(1, at = seq(1, nCAF, 1))
       }
+    } else {
+      axis(side=1,labels=F) 
     }
     if (yaxts == "s") {
       axis(2, at = seq(0, 1, 0.2), labels = as.character(seq(0, 1, 0.2)))
@@ -275,6 +277,7 @@ plot.dmcsim <- function(x,
          ylim = ylimDelta, xlim = c(0, x$prms$tmax),
          ylab = ylabs[6],  xlab = xlabs[6],
          xaxt = xaxts, yaxt = yaxts, ...)
+    axis(side=1,labels=F) 
   }
 
   # rtCorrect
