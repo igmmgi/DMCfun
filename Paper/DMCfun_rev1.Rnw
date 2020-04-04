@@ -61,6 +61,7 @@ opts_chunk$set(echo=FALSE, include=FALSE, cache=FALSE)
 % \usepackage{tikz}
 % \usepackage[printwatermark]{xwatermark}
 % \newsavebox\mybox
+
 % \savebox\mybox{\tikz[color=gray, opacity=0.5]\node{DRAFT};}
 % \newwatermark*[ allpages, angle=45, scale=10, xpos=-50, ypos=50 ]{\usebox\mybox}
 
@@ -113,7 +114,7 @@ opts_chunk$set(echo=FALSE, include=FALSE, cache=FALSE)
     is used to explain distributional reaction time (and error rate) patterns
     in common behavioural conflict-like tasks (e.g., Flanker task, Simon task).
     This paper introduces the R-package DMCfun, which implements the DMC model
-    and provides functionalityqto fit the model to observed data.
+    and provides functionality to fit the model to observed data.
 
 \keywords{reaction time \and conflict task \and Diffusion Model Conflict (DMC) \and R package}
 
@@ -130,7 +131,7 @@ Such conflict tasks involve stimuli with multiple features that are either
 relevant or irrelevant to the required task. For example, a typical Flanker
 task consists of an array (e.g., HHHHH, HHSHH) with the central item being the
 ``target'' (task-relevant) and the surrounding items being the
-``flankers''(task-irrelevant). Responses are typically mapped to the left and
+``flankers'' (task-irrelevant). Responses are typically mapped to the left and
 right hand (e.g., H = left, S = right). When the target and the flankers match
 (mismatch), both the relevant and irrelevant dimensions indicate the same
 (different) response. In a typical Simon task, participants respond to a
@@ -151,7 +152,7 @@ However, when the size of the effect (incompatible - compatible) is compared
 across different percentiles of the RT distribution, different patterns can
 emerge. Such differences across the RT distribution are investigated via the
 use of delta functions (or delta plots) \parencite{de1994conditional,
-speckman2008delta}.  Such plots depict the compatibility effect (y-axis) at n
+speckman2008delta}. Such plots depict the compatibility effect (y-axis) at n
 bins (x-axis) (see Figure \ref{fig:1} bottom-right panel for an example of a
 delta plot). Such distributional analyses have indicated that the compatibility
 effect in some conflict tasks (e.g., Stroop task) increases with slower
@@ -174,7 +175,7 @@ explaining negative-going delta functions. The DMC model is an extension of the
 standard diffusion model that can explain observed delta functions (both
 positive and negative going) across a range of conflict tasks. Since its
 publication, simulation and fitting procedures of the DMC model have been
-applied in various research context in order to provide important insights into
+applied in various research contexts in order to provide important insights into
 the mechanisms at play in conflict tasks\parencite[e.g.,][]{servant2016,
 mittelstadt2020beyond}.
 
@@ -189,8 +190,8 @@ incompatible conditions.
 The following section introduces the DMC model \textcite{ulrich2015automatic}.
 It must be noted that other extensions of standard drift diffusion models with
 specific reference to conflict-like tasks have been proposed. For example, the
-dual-stage two-phase model \parencite[DSTP][]{hubner2010dual} or the shrinking
-spotlight model \parencite[SSP][]{white2011diffusion}. A direct comparison
+dual-stage two-phase model \parencite[DSTP, ][]{hubner2010dual} or the shrinking
+spotlight model \parencite[SSP, ][]{white2011diffusion}. A direct comparison
 between such models is beyond the scope of the current paper with such
 comparisons provided elsewhere \parencite[see][albeit with specific reference
 to the flanker task only]{white2018testing, evans2020comparison}.
@@ -205,7 +206,7 @@ information, whereas automatic processing concerns the task-irrelevant
 information. Whilst the architecture of such combined controlled/automatic
 processing within individual conflict tasks is under-specified,
 \textcite{ulrich2015automatic} suggest two possible architectures
-\parencite[see Figure 1][]{ulrich2015automatic} under which automatic and
+\parencite[see Figure 1 in ][]{ulrich2015automatic} under which automatic and
 controlled processing interact. Under both architectures, DMC assumes that a
 single accumulation process (combined automatic and controlled) determines the
 executed response. Critically, automatic processes will facilitate (impede)
@@ -292,7 +293,7 @@ The R-package DMCfun provides functionality allowing both the simulation of the
 DMC model and fitting the model to observed data. The simulation code is
 written in C++ utilising the R-package Rcpp \parencite{eddelbuettel2011rcpp}.
 The use of C++ gives a significant performance boost over base R whilst the
-Rcpp interface allows convienient use from within the standard R environment
+Rcpp interface allows convenient use from within the standard R environment
 and also direct access to plotting facilities within R. The fitting procedure
 uses the R-package optimr \textcite{optimr} with method = "Nelder-Mead". As in
 \textcite{ulrich2015automatic} the model fit was evaluated by calculating the
@@ -359,7 +360,7 @@ Example 5). This will fit DMC to the data averaged across all participants,
 whereas the function dmcFitVPs will fit DMC to individual participants. A
 summary of the fit is provided. By default, dmcFit* fits the following
 parameters: amp, tau, mu, bnds, resMean, resSD, aaShape, spShape. The function
-dmcFit* uses the R-package optimr \textcite{optimr} with method = "Nelder-Mead"
+dmcFit* uses the R-package optimr \parencite{optimr} with method = "Nelder-Mead"
 and allow the specification of a number of options including which parameters
 to fit and their starting values. \textcite{ulrich2015automatic} observed that
 model fit was highly influenced by the tau parameter. The function dmcFit*

@@ -41,13 +41,13 @@
   >
 ]>
 <requests version="1.0">
-  <internal package="biblatex" priority="9" active="1">
+  <internal package="biblatex" priority="9" active="0">
     <generic>latex</generic>
     <provides type="dynamic">
-      <file>DMCfun_rev1.bcf</file>
+      <file>DMCfun_rev1_diff.bcf</file>
     </provides>
     <requires type="dynamic">
-      <file>DMCfun_rev1.bbl</file>
+      <file>DMCfun_rev1_diff.bbl</file>
     </requires>
     <requires type="static">
       <file>blx-dm.def</file>
@@ -68,19 +68,19 @@
     <generic>biber</generic>
     <cmdline>
       <binary>biber</binary>
-      <infile>DMCfun_rev1</infile>
+      <infile>DMCfun_rev1_diff</infile>
     </cmdline>
     <input>
-      <file>DMCfun_rev1.bcf</file>
+      <file>DMCfun_rev1_diff.bcf</file>
     </input>
     <output>
-      <file>DMCfun_rev1.bbl</file>
+      <file>DMCfun_rev1_diff.bbl</file>
     </output>
     <provides type="dynamic">
-      <file>DMCfun_rev1.bbl</file>
+      <file>DMCfun_rev1_diff.bbl</file>
     </provides>
     <requires type="dynamic">
-      <file>DMCfun_rev1.bcf</file>
+      <file>DMCfun_rev1_diff.bcf</file>
     </requires>
     <requires type="editable">
       <file>bibfile.bib</file>

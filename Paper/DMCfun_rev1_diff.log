@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.3.19)  4 APR 2020 11:47
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.3.19)  4 APR 2020 13:48
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**DMCfun.tex
-(./DMCfun.tex
+**DMCfun_rev1_diff.tex
+(./DMCfun_rev1_diff.tex
 LaTeX2e <2018-12-01>
 
 LaTeX Warning: File `example.eps' already exists on the system.
@@ -1713,13 +1713,25 @@ Package biblatex Info: ... file 'biblatex.cfg' found.
 (/usr/share/texlive/texmf-dist/tex/latex/biblatex/biblatex.cfg
 File: biblatex.cfg 
 ))
-Package color Info: Redefining color blue on input line 102.
-Package color Info: Redefining color black on input line 103.
-Package color Info: Redefining color white on input line 104.
+Package color Info: Redefining color blue on input line 105.
+Package color Info: Redefining color black on input line 106.
+Package color Info: Redefining color white on input line 107.
 
 (/usr/share/texlive/texmf-dist/tex/latex/upquote/upquote.sty
 Package: upquote 2012/04/19 v1.3 upright-quote and grave-accent glyphs in verba
 tim
+)
+(/usr/share/texlive/texmf-dist/tex/generic/ulem/ulem.sty
+\UL@box=\box38
+\UL@hyphenbox=\box39
+\UL@skip=\skip70
+\UL@hook=\toks23
+\UL@height=\dimen125
+\UL@pe=\count320
+\UL@pixel=\dimen126
+\ULC@box=\box40
+Package: ulem 2012/05/18
+\ULdepth=\dimen127
 )
 Package biblatex Info: Trying to load language 'english' -> 'english-apa'...
 Package biblatex Info: ... file 'english-apa.lbx' found.
@@ -1748,88 +1760,89 @@ Package biblatex Info: ... file 'english.lbx' found.
 (/usr/share/texlive/texmf-dist/tex/latex/biblatex/lbx/english.lbx
 File: english.lbx 2018/11/02 v3.12 biblatex localization (PK/MW)
 ))))
-\@quotelevel=\count320
-\@quotereset=\count321
+\@quotelevel=\count321
+\@quotereset=\count322
 
-(./DMCfun.aux)
-\openout1 = `DMCfun.aux'.
+(./DMCfun_rev1_diff.aux)
+\openout1 = `DMCfun_rev1_diff.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 132.
-LaTeX Font Info:    ... okay on input line 132.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 132.
-LaTeX Font Info:    ... okay on input line 132.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 132.
-LaTeX Font Info:    ... okay on input line 132.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 132.
-LaTeX Font Info:    ... okay on input line 132.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 132.
-LaTeX Font Info:    ... okay on input line 132.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 132.
-LaTeX Font Info:    ... okay on input line 132.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 132.
-LaTeX Font Info:    ... okay on input line 132.
-LaTeX Font Info:    Checking defaults for OT2/cmr/m/n on input line 132.
-LaTeX Font Info:    Try loading font information for OT2+cmr on input line 132.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 176.
+LaTeX Font Info:    ... okay on input line 176.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 176.
+LaTeX Font Info:    ... okay on input line 176.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 176.
+LaTeX Font Info:    ... okay on input line 176.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 176.
+LaTeX Font Info:    ... okay on input line 176.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 176.
+LaTeX Font Info:    ... okay on input line 176.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 176.
+LaTeX Font Info:    ... okay on input line 176.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 176.
+LaTeX Font Info:    ... okay on input line 176.
+LaTeX Font Info:    Checking defaults for OT2/cmr/m/n on input line 176.
+LaTeX Font Info:    Try loading font information for OT2+cmr on input line 176.
 
- (/usr/share/texlive/texmf-dist/tex/latex/cyrillic/ot2cmr.fd
+
+(/usr/share/texlive/texmf-dist/tex/latex/cyrillic/ot2cmr.fd
 File: ot2cmr.fd 2001/08/11 v3.2c Computer Modern Cyrillic font definitions
 )
-LaTeX Font Info:    ... okay on input line 132.
-LaTeX Font Info:    Checking defaults for T2C/cmr/m/n on input line 132.
-LaTeX Font Info:    Try loading font information for T2C+cmr on input line 132.
+LaTeX Font Info:    ... okay on input line 176.
+LaTeX Font Info:    Checking defaults for T2C/cmr/m/n on input line 176.
+LaTeX Font Info:    Try loading font information for T2C+cmr on input line 176.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/cyrillic/t2ccmr.fd
 File: t2ccmr.fd 2001/08/11 v1.0a Computer Modern Cyrillic font definitions
 )
-LaTeX Font Info:    ... okay on input line 132.
-LaTeX Font Info:    Checking defaults for T2B/cmr/m/n on input line 132.
-LaTeX Font Info:    Try loading font information for T2B+cmr on input line 132.
+LaTeX Font Info:    ... okay on input line 176.
+LaTeX Font Info:    Checking defaults for T2B/cmr/m/n on input line 176.
+LaTeX Font Info:    Try loading font information for T2B+cmr on input line 176.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/cyrillic/t2bcmr.fd
 File: t2bcmr.fd 2001/08/11 v1.0a Computer Modern Cyrillic font definitions
 )
-LaTeX Font Info:    ... okay on input line 132.
-LaTeX Font Info:    Checking defaults for T2A/cmr/m/n on input line 132.
-LaTeX Font Info:    Try loading font information for T2A+cmr on input line 132.
+LaTeX Font Info:    ... okay on input line 176.
+LaTeX Font Info:    Checking defaults for T2A/cmr/m/n on input line 176.
+LaTeX Font Info:    Try loading font information for T2A+cmr on input line 176.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/cyrillic/t2acmr.fd
 File: t2acmr.fd 2001/08/11 v1.0a Computer Modern Cyrillic font definitions
 )
-LaTeX Font Info:    ... okay on input line 132.
-LaTeX Font Info:    Checking defaults for LGR/cmr/m/n on input line 132.
-LaTeX Font Info:    Try loading font information for LGR+cmr on input line 132.
+LaTeX Font Info:    ... okay on input line 176.
+LaTeX Font Info:    Checking defaults for LGR/cmr/m/n on input line 176.
+LaTeX Font Info:    Try loading font information for LGR+cmr on input line 176.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/cbfonts-fd/lgrcmr.fd
 File: lgrcmr.fd 2017/07/29 v1.2 Greek European Computer Regular
 )
-LaTeX Font Info:    ... okay on input line 132.
+LaTeX Font Info:    ... okay on input line 176.
 LaTeX Font Info:    Try loading font information for T1+Tempora-TLF on input li
-ne 132.
+ne 176.
 
 (/usr/share/texlive/texmf-dist/tex/latex/tempora/T1Tempora-TLF.fd
 File: T1Tempora-TLF.fd 2016/02/02 (autoinst) Font definitions for T1/Tempora-TL
 F.
 )
 LaTeX Font Info:    Font shape `T1/Tempora-TLF/m/n' will be
-(Font)              scaled to size 9.5pt on input line 132.
+(Font)              scaled to size 9.5pt on input line 176.
 
 (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count322
-\scratchdimen=\dimen125
-\scratchbox=\box38
-\nofMPsegments=\count323
-\nofMParguments=\count324
-\everyMPshowfont=\toks23
-\MPscratchCnt=\count325
-\MPscratchDim=\dimen126
-\MPnumerator=\count326
-\makeMPintoPDFobject=\count327
-\everyMPtoPDFconversion=\toks24
+\scratchcounter=\count323
+\scratchdimen=\dimen128
+\scratchbox=\box41
+\nofMPsegments=\count324
+\nofMParguments=\count325
+\everyMPshowfont=\toks24
+\MPscratchCnt=\count326
+\MPscratchDim=\dimen129
+\MPnumerator=\count327
+\makeMPintoPDFobject=\count328
+\everyMPtoPDFconversion=\toks25
 ) (/usr/share/texlive/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
 
@@ -1850,72 +1863,109 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-\c@mv@tabular=\count328
-\c@mv@boldtabular=\count329
-\c@lstlisting=\count330
+\c@mv@tabular=\count329
+\c@mv@boldtabular=\count330
+\c@lstlisting=\count331
 Package biblatex Info: Input encoding 'utf8' detected.
 Package biblatex Info: Automatic encoding selection.
 (biblatex)             Assuming data encoding 'utf8'.
-\openout3 = `DMCfun.bcf'.
+\openout3 = `DMCfun_rev1_diff.bcf'.
 
 Package biblatex Info: Trying to load bibliographic data...
-Package biblatex Info: ... file 'DMCfun.bbl' found.
+Package biblatex Info: ... file 'DMCfun_rev1_diff.bbl' found.
 
-(./DMCfun.bbl)
-Package biblatex Info: Reference section=0 on input line 132.
-Package biblatex Info: Reference segment=0 on input line 132.
+(./DMCfun_rev1_diff.bbl
+
+Package biblatex Warning: The following entry could not be found
+(biblatex)                in the database:
+(biblatex)                hubner2010dua
+(biblatex)                Please verify the spelling and rerun
+(biblatex)                LaTeX afterwards.
+
+
+Package biblatex Warning: The following entry could not be found
+(biblatex)                in the database:
+(biblatex)                white2011diffusio
+(biblatex)                Please verify the spelling and rerun
+(biblatex)                LaTeX afterwards.
+
+)
+Package biblatex Info: Reference section=0 on input line 176.
+Package biblatex Info: Reference segment=0 on input line 176.
 LaTeX Font Info:    Font shape `T1/Tempora-TLF/bx/n' in size <9.5> not availabl
 e
 (Font)              Font shape `T1/Tempora-TLF/b/n' tried instead on input line
- 150.
+ 194.
 LaTeX Font Info:    Font shape `T1/Tempora-TLF/b/n' will be
-(Font)              scaled to size 9.5pt on input line 150.
+(Font)              scaled to size 9.5pt on input line 194.
 LaTeX Font Info:    Font shape `T1/Tempora-TLF/m/n' will be
-(Font)              scaled to size 8.0pt on input line 150.
+(Font)              scaled to size 8.0pt on input line 194.
 LaTeX Font Info:    Font shape `T1/Tempora-TLF/m/n' will be
-(Font)              scaled to size 13.0pt on input line 150.
+(Font)              scaled to size 13.0pt on input line 194.
 LaTeX Font Info:    Font shape `T1/Tempora-TLF/bx/n' in size <13> not available
 
 (Font)              Font shape `T1/Tempora-TLF/b/n' tried instead on input line
- 150.
+ 194.
 LaTeX Font Info:    Font shape `T1/Tempora-TLF/b/n' will be
-(Font)              scaled to size 13.0pt on input line 150.
-LaTeX Font Info:    Calculating math sizes for size <9.5> on input line 150.
+(Font)              scaled to size 13.0pt on input line 194.
+LaTeX Font Info:    Calculating math sizes for size <9.5> on input line 194.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <9.5> on input line 150.
+(Font)              <9.5> on input line 194.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6.64996> on input line 150.
+(Font)              <6.64996> on input line 194.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <4.75> on input line 150.
+(Font)              <4.75> on input line 194.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 150.
+(Font)              <8> on input line 194.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 150.
+(Font)              <6> on input line 194.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 150.
- [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+(Font)              <5> on input line 194.
+
+Overfull \hbox (56.90564pt too wide) in paragraph at lines 198--209
+\T1/Tempora-TLF/m/n/9.5 us-ing vari-a-tions of a Dif-fu-sion De-ci-sion Model [
+]|   []   |   []   |   []   |   []   |   []   |   [][](DDM,
+ []
+
 
 Package biblatex Warning: Package option 'sortcites' enabled.
-(biblatex)                Verify postnote placement on input line 243.
+(biblatex)                Verify postnote placement on input line 220.
+
+[1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+
+Package biblatex Warning: Package option 'sortcites' enabled.
+(biblatex)                Verify postnote placement on input line 290.
+
+
+Overfull \hbox (17.92058pt too wide) in paragraph at lines 283--291
+\T1/Tempora-TLF/m/n/9.5 tasks have been pro-posed. For ex-am-ple, the dual-stag
+e two-phase model []|   []   |   []
+ []
+
+
+Overfull \hbox (60.31567pt too wide) in paragraph at lines 283--291
+[]\T1/Tempora-TLF/m/n/9.5 (DSTP, [][] Hüb-ner, Stein-hauser, & Lehle, 2010) or 
+the shrink-ing spot-light model []|   []   |   [][](SSP,
+ []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [2]
 LaTeX Font Info:    Font shape `T1/Tempora-TLF/m/it' will be
-(Font)              scaled to size 9.5pt on input line 280.
+(Font)              scaled to size 9.5pt on input line 328.
 LaTeX Font Info:    Font shape `T1/Tempora-TLF/m/n' will be
-(Font)              scaled to size 6.64996pt on input line 281.
-<../figures/figure1.png, id=13, 803.0pt x 602.25pt>
+(Font)              scaled to size 6.64996pt on input line 329.
+<../figures/figure1.png, id=14, 803.0pt x 602.25pt>
 File: ../figures/figure1.png Graphic file (type png)
 <use ../figures/figure1.png>
-Package pdftex.def Info: ../figures/figure1.png  used on input line 308.
+Package pdftex.def Info: ../figures/figure1.png  used on input line 356.
 (pdftex.def)             Requested size: 347.0pt x 260.25818pt.
 LaTeX Font Info:    Font shape `T1/Tempora-TLF/bx/n' in size <8> not available
 (Font)              Font shape `T1/Tempora-TLF/b/n' tried instead on input line
- 327.
+ 375.
 LaTeX Font Info:    Font shape `T1/Tempora-TLF/b/n' will be
-(Font)              scaled to size 8.0pt on input line 327.
+(Font)              scaled to size 8.0pt on input line 375.
 
 Underfull \vbox (badness 3525) has occurred while \output is active []
 
@@ -1930,78 +1980,77 @@ File: lstlang2.sty 2019/02/27 1.8b listings language file
 (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang3.sty
 File: lstlang3.sty 2019/02/27 1.8b listings language file
 )
-Overfull \hbox (15.0pt too wide) in paragraph at lines 359--367
+Overfull \hbox (15.0pt too wide) in paragraph at lines 407--416
 []$[]$ 
  []
 
 
-Overfull \hbox (15.0pt too wide) in paragraph at lines 380--393
+Overfull \hbox (15.0pt too wide) in paragraph at lines 429--443
 []$[]$ 
  []
 
-<../figures/figure4.png, id=22, 803.0pt x 602.25pt>
+<../figures/figure4.png, id=23, 803.0pt x 602.25pt>
 File: ../figures/figure4.png Graphic file (type png)
 <use ../figures/figure4.png>
-Package pdftex.def Info: ../figures/figure4.png  used on input line 395.
+Package pdftex.def Info: ../figures/figure4.png  used on input line 445.
 (pdftex.def)             Requested size: 347.0pt x 260.25818pt.
 [5]
-Overfull \hbox (15.0pt too wide) in paragraph at lines 432--439
+Overfull \hbox (15.0pt too wide) in paragraph at lines 482--490
 []$[]$ 
  []
 
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Underfull \vbox (badness 2205) has occurred while \output is active []
 
  [6 <../figures/figure4.png (PNG copy)>]
-Overfull \hbox (15.0pt too wide) in paragraph at lines 447--459
+Overfull \hbox (15.0pt too wide) in paragraph at lines 498--511
 []$[]$ 
  []
 
 
-Overfull \hbox (15.0pt too wide) in paragraph at lines 460--483
+Overfull \hbox (15.0pt too wide) in paragraph at lines 512--536
 []$[]$ 
  []
 
 
-Overfull \hbox (15.0pt too wide) in paragraph at lines 486--498
+Overfull \hbox (15.0pt too wide) in paragraph at lines 539--552
 []$[]$ 
  []
 
+[7]
+<../figures/figure5.png, id=35, 803.0pt x 602.25pt>
+File: ../figures/figure5.png Graphic file (type png)
+<use ../figures/figure5.png>
+Package pdftex.def Info: ../figures/figure5.png  used on input line 573.
+(pdftex.def)             Requested size: 347.0pt x 260.25818pt.
+<../figures/figure6.png, id=36, 803.0pt x 602.25pt>
+File: ../figures/figure6.png Graphic file (type png)
+<use ../figures/figure6.png>
+Package pdftex.def Info: ../figures/figure6.png  used on input line 579.
+(pdftex.def)             Requested size: 347.0pt x 260.25818pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [7]
-<../figures/figure5.png, id=34, 803.0pt x 602.25pt>
-File: ../figures/figure5.png Graphic file (type png)
-<use ../figures/figure5.png>
-Package pdftex.def Info: ../figures/figure5.png  used on input line 518.
-(pdftex.def)             Requested size: 347.0pt x 260.25818pt.
-<../figures/figure6.png, id=35, 803.0pt x 602.25pt>
-File: ../figures/figure6.png Graphic file (type png)
-<use ../figures/figure6.png>
-Package pdftex.def Info: ../figures/figure6.png  used on input line 524.
-(pdftex.def)             Requested size: 347.0pt x 260.25818pt.
-
-[8 <../figures/figure5.png (PNG copy)>] [9 <../figures/figure6.png (PNG copy)>]
-
-Overfull \hbox (2.82166pt too wide) in paragraph at lines 548--548
+ [8 <../figures/figure5.png (PNG copy)>] [9 <../figures/figure6.png (PNG copy)>
+]
+Overfull \hbox (2.82166pt too wide) in paragraph at lines 603--603
 \T1/Tempora-TLF/m/n/9.5 diffusion mod-els for use in es-ti-mat-ing cog-ni-tive 
 pro-cesses: A parameter-recovery study.
  []
 
-[10] (./DMCfun.aux)
-Package logreq Info: Writing requests to 'DMCfun.run.xml'.
-\openout1 = `DMCfun.run.xml'.
+[10] (./DMCfun_rev1_diff.aux)
+Package logreq Info: Writing requests to 'DMCfun_rev1_diff.run.xml'.
+\openout1 = `DMCfun_rev1_diff.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 14916 strings out of 492609
- 243687 string characters out of 6131462
- 918910 words of memory out of 5000000
- 18618 multiletter control sequences out of 15000+600000
- 47424 words of font info for 55 fonts, out of 8000000 for 9000
+ 15023 strings out of 492609
+ 244898 string characters out of 6131462
+ 895608 words of memory out of 5000000
+ 18720 multiletter control sequences out of 15000+600000
+ 47530 words of font info for 56 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 64i,9n,101p,1326b,3997s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 64i,8n,101p,1336b,3995s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-t1.enc}{/usr/share/texliv
 e/texmf-dist/fonts/enc/dvips/tempora/tmp_aq2g6w.enc}{/usr/share/texlive/texmf-d
 ist/fonts/enc/dvips/tempora/tmp_jglahm.enc}</usr/share/texlive/texmf-dist/fonts
@@ -2010,11 +2059,12 @@ e1/public/tempora/Tempora-Italic.pfb></usr/share/texlive/texmf-dist/fonts/type1
 /public/tempora/Tempora-Regular.pfb></usr/share/texlive/texmf-dist/fonts/type1/
 public/amsfonts/cm/cmbsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/publi
 c/amsfonts/cm/cmmi9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfo
-nts/cm/cmsy9.pfb></usr/share/texmf/fonts/type1/public/cm-super/sftt0800.pfb>
-Output written on DMCfun.pdf (10 pages, 349058 bytes).
+nts/cm/cmsy9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/lat
+xfont/lasy6.pfb></usr/share/texmf/fonts/type1/public/cm-super/sftt0800.pfb>
+Output written on DMCfun_rev1_diff.pdf (10 pages, 352115 bytes).
 PDF statistics:
- 72 PDF objects out of 1000 (max. 8388607)
- 48 compressed objects within 1 object stream
+ 76 PDF objects out of 1000 (max. 8388607)
+ 51 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  21 words of extra memory for PDF output out of 10000 (max. 10000000)
 

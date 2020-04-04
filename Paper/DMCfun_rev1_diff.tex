@@ -1,4 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%DIF LATEXDIFF DIFFERENCE FILE
+%DIF DEL DMCfun.tex        Sat Apr  4 10:52:10 2020
+%DIF ADD DMCfun_rev1.tex   Sat Apr  4 12:43:11 2020
 %                       Springer Latex Template                       %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -107,7 +110,9 @@ grestore
 % \usepackage{tikz}
 % \usepackage[printwatermark]{xwatermark}
 % \newsavebox\mybox
-
+%DIF 110a110
+ %DIF > 
+%DIF -------
 % \savebox\mybox{\tikz[color=gray, opacity=0.5]\node{DRAFT};}
 % \newwatermark*[ allpages, angle=45, scale=10, xpos=-50, ypos=50 ]{\usebox\mybox}
 
@@ -130,6 +135,44 @@ grestore
 
 \journalname{Behavior Research Methods}
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+%DIF PREAMBLE EXTENSION ADDED BY LATEXDIFF
+%DIF UNDERLINE PREAMBLE %DIF PREAMBLE
+\RequirePackage[normalem]{ulem} %DIF PREAMBLE
+\RequirePackage{color}\definecolor{RED}{rgb}{1,0,0}\definecolor{BLUE}{rgb}{0,0,1} %DIF PREAMBLE
+\providecommand{\DIFadd}[1]{{\protect\color{blue}\uwave{#1}}} %DIF PREAMBLE
+\providecommand{\DIFdel}[1]{{\protect\color{red}\sout{#1}}}                      %DIF PREAMBLE
+%DIF SAFE PREAMBLE %DIF PREAMBLE
+\providecommand{\DIFaddbegin}{} %DIF PREAMBLE
+\providecommand{\DIFaddend}{} %DIF PREAMBLE
+\providecommand{\DIFdelbegin}{} %DIF PREAMBLE
+\providecommand{\DIFdelend}{} %DIF PREAMBLE
+\providecommand{\DIFmodbegin}{} %DIF PREAMBLE
+\providecommand{\DIFmodend}{} %DIF PREAMBLE
+%DIF FLOATSAFE PREAMBLE %DIF PREAMBLE
+\providecommand{\DIFaddFL}[1]{\DIFadd{#1}} %DIF PREAMBLE
+\providecommand{\DIFdelFL}[1]{\DIFdel{#1}} %DIF PREAMBLE
+\providecommand{\DIFaddbeginFL}{} %DIF PREAMBLE
+\providecommand{\DIFaddendFL}{} %DIF PREAMBLE
+\providecommand{\DIFdelbeginFL}{} %DIF PREAMBLE
+\providecommand{\DIFdelendFL}{} %DIF PREAMBLE
+%DIF LISTINGS PREAMBLE %DIF PREAMBLE
+\RequirePackage{listings} %DIF PREAMBLE
+\RequirePackage{color} %DIF PREAMBLE
+\lstdefinelanguage{DIFcode}{ %DIF PREAMBLE
+%DIF DIFCODE_UNDERLINE %DIF PREAMBLE
+  moredelim=[il][\color{red}\sout]{\%DIF\ <\ }, %DIF PREAMBLE
+  moredelim=[il][\color{blue}\uwave]{\%DIF\ >\ } %DIF PREAMBLE
+} %DIF PREAMBLE
+\lstdefinestyle{DIFverbatimstyle}{ %DIF PREAMBLE
+	language=DIFcode, %DIF PREAMBLE
+	basicstyle=\ttfamily, %DIF PREAMBLE
+	columns=fullflexible, %DIF PREAMBLE
+	keepspaces=true %DIF PREAMBLE
+} %DIF PREAMBLE
+\lstnewenvironment{DIFverbatim}{\lstset{style=DIFverbatimstyle}}{} %DIF PREAMBLE
+\lstnewenvironment{DIFverbatim*}{\lstset{style=DIFverbatimstyle,showspaces=true}}{} %DIF PREAMBLE
+%DIF END PREAMBLE EXTENSION ADDED BY LATEXDIFF
+
 \begin{document}
 \title{DMCfun: An R package for fitting Diffusion Model of Conflict (DMC) to reaction time and error rate data}
 \subtitle{}
@@ -153,8 +196,9 @@ grestore
 \begin{abstract}
 
     Decision processes within choice reaction-time (CRT) tasks are often
-    modelled using variations of a Diffusion Decision Model \parencite[DDM, for
-    a review, see][] {ratcliff2008diffusion}. \textcite{ulrich2015automatic}
+    modelled using variations of a Diffusion Decision Model \DIFdelbegin \DIFdel{(DDM, for a review, see
+    \textcite{ratcliff2008diffusion})}\DIFdelend \DIFaddbegin \parencite[DDM, for
+    a review, see][] {ratcliff2008diffusion}\DIFaddend . \textcite{ulrich2015automatic}
     introduced a Diffusion Model for Conflict tasks (DMC). The DMC model
     combines common features from within standard diffusion models with the
     addition of superimposed controlled and automatic activation. The DMC model
@@ -170,8 +214,10 @@ grestore
 \section{Introduction}
 \label{introduction}
 
-Conflict tasks \parencite[e.g., Flanker task, Simon task, Stroop task,
-see][, respectively]{eriksen1974effects, lu1995influence, macleod1991half} are
+Conflict tasks \DIFdelbegin %DIFDELCMD < \parencite[e.g., Flanker task, Simon task, Stroop task,
+%DIFDELCMD < see][]{eriksen1974effects, lu1995influence, macleod1991half}%%%
+\DIFdel{, respectively) }\DIFdelend \DIFaddbegin \parencite[e.g., Flanker task, Simon task, Stroop task,
+see][, respectively]{eriksen1974effects, lu1995influence, macleod1991half} \DIFaddend are
 common experimental paradigms used to investigate decision processes under
 response competition (i.e., the activation of competing response alternatives).
 Such conflict tasks involve stimuli with multiple features that are either
@@ -193,7 +239,7 @@ dimensions indicate the same response (compatible) than when they indicate
 different responses (incompatible). The longer reaction time and larger error
 rate in incompatible trials indicates that task-irrelevant information
 interferes with the processing of the task relevant information.
-    
+
 This compatibility effect pattern is consistent across all conflict-like tasks.
 However, when the size of the effect (incompatible - compatible) is compared
 across different percentiles of the RT distribution, different patterns can
@@ -222,7 +268,7 @@ explaining negative-going delta functions. The DMC model is an extension of the
 standard diffusion model that can explain observed delta functions (both
 positive and negative going) across a range of conflict tasks. Since its
 publication, simulation and fitting procedures of the DMC model have been
-applied in various research contexts in order to provide important insights into
+applied in various research \DIFdelbegin \DIFdel{context }\DIFdelend \DIFaddbegin \DIFadd{contexts }\DIFaddend in order to provide important insights into
 the mechanisms at play in conflict tasks\parencite[e.g.,][]{servant2016,
 mittelstadt2020beyond}.
 
@@ -237,8 +283,8 @@ incompatible conditions.
 The following section introduces the DMC model \textcite{ulrich2015automatic}.
 It must be noted that other extensions of standard drift diffusion models with
 specific reference to conflict-like tasks have been proposed. For example, the
-dual-stage two-phase model \parencite[DSTP, ][]{hubner2010dual} or the shrinking
-spotlight model \parencite[SSP, ][]{white2011diffusion}. A direct comparison
+dual-stage two-phase model \DIFdelbegin \DIFdel{(DSTP; \textcite{hubner2010dua}) }\DIFdelend \DIFaddbegin \parencite[DSTP, ][]{hubner2010dual} \DIFaddend or the shrinking
+spotlight model \DIFdelbegin \DIFdel{(SSP; \textcite{white2011diffusio})}\DIFdelend \DIFaddbegin \parencite[SSP, ][]{white2011diffusion}\DIFaddend . A direct comparison
 between such models is beyond the scope of the current paper with such
 comparisons provided elsewhere \parencite[see][albeit with specific reference
 to the flanker task only]{white2018testing, evans2020comparison}.
@@ -253,7 +299,8 @@ information, whereas automatic processing concerns the task-irrelevant
 information. Whilst the architecture of such combined controlled/automatic
 processing within individual conflict tasks is under-specified,
 \textcite{ulrich2015automatic} suggest two possible architectures
-\parencite[see Figure 1 in ][]{ulrich2015automatic} under which automatic and
+\DIFdelbegin %DIFDELCMD < \parencite[see Figure 1][]{ulrich2015automatic} %%%
+\DIFdelend \DIFaddbegin \parencite[see Figure 1 in ][]{ulrich2015automatic} \DIFaddend under which automatic and
 controlled processing interact. Under both architectures, DMC assumes that a
 single accumulation process (combined automatic and controlled) determines the
 executed response. Critically, automatic processes will facilitate (impede)
@@ -340,7 +387,7 @@ The R-package DMCfun provides functionality allowing both the simulation of the
 DMC model and fitting the model to observed data. The simulation code is
 written in C++ utilising the R-package Rcpp \parencite{eddelbuettel2011rcpp}.
 The use of C++ gives a significant performance boost over base R whilst the
-Rcpp interface allows convenient use from within the standard R environment
+Rcpp interface allows \DIFdelbegin \DIFdel{convienient }\DIFdelend \DIFaddbegin \DIFadd{convenient }\DIFaddend use from within the standard R environment
 and also direct access to plotting facilities within R. The fitting procedure
 uses the R-package optimr \textcite{optimr} with method = "Nelder-Mead". As in
 \textcite{ulrich2015automatic} the model fit was evaluated by calculating the
@@ -363,7 +410,8 @@ devtools package (via install\_github, see Code Example 1).
     > devtools::install_github("igmmgi/DMCfun")
     > library(DMCfun)
     > help(package = "DMCfun")  
-    \end{lstlisting}
+    
+\end{lstlisting}
 \end{minipage}
 
 \subsection{DMC Simulation}
@@ -389,7 +437,8 @@ parameters from 20 to 170 in steps of 10 (see Figure \ref{fig:2}).
 > dmc <- dmcSim() 
 > plot(dmc)       # Fig 3 from Ulrich et al. 
 
-    \end{lstlisting}
+    
+\end{lstlisting}
 \end{minipage}
 
 \begin{figure}
@@ -407,7 +456,7 @@ Example 5). This will fit DMC to the data averaged across all participants,
 whereas the function dmcFitVPs will fit DMC to individual participants. A
 summary of the fit is provided. By default, dmcFit* fits the following
 parameters: amp, tau, mu, bnds, resMean, resSD, aaShape, spShape. The function
-dmcFit* uses the R-package optimr \parencite{optimr} with method = "Nelder-Mead"
+dmcFit* uses the R-package optimr \DIFdelbegin \DIFdel{\textcite{optimr} }\DIFdelend \DIFaddbegin \parencite{optimr} \DIFaddend with method = "Nelder-Mead"
 and allow the specification of a number of options including which parameters
 to fit and their starting values. \textcite{ulrich2015automatic} observed that
 model fit was highly influenced by the tau parameter. The function dmcFit*
@@ -435,7 +484,8 @@ values for the simplex routine.
 > dmc <- dmcSims(list(tau = seq(20,170,10)))
 > plot(dmc[[1]])  # full plot first combination
 > plot(dmc)       # plot delta functions for each combination
-    \end{lstlisting}
+    
+\end{lstlisting}
 \end{minipage}
 
 Users can fit DMC to their own data using the function dmcObservedData (see
@@ -455,7 +505,8 @@ column names and column codings can be specified using function arguments.
     simonData           # summarised simon data
     simonData$summary   # aggregated simon data
     plot(simonData)
-    \end{lstlisting}
+    
+\end{lstlisting}
 \end{minipage}
 
 \begin{minipage}{\linewidth}
@@ -479,7 +530,8 @@ column names and column codings can be specified using function arguments.
     amp   tau    mu  bnds resMean resSD aaShape spShape  rmse
   <dbl> <dbl> <dbl> <dbl>   <dbl> <dbl>   <dbl>   <dbl> <dbl>
 1  17.9  27.9 0.595  58.1    315.  31.5    2.32    3.20  11.6
-    \end{lstlisting}
+    
+\end{lstlisting}
 \end{minipage}
 
 
@@ -494,11 +546,13 @@ column names and column codings can be specified using function arguments.
 > plot(datOb)
 > dmcFit <- dmcFitAgg(datOb)
 > plot(dmcFit,datOb)
-    \end{lstlisting}
+    
+\end{lstlisting}
 \end{minipage}
 
 % latex table generated in R 3.6.1 by xtable 1.8-4 package
-% Sat Apr  4 12:43:11 2020
+%DIF <  Thu Mar  5 09:50:14 2020
+%DIF >  Sat Apr  4 12:43:11 2020
 \begin{longtable}{rlrr}
 \caption{Raw Data file example} \\ 
   \hline
