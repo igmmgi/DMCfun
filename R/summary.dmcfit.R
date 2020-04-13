@@ -17,7 +17,7 @@
 #' plot(fitAgg, flankerData)
 #'
 #' # Example 2
-#' fitVPs <- dmcFitVPs(flankerData, nTrl = 1000)
+#' fitVPs <- dmcFitVPs(flankerData, nTrl = 1000, VP = c(1, 10))
 #' summary(fitVPs)
 #' fit <- mean(fitVPs)
 #' plot(fit, flankerData)
@@ -27,19 +27,19 @@
 summary.dmcfit <- function(object, ...) {
 
   if ("par" %in% names(object[[2]])) {
-
-    out           <- tibble::as_tibble(cbind(t(object[[2]][[1]]), object[[2]][[2]]))
-    colnames(out) <- c("amp", "tau", "mu", "bnds", "resMean", "resSD", "aaShape", "spShape", "sigma", "rmse")
+    
+    out <- tibble::as_tibble(object[[2]]$par)
 
   } else {
-
-    outVP <- tibble::as_tibble(cbind(VP = which(!unlist(lapply(object, is.null))),
-                                     do.call(rbind, lapply(lapply(object, `[[`, 2), `[[`, 1)),
-                                     do.call(rbind, lapply(lapply(object, `[[`, 2), `[[`, 2))))
-    outAvg <- tibble::as_tibble(t(c(VP = NA,  colMeans(outVP[,c(2:10)]))))
-
-    out <- rbind(outVP, outAvg)
-    colnames(out) <- c("VP", "amp", "tau", "mu", "bnds", "resMean", "resSD", "aaShape", "spShape", "sigma", "rmse")
+  
+    VPs <- which(!unlist(lapply(object, is.null)))
+    outVP <- NULL
+    for (VP in VPs){
+      outVP <- rbind(outVP, cbind(VP, tibble::as_tibble(object[[VP]][[2]]$par)))
+    }
+    outAvg <- tibble::as_tibble(t(c(colMeans(outVP[, c(2:11)]))))
+    
+    out    <- list(outVP, outAvg)
 
   }
 

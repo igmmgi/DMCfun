@@ -10,7 +10,6 @@
 #' @param minVals Minimum values for the to-be estimated parameters
 #' @param maxVals Maximum values for the to-be estimated parameters
 #' @param fixedFit Fix parameter to starting value
-#' @param parScale Scaling values for the to-be estimated parameters
 #' @param fitInitialGrid TRUE/FALSE (NB. overrides fitInitialTau)
 #' @param fitInitialGridN 10
 #' @param fixedGrid Fix parameter for initial grid search
@@ -29,7 +28,7 @@
 #' library(DMCfun)
 #'
 #' # Example 1: Flanker data from Ulrich et al. (2015)
-#' fit <- dmcFitVPs(flankerData)
+#' fit <- dmcFitVPs(flankerData, nTrl = 1000)
 #' plot(fit, flankerData, VP = 1)
 #' summary(fit)
 #' fitAgg <- mean(fit)
@@ -46,14 +45,13 @@
 #' @export
 dmcFitVPs <- function(resOb,
                       nTrl             = 50000,
-                      startVals        = c(20, 100, 0.5,  75, 300,  30, 2, 3, 4),
-                      minVals          = c(10,   5, 0.1,  20, 200,   5, 1, 2, 1),
-                      maxVals          = c(30, 300, 1.0, 150, 800, 100, 3, 4, 10),
-                      fixedFit         = c( 0,   0, 0,     0,   0,   0, 0, 0, 1),
-                      parScale         = startVals/min(startVals),
+                      startVals        = list(), 
+                      minVals          = list(), 
+                      maxVals          = list(), 
+                      fixedFit         = list(), 
                       fitInitialGrid   = TRUE,
-                      fitInitialGridN  = 10,                                       # reduce if grid search 3/4+ parameters
-                      fixedGrid        = c( 1,   0, 1,     1,   1,   1, 1, 1, 1),  # only initial search tau
+                      fitInitialGridN  = 10,       # reduce if grid search 3/4+ parameters
+                      fixedGrid        = list(),   # default only initial tau search
                       stepCAF          = 20,
                       stepDelta        = 5,
                       VP               = c(),
@@ -63,7 +61,20 @@ dmcFitVPs <- function(resOb,
   if (length(VP) == 0) {
     VP = unique(resOb$summaryVP$VP)  # fit all individual VPs in data
   }
-
+  
+  # default parameter space
+  defaultStartVals <- list(amp = 20, tau = 200, mu = 0.5, bnds =  75, resMean = 300, resSD =  30, aaShape = 2, spShape = 3, sig =  4)
+  defaultMinVals   <- list(amp = 10, tau =   5, mu = 0.1, bnds =  20, resMean = 200, resSD =  5,  aaShape = 1, spShape = 2, sig =  1)
+  defaultMaxVals   <- list(amp = 40, tau = 300, mu = 1.0, bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, sig = 10)
+  defaultFixedFit  <- list(amp = F,  tau = F,   mu = F,   bnds = F,   resMean = F,   resSD = F,   aaShape = F, spShape = F, sig = T)
+  defaultFixedGrid <- list(amp = T,  tau = F,   mu = T,   bnds = T,   resMean = T,   resSD = T,   aaShape = T, spShape = T, sig = T)
+  
+  startVals <- modifyList(defaultStartVals, startVals)
+  minVals   <- modifyList(defaultMinVals,   minVals)
+  maxVals   <- modifyList(defaultMaxVals,   maxVals)
+  fixedFit  <- modifyList(defaultFixedFit,  fixedFit)
+  fixedGrid <- modifyList(defaultFixedGrid, fixedGrid)
+ 
   dmcfit <- vector("list", max(VP))
   for (vp in VP) {
 
@@ -76,7 +87,6 @@ dmcFitVPs <- function(resOb,
                               minVals          = minVals,
                               maxVals          = maxVals,
                               fixedFit         = fixedFit,
-                              parScale         = parScale,
                               fitInitialGrid   = fitInitialGrid,
                               fitInitialGridN  = fitInitialGridN, # reduce if grid search 3/4+ parameters
                               fixedGrid        = fixedGrid,       # only fit tau
