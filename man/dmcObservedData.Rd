@@ -9,14 +9,14 @@ dmcObservedData(
   stepCAF = 20,
   stepDelta = 5,
   outlier = c(200, 1200),
-  quantileType = 5,
   columns = c("VP", "Comp", "RT", "Error"),
   compCoding = c("comp", "incomp"),
-  errorCoding = c(0, 1)
+  errorCoding = c(0, 1),
+  quantileType = 5
 )
 }
 \arguments{
-\item{dat}{Text file containing the observed data or R dataframe (see createDF/addDataDF)}
+\item{dat}{Text file(s) containing the observed data or an R DataFrame (see createDF/addDataDF)}
 
 \item{stepCAF}{Step size for the CAF bins. For example, a step size of 20 would result
 in 5 CAF bins centered on 10, 30, 50, 70, and 90\%.}
@@ -24,22 +24,27 @@ in 5 CAF bins centered on 10, 30, 50, 70, and 90\%.}
 \item{stepDelta}{Step size for the Delta bins. For example, a step size of 5 would result
 in 19 CAF bins positioned at 5, 10, 15, ... 85, 90, 95\%.}
 
-\item{outlier}{Outlier limits e.g., c(200, 1200)}
-
-\item{quantileType}{Argument (1-9) from R function quantile specifying the algorithm (?quantile)}
+\item{outlier}{Outlier limits in ms (e.g., c(200, 1200))}
 
 \item{columns}{Name of required columns DEFAULT = c("VP", "Comp", "RT", "Error")}
 
 \item{compCoding}{Coding for compatibility DEFAULT = c("comp", "incomp")}
 
 \item{errorCoding}{Coding for errors DEFAULT = c(0, 1))}
+
+\item{quantileType}{Argument (1-9) from R function quantile specifying the algorithm (?quantile)}
 }
 \value{
 DataFrame
 }
 \description{
 Basic example analysis script to create data object required
-for observed data. Example raw *.txt files are flankerData.txt and simonData.txt.
+for observed data. Example raw *.txt files are flankerData.txt and simonData.txt. There 
+are four critical columns:
+A column containing participant number
+A column coding for compatible or incompatible 
+A column with RT (in ms)
+A column indicating of the response was correct
 }
 \examples{
 library(DMCfun)
@@ -69,7 +74,7 @@ summary(aovRt)
 model.tables(aovRt, type = "mean")
 
 # Example 4
-dat <- createDF(nVP = 50, nTrl = 500, design = list("Comp" = c("comp", "incomp")))
+dat <- createDF(nVP = 50, nTrl = 100, design = list("Comp" = c("comp", "incomp")))
 dat <- addDataDF(dat,
                  RT = list("Comp_comp"    = c(500, 75, 120),
                            "Comp_incomp"  = c(530, 75, 100)),

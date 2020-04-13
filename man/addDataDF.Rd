@@ -7,19 +7,19 @@
 addDataDF(dat, RT = NULL, Error = NULL)
 }
 \arguments{
-\item{dat}{DataFrame created from createDF}
+\item{dat}{DataFrame (see createDF)}
 
-\item{RT}{Parameters for the call to rtDist function}
+\item{RT}{RT parameters (see rtDist)}
 
-\item{Error}{Parameters for the call to errDist function}
+\item{Error}{Error parameters (see errDist)}
 }
 \value{
 DataFrame with RT and Error columns
 }
 \description{
 Add simulated ex-gaussian reaction-time (RT) data and
-binary error (Error = 1, Correct = 0) data to dataframe. This function
-can be used to create simulated dataframes.
+binary error (Error = 1, Correct = 0) data to an R DataFrame. This function
+can be used to create simulated data sets.
 }
 \examples{
 library(DMCfun)
@@ -40,9 +40,9 @@ table(dat$Comp, dat$Error)
 dat <- createDF(nVP = 50, nTrl = 50, design = list("Comp" = c("comp", "incomp")))
 dat <- addDataDF(dat,
                  RT = list("Comp_comp"   = c(500, 80, 100),
-                           "Comp_incomp" = c(550, 80, 140)),
+                           "Comp_incomp" = c(600, 80, 140)),
                  Error = list("Comp_comp"   = 5,
-                              "Comp_incomp" = 10))
+                              "Comp_incomp" = 15))
 boxplot(dat$RT ~ dat$Comp)
 table(dat$Comp, dat$Error)
 

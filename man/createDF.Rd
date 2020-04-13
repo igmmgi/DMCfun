@@ -21,7 +21,7 @@ createDF(
 dataframe
 }
 \description{
-Create dataframe in which to subsequently add simulated data.
+Create dataframe (see addDataDF)
 }
 \examples{
 library(DMCfun)

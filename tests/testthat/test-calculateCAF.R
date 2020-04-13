@@ -2,44 +2,39 @@ context("calculateCAF")
 
 test_that("calculateCAF", {
 
-  # test 1: 10% errors, 5 bins
   set.seed(1)
-  rts  <- rtDist(1000)
-  errs <- errDist(1000, 10)
-  dat  <- cbind(rts, errs)
+  
+  # test 1: 10% errors, 5 bins
+  dat  <- createDF(nVP = 20, nTrl = 50, design = list("Comp" = c("comp", "incomp")))
+  dat  <- addDataDF(dat)
   caf  <- calculateCAF(dat)
 
-  testthat::expect_equal(length(caf), 5)
-  testthat::expect_equal(0.9, round(mean(caf), 1))
+  testthat::expect_equal(length(unique(caf$bin)), 5)
+  testthat::expect_equal(round(mean(caf$accPerVP), 1),  0.9)
 
   # test 2 10% errors, 10 bins
-  set.seed(1)
-  rts  <- rtDist(1000)
-  errs <- errDist(1000, 10)
-  dat  <- cbind(rts, errs)
+  dat  <- createDF(nVP = 20, nTrl = 50, design = list("Comp" = c("comp", "incomp")))
+  dat  <- addDataDF(dat)
   caf  <- calculateCAF(dat, stepCAF = 10)
 
-  testthat::expect_equal(length(caf), 10)
-  testthat::expect_equal(0.9, round(mean(caf), 1))
+  testthat::expect_equal(length(unique(caf$bin)), 10)
+  testthat::expect_equal(round(mean(caf$accPerVP), 1),  0.9)
 
   # test 3: 20% errors, 5 bins
-  set.seed(1)
-  rts  <- rtDist(1000)
-  errs <- errDist(1000, 20)
-  dat  <- cbind(rts, errs)
-  caf  <- calculateCAF(dat)
+  dat  <- createDF(nVP = 20, nTrl = 50, design = list("Comp" = c("comp", "incomp")))
+  dat  <- addDataDF(dat, Error = 20)
+  caf  <- calculateCAF(dat, stepCAF = 20)
 
-  testthat::expect_equal(length(caf), 5)
-  testthat::expect_equal(0.8, round(mean(caf), 1))
+  testthat::expect_equal(length(unique(caf$bin)), 5)
+  testthat::expect_equal(round(mean(caf$accPerVP), 1),  0.8)
 
-  # test 4: 30% errors, 8 bins
-  set.seed(1)
-  rts  <- rtDist(1000)
-  errs <- errDist(1000, 30)
-  dat  <- cbind(rts, errs)
+  # test 4: 30% errors, 4 bins
+  dat  <- createDF(nVP = 20, nTrl = 50, design = list("Comp" = c("comp", "incomp")))
+  dat  <- addDataDF(dat, Error = 30)
   caf  <- calculateCAF(dat, stepCAF = 25)
 
-  testthat::expect_equal(length(caf), 4)
-  testthat::expect_equal(0.7, round(mean(caf), 1))
+  testthat::expect_equal(length(unique(caf$bin)), 4)
+  testthat::expect_equal(round(mean(caf$accPerVP), 1),  0.7)
+
 
 })

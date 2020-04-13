@@ -7,14 +7,13 @@
 dmcFitVPs(
   resOb,
   nTrl = 50000,
-  startVals = c(20, 100, 0.5, 75, 300, 30, 2, 3, 4),
-  minVals = c(10, 5, 0.1, 20, 200, 5, 1, 2, 1),
-  maxVals = c(30, 300, 1, 150, 800, 100, 3, 4, 10),
-  fixedFit = c(0, 0, 0, 0, 0, 0, 0, 0, 1),
-  parScale = startVals/min(startVals),
+  startVals = list(),
+  minVals = list(),
+  maxVals = list(),
+  fixedFit = list(),
   fitInitialGrid = TRUE,
   fitInitialGridN = 10,
-  fixedGrid = c(1, 0, 1, 1, 1, 1, 1, 1, 1),
+  fixedGrid = list(),
   stepCAF = 20,
   stepDelta = 5,
   VP = c(),
@@ -34,8 +33,6 @@ dmcFitVPs(
 \item{maxVals}{Maximum values for the to-be estimated parameters}
 
 \item{fixedFit}{Fix parameter to starting value}
-
-\item{parScale}{Scaling values for the to-be estimated parameters}
 
 \item{fitInitialGrid}{TRUE/FALSE (NB. overrides fitInitialTau)}
 
@@ -68,7 +65,7 @@ of the CAF and CDF functions.
 library(DMCfun)
 
 # Example 1: Flanker data from Ulrich et al. (2015)
-fit <- dmcFitVPs(flankerData)
+fit <- dmcFitVPs(flankerData, nTrl = 1000)
 plot(fit, flankerData, VP = 1)
 summary(fit)
 fitAgg <- mean(fit)

@@ -14,7 +14,7 @@ delta values for comp/incomp conditions (n*2*5). See output from dmcSim.}
 delta values for comp/incomp conditions (n*5). See output from dmcSim.}
 }
 \value{
-cost
+cost value (RMSE)
 }
 \description{
 Calculate cost value (fit) as combination of RT and error rate

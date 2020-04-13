@@ -7,14 +7,13 @@
 dmcFitAgg(
   resOb,
   nTrl = 1e+05,
-  startVals = c(20, 100, 0.5, 75, 300, 30, 2, 3, 4),
-  minVals = c(10, 5, 0.1, 20, 200, 5, 1, 2, 1),
-  maxVals = c(40, 300, 1, 150, 800, 100, 3, 4, 10),
-  fixedFit = c(0, 0, 0, 0, 0, 0, 0, 0, 1),
-  parScale = startVals/min(startVals),
+  startVals = list(),
+  minVals = list(),
+  maxVals = list(),
+  fixedFit = list(),
   fitInitialGrid = TRUE,
   fitInitialGridN = 10,
-  fixedGrid = c(1, 0, 1, 1, 1, 1, 1, 1, 1),
+  fixedGrid = list(),
   stepCAF = 20,
   stepDelta = 5,
   printInputArgs = TRUE,
@@ -34,8 +33,6 @@ with the following order: amp, tau, mu, bnds, resMean, resSD, aaShape, spShape, 
 \item{maxVals}{Maximum values for the to-be estimated parameters (see startVals)}
 
 \item{fixedFit}{Fix parameter to starting value (bool vector of length 9)}
-
-\item{parScale}{Scaling values for the to-be estimated parameters}
 
 \item{fitInitialGrid}{TRUE/FALSE}
 
@@ -66,7 +63,7 @@ of the CAF and CDF functions.
 library(DMCfun)
 
 # Example 1: Flanker data from Ulrich et al. (2015)
-fit <- dmcFitAgg(flankerData, nTrl = 5000)  # only initial search tau
+fit <- dmcFitAggNew1(flankerData)  # only initial search tau
 plot(fit, flankerData)
 summary(fit)
 

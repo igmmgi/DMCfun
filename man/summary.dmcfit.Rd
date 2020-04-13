@@ -27,7 +27,7 @@ summary(fitAgg)
 plot(fitAgg, flankerData)
 
 # Example 2
-fitVPs <- dmcFitVPs(flankerData, nTrl = 1000)
+fitVPs <- dmcFitVPs(flankerData, nTrl = 1000, VP = c(1, 10))
 summary(fitVPs)
 fit <- mean(fitVPs)
 plot(fit, flankerData)
