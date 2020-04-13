@@ -7,7 +7,7 @@
 #' @param resOb list containing caf values for comp/incomp conditions (n*2*3) and
 #' delta values for comp/incomp conditions (n*5). See output from dmcSim.
 #'
-#' @return cost
+#' @return cost value (RMSE)
 #'
 #' @examples
 #' library(DMCfun)

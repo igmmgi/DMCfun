@@ -1,6 +1,6 @@
 #' @title createDF
 #'
-#' @description Create dataframe in which to subsequently add simulated data.
+#' @description Create dataframe (see addDataDF)
 #'
 #' @param nVP Number of participants
 #' @param nTrl Number of trials per factor/level for each participant

@@ -1,12 +1,9 @@
 #' @title calculateCAF
 #'
-#' @description Calculate conditional accuracy function (CAF). The data in (dat)
-#' should consist of a two column dataframe/matrix with the first column containing
-#' the reaction times, and the second column containing a logical vector of
-#' errors with 0 being correct, 1 being an error.
+#' @description Calculate conditional accuracy function (CAF). 
 #'
 #' @param dat Two column dataframe/matrix with the first column containing the
-#' reaction times and the second column containing the errors.
+#' reaction times and the second column containing the errors (0 = correct, 1 = error).
 #' @param stepCAF Step size for the CAF bins. For example, a step size of 20 would
 #' result in 5 CAF bins centered on 10, 30, 50, 70, and 90\%.
 #'
