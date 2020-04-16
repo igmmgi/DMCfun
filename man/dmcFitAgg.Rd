@@ -72,7 +72,7 @@ of the CAF and CDF functions.
 library(DMCfun)
 
 # Example 1: Flanker data from Ulrich et al. (2015)
-fit <- dmcFitAggNew1(flankerData)  # only initial search tau
+fit <- dmcFitAgg(flankerData)  # only initial search tau
 plot(fit, flankerData)
 summary(fit)
 
