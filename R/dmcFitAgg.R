@@ -8,21 +8,21 @@
 #' @param nTrl Number of trials to use within dmcSim.
 #' @param startVals Starting values for to-be estimated parameters. This is a list with values specified individually for 
 #' amp, tau, mu, bnds, resMean, resSD, aaShape, spShape, sigma (e.g., startVals = list(amp = 20, tau = 200, mu = 0.5, bnds = 75, resMean = 300, 
-#' resSD = 30, aaShape = 2, spShape = 3, sig = 4)).
+#' resSD = 30, aaShape = 2, spShape = 3, sigma = 4)).
 #' @param minVals Minimum values for the to-be estimated parameters. This is a list with values specified individually for 
 #' amp, tau, mu, bnds, resMean, resSD, aaShape, spShape, sigma (e.g., minVals = list(amp = 10, tau = 5, mu = 0.1, bnds = 20, resMean = 200, 
-#' resSD = 5, aaShape = 1, spShape = 2, sig = 1))
+#' resSD = 5, aaShape = 1, spShape = 2, sigma = 1)). 
 #' @param maxVals Maximum values for the to-be estimated parameters. This is a list with values specified individually for
 #' amp, tau, mu, bnds, resMean, resSD, aaShape, spShape, sigma (e.g., maxVals = list(amp = 40, tau = 300, mu = 1.0, bnds = 150, resMean = 800, 
-#' resSD = 100, aaShape = 3, spShape = 4, sig = 10))
+#' resSD = 100, aaShape = 3, spShape = 4, sigma = 10))
 #' @param fixedFit Fix parameter to starting value. This is a list with bool values specified individually for 
 #' amp, tau, mu, bnds, resMean, resSD, aaShape, spShape, sigma (e.g., fixedFit = list(amp = F,  tau = F,   mu = F, bnds = F, resMean = F,   
-#' resSD = F, aaShape = F, spShape = F, sig = T))
+#' resSD = F, aaShape = F, spShape = F, sigma = T))
 #' @param fitInitialGrid TRUE/FALSE
 #' @param fitInitialGridN 10 reduce if searching more than 1 initial parameter
 #' @param fixedGrid Fix parameter for initial grid search.  This is a list with bool values specified individually for 
 #' amp, tau, mu, bnds, resMean, resSD, aaShape, spShape, sigma (e.g., fixedGrid = list(amp = T, tau = F, mu = T, bnds = T, resMean = T,   
-#' resSD = T, aaShape = T, spShape = T, sig = T))
+#' resSD = T, aaShape = T, spShape = T, sigma = T))
 #' @param stepCAF Step size for the CAF bins. For example, a step size of 20 would result
 #' in 5 CAF bins centered on 10, 30, 50, 70, and 90\%.
 #' @param stepDelta Step size for the Delta bins. For example, a step size of 5 would result
@@ -77,11 +77,11 @@ dmcFitAgg <- function(resOb,
   
     
   # default parameter space
-  defaultStartVals <- list(amp = 20, tau = 200, mu = 0.5, bnds =  75, resMean = 300, resSD =  30, aaShape = 2, spShape = 3, sig =  4)
-  defaultMinVals   <- list(amp = 10, tau =   5, mu = 0.1, bnds =  20, resMean = 200, resSD =  5,  aaShape = 1, spShape = 2, sig =  1)
-  defaultMaxVals   <- list(amp = 40, tau = 300, mu = 1.0, bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, sig = 10)
-  defaultFixedFit  <- list(amp = F,  tau = F,   mu = F,   bnds = F,   resMean = F,   resSD = F,   aaShape = F, spShape = F, sig = T)
-  defaultFixedGrid <- list(amp = T,  tau = F,   mu = T,   bnds = T,   resMean = T,   resSD = T,   aaShape = T, spShape = T, sig = T)
+  defaultStartVals <- list(amp = 20, tau = 200, mu = 0.5, bnds =  75, resMean = 300, resSD =  30, aaShape = 2, spShape = 3, sigma =  4)
+  defaultMinVals   <- list(amp = 10, tau =   5, mu = 0.1, bnds =  20, resMean = 200, resSD =  5,  aaShape = 1, spShape = 2, sigma =  1)
+  defaultMaxVals   <- list(amp = 40, tau = 300, mu = 1.0, bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, sigma = 10)
+  defaultFixedFit  <- list(amp = F,  tau = F,   mu = F,   bnds = F,   resMean = F,   resSD = F,   aaShape = F, spShape = F, sigma = T)
+  defaultFixedGrid <- list(amp = T,  tau = F,   mu = T,   bnds = T,   resMean = T,   resSD = T,   aaShape = T, spShape = T, sigma = T)
   
   startVals <- modifyList(defaultStartVals, startVals)
   minVals   <- modifyList(defaultMinVals,   minVals)
@@ -112,7 +112,7 @@ dmcFitAgg <- function(resOb,
     
     resTh <- dmcSim(amp = prms$amp, tau = prms$tau, mu = prms$mu, bnds = prms$bnds,
                     resMean = prms$resMean, resSD = prms$resSD, aaShape = prms$aaShape,
-                    varSP = TRUE, spShape = prms$spShape, sigma = prms$sig, spLim = c(-prms$bnds, prms$bnds),
+                    varSP = TRUE, spShape = prms$spShape, sigma = prms$sigma, spLim = c(-prms$bnds, prms$bnds),
                     nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,
                     printInputArgs = printInputArgs, printResults = printResults)
     
@@ -159,7 +159,7 @@ dmcFitAgg <- function(resOb,
                                     resTh <- dmcSim(amp = startValsGrid$amp[i], tau = startValsGrid$tau[i], mu = startValsGrid$mu[i],
                                                     bnds = startValsGrid$bnds[i], resMean = startValsGrid$resMean[i], resSD = startValsGrid$resSD[i],
                                                     aaShape = startValsGrid$aaShape[i], varSP = TRUE, spShape = startValsGrid$spShape[i],
-                                                    sigma = startValsGrid$sig[i],  spLim = c(-startValsGrid$bnds[i], startValsGrid$bnds[i]),
+                                                    sigma = startValsGrid$sigma[i],  spLim = c(-startValsGrid$bnds[i], startValsGrid$bnds[i]),
                                                     nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,
                                                     printInputArgs = FALSE, printResults = FALSE)
                                     return(calculateCostValue(resTh, resOb))
@@ -194,7 +194,7 @@ dmcFitAgg <- function(resOb,
   cat(sprintf("RMSE: %.3f\n", fit$value))
   resTh <- dmcSim(amp = prms$amp, tau = prms$tau, mu = prms$mu,
                   bnds = prms$bnds, resMean = prms$resMean, resSD = prms$resSD,
-                  aaShape = prms$aaShape, sigma = prms$sig,
+                  aaShape = prms$aaShape, sigma = prms$sigma,
                   varSP = TRUE, spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
                   nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,
                   printResults = TRUE)
