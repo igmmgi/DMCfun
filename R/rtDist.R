@@ -1,10 +1,10 @@
 #' @title rtDist
 #'
-#' @description Returns a distribution appropriate to simulate reaction times.
+#' @description Returns value(s) from a distribution appropriate to simulate reaction times.
 #' The distribution is a combined exponential and gaussian distribution called
 #' an exponentially modified Gaussian (EMG) distribution or ex-gaussian distribution.
 #'
-#' @param n Number
+#' @param n Number of observations
 #' @param gaussMean Mean of the gaussian distribution
 #' @param gaussSD SD of the gaussian distribution
 #' @param expRate Rate of the exponential function
@@ -27,6 +27,6 @@ rtDist <- function(n=10000, gaussMean=600, gaussSD=50, expRate=200) {
 
   expDist <- stats::rexp(n, 1/expRate)
   gaussDist <- stats::rnorm(n, gaussMean, gaussSD)
-  return(expDist + gaussDist - mean(expDist))
+  return(round(expDist + gaussDist - mean(expDist)))
 
 }

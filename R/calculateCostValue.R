@@ -1,11 +1,12 @@
 #' @title calculateCostValue
 #'
-#' @description Calculate cost value (fit) as combination of RT and error rate
+#' @description Calculate cost value (fit) from combination of RT and error rate.
 #'
-#' @param resTh list containing caf values for comp/incomp conditions (n*2*3) and
-#' delta values for comp/incomp conditions (n*2*5). See output from dmcSim.
+#' @param resTh list containing caf values for comp/incomp conditions (nbins*2*3) and
+#' delta values for comp/incomp conditions (nbins*5). See output from dmcSim (.$caf).
 #' @param resOb list containing caf values for comp/incomp conditions (n*2*3) and
-#' delta values for comp/incomp conditions (n*5). See output from dmcSim.
+#' delta values for comp/incomp conditions (nbins*5). See output from dmcSim ($delta).
+#' @param weighting Weighting applied to the CAF data
 #'
 #' @return cost value (RMSE)
 #'
@@ -23,7 +24,7 @@
 #' cost  <- calculateCostValue(resTh, resOb)
 #'
 #' @export
-calculateCostValue <- function(resTh, resOb) {
+calculateCostValue <- function(resTh, resOb, weighting = 1500) {
 
   n_rt  <- nrow(resTh$delta) * 2
   n_err <- nrow(resTh$caf)
@@ -31,7 +32,7 @@ calculateCostValue <- function(resTh, resOb) {
   costCAF <- sqrt((1/n_err) * sum((resTh$caf$accPer - resOb$caf$accPer)**2))
   costRT  <- sqrt((1/n_rt)  * sum((resTh$delta[c("meanComp", "meanIncomp")] - resOb$delta[c("meanComp", "meanIncomp")])**2))
 
-  costValue <- (((1 - (n_rt/(n_rt + n_err))) * 1500) * costCAF) + costRT
+  costValue <- (((1 - (n_rt/(n_rt + n_err))) * weighting) * costCAF) + costRT
   
   cat(sprintf("RMSE: %.3f\n", costValue))
 

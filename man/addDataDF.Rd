@@ -14,7 +14,7 @@ addDataDF(dat, RT = NULL, Error = NULL)
 \item{Error}{Error parameters (see errDist)}
 }
 \value{
-DataFrame with RT and Error columns
+DataFrame with RT (ms) and Error (bool) columns
 }
 \description{
 Add simulated ex-gaussian reaction-time (RT) data and
@@ -27,6 +27,7 @@ library(DMCfun)
 # Example 1: default dataframe
 dat <- createDF()
 dat <- addDataDF(dat)
+head(dat)
 hist(dat$RT, 100)
 table(dat$Error)
 

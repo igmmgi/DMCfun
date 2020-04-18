@@ -13,30 +13,33 @@ calculateCAF(
 )
 }
 \arguments{
-\item{dat}{DataFrame with a column containing the participant number, a column coding 
-compatible vs. incompatible, a column with the RT data (in ms) and a column coding
-if the trial was an error (correct = 0, error = 1)}
+\item{dat}{DataFrame with columns containing the participant number, condition 
+compatibility, RT data (in ms) and an Error column.}
 
 \item{stepCAF}{Step size for the CAF bins. For example, a step size of 20 would
 result in 5 CAF bins centered on 10, 30, 50, 70, and 90\%.}
 
-\item{columns}{Name of required columns DEFAULT = c("VP", "Comp", "RT", "Error")}
+\item{columns}{Name of required columns Default: c("VP", "Comp", "RT", "Error")}
 
-\item{compCoding}{Coding for compatibility DEFAULT = c("comp", "incomp")}
+\item{compCoding}{Coding for compatibility Default: c("comp", "incomp")}
 
-\item{errorCoding}{Coding for errors DEFAULT = c(0, 1))}
+\item{errorCoding}{Coding for errors Default: c(0, 1))}
 }
 \value{
 DataFrame (tibble)
 }
 \description{
-Calculate conditional accuracy function (CAF) on DataFrame
+Calculate conditional accuracy function (CAF). 
+The DataFrame should contain columns defining the participant, compatibility condition, 
+RT and error (Default column names: "VP", "Comp", "RT", "Error"). The "Comp" column should
+define compatibility condition (Default: c("comp", "incomp")) and the "Error" column should
+define if the trial was an error or not (Default: c(0, 1) ).
 }
 \examples{
 library(DMCfun)
 
 # Example 1
-dat <- createDF(nVP = 50, nTrl = 100, design = list("Comp" = c("comp", "incomp")))
+dat <- createDF(nVP = 1, nTrl = 100, design = list("Comp" = c("comp", "incomp")))
 dat <- addDataDF(dat,
                  RT = list("Comp_comp"   = c(500, 80, 100),
                            "Comp_incomp" = c(600, 80, 140)),

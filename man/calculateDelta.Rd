@@ -7,22 +7,21 @@
 calculateDelta(
   dat,
   stepDelta = 5,
-  columns = c("VP", "Comp", "RT", "Error"),
+  columns = c("VP", "Comp", "RT"),
   compCoding = c("comp", "incomp"),
   quantileType = 5
 )
 }
 \arguments{
-\item{dat}{DataFrame with a column containing the participant number, a column coding 
-compatible vs. incompatible, a column with the RT data (in ms) and a column coding
-if the trial was an error (correct = 0, error = 1)}
+\item{dat}{DataFrame with columns containing the participant number, condition 
+compatibility, and RT data (in ms).}
 
 \item{stepDelta}{Step size for the Delta bins. For example, a step size of 5 would result
 in 19 CAF bins positioned at 5, 10, 15, ... 85, 90, 95\%.}
 
-\item{columns}{Name of required columns DEFAULT = c("VP", "Comp", "RT", "Error")}
+\item{columns}{Name of required columns Default: c("VP", "Comp", "RT")}
 
-\item{compCoding}{Coding for compatibility DEFAULT = c("comp", "incomp")}
+\item{compCoding}{Coding for compatibility Default: c("comp", "incomp")}
 
 \item{quantileType}{Argument (1-9) from R function quantile specifying the algorithm (?quantile)}
 }
@@ -30,7 +29,9 @@ in 19 CAF bins positioned at 5, 10, 15, ... 85, 90, 95\%.}
 DataFrame (tibble)
 }
 \description{
-Calculate delta plot
+Calculate delta plot. Here RTs are split into n bins (Default: 5) for compatible and
+incompatible trials separately. Mean RT is calculated for each condition in each bin then 
+subtracted (incompatible - compatible) to give a compatibility effect (delta) at each bin.
 }
 \examples{
 library(DMCfun)

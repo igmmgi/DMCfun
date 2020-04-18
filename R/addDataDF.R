@@ -8,7 +8,7 @@
 #' @param RT RT parameters (see rtDist)
 #' @param Error Error parameters (see errDist)
 #'
-#' @return DataFrame with RT and Error columns
+#' @return DataFrame with RT (ms) and Error (bool) columns
 #'
 #' @examples
 #' library(DMCfun)
@@ -16,6 +16,7 @@
 #' # Example 1: default dataframe
 #' dat <- createDF()
 #' dat <- addDataDF(dat)
+#' head(dat)
 #' hist(dat$RT, 100)
 #' table(dat$Error)
 #'

@@ -7,7 +7,7 @@
 rtDist(n = 10000, gaussMean = 600, gaussSD = 50, expRate = 200)
 }
 \arguments{
-\item{n}{Number}
+\item{n}{Number of observations}
 
 \item{gaussMean}{Mean of the gaussian distribution}
 
@@ -19,7 +19,7 @@ rtDist(n = 10000, gaussMean = 600, gaussSD = 50, expRate = 200)
 double
 }
 \description{
-Returns a distribution appropriate to simulate reaction times.
+Returns value(s) from a distribution appropriate to simulate reaction times.
 The distribution is a combined exponential and gaussian distribution called
 an exponentially modified Gaussian (EMG) distribution or ex-gaussian distribution.
 }

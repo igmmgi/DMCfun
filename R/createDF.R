@@ -1,6 +1,6 @@
 #' @title createDF
 #'
-#' @description Create dataframe (see addDataDF)
+#' @description Create dataframe (see also addDataDF)
 #'
 #' @param nVP Number of participants
 #' @param nTrl Number of trials per factor/level for each participant
@@ -26,7 +26,7 @@ createDF <- function(nVP = 20,
                      nTrl = 50,
                      design = list("A" = c("A1", "A2"), "B" = c("B1", "B2"))) {
 
-  return(data.frame(VP = factor(rep(1:nVP, each = prod(sapply(design, length)) * nTrl)),
-                    do.call("rbind", rep(list(expand.grid(design)), nVP*nTrl))))
+  dat <-  data.frame(expand.grid(modifyList(design, list(VP = c(1:nVP), Trial = c(1:nTrl))))) 
+  return(dat[c("VP", names(design))])
 
 }
