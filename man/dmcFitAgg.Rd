@@ -60,7 +60,7 @@ in 19 CAF bins positioned at 5, 10, 15, ... 85, 90, 95\%.}
 \item{printResults}{TRUE/FALSE}
 }
 \value{
-resTh
+dmcfit
 }
 \description{
 Fit theoretical data generated from dmcSim to observed data by
@@ -69,8 +69,6 @@ of the CAF and CDF functions.
 }
 \examples{
 \dontrun{
-library(DMCfun)
-
 # Example 1: Flanker data from Ulrich et al. (2015)
 fit <- dmcFitAgg(flankerData)  # only initial search tau
 plot(fit, flankerData)

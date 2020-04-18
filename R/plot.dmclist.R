@@ -21,17 +21,15 @@
 #'
 #' @examples
 #' \dontrun{
-#' library(DMCfun)
-#'
 #' # Example 1
 #' params <- list(amp = seq(20, 30, 2))
 #' dmc <- dmcSims(params)
 #' plot(dmc, ncol = 2, xlim = c(0, 1300), ylim = c(-100, 200))
 #'
 #' # Example 2
-#' params <- list(amp=c(10, 20), tau = seq(20, 80, 20), mu = seq(0.2, 0.6, 0.2), nTrl = 50000)
+#' params <- list(amp=c(10, 20), tau = seq(20, 80, 40), mu = seq(0.2, 0.6, 0.2), nTrl = 50000)
 #' dmc <- dmcSims(params)
-#' plot(dmc, ncol = 3, col=c("green", "blue"), lineType = "l")
+#' plot(dmc, ncol = 2, col=c("green", "blue"), lineType = "l")
 #'
 #' }
 #'
@@ -49,7 +47,7 @@ plot.dmclist <- function(x,
     xlim <- c(0, x[[1]]$prms$tmax)
   }
 
-  # color range
+  # colour range
   cols <- colorRampPalette(col)(length(x))
 
   # plot
@@ -62,5 +60,5 @@ plot.dmclist <- function(x,
     lines(x[[i]]$delta$meanBin, x[[i]]$delta$meanEffect, col = cols[i], type = lineType)
     legendText <- c(NULL, legendText, paste0(names(x[[i]]$params), "=", x[[1]]$params[i, ], collapse = ", "))
   }
-  legend(legendPos, legend = legendText, col=as.vector(cols), lty = 1, ...)
+  legend(legendPos, legend = legendText, col = as.vector(cols), lty = 1, ...)
 }

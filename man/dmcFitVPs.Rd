@@ -62,10 +62,8 @@ of the CAF and CDF functions.
 }
 \examples{
 \dontrun{
-library(DMCfun)
-
 # Example 1: Flanker data from Ulrich et al. (2015)
-fit <- dmcFitVPs(flankerData, nTrl = 1000)
+fit <- dmcFitVPs(flankerData, nTrl = 1000, VP = c(1, 2))
 plot(fit, flankerData, VP = 1)
 summary(fit)
 fitAgg <- mean(fit)

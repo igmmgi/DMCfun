@@ -10,8 +10,6 @@
 #' @return Plot
 #'
 #' @examples
-#' library(DMCfun)
-#'
 #' # Example 1
 #' plot(c(1, 2), c(450, 500), xlim = c(0.5, 2.5), ylim = c(400, 600), type = "o")
 #' addErrorBars(c(1, 2), c(450, 500), errorSize = c(20, 20))

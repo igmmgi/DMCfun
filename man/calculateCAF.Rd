@@ -36,8 +36,6 @@ define compatibility condition (Default: c("comp", "incomp")) and the "Error" co
 define if the trial was an error or not (Default: c(0, 1) ).
 }
 \examples{
-library(DMCfun)
-
 # Example 1
 dat <- createDF(nVP = 1, nTrl = 100, design = list("Comp" = c("comp", "incomp")))
 dat <- addDataDF(dat,

@@ -17,8 +17,6 @@
 #' @return DataFrame (tibble)
 #'
 #' @examples
-#' library(DMCfun)
-#'
 #' # Example 1
 #' dat <- createDF(nVP = 1, nTrl = 100, design = list("Comp" = c("comp", "incomp")))
 #' dat <- addDataDF(dat,

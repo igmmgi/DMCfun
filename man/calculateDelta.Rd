@@ -34,8 +34,6 @@ incompatible trials separately. Mean RT is calculated for each condition in each
 subtracted (incompatible - compatible) to give a compatibility effect (delta) at each bin.
 }
 \examples{
-library(DMCfun)
-
 # Example 1
 dat <- createDF(nVP = 50, nTrl = 100, design = list("Comp" = c("comp", "incomp")))
 dat <- addDataDF(dat,

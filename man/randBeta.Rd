@@ -21,8 +21,6 @@ Draw n random numbers from a beta distribution with shape and
 scale between limits
 }
 \examples{
-library(DMCfun)
-
 # Example 1
 x <- randBeta()
 

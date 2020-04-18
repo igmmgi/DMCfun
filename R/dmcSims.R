@@ -10,8 +10,6 @@
 #'
 #' @examples
 #' \dontrun{
-#' library(DMCfun)
-#'
 #' # Example 1
 #' params <- list(amp = seq(10, 20, 5), tau = c(50, 100, 150), nTrl = 50000)
 #' dmc <- dmcSims(params)

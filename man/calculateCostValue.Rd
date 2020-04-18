@@ -22,8 +22,6 @@ cost value (RMSE)
 Calculate cost value (fit) from combination of RT and error rate.
 }
 \examples{
-library(DMCfun)
-
 # Example 1:
 resTh <- dmcSim()
 resOb <- dmcSim()

@@ -47,9 +47,6 @@ A column with RT (in ms)
 A column indicating of the response was correct
 }
 \examples{
-library(DMCfun)
-library(dplyr)
-
 # Example 1
 plot(flankerData)  # flanker data from Ulrich et al. (2015)
 

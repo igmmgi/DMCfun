@@ -71,8 +71,6 @@ that dmcSim is run with fullData = TRUE.
 }
 \examples{
 \dontrun{
-library(DMCfun)
-
 # Example 1
 dmc = dmcSim(fullData = TRUE)
 plot(dmc)

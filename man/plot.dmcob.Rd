@@ -80,10 +80,8 @@ that dmcSim is run with fullData = TRUE.
 }
 \examples{
 \dontrun{
-library(DMCfun)
-
 # Example 1 (real dataset)
-plot(flankerData, labels = c("a", "b", "c"))
+plot(flankerData)
 plot(flankerData, errorBars = TRUE, errorBarType = "se")
 plot(flankerData, figType = "delta")
 plot(flankerData, figType = "caf")

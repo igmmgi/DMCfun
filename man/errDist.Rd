@@ -19,8 +19,6 @@ Returns a random vector of 0's (correct) and 1's (incorrect) with
 defined proportions (default = 10\% errors).
 }
 \examples{
-library(DMCfun)
-
 # Example 1
 x <- errDist(1000, 10)
 table(x)

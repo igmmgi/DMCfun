@@ -9,8 +9,6 @@
 #' @return dataframe
 #'
 #' @examples
-#' library(DMCfun)
-#'
 #' # Example 1
 #' dat <- createDF()
 #'

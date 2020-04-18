@@ -9,8 +9,6 @@
 #'
 #' @examples
 #' \dontrun{
-#' library(DMCfun)
-#'
 #' # Example 1: Fit individual data then aggregate
 #' fitVPs <- dmcFitVPs(flankerData, nTrl = 1000)
 #' summary(fitVPs)

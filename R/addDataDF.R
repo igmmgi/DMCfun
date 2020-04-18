@@ -11,8 +11,6 @@
 #' @return DataFrame with RT (ms) and Error (bool) columns
 #'
 #' @examples
-#' library(DMCfun)
-#'
 #' # Example 1: default dataframe
 #' dat <- createDF()
 #' dat <- addDataDF(dat)

@@ -21,9 +21,6 @@
 #' @return DataFrame
 #'
 #' @examples
-#' library(DMCfun)
-#' library(dplyr)
-#'
 #' # Example 1
 #' plot(flankerData)  # flanker data from Ulrich et al. (2015)
 #'

@@ -12,8 +12,6 @@
 #' @return double
 #'
 #' @examples
-#' library(DMCfun)
-#'
 #' # Example 1
 #' x <- rtDist()
 #' hist(x, 100)

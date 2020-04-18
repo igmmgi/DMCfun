@@ -24,8 +24,6 @@ dataframe
 Create dataframe (see also addDataDF)
 }
 \examples{
-library(DMCfun)
-
 # Example 1
 dat <- createDF()
 

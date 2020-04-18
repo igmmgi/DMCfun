@@ -4,4 +4,3 @@
   attributes(y) = attributes(x)
   return(y)
 }
-

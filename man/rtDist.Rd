@@ -24,8 +24,6 @@ The distribution is a combined exponential and gaussian distribution called
 an exponentially modified Gaussian (EMG) distribution or ex-gaussian distribution.
 }
 \examples{
-library(DMCfun)
-
 # Example 1
 x <- rtDist()
 hist(x, 100)

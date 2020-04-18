@@ -9,8 +9,6 @@
 #' @return double
 #'
 #' @examples
-#' library(DMCfun)
-#'
 #' # Example 1
 #' x <- errDist(1000, 10)
 #' table(x)

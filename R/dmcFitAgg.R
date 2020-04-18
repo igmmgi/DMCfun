@@ -30,12 +30,10 @@
 #' @param printInputArgs TRUE/FALSE
 #' @param printResults TRUE/FALSE
 #'
-#' @return resTh
+#' @return dmcfit
 #'
 #' @examples
 #' \dontrun{
-#' library(DMCfun)
-#'
 #' # Example 1: Flanker data from Ulrich et al. (2015)
 #' fit <- dmcFitAgg(flankerData)  # only initial search tau
 #' plot(fit, flankerData)
@@ -187,20 +185,19 @@ dmcFitAgg <- function(resOb,
   if (any(prms == unlist(minVals)) || any(prms == unlist(maxVals))) {
     warning("Parameter estimates at minVals/maxVals bounds!")
   }
-  prms    <- as.list(prms)
-  fit$par <- prms 
-  fit$par["RMSE"] <- fit$value
+  prms <- as.list(prms)
   
   cat(sprintf("RMSE: %.3f\n", fit$value))
-  resTh <- dmcSim(amp = prms$amp, tau = prms$tau, mu = prms$mu,
-                  bnds = prms$bnds, resMean = prms$resMean, resSD = prms$resSD,
-                  aaShape = prms$aaShape, sigma = prms$sigma,
-                  varSP = TRUE, spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
-                  nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,
-                  printResults = TRUE)
-  resTh$prms[1:9] <- prms
+  dmcfit <- dmcSim(amp = prms$amp, tau = prms$tau, mu = prms$mu,
+                   bnds = prms$bnds, resMean = prms$resMean, resSD = prms$resSD,
+                   aaShape = prms$aaShape, sigma = prms$sigma,
+                   varSP = TRUE, spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
+                   nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,
+                   printResults = TRUE)
   
-  dmcfit        <- list(resTh, fit)
+  dmcfit$par <- prms
+  dmcfit$par["RMSE"] <- fit$value
+  
   class(dmcfit) <- "dmcfit"
   
   return(dmcfit)

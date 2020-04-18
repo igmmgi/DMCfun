@@ -22,8 +22,6 @@ binary error (Error = 1, Correct = 0) data to an R DataFrame. This function
 can be used to create simulated data sets.
 }
 \examples{
-library(DMCfun)
-
 # Example 1: default dataframe
 dat <- createDF()
 dat <- addDataDF(dat)

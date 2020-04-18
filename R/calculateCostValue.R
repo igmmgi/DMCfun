@@ -11,8 +11,6 @@
 #' @return cost value (RMSE)
 #'
 #' @examples
-#' library(DMCfun)
-#'
 #' # Example 1:
 #' resTh <- dmcSim()
 #' resOb <- dmcSim()

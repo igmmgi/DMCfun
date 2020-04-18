@@ -77,8 +77,6 @@ that dmcSim is run with fullData = TRUE.
 }
 \examples{
 \dontrun{
-library(DMCfun)
-
 # Example 1
 resTh <- dmcFitAgg(flankerData, nTrl = 5000)
 plot(resTh, flankerData)

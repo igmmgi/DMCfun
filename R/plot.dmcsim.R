@@ -31,8 +31,6 @@
 #'
 #' @examples
 #' \dontrun{
-#' library(DMCfun)
-#'
 #' # Example 1
 #' dmc = dmcSim(fullData = TRUE)
 #' plot(dmc)

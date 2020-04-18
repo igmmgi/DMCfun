@@ -33,8 +33,6 @@
 #'
 #' @examples
 #' \dontrun{
-#' library(DMCfun)
-#'
 #' # Example 1
 #' resTh <- dmcFitAgg(flankerData, nTrl = 5000)
 #' plot(resTh, flankerData)
@@ -86,17 +84,13 @@ plot.dmcfit <- function(x,
     stop("labels must be length 4")
   }
 
-  if (is.null(VP)) {
-    x$means <- x[[1]]$means
-    x$delta <- x[[1]]$delta
-    x$caf   <- x[[1]]$caf
-  } else {
+  if (!is.null(VP)) {
     if (!VP %in% y$summaryVP$VP) {
       stop("datOb does not contain requested VP!")
     }
-    x$means <- x[[VP]][[1]]$means
-    x$delta <- x[[VP]][[1]]$delta
-    x$caf   <- x[[VP]][[1]]$caf
+    x$means <- x[[VP]]$means
+    x$delta <- x[[VP]]$delta
+    x$caf   <- x[[VP]]$caf
     y$means <- y$summaryVP[y$summaryVP$VP == VP, ]
     y$delta <- y$deltaVP[y$deltaVP$VP == VP, ]
     y$caf   <- y$cafVP[y$cafVP$VP == VP, ]
@@ -133,7 +127,7 @@ plot.dmcfit <- function(x,
                   nrow = 3, ncol = 2, byrow = TRUE))
     showFig[1:6] = TRUE
   } else if (figType == "all") {
-    par(mar = c(4, 4, 1, 1), mfrow=c(1, 1), ...)
+    par(mar = c(4, 4, 1, 1), mfrow = c(1, 1), ...)
     showFig[1:6] = TRUE
   } else {
     showFig[figTypes[3:8] %in% figType] = TRUE
@@ -201,8 +195,8 @@ plot.dmcfit <- function(x,
          ylab = ylabs[4], xlab = xlabs[4],
          yaxt = "n", col = tail(cols, 2)[1],
          xaxt = xaxts, yaxt = "n", ...)
-    if (xaxts == "n") axis(side=1, labels = FALSE)  # keep tick marks
-    if (yaxts == "n") axis(side=2, labels = FALSE)  # keep tick marks
+    if (xaxts == "n") axis(side = 1, labels = FALSE)  # keep tick marks
+    if (yaxts == "n") axis(side = 2, labels = FALSE)  # keep tick marks
     
     lines(y$delta$meanIncomp, seq(seqStep, 100 - seqStep, seqStep)/100, type = "p", col = tail(cols, 2)[2], ...)
     lines(x$delta$meanComp,   seq(seqStep, 100 - seqStep, seqStep)/100, type = "l", col = tail(cols, 2)[1], ...)
@@ -231,8 +225,8 @@ plot.dmcfit <- function(x,
          ylab = ylabs[5], xlab = xlabs[5],
          yaxt = "n", xaxt = "n",
          col = tail(cols, 2)[1], ...)
-    if (xaxts == "n") axis(side=1, labels = FALSE)  # keep tick marks
-    if (yaxts == "n") axis(side=2, labels = FALSE)  # keep tick marks
+    if (xaxts == "n") axis(side = 1, labels = FALSE)  # keep tick marks
+    if (yaxts == "n") axis(side = 2, labels = FALSE)  # keep tick marks
     
     lines(y$caf$accPer[y$caf$Comp == "incomp"], type = "p", col = tail(cols, 2)[2], ...)
     lines(x$caf$accPer[x$caf$Comp == "comp"],   type = "l", col = tail(cols, 2)[1], ...)
@@ -247,7 +241,7 @@ plot.dmcfit <- function(x,
         axis(1, at = seq(1, nCAF, 1))
       }
     } else {
-      axis(side=1,labels=F) 
+      axis(sidei = 1,labels = F) 
     }
     if (yaxts == "s") {
       axis(2, at = seq(0, 1, 0.2), labels = as.character(seq(0, 1, 0.2)))
@@ -272,8 +266,8 @@ plot.dmcfit <- function(x,
          ylab = ylabs[6], xlab = xlabs[6],
          xaxt = xaxts, yaxt = yaxts, ...)
     lines(x$delta$meanBin, x$delta$meanEffect, ...)
-    axis(side=1, labels = FALSE) 
-    axis(side=2, labels = FALSE) 
+    axis(side = 1, labels = FALSE) 
+    axis(side = 2, labels = FALSE) 
 
     if (is.function(legend)) {
       legend()
@@ -285,7 +279,7 @@ plot.dmcfit <- function(x,
 
   # reset par
   if (resetLayout) {
-    par(mfrow=c(1, 1))
+    par(mfrow = c(1, 1))
   }
 
 }

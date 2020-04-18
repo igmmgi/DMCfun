@@ -10,8 +10,6 @@
 #' @return double
 #'
 #' @examples
-#' library(DMCfun)
-#'
 #' # Example 1
 #' x <- randBeta()
 #'
