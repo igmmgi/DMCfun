@@ -4,27 +4,27 @@ test_that("plot.dmcfit", {
 
   # just check code does not error
   # test 1
-  resTh <- dmcFitAgg(DMCfun::flankerData, nTrl = 10000,
+  resTh <- dmcFitAgg(DMCfun::flankerData, nTrl = 1000,
                      printInputArgs = FALSE, printResults = FALSE)
   testthat::expect_error(plot(resTh, DMCfun::flankerData), NA)
 
   # test 2
-  resTh <- dmcFitAgg(DMCfun::flankerData, nTrl = 10000,
+  resTh <- dmcFitAgg(DMCfun::flankerData, nTrl = 1000,
                      printInputArgs = FALSE, printResults = FALSE)
   testthat::expect_error(plot(resTh, DMCfun::flankerData), NA)
 
   # test 3
-  resTh <- dmcFitAgg(DMCfun::simonData, nTrl = 10000,
+  resTh <- dmcFitAgg(DMCfun::simonData, nTrl = 1000,
                      printInputArgs = FALSE, printResults = FALSE)
   testthat::expect_error(plot(resTh, DMCfun::simonData), NA)
 
   # test 4
-  resTh <- dmcFitVPs(DMCfun::flankerData, nTrl = 10000, VP = 10,
+  resTh <- dmcFitVPs(DMCfun::flankerData, nTrl = 1000, VP = 10,
                      printInputArgs = FALSE, printResults = FALSE)
   testthat::expect_error(plot(resTh, DMCfun::flankerData, VP = 10), NA)
 
   # test 5
-  resTh <- dmcFitVPs(DMCfun::simonData, nTrl = 10000, VP = 4,
+  resTh <- dmcFitVPs(DMCfun::simonData, nTrl = 1000, VP = 4,
                      printInputArgs = FALSE, printResults = FALSE)
   testthat::expect_error(plot(resTh, DMCfun::flankerData, VP = 4), NA)
 
@@ -38,11 +38,11 @@ test_that("plot.dmcfit", {
                                 "Comp_incomp" = c(15, 12, 5, 2, 1)))
   datOb <- dmcObservedData(dat)
 
-  resTh <- dmcFitAgg(datOb, nTrl = 5000, printInputArgs = FALSE, printResults = FALSE)
+  resTh <- dmcFitAgg(datOb, nTrl = 1000, printInputArgs = FALSE, printResults = FALSE)
   testthat::expect_error(plot(resTh, datOb), NA)
 
   # test 7
-  dat <- createDF(nVP = 2, nTrl = 10000,
+  dat <- createDF(nVP = 2, nTrl = 1000,
                   design = list("Comp" = c("comp", "incomp")))
   dat <- addDataDF(dat,
                    RT = list("Comp_comp"   = c(500, 30, 100),
@@ -51,7 +51,7 @@ test_that("plot.dmcfit", {
                                 "Comp_incomp" = c(15, 12, 5, 2, 1)))
   datOb <- dmcObservedData(dat)
 
-  resTh <- dmcFitVPs(datOb, nTrl = 10000, VP = 2,
+  resTh <- dmcFitVPs(datOb, nTrl = 1000, VP = 2,
                      printInputArgs = FALSE, printResults = FALSE)
   testthat::expect_error(plot(resTh, datOb, VP = 2), NA)
 

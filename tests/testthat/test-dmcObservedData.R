@@ -1,7 +1,8 @@
 context("dmcObservedData")
 
 test_that("dmcObservedData", {
-
+ 
+  # create data frame 
   dat <- createDF(nVP = 50, nTrl = 100,
                   design = list("Comp" = c("comp", "incomp")))
   dat <- addDataDF(dat)

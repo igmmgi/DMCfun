@@ -65,7 +65,7 @@ dmcObservedData <- function(dat,
                             errorCoding = c(0, 1), 
                             quantileType = 5) {
   
-  # single file or multiple files
+  # single file 
   if (is.character(dat)) {  
     dat <- readr::read_tsv(dat, col_names = TRUE)
   } 

@@ -43,4 +43,47 @@ test_that("addDataDF", {
   testthat::expect_equal(ncol(dat), 4)
   testthat::expect_equal(names(dat), c("VP", "A", "RT", "Error"))
 
+  # Further tests with RT & Error parameters defined 
+  # 1 factor with 2 levels, 1 VP, 1 trial
+  dat <- createDF(nVP = 1, nTrl = 1, design = list("A" = c("a", "b")))
+  dat <- addDataDF(dat,  RT = c(500, 100, 100),  Error = 10)
+
+  testthat::expect_equal(nrow(dat), 2)
+  testthat::expect_equal(ncol(dat), 4)
+  testthat::expect_equal(names(dat), c("VP", "A", "RT", "Error"))
+ 
+  # 1 factor with 2 levels, 2 VPs, 2 trials
+  dat <- createDF(nVP = 2, nTrl = 2, design = list("A" = c("a", "b")))
+  dat <- addDataDF(dat,  RT = c(500, 100, 100),  Error = 10)
+
+  testthat::expect_equal(nrow(dat), 8)
+  testthat::expect_equal(ncol(dat), 4)
+  testthat::expect_equal(names(dat), c("VP", "A", "RT", "Error"))
+  
+  # Further tests with RT & Error parameters defined 
+  # 1 factor, 1 VP, 1 trial
+  dat <- createDF(nVP = 1, nTrl = 1, design = list("A" = c("a", "b")))
+  dat <- addDataDF(dat, 
+                   RT = list("A_a" = c(500, 100, 100),
+                             "A_b" = c(600, 100, 100)),
+                   Error = list("A_a" = 10,
+                                "A_b" = 20))
+
+  testthat::expect_equal(nrow(dat), 2)
+  testthat::expect_equal(ncol(dat), 4)
+  testthat::expect_equal(names(dat), c("VP", "A", "RT", "Error"))
+
+  # 1 factor with 2 levels, 2 VPs, 4 trials
+  dat <- createDF(nVP = 2, nTrl = 4, design = list("A" = c("a", "b")))
+  dat <- addDataDF(dat, 
+                   RT = list("A_a" = c(500, 100, 100),
+                             "A_b" = c(600, 100, 100)),
+                   Error = list("A_a" = 10,
+                                "A_b" = 20))
+
+  testthat::expect_equal(nrow(dat), 16)
+  testthat::expect_equal(ncol(dat), 4)
+  
+  
+  
 })

@@ -78,7 +78,7 @@ of the CAF and CDF functions.
 \examples{
 \dontrun{
 # Example 1: Flanker data from Ulrich et al. (2015)
-fit <- dmcFitAgg(flankerData, nTrl = 1000)  # only initial search tau
+fit <- dmcFitAgg(flankerData)  # only initial search tau
 plot(fit, flankerData)
 summary(fit)
 
@@ -87,7 +87,13 @@ fit <- dmcFitAgg(simonData)    # only initial search tau
 plot(fit, simonData)
 summary(fit)
 
-# Example 3: Simulated Data (+ve going delta function)
+# Example 3: Flanker data from Ulrich et al. (2015) with non-default 
+start vals and some fixed values
+fit <- dmcFitAgg(flankerData, 
+                 startVals = list(mu = 0.6, aaShape = 2.5), 
+                 fixedFit = list(mu = T, aaShape = T)) 
+
+# Example 4: Simulated Data (+ve going delta function)
 dat <- createDF(nVP = 20, nTrl = 500, design = list("Comp" = c("comp", "incomp")))
 dat <- addDataDF(dat,
                  RT = list("Comp_comp"   = c(510, 100, 100),
