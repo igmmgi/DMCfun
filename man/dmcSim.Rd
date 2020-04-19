@@ -13,7 +13,7 @@ dmcSim(
   resSD = 30,
   aaShape = 2,
   spShape = 3,
-  sigma = 4,
+  sigm = 4,
   nTrl = 1e+05,
   tmax = 1000,
   varSP = FALSE,
@@ -37,7 +37,7 @@ dmcSim(
 
 \item{mu}{drift rate of controlled processes}
 
-\item{bnds}{+- response barrier}
+\item{bnds}{+- response criterion}
 
 \item{resMean}{mean of non-decisional component}
 
@@ -47,7 +47,7 @@ dmcSim(
 
 \item{spShape}{shape parameter of starting point}
 
-\item{sigma}{diffusion constant}
+\item{sigm}{diffusion constant}
 
 \item{nTrl}{number of trials}
 
@@ -63,7 +63,7 @@ dmcSim(
 
 \item{drLim}{limit range of distribution of drift rate}
 
-\item{fullData}{TRUE/FALSE}
+\item{fullData}{TRUE/FALSE (Default: FALSE)}
 
 \item{nTrlData}{Number of trials to plot}
 
@@ -81,13 +81,13 @@ dmcSim(
 dmcsim
 
 The function returns a list with the relevant results from the simulation. The list
-is accessed with obj$name and so on with the the following:
-\item{obj$summary}{summary}
-\item{obj$delta}{delta}
-\item{obj$caf}{caf}
-\item{obj$sim}{sim}
-\item{obj$trials}{trials}
-\item{obj$prms}{prms}
+is accessed with obj$name with the the following:
+\item{obj$means}{Condition means for reaction time and error rate}
+\item{obj$caf}{Accuracy per bin for compatible and incompatible trials}
+\item{obj$delta}{Mean RT and compatibility effect per bin}
+\item{obj$sim}{Individual trial data points (reaction times/error) and activation vectors from simulation}
+\item{obj$trials}{Example individual trial timecourse for n compatible and incompatible trials}
+\item{obj$prms}{The input parameters used in the simulation}
 }
 \description{
 DMC model simulation detailed in  Ulrich, R., Schroeter, H., Leuthold, H., & Birngruber, T. (2015).
@@ -96,18 +96,18 @@ Cognitive Psychology, 78, 148-174. This function is essentially a wrapper around
 }
 \examples{
 \dontrun{
-library(DMCfun)
-
 # Example 1
-dmc <- dmcSim(fullData = FALSE, stepDelta = 5, stepCAF = 20)
+dmc <- dmcSim(fullData = TRUE)  # full data only required for activation plot (top left)
+plot(dmc)
+dmc <- dmcSim() # faster
 plot(dmc)
 
 # Example 2
-dmc <- dmcSim(fullData = TRUE, tau = 130)
+dmc <- dmcSim(tau = 130)
 plot(dmc)
 
 # Example 3
-dmc <- dmcSim(fullData = TRUE, tau = 90)
+dmc <- dmcSim(tau = 90)
 plot(dmc)
 
 # Example 4
@@ -119,9 +119,8 @@ dmc <- dmcSim(tau = 130, varDR = TRUE)
 plot(dmc, "caf")
 
 # Example 6
-dmc <- dmcSim(fullData = TRUE, stepDelta = 10, stepCAF = 10)
+dmc <- dmcSim(stepDelta = 10, stepCAF = 10)
 plot(dmc)
-
 }
 
 }

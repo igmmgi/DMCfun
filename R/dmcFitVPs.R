@@ -21,20 +21,22 @@
 #' @param printInputArgs TRUE/FALSE
 #' @param printResults TRUE/FALSE
 #'
-#' @return resTh
+#' @return dmcfitvp List of dmcfit per participant fitted (see dmcFitAgg)
 #'
 #' @examples
 #' \dontrun{
 #' # Example 1: Flanker data from Ulrich et al. (2015)
 #' fit <- dmcFitVPs(flankerData, nTrl = 1000, VP = c(1, 2))
 #' plot(fit, flankerData, VP = 1)
+#' plot(fit, flankerData, VP = 2)
 #' summary(fit)
 #' fitAgg <- mean(fit)
 #' plot(fitAgg, flankerData)
 #'
 #' # Example 2: Simon data from Ulrich et al. (2015)
-#' fit <- dmcFitAgg(simonData)
+#' fit <- dmcFitVPs(simonData, nTrl = 1000, VP = c(1, 2))
 #' plot(fit, simonData, VP = 1)
+#' plot(fit, simonData, VP = 2)
 #' summary(fit)
 #' fitAgg <- mean(fit)
 #' plot(fitAgg, simonData)
@@ -42,7 +44,7 @@
 #'
 #' @export
 dmcFitVPs <- function(resOb,
-                      nTrl             = 50000,
+                      nTrl             = 100000,
                       startVals        = list(), 
                       minVals          = list(), 
                       maxVals          = list(), 
@@ -61,11 +63,11 @@ dmcFitVPs <- function(resOb,
   }
   
   # default parameter space
-  defaultStartVals <- list(amp = 20, tau = 200, mu = 0.5, bnds =  75, resMean = 300, resSD =  30, aaShape = 2, spShape = 3, sigma =  4)
-  defaultMinVals   <- list(amp = 10, tau =   5, mu = 0.1, bnds =  20, resMean = 200, resSD =  5,  aaShape = 1, spShape = 2, sigma =  1)
-  defaultMaxVals   <- list(amp = 40, tau = 300, mu = 1.0, bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, sigma = 10)
-  defaultFixedFit  <- list(amp = F,  tau = F,   mu = F,   bnds = F,   resMean = F,   resSD = F,   aaShape = F, spShape = F, sigma = T)
-  defaultFixedGrid <- list(amp = T,  tau = F,   mu = T,   bnds = T,   resMean = T,   resSD = T,   aaShape = T, spShape = T, sigma = T)
+  defaultStartVals <- list(amp = 20, tau = 200, mu = 0.5, bnds =  75, resMean = 300, resSD =  30, aaShape = 2, spShape = 3, sigm =  4)
+  defaultMinVals   <- list(amp = 10, tau =   5, mu = 0.1, bnds =  20, resMean = 200, resSD =  5,  aaShape = 1, spShape = 2, sigm =  1)
+  defaultMaxVals   <- list(amp = 40, tau = 300, mu = 1.0, bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, sigm = 10)
+  defaultFixedFit  <- list(amp = F,  tau = F,   mu = F,   bnds = F,   resMean = F,   resSD = F,   aaShape = F, spShape = F, sigm = T)
+  defaultFixedGrid <- list(amp = T,  tau = F,   mu = T,   bnds = T,   resMean = T,   resSD = T,   aaShape = T, spShape = T, sigm = T)
   
   startVals <- modifyList(defaultStartVals, startVals)
   minVals   <- modifyList(defaultMinVals,   minVals)
@@ -95,7 +97,8 @@ dmcFitVPs <- function(resOb,
 
   }
 
-  class(dmcfit) <- "dmcfit"
+  class(dmcfit) <- "dmcfitvp"
+  
   return(dmcfit)
 
 }

@@ -7,28 +7,21 @@
 \method{summary}{dmcfit}(object, ...)
 }
 \arguments{
-\item{object}{Output from dmcFit}
+\item{object}{Output from dmcFitAgg}
 
 \item{...}{pars}
 }
 \value{
-tibble
+DataFrame (tibble)
 }
 \description{
-Summary of the simulation results from dmcFitAgg/dmcFitVPs.
+Summary of the simulation results from dmcFitAgg
 }
 \examples{
 \dontrun{
 # Example 1
 fitAgg <- dmcFitAgg(flankerData, nTrl = 1000)
-summary(fitAgg)
-plot(fitAgg, flankerData)
-
-# Example 2
-fitVPs <- dmcFitVPs(flankerData, nTrl = 1000, VP = c(1, 10))
-summary(fitVPs)
-fit <- mean(fitVPs)
-plot(fit, flankerData)
+summary(fitAgg)  # this is just fitAgg$means
 }
 
 }

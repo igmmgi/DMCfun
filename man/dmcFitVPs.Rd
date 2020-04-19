@@ -6,7 +6,7 @@
 \usage{
 dmcFitVPs(
   resOb,
-  nTrl = 50000,
+  nTrl = 1e+05,
   startVals = list(),
   minVals = list(),
   maxVals = list(),
@@ -53,7 +53,7 @@ in 19 CAF bins positioned at 5, 10, 15, ... 85, 90, 95\%.}
 \item{printResults}{TRUE/FALSE}
 }
 \value{
-resTh
+dmcfitvp List of dmcfit per participant fitted (see dmcFitAgg)
 }
 \description{
 Fit theoretical data generated from dmcSim to observed data by
@@ -65,13 +65,15 @@ of the CAF and CDF functions.
 # Example 1: Flanker data from Ulrich et al. (2015)
 fit <- dmcFitVPs(flankerData, nTrl = 1000, VP = c(1, 2))
 plot(fit, flankerData, VP = 1)
+plot(fit, flankerData, VP = 2)
 summary(fit)
 fitAgg <- mean(fit)
 plot(fitAgg, flankerData)
 
 # Example 2: Simon data from Ulrich et al. (2015)
-fit <- dmcFitAgg(simonData)
+fit <- dmcFitVPs(simonData, nTrl = 1000, VP = c(1, 2))
 plot(fit, simonData, VP = 1)
+plot(fit, simonData, VP = 2)
 summary(fit)
 fitAgg <- mean(fit)
 plot(fitAgg, simonData)

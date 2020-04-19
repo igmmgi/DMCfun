@@ -7,10 +7,10 @@
 #' @param amp amplitude of automatic activation
 #' @param tau time to peak automatic activation
 #' @param mu drift rate of controlled processes
-#' @param bnds +- response barrier
+#' @param bnds +- response criterion
 #' @param resMean mean of non-decisional component
 #' @param resSD standard deviation of non-decisional component
-#' @param sigma diffusion constant
+#' @param sigm diffusion constant
 #' @param aaShape shape parameter of automatic activation
 #' @param nTrl number of trials
 #' @param tmax number of time points per trial
@@ -20,7 +20,7 @@
 #' @param varDR true/false variable drift rate NB. In DMC, drift rate across trials is always constant.
 #' @param drShape shape parameter of drift rate
 #' @param drLim limit range of distribution of drift rate
-#' @param fullData TRUE/FALSE
+#' @param fullData TRUE/FALSE (Default: FALSE)
 #' @param nTrlData Number of trials to plot
 #' @param stepDelta Number of delta bins
 #' @param stepCAF Number of CAF bins
@@ -31,28 +31,28 @@
 #' @return dmcsim
 #'
 #' The function returns a list with the relevant results from the simulation. The list
-#' is accessed with obj$name and so on with the the following:
-#' \item{obj$summary}{summary}
-#' \item{obj$delta}{delta}
-#' \item{obj$caf}{caf}
-#' \item{obj$sim}{sim}
-#' \item{obj$trials}{trials}
-#' \item{obj$prms}{prms}
+#' is accessed with obj$name with the the following:
+#' \item{obj$means}{Condition means for reaction time and error rate}
+#' \item{obj$caf}{Accuracy per bin for compatible and incompatible trials}
+#' \item{obj$delta}{Mean RT and compatibility effect per bin}
+#' \item{obj$sim}{Individual trial data points (reaction times/error) and activation vectors from simulation}
+#' \item{obj$trials}{Example individual trial timecourse for n compatible and incompatible trials}
+#' \item{obj$prms}{The input parameters used in the simulation}
 #'
 #' @examples
 #' \dontrun{
-#' library(DMCfun)
-#'
 #' # Example 1
-#' dmc <- dmcSim(fullData = FALSE, stepDelta = 5, stepCAF = 20)
+#' dmc <- dmcSim(fullData = TRUE)  # full data only required for activation plot (top left)
+#' plot(dmc)
+#' dmc <- dmcSim() # faster
 #' plot(dmc)
 #'
 #' # Example 2
-#' dmc <- dmcSim(fullData = TRUE, tau = 130)
+#' dmc <- dmcSim(tau = 130)
 #' plot(dmc)
 #'
 #' # Example 3
-#' dmc <- dmcSim(fullData = TRUE, tau = 90)
+#' dmc <- dmcSim(tau = 90)
 #' plot(dmc)
 #'
 #' # Example 4
@@ -64,14 +64,13 @@
 #' plot(dmc, "caf")
 #'
 #' # Example 6
-#' dmc <- dmcSim(fullData = TRUE, stepDelta = 10, stepCAF = 10)
+#' dmc <- dmcSim(stepDelta = 10, stepCAF = 10)
 #' plot(dmc)
-#'
 #' }
 #'
 #' @export
 dmcSim <- function(amp = 20, tau = 30, mu = 0.5, bnds = 75, resMean = 300, resSD = 30, aaShape = 2, spShape = 3,
-                   sigma = 4,  nTrl = 100000, tmax = 1000,
+                   sigm = 4,  nTrl = 100000, tmax = 1000,
                    varSP = FALSE, spLim = c(-75, 75),
                    varDR = FALSE, drShape = 3, drLim = c(0.1, 0.7),
                    fullData = FALSE, nTrlData = 5,
@@ -80,7 +79,7 @@ dmcSim <- function(amp = 20, tau = 30, mu = 0.5, bnds = 75, resMean = 300, resSD
                    setSeed = FALSE) {
 
   dmc <- dmcCppR(r_in = list(amp = amp, tau = tau, mu = mu, bnds = bnds, resMean = resMean, resSD = resSD, aaShape = aaShape, spShape = spShape,
-                             sigma = sigma,  nTrl = nTrl, tmax = tmax,
+                             sigm = sigm,  nTrl = nTrl, tmax = tmax,
                              varSP = varSP, spLimLow = spLim[1], spLimHigh = spLim[2],
                              varDR = varDR, drShape = 3, drLimLow = drLim[1], drLimHigh = drLim[2],
                              fullData = fullData, nTrlData = nTrlData,
@@ -88,9 +87,10 @@ dmcSim <- function(amp = 20, tau = 30, mu = 0.5, bnds = 75, resMean = 300, resSD
                              printInputArgs = printInputArgs, printResults = printResults,
                              setSeed = setSeed))
   
-  # summary
-  summary <- dmc$summary 
+  summary     <- dmc$summary 
+  dmc$summary <- NULL
   
+  # means
   dmc$means <- tibble::as_tibble(rbind(summary$resSum_comp, summary$resSum_incomp), .name_repair = "minimal")
   colnames(dmc$means) <- c("rtCor", "sdRtCor", "perErr", "rtErr", "sdRtErr")
   dmc$means <- tibble::add_column(Comp = c("comp", "incomp"), dmc$means, .before = TRUE)
@@ -110,10 +110,10 @@ dmcSim <- function(amp = 20, tau = 30, mu = 0.5, bnds = 75, resMean = 300, resSD
   dmc$delta <- tibble::add_column("Bin" = rep(1:nDelta, each = 1, times = 1), dmc$delta, .before = TRUE)
   
   # store parameters used to call function
-  dmc$prms <- c(as.list(environment()))
-
-  dmc$summary <- NULL
+  dmc$prms <- modifyList(as.list(formals(dmcSim)), as.list(sys.call()))
+  
   class(dmc) <- "dmcsim"
+  
   return(dmc)
 
 }

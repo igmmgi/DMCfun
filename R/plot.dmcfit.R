@@ -1,6 +1,6 @@
 #' @title plot.dmcfit
 #'
-#' @description Plot the simulation results from the output of dmcSim. The plot
+#' @description Plot the simulation results from the output of dmcFitAgg. The plot
 #' can be an overall summary, or individual plots (activation, trials, pdf, cdf,
 #' caf, delta, all). Plot type summary1 contains an activation plot, example
 #' individual trials, the probability distribution function (PDF), the cumulative
@@ -9,10 +9,9 @@
 #' summary2 contains only the PDF, CDF, CAF and delta plots and does not require
 #' that dmcSim is run with fullData = TRUE.
 #'
-#' @param x Output from dmcFit
+#' @param x Output from dmcFitAgg
 #' @param y Observed data
 #' @param figType summary, rtCorrect, errorRate, rtErrors, cdf, caf, delta, all
-#' @param VP NULL (aggregated data across all participants) or integer for participant number
 #' @param legend TRUE/FALSE (or FUNCTION) plot legend on each plot
 #' @param labels Condition labels c("Compatible", "Incompatible", "Observed", "Predicted") default
 #' @param cols Condition colours c("green", "red") default
@@ -45,18 +44,12 @@
 #' # Example 3
 #' resTh <- dmcFitAgg(simonData, nTrl = 5000)
 #' plot(resTh, simonData)
-#'
-#' # Example 4
-#' resTh <- dmcFitVPs(simonData, nTrl = 5000, VP = 6)
-#' plot(simonData, VP = 6)
-#' plot(resTh, simonData, VP = 6)
 #' }
 #'
 #' @export
 plot.dmcfit <- function(x,
                         y,
                         figType = "summary",
-                        VP     = NULL,
                         legend = TRUE,
                         labels = c("Compatible", "Incompatible", "Observed", "Predicted"),
                         cols = c("black", "green", "red"),
@@ -82,18 +75,6 @@ plot.dmcfit <- function(x,
   }
   if (length(labels) != 4) {
     stop("labels must be length 4")
-  }
-
-  if (!is.null(VP)) {
-    if (!VP %in% y$summaryVP$VP) {
-      stop("datOb does not contain requested VP!")
-    }
-    x$means <- x[[VP]]$means
-    x$delta <- x[[VP]]$delta
-    x$caf   <- x[[VP]]$caf
-    y$means <- y$summaryVP[y$summaryVP$VP == VP, ]
-    y$delta <- y$deltaVP[y$deltaVP$VP == VP, ]
-    y$caf   <- y$cafVP[y$cafVP$VP == VP, ]
   }
 
   showFig = rep(FALSE, 6)
