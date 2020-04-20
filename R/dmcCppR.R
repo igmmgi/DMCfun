@@ -1,3 +1,0 @@
-#' dmcCppR
-#' @name dmcCppR
-NULL
