@@ -219,6 +219,8 @@ dmcFitAgg <- function(resOb,
   
 }
 
+
+
 #' @title dmcFitVPs
 #'
 #' @description Fit theoretical data generated from dmcSim to observed data by
@@ -325,6 +327,7 @@ dmcFitVPs <- function(resOb,
 }
 
 
+
 #' @title mean.dmcfitvp
 #'
 #' @description Aggregated simulation results from dmcFitVPs.
@@ -398,7 +401,6 @@ mean.dmcfitvp <- function(x, ...) {
   return(meanfit)
   
 }
-
 
 
 

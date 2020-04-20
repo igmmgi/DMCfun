@@ -24,6 +24,8 @@ summary.dmcsim <- function(object, ...) {
   return(list(tibble::as_tibble(object$prms[1:9]), object$means))
 }
 
+
+
 #' @title summary.dmcfit
 #'
 #' @description Summary of the simulation results from dmcFitAgg
@@ -44,6 +46,8 @@ summary.dmcsim <- function(object, ...) {
 summary.dmcfit <- function(object, ...) {
     return(object$means)
 }
+
+
 
 #' @title summary.dmcfitvp
 #'

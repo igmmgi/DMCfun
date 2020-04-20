@@ -118,6 +118,8 @@ dmcSim <- function(amp = 20, tau = 30, mu = 0.5, bnds = 75, resMean = 300, resSD
 
 }
 
+
+
 #' @title dmcSims
 #'
 #' @description Run dmcSim with range of input parameters.

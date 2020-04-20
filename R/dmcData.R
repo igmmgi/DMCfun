@@ -20,6 +20,7 @@
 NULL
 
 
+
 #' Raw flanker data from Ulrich et al. (2015)
 #'
 #' \itemize{
@@ -34,6 +35,7 @@ NULL
 #' @name flankerDataRaw
 #' @usage flankerDataRaw
 NULL
+
 
 
 #' A summarised dataset: see raw data file simonDataRaw and dmcObservedData.R
@@ -58,6 +60,7 @@ NULL
 NULL
 
 
+
 #' Raw simon data from Ulrich et al. (2015)
 #'
 #' \itemize{
@@ -72,6 +75,8 @@ NULL
 #' @name simonDataRaw
 #' @usage simonDataRaw
 NULL
+
+
 
 #' @title createDF
 #'
@@ -103,6 +108,7 @@ createDF <- function(nVP = 20,
   return(dat[c("VP", names(design))])
 
 }
+
 
 
 #' @title addDataDF
@@ -237,6 +243,7 @@ addDataDF <- function(dat, RT=NULL, Error=NULL) {
   return(dat)
 
 }
+
 
 
 #' @title dmcObservedData
@@ -429,6 +436,7 @@ dmcObservedData <- function(dat,
 }
 
 
+
 #' @title calculateCAF
 #'
 #' @description Calculate conditional accuracy function (CAF). 
@@ -509,6 +517,7 @@ calculateCAF <- function(dat,
     return(dat_caf)
 
 }
+
 
 
 #' @title calculateDelta
@@ -593,6 +602,7 @@ calculateDelta <- function(dat,
   return(dat_delta)
   
 }
+
 
 
 #' @title rtDist

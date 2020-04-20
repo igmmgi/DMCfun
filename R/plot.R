@@ -343,6 +343,7 @@ plot.dmcsim <- function(x,
 }
 
 
+
 #' @title plot.dmclist
 #'
 #' @description Plot the simulation results from the output of dmcSim. The plot
@@ -407,6 +408,7 @@ plot.dmclist <- function(x,
   }
   legend(legendPos, legend = legendText, col = as.vector(cols), lty = 1, ...)
 }
+
 
 
 #' @title plot.dmcob
@@ -688,6 +690,7 @@ plot.dmcob <- function(x,
 }
 
 
+
 #' @title plot.dmcfit
 #'
 #' @description Plot the simulation results from the output of dmcFitAgg. The plot
@@ -955,6 +958,8 @@ plot.dmcfit <- function(x,
 
 }
 
+
+
 #' @title plot.dmcfitvp
 #'
 #' @description Plot the simulation results from the output of dmcFitVPs. The plot
@@ -1049,6 +1054,7 @@ plot.dmcfitvp <- function(x,
 }
   
   
+
 #' @title addErrorBars
 #'
 #' @description Add error bars to current plot (uses base arrows function).
