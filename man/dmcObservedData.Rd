@@ -12,7 +12,9 @@ dmcObservedData(
   columns = c("VP", "Comp", "RT", "Error"),
   compCoding = c("comp", "incomp"),
   errorCoding = c(0, 1),
-  quantileType = 5
+  quantileType = 5,
+  delim = "\\t",
+  skip = 0
 )
 }
 \arguments{
@@ -33,6 +35,10 @@ in 19 CAF bins positioned at 5, 10, 15, ... 85, 90, 95\%.}
 \item{errorCoding}{Coding for errors DEFAULT = c(0, 1))}
 
 \item{quantileType}{Argument (1-9) from R function quantile specifying the algorithm (?quantile)}
+
+\item{delim}{Single character used to separate fields within a record if reading from external text file.}
+
+\item{skip}{Number of lines to skip before reading data if reading from external text file.}
 }
 \value{
 DataFrame

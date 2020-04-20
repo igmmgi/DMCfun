@@ -258,6 +258,8 @@ addDataDF <- function(dat, RT=NULL, Error=NULL) {
 #' @param compCoding Coding for compatibility DEFAULT = c("comp", "incomp")
 #' @param errorCoding Coding for errors DEFAULT = c(0, 1))
 #' @param quantileType Argument (1-9) from R function quantile specifying the algorithm (?quantile)
+#' @param delim Single character used to separate fields within a record if reading from external text file.
+#' @param skip Number of lines to skip before reading data if reading from external text file.
 #'
 #' @return DataFrame
 #'
@@ -317,11 +319,13 @@ dmcObservedData <- function(dat,
                             columns = c("VP", "Comp", "RT", "Error"),
                             compCoding = c("comp", "incomp"),
                             errorCoding = c(0, 1), 
-                            quantileType = 5) {
+                            quantileType = 5,
+                            delim = "\t",
+                            skip = 0) {
   
   # single file 
   if (is.character(dat)) {  
-    dat <- readr::read_tsv(dat, col_names = TRUE)
+    dat <- readr::read_delim(dat, delim = delim, skip = skip)
   } 
   
   # select required columns
