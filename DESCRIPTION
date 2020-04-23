@@ -8,7 +8,7 @@ Maintainer: Ian G. Mackenzie <ian.mackenzie@uni-tuebingen.de>
 Description: DMC model simulation detailed in Ulrich, R., Schroeter, H., Leuthold, H., & Birngruber, T. (2015). Automatic and controlled stimulus processing in conflict tasks: Superimposed diffusion processes and delta functions. Cognitive Psychology, 78, 148-174.
 License: MIT + file LICENSE
 Encoding: UTF-8
-Depends: R (>= 3.2.0)
+Depends: R (>= 3.5.0)
 Imports: 
   Rcpp (>= 0.12.16),
   doSNOW,
