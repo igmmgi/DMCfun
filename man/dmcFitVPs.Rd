@@ -11,6 +11,7 @@ dmcFitVPs(
   minVals = list(),
   maxVals = list(),
   fixedFit = list(),
+  varSP = TRUE,
   fitInitialGrid = TRUE,
   fitInitialGridN = 10,
   fixedGrid = list(),
@@ -33,6 +34,8 @@ dmcFitVPs(
 \item{maxVals}{Maximum values for the to-be estimated parameters}
 
 \item{fixedFit}{Fix parameter to starting value}
+
+\item{varSP}{TRUE/FALSE Variable starting point for DMC}
 
 \item{fitInitialGrid}{TRUE/FALSE (NB. overrides fitInitialTau)}
 
