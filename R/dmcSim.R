@@ -110,7 +110,7 @@ dmcSim <- function(amp = 20, tau = 30, mu = 0.5, bnds = 75, resMean = 300, resSD
   dmc$delta <- tibble::add_column("Bin" = rep(1:nDelta, each = 1, times = 1), dmc$delta, .before = TRUE)
   
   # store parameters used to call function
-  dmc$prms <- modifyList(as.list(formals(dmcSim)), as.list(sys.call()))
+  dmc$prms <- as.list(environment())
   
   class(dmc) <- "dmcsim"
   

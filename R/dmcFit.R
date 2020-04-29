@@ -18,7 +18,6 @@
 #' @param fixedFit Fix parameter to starting value. This is a list with bool values specified individually for 
 #' amp, tau, mu, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedFit = list(amp = F,  tau = F,   mu = F, bnds = F, resMean = F,   
 #' resSD = F, aaShape = F, spShape = F, sigm = T))
-#' @param varSP TRUE/FALSE Variable starting point for DMC
 #' @param fitInitialGrid TRUE/FALSE
 #' @param fitInitialGridN 10 reduce if searching more than 1 initial parameter
 #' @param fixedGrid Fix parameter for initial grid search.  This is a list with bool values specified individually for 
@@ -80,7 +79,6 @@ dmcFitAgg <- function(resOb,
                       minVals         = list(), 
                       maxVals         = list(), 
                       fixedFit        = list(), 
-                      varSP            = TRUE, 
                       fitInitialGrid  = TRUE,
                       fitInitialGridN = 10,      # reduce if grid search 3/4+ parameters
                       fixedGrid       = list(),  # default only initial search tau
@@ -126,7 +124,7 @@ dmcFitAgg <- function(resOb,
     
     resTh <- dmcSim(amp = prms$amp, tau = prms$tau, mu = prms$mu, bnds = prms$bnds,
                     resMean = prms$resMean, resSD = prms$resSD, aaShape = prms$aaShape,
-                    varSP = varSP, spShape = prms$spShape, sigm = prms$sigm, spLim = c(-prms$bnds, prms$bnds),
+                    varSP = TRUE, spShape = prms$spShape, sigm = prms$sigm, spLim = c(-prms$bnds, prms$bnds),
                     nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,
                     printInputArgs = printInputArgs, printResults = printResults)
     
@@ -172,7 +170,7 @@ dmcFitAgg <- function(resOb,
                                   .options.snow = list(progress = progress)) %dopar% {
                                     resTh <- dmcSim(amp = startValsGrid$amp[i], tau = startValsGrid$tau[i], mu = startValsGrid$mu[i],
                                                     bnds = startValsGrid$bnds[i], resMean = startValsGrid$resMean[i], resSD = startValsGrid$resSD[i],
-                                                    aaShape = startValsGrid$aaShape[i], varSP = varSP, spShape = startValsGrid$spShape[i],
+                                                    aaShape = startValsGrid$aaShape[i], varSP = TRUE, spShape = startValsGrid$spShape[i],
                                                     sigm = startValsGrid$sigm[i],  spLim = c(-startValsGrid$bnds[i], startValsGrid$bnds[i]),
                                                     nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,
                                                     printInputArgs = FALSE, printResults = FALSE)
@@ -207,7 +205,7 @@ dmcFitAgg <- function(resOb,
   dmcfit <- dmcSim(amp = prms$amp, tau = prms$tau, mu = prms$mu,
                    bnds = prms$bnds, resMean = prms$resMean, resSD = prms$resSD,
                    aaShape = prms$aaShape, sigm = prms$sigm,
-                   varSP = varSP, spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
+                   varSP = TRUE, spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
                    nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,
                    printResults = TRUE)
   
@@ -235,7 +233,6 @@ dmcFitAgg <- function(resOb,
 #' @param minVals Minimum values for the to-be estimated parameters
 #' @param maxVals Maximum values for the to-be estimated parameters
 #' @param fixedFit Fix parameter to starting value
-#' @param varSP TRUE/FALSE Variable starting point for DMC
 #' @param fitInitialGrid TRUE/FALSE (NB. overrides fitInitialTau)
 #' @param fitInitialGridN 10
 #' @param fixedGrid Fix parameter for initial grid search
@@ -275,7 +272,6 @@ dmcFitVPs <- function(resOb,
                       minVals          = list(), 
                       maxVals          = list(), 
                       fixedFit         = list(), 
-                      varSP            = TRUE, 
                       fitInitialGrid   = TRUE,
                       fitInitialGridN  = 10,       # reduce if grid search 3/4+ parameters
                       fixedGrid        = list(),   # default only initial tau search
@@ -314,7 +310,6 @@ dmcFitVPs <- function(resOb,
                               minVals          = minVals,
                               maxVals          = maxVals,
                               fixedFit         = fixedFit,
-                              varSP            = varSP, 
                               fitInitialGrid   = fitInitialGrid,
                               fitInitialGridN  = fitInitialGridN, # reduce if grid search 3/4+ parameters
                               fixedGrid        = fixedGrid,       # only fit tau
@@ -417,7 +412,6 @@ mean.dmcfitvp <- function(x, ...) {
 #' delta values for comp/incomp conditions (nbins*5). See output from dmcSim (.$caf).
 #' @param resOb list containing caf values for comp/incomp conditions (n*2*3) and
 #' delta values for comp/incomp conditions (nbins*5). See output from dmcSim ($delta).
-#' @param weighting Weighting applied to the CAF data
 #'
 #' @return cost value (RMSE)
 #'
@@ -433,15 +427,17 @@ mean.dmcfitvp <- function(x, ...) {
 #' cost  <- calculateCostValue(resTh, resOb)
 #'
 #' @export
-calculateCostValue <- function(resTh, resOb, weighting = 1500) {
+calculateCostValue <- function(resTh, resOb) {
 
   n_rt  <- nrow(resTh$delta) * 2
   n_err <- nrow(resTh$caf)
 
-  costCAF <- sqrt((1/n_err) * sum((resTh$caf$accPer - resOb$caf$accPer)**2))
-  costRT  <- sqrt((1/n_rt)  * sum((resTh$delta[c("meanComp", "meanIncomp")] - resOb$delta[c("meanComp", "meanIncomp")])**2))
-
-  costValue <- (((1 - (n_rt/(n_rt + n_err))) * weighting) * costCAF) + costRT
+  costCAF   <- sqrt((1/n_err) * sum((resTh$caf$accPer - resOb$caf$accPer)**2))
+  costRT    <- sqrt((1/n_rt)  * sum((resTh$delta[c("meanComp", "meanIncomp")] - resOb$delta[c("meanComp", "meanIncomp")])**2))
+  weightRT  <- n_rt / (n_rt + n_err)
+  weightCAF <- (1 - weightRT) * 1500
+  
+  costValue <- (weightCAF * costCAF) + (weightRT * costRT)
   
   cat(sprintf("RMSE: %.3f\n", costValue))
 
