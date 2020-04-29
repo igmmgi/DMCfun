@@ -75,10 +75,23 @@ test_that("dmcSim5", {
 
   # Values from paper?
   # testthat::expect_equal(500,  round(dat$means$rtCor[1]))       # rt correct
-  # testthat::expect_equal(175,  round(dat$means$sdRtCor[1]))    # sd correct
-  # testthat::expect_equal(12.1, round(dat$means$perErr[1], 1))  # percentage errors
-  # testthat::expect_equal(522,  round(dat$means$rtCor[2]))      # rt correct
-  # testthat::expect_equal(164,  round(dat$means$sdRtCor[2]))    # sd correct
-  # testthat::expect_equal(13.9, round(dat$means$perErr[2], 1)) # percentage errors
+  # testthat::expect_equal(175,  round(dat$means$sdRtCor[1]))     # sd correct
+  # testthat::expect_equal(12.1, round(dat$means$perErr[1], 1))   # percentage errors
+  # testthat::expect_equal(522,  round(dat$means$rtCor[2]))       # rt correct
+  # testthat::expect_equal(164,  round(dat$means$sdRtCor[2]))     # sd correct
+  # testthat::expect_equal(13.9, round(dat$means$perErr[2], 1))   # percentage errors
 
 })
+
+test_that("dmcSim6", {
+
+  amp = 20
+  mu = 0.5
+  
+  dmc <- dmcSim(amp = amp, mu = mu)
+
+  testthat::expect_equal(dmc$prms$amp, 20)
+  testthat::expect_equal(dmc$prms$mu, 0.5)
+
+})
+

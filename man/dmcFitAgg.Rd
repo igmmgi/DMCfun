@@ -11,7 +11,6 @@ dmcFitAgg(
   minVals = list(),
   maxVals = list(),
   fixedFit = list(),
-  varSP = TRUE,
   fitInitialGrid = TRUE,
   fitInitialGridN = 10,
   fixedGrid = list(),
@@ -39,10 +38,8 @@ amp, tau, mu, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., maxVals = list
 resSD = 100, aaShape = 3, spShape = 4, sigm = 10))}
 
 \item{fixedFit}{Fix parameter to starting value. This is a list with bool values specified individually for 
-amp, tau, mu, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedFit = list(amp = F,  tau = F,   mu = F, bnds = F, resMean = F,   
+amp, tau, mu, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedFit = list(amp = F,  tau = F, mu = F, bnds = F, resMean = F,   
 resSD = F, aaShape = F, spShape = F, sigm = T))}
-
-\item{varSP}{TRUE/FALSE Variable starting point for DMC}
 
 \item{fitInitialGrid}{TRUE/FALSE}
 

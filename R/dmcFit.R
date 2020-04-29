@@ -16,7 +16,7 @@
 #' amp, tau, mu, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., maxVals = list(amp = 40, tau = 300, mu = 1.0, bnds = 150, resMean = 800, 
 #' resSD = 100, aaShape = 3, spShape = 4, sigm = 10))
 #' @param fixedFit Fix parameter to starting value. This is a list with bool values specified individually for 
-#' amp, tau, mu, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedFit = list(amp = F,  tau = F,   mu = F, bnds = F, resMean = F,   
+#' amp, tau, mu, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedFit = list(amp = F,  tau = F, mu = F, bnds = F, resMean = F,   
 #' resSD = F, aaShape = F, spShape = F, sigm = T))
 #' @param fitInitialGrid TRUE/FALSE
 #' @param fitInitialGridN 10 reduce if searching more than 1 initial parameter
@@ -444,4 +444,3 @@ calculateCostValue <- function(resTh, resOb) {
   return(costValue)
 
 }
-
