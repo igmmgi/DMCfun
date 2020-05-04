@@ -61,7 +61,7 @@ plot(fit, flankerData)
 ``` r
 summary(fit)
 # A tibble: 1 x 10
-    amp   tau    mu  bnds resMean resSD aaShape spShape sigma  rmse
+    amp   tau    mu  bnds resMean resSD aaShape spShape sigm  rmse
   <dbl> <dbl> <dbl> <dbl>   <dbl> <dbl>   <dbl>   <dbl> <dbl> <dbl>
 1  19.3  98.8 0.593  55.8    325.  28.4    2.26    2.84     4  8.91
 ```
@@ -74,7 +74,7 @@ plot(fit, simonData)
 
 ``` r
 # A tibble: 1 x 10
-    amp   tau    mu  bnds resMean resSD aaShape spShape sigma  rmse
+    amp   tau    mu  bnds resMean resSD aaShape spShape sigm  rmse
   <dbl> <dbl> <dbl> <dbl>   <dbl> <dbl>   <dbl>   <dbl> <dbl> <dbl>
 1  17.5  33.8 0.577  58.7    311.  29.9    2.31    3.41     4  11.5
 ```
