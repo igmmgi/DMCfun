@@ -23,7 +23,7 @@ List dmcCppR(List r_in) {
   if (r_in.containsElementNamed("resSD"))          p.resSD          = as<double>(r_in["resSD"]);
   if (r_in.containsElementNamed("aaShape"))        p.aaShape        = as<double>(r_in["aaShape"]);
   if (r_in.containsElementNamed("spShape"))        p.spShape        = as<double>(r_in["spShape"]);
-  if (r_in.containsElementNamed("sigma"))          p.sigma          = as<double>(r_in["sigma"]);
+  if (r_in.containsElementNamed("sigm"))           p.sigm           = as<double>(r_in["sigm"]);
   if (r_in.containsElementNamed("nTrl"))           p.nTrl           = as<unsigned long>(r_in["nTrl"]);
   if (r_in.containsElementNamed("tmax"))           p.tmax           = as<unsigned long>(r_in["tmax"]);
   if (r_in.containsElementNamed("varSP"))          p.varSP          = as<bool>(r_in["varSP"]);

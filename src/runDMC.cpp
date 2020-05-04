@@ -119,7 +119,7 @@ void run_simulation(Prms &p,
     for (auto trl = 0u; trl < p.nTrl; trl++) {
         activation_trial = sp[trl];
         for (auto i = 0u; i < p.tmax; i++) {
-            activation_trial += mu_vec[i] + dr[trl] + (p.sigma * snd(rng));
+            activation_trial += mu_vec[i] + dr[trl] + (p.sigm * snd(rng));
             if (fabs(activation_trial) > p.bnds) {
                 (activation_trial > p.bnds ? rts : errs).push_back(i + nd_mean_sd(rng) + 1); // zero index
                 break;
@@ -150,7 +150,7 @@ void run_simulation(Prms &p,
         criterion = false;
         activation_trial = sp[trl];
         for (auto i = 0u; i < activation_sum.size(); i++) {
-            activation_trial += mu_vec[i] + dr[trl] + (p.sigma * snd(rng));
+            activation_trial += mu_vec[i] + dr[trl] + (p.sigm * snd(rng));
             if (!criterion && fabs(activation_trial) > p.bnds) {
                 (activation_trial > p.bnds ? rts : errs).push_back(i + nd_mean_sd(rng) + 1); // zero index
                 criterion = true;
