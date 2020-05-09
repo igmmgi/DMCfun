@@ -538,7 +538,6 @@ calculateCAF <- function(dat,
 #' dat <- addDataDF(dat,
 #'                  RT = list("Comp_comp"   = c(500, 80, 100),
 #'                            "Comp_incomp" = c(600, 80, 140)))
-#' head(dat)
 #' delta <- calculateDelta(dat)
 #' 
 #' # Example 2
@@ -576,13 +575,13 @@ calculateDelta <- function(dat,
  
   deltaSeq <- seq(stepDelta, 100, stepDelta)
   deltaSeq <- deltaSeq[!deltaSeq %in% 100]
-  
+ 
   dat_delta <- dat %>%
     dplyr::group_by(VP, Comp) %>%
     dplyr::do(tibble::as_tibble(t(quantile(.$RT, deltaSeq/100, type = quantileType))))  %>%
     setNames(c("VP", "Comp", seq(1, length(deltaSeq)))) %>%
-    tidyr::gather(bin, rt_VP, -c("VP", "Comp")) %>%
-    tidyr::spread(Comp, rt_VP) %>%
+    tidyr::pivot_longer(., cols = -c("VP", "Comp"), names_to = "bin", values_to = "rt") %>%
+    tidyr::pivot_wider(., names_from = "Comp", values_from = "rt") %>%
     dplyr::mutate(meanCompVP   = comp,
                   meanIncompVP = incomp,
                   meanBinVP    = (comp + incomp)/2,
@@ -591,6 +590,7 @@ calculateDelta <- function(dat,
     dplyr::mutate(bin = as.integer(bin)) %>%
     dplyr::arrange(VP, bin)
   
+    
   return(dat_delta)
   
 }
