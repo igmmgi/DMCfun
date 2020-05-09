@@ -330,19 +330,16 @@ dmcObservedData <- function(dat,
                             delim = "\t",
                             skip = 0) {
   
-  # single file 
+  # if dat external file(s)
   if (is.character(dat)) {  
-    dat <- readr::read_delim(dat, delim = delim, skip = skip)
+    dat <- do.call(rbind, lapply(dat, read.table, header = TRUE, sep = delim, skip = skip))
   } 
-  
-  # select required columns
-  dat <- dat %>%
-    dplyr::select(tidyselect::all_of(columns))
+      
+  # select required columns and give default names
+  dat <- dat[columns] 
   if (ncol(dat) < 4) {
     stop("dat does not contain required/requested columns!")
   }
-  
-  # create default column names
   if (any(names(dat) != c("VP", "Comp", "RT", "Error"))) {
     names(dat) = c("VP", "Comp", "RT", "Error")
   }
@@ -485,8 +482,7 @@ calculateCAF <- function(dat,
                          errorCoding = c(0, 1)) {
                           
   # select required columns
-  dat <- dat %>%
-    dplyr::select(tidyselect::all_of(columns))
+  dat <- dat[columns] 
   if (ncol(dat) < 4) {
     stop("dat does not contain required/requested columns!")
   }
@@ -563,8 +559,7 @@ calculateDelta <- function(dat,
                            quantileType = 5) {
   
   # select required columns
-  dat <- dat %>%
-    dplyr::select(tidyselect::all_of(columns))
+  dat <- dat[columns] 
   if (ncol(dat) != 3) {
     stop("dat does not contain required/requested columns!")
   }
@@ -578,9 +573,6 @@ calculateDelta <- function(dat,
   if (any(compCoding != c("comp", "incomp"))) {
     dat$Comp <- ifelse(dat$Comp == compCoding[1], "comp", "incomp")
   }
-  # if (any(errorCoding != c(0, 1))) {
-  #   dat$Error <- ifelse(dat$Error == errorCoding[1], 0, 1)
-  # }
  
   deltaSeq <- seq(stepDelta, 100, stepDelta)
   deltaSeq <- deltaSeq[!deltaSeq %in% 100]

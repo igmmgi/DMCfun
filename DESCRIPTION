@@ -16,10 +16,8 @@ Imports:
   foreach,
   optimr,
   parallel,
-  readr,
   tibble,
   tidyr,
-  tidyselect
 Suggests:
   testthat
 LinkingTo: Rcpp, BH
