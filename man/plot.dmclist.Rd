@@ -11,6 +11,7 @@
   col = c("black", "lightgrey"),
   lineType = "l",
   legendPos = "topleft",
+  ncol = 1,
   ...
 )
 }
@@ -26,6 +27,8 @@
 \item{lineType}{line type ("l", "b", "o") for delta plot}
 
 \item{legendPos}{legend position}
+
+\item{ncol}{number of legend columns}
 
 \item{...}{pars for legend}
 }

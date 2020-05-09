@@ -361,6 +361,7 @@ plot.dmcsim <- function(x,
 #' @param col # color range start/end color
 #' @param lineType line type ("l", "b", "o") for delta plot
 #' @param legendPos legend position
+#' @param ncol number of legend columns 
 #' @param ... pars for legend
 #'
 #' @return NULL
@@ -386,6 +387,7 @@ plot.dmclist <- function(x,
                          col=c("black", "lightgrey"),
                          lineType = "l",
                          legendPos = "topleft",
+                         ncol = 1,
                          ...) {
 
   # default xlimit
@@ -397,16 +399,18 @@ plot.dmclist <- function(x,
   cols <- colorRampPalette(col)(length(x))
 
   # plot
-  plot(x[[1]]$delta$meanBin, x[[1]]$delta$meanEffect, type = lineType,
+ plot(x[[1]]$delta$meanBin, x[[1]]$delta$meanEffect, type = lineType,
        ylim = ylim, xlim = xlim,
-       ylab = expression(Delta), xlab = "Time [ms]", col = cols[1])
-
+       ylab = expression(Delta), xlab = "Time [ms]", col = cols[1], ...)
+    
   legendText <- paste0(names(x[[1]]$params), "=", x[[1]]$params[1, ], collapse = ", ")
   for (i in 2:length(x)) {
     lines(x[[i]]$delta$meanBin, x[[i]]$delta$meanEffect, col = cols[i], type = lineType)
     legendText <- c(NULL, legendText, paste0(names(x[[i]]$params), "=", x[[1]]$params[i, ], collapse = ", "))
   }
-  legend(legendPos, legend = legendText, col = as.vector(cols), lty = 1, ...)
+  
+  legend(legendPos, legend = legendText, col = as.vector(cols), lty = 1, ncol = ncol)
+  
 }
 
 

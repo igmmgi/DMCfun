@@ -31,8 +31,7 @@ grestore
 \RequirePackage{fix-cm}
 
 << setup, echo=FALSE, include = FALSE >>=
-library(psychReport)
-requiredPackages(c("knitr"))
+library(knitr)
 opts_chunk$set(echo=FALSE, include=FALSE, cache=FALSE)
 @
 
@@ -41,10 +40,11 @@ opts_chunk$set(echo=FALSE, include=FALSE, cache=FALSE)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[]{svjour3}  % [] or [smallcondensed], [smallextended], [twocolumn]
 
-\usepackage{tempora}  % use Times fonts if available on your TeX system
+\usepackage{times}  % use Times fonts if available on your TeX system
 \usepackage{graphicx}
 \usepackage{color}
 \usepackage{float}
+\usepackage{amsmath}
 \usepackage{listings}
 \usepackage{longtable}
 \usepackage[style=apa, sortcites=true, sorting=nyt,backend=biber]{biblatex}
@@ -61,7 +61,6 @@ opts_chunk$set(echo=FALSE, include=FALSE, cache=FALSE)
 % \usepackage{tikz}
 % \usepackage[printwatermark]{xwatermark}
 % \newsavebox\mybox
-
 % \savebox\mybox{\tikz[color=gray, opacity=0.5]\node{DRAFT};}
 % \newwatermark*[ allpages, angle=45, scale=10, xpos=-50, ypos=50 ]{\usebox\mybox}
 
@@ -218,24 +217,25 @@ maximum before decreasing back to zero (pulse function).
 The formal model specification for DMC is provided in
 \textcite{ulrich2015automatic} and thus, will only be briefly described here.
 The time-course of automatic activation is modelled using a Gamma density
-function with a shape parameter (aaShape, with $\alpha$ > 1) and a scale
+function with a shape parameter (aaShape, with $\alpha$ $>$ 1) and a scale
 parameter (tau, $\tau$) multiplied by a constant (amp, +ve for compatible, -ve
 for incompatible trials), with the drift rate (mu, $\mu$) being the first
 derivative of the density function. This gives DMC 7 parameters that can vary:
-amp, aaShape, tau, mu, bnds, resMean, and resSD. Like standard diffusion models
-\parencite[see][]{ratcliff2013parameter}, DMC also allows increased
-trial-to-trial variability by allowing the starting point to vary. This
-starting point is sampled from a general beta distribution (spShape $\alpha$ >
-0) centered around zero within the boundary range. DMC assumes that total RT is
-a combination of decision (D) and residual non-decision (R) processes and
-assumes that compatibility effects influence D processes only. The predictions
-of DMC are independent of the distributional properties of R. However, to
-provide more realistic RTs, the non-decisional component (R) was sampled from a
-normal distribution with a given mean and standard deviation. Within the DMC
-model, activation accumulates over \textit{t (t > 0)}, with t being the time
-since stimulus onset. \textbf{X}\textsubscript{c}(\textit{t}) represents
-represents the accumulation of noisy information from controlled processes,
-whereas \textbf{X}\textsubscript{a}\textit{(t)} is the accumulation of noisy
+amp, tau, aaShape, mu, bnds, resMean, and resSD (see Table \ref{tab:dmc_parameters}).
+Like standard diffusion models \parencite[see][]{ratcliff2013parameter}, DMC
+also allows increased trial-to-trial variability by allowing the starting point
+to vary. This starting point is sampled from a general beta distribution
+(spShape $\alpha$ $>$ 0) centered around zero within the boundary range. DMC
+assumes that total RT is a combination of decision (D) and residual
+non-decision (R) processes and assumes that compatibility effects influence D
+processes only. The predictions of DMC are independent of the distributional
+properties of R. However, to provide more realistic RTs, the non-decisional
+component (R) was sampled from a normal distribution with a given mean
+(resMean) and standard deviation (resSD). Within the DMC model, activation
+accumulates over \textit{t (t $>$ 0)}, with t being the time since stimulus
+onset. \textbf{X}\textsubscript{c}(\textit{t}) represents represents the
+accumulation of noisy information from controlled processes, whereas
+\textbf{X}\textsubscript{a}\textit{(t)} is the accumulation of noisy
 information from automatic processes. For controlled activation, drift rate
 (\textit{$\mu$}\textsubscript{c}) is assumed to be time-independent, whereas
 for automatic activation, drift rate (\textit{$\mu$}\textsubscript{a}) depends
@@ -245,6 +245,27 @@ information is the sum of the controlled and automatic processes
 \textbf{X}\textsubscript{a}\textit{(t)}) since it is assumed that automatic
 activation spills over to the controlled process. Responses are generated
 whenever total activation exceeds some boundary (\textit{b}). 
+
+\begin{table}
+    \centering
+    \caption{DMC Model Parameters}
+    \begin{tabular}{ll}
+        \hline
+        Parameter&Description \\ 
+        \hline
+        amp & Amplitude of automatic activation\\ 
+        tau & Time of peak automatic activation with peak being tau $\cdot$ (aaShape - 1) \\ 
+        aaShape & Shape parameter of the gamma density function for timecourse of automatic activation \\ 
+        mu & Drift rate of the controlled activation \\ 
+        bnds & Decision boundary where response executed \\ 
+        resMean & Mean of the normal distribution of the residual (R) stage \\ 
+        resSD & Standard deviation of the normal distribution of the residual (R) stage \\ 
+        spShape & Shape parameter of the beta distribution for starting point variability \\ 
+        sigm & Scalling parameter of the drift diffusion process \\ 
+        \hline
+    \end{tabular}
+    \label{tab:dmc_parameters}
+\end{table}
 
 Figure \ref{fig:1} (top-left panel) illustrates the model dynamics for
 automatic and controlled activation averaged over 100,000 compatible and
@@ -260,7 +281,7 @@ results in delayed boundary level activation for incompatible compared to
 compatible trials.
 
 \begin{figure}
-    \includegraphics[width=1\textwidth]{../figures/figure1.png}
+    \includegraphics[width=1\textwidth]{../figures/figure1.pdf}
     \caption{
         DMC simulation. This simulation involved 100,000 trials for each
         compatibility condition with the following default simulation
@@ -296,7 +317,7 @@ written in C++ utilising the R-package Rcpp \parencite{eddelbuettel2011rcpp}.
 The use of C++ gives a significant performance boost over base R whilst the
 Rcpp interface allows convenient use from within the standard R environment
 and also direct access to plotting facilities within R. The fitting procedure
-uses the R-package optimr \textcite{optimr} with method = "Nelder-Mead". As in
+uses the R-package optimr \textcite{optimr} with method = ``Nelder-Mead''. As in
 \textcite{ulrich2015automatic} the model fit was evaluated by calculating the
 RMSE weighted difference between the predicted and observed delta/CAF values.
 The following sections will provide a tutorial-type overview of using the
@@ -343,7 +364,7 @@ and grand-average mean RTs, erorr-rates, CAF values and delta values.
 The simulation code is within the function dmcSim (see Code Example 2). The
 function dmcSim() allows the user to specify parameter values using named
 arguments (?dmcSim). A single simulation run with 100,000 trials in each
-compatibility condition takes approximately < 150 ms (standard desktop PC).
+compatibility condition takes approximately $<$ 150 ms (standard desktop PC).
 The function dmcSims allows the user to specify a list of input parameters in
 order to run multiple simulations. For example, \textcite{ulrich2015automatic}
 observed that the parameter tau ($\tau$) largely determined the slope to the
@@ -352,19 +373,19 @@ parameters from 20 to 170 in steps of 10 (see Figure \ref{fig:2}).
 
 \begin{minipage}{\linewidth}
     \begin{lstlisting}[style = R, title = {R Code Example 2}, captionpos = t]
-    > dmc <- dmcSim(fullData = TRUE)            # Fig 3 from Ulrich et al. (2015)
-    > dmc <- dmcSim(fullData = TRUE, tau = 150) # Fig 4 from Ulrich et al. (2015)
+    > dmc <- dmcSim(fullData = TRUE)            # Fig 3 Ulrich et al. (2015)
+    > dmc <- dmcSim(fullData = TRUE, tau = 150) # Fig 4 Ulrich et al. (2015)
     > plot(dmc)
     > plot(dmc, figType = "caf")    
     > plot(dmc, figType = "delta")
     > 
-    > dmc <- dmcSim() 
-    > plot(dmc)       # Fig 3 from Ulrich et al.  
+    > dmc <- dmcSim()                            
+    > plot(dmc)                                 # Fig 3 Ulrich et al. (2015)
     \end{lstlisting}
 \end{minipage}
 
 \begin{figure}
-    \includegraphics[width=1\textwidth]{../figures/figure4.png}
+    \includegraphics[width=1\textwidth]{../figures/figure4.pdf}
     \caption{DMC Simulation delta functions with varying tau parameter only.}
     \label{fig:2}
 \end{figure}
@@ -373,33 +394,65 @@ parameters from 20 to 170 in steps of 10 (see Figure \ref{fig:2}).
 \label{dmc_fit} 
 
 The package includes the raw data from \textcite{ulrich2015automatic} (see Code
-Example 4). This data can be fitted to DMC via the function dmcFitAgg (see Code
-Example 5). This will fit DMC to the data averaged across all participants,
-whereas the function dmcFitVPs will fit DMC to individual participants. A
-summary of the fit is provided. By default, dmcFit* fits the following
-parameters: amp, tau, mu, bnds, resMean, resSD, aaShape, spShape. The function
-dmcFit* uses the R-package optimr \parencite{optimr} with method = "Nelder-Mead"
-and allow the specification of a number of options including which parameters
-to fit and their starting values. \textcite{ulrich2015automatic} observed that
-model fit was highly influenced by the tau parameter. The function dmcFit*
-first searches a grid space (N = 10) within this single parameter to find the
-"best" starting value of tau before the simplex minimisation routine is
-implemented. An initial search of a parameter space has been shown to improve
-parameter recovery \parencite{hubnerimproving}. Such a initial search grid and
-subsequent fitting procedure takes < 1 minute. It is also possible to search
-the initial grid space across multiple parameters with the search space being
-determined by the input arguments minVals, maxVals, and fitInitialGridN. It
-should be noted that increasing the size of the initial grid space will
-increase computational time prior to the simplex minimisation routine
-dramatically. For example, searching 6 parameters within a gridspace of 6,
-results in 46,656 initial parameter sets. Although these are independent and
-are run in parallel, such an initial grid space takes approximately 20 minutes
-(tested on 12 core desktop PC). As a result, the default setting is to perform
-the initial search in the tau space only. Such a procedure produced consistently
-good fits with the data of \textcite{ulrich2015automatic} (RMSE < 15), although
-this does not exclude the possibility that other datasets would benefit from an
-extended search grid (or alternative starting values) regarding the initial
-values for the simplex routine.
+Example 4). This data was collected from a participants performing both a
+standard visual simon task and a flanker task. The data is available in both
+raw form (flankerDataRaw, simonDataRaw) and a summarized form (output from
+dmcObservedData, flankerData, simonData). This data can be fitted to DMC via
+the function dmcFitAgg (see Code Example 5). This will fit DMC to the data
+averaged across all participants, whereas the function dmcFitVPs will fit DMC
+to individual participants. A summary of the fit is provided. By default,
+dmcFit* fits the following parameters: amp, tau, mu, bnds, resMean, resSD,
+aaShape, spShape. The function dmcFit* uses the R-package optimr
+\parencite{optimr} with method = ``Nelder-Mead'', and allow the specification of a
+number of options including which parameters to fit and their starting values. 
+   
+The cost function to minimize was identical to that used within
+\textcite{ulrich2015automatic}; specifically, the root-mean-square-error
+(RMSE). In detail, a cost value was calculated for both the percentile reaction time data
+(RMSE\textsubscript{RT}) and the binned error data (RMSE\textsubscript{CAF}) with the
+total cost being a weighted sum of the two
+\begin{equation*}
+    RMSE = \textit{w}\textsubscript{RT} \cdot RMSE\textsubscript{RT} + \textit{w}\textsubscript{CAF} \cdot RMSE\textsubscript{CAF}  
+\end{equation*}
+with \textit{w}\textsubscript{RT} being determined by the number of bins 
+within the RT and CAF data across both compatibility conditions such that 
+
+\begin{equation*}
+    \textit{w}\textsubscript{RT} = \frac{2 \cdot N\textsubscript{RT}} {2 \cdot N\textsubscript{RT} + N\textsubscript{CAF}} \quad and \quad  \textit{w}\textsubscript{CAF} = (1 - \textit{w}\textsubscript{RT}) \cdot 1500
+\end{equation*}
+where N is the number of bins. The actual calculation of the RMSE\textsubscript{CAF} and
+RMSE\textsubscript{RT} is as follows:
+
+\begin{equation*}
+    RMSE\textsubscript{RT/CAF} = \sqrt{\frac{1}{N\cdot2} \sum_{b=1}^{N} \sum_{c=1}^{2} \left[X\textsubscript{\textit{th;b,c}} - X\textsubscript{\textit{ob;b,c}} \right] \textsuperscript{2}} 
+\end{equation*}
+where X is the is the data from either the percentile RTs
+(RMSE\textsubscript{RT}) or CAF (RMSE\textsubscript{CAF}) bins. Here,
+\textit{b} runs over all of the bins, \textit{c} over the two compatibility
+conditions, and \textit{th} and \textit{ob} are the theoretical and observed
+data, respectively. 
+
+\textcite{ulrich2015automatic} observed that the model fit was highly
+influenced by the tau parameter. The function dmcFit* first searches a grid
+space (default N = 10) within this single parameter to find the ``best'' starting
+value of tau before the simplex minimisation routine is implemented. An initial
+search of a parameter space has been shown to improve parameter recovery
+\parencite{hubnerimproving}. Such a initial search grid and subsequent fitting
+procedure takes $<$ 1 minute. It is also possible to search the initial grid
+space across multiple parameters with the search space being determined by the
+input arguments minVals, maxVals, and fitInitialGridN. It should be noted that
+increasing the size of the initial grid space will increase computational time
+prior to the simplex minimisation routine dramatically. For example, searching
+6 parameters within a gridspace of 6, results in 46,656 initial parameter sets.
+Although these are independent and are run in parallel, such an initial grid
+space takes approximately 20 minutes (tested on 12 core desktop PC). As a
+result, the default setting is to perform the initial search in the tau space
+only. Such a procedure produced consistently good fits with the data of
+\textcite{ulrich2015automatic} (RMSE $<$ 15), although this does not exclude the
+possibility that other datasets would benefit from an extended search grid (or
+alternative starting values) regarding the initial values for the simplex
+routine.
+
 
 \begin{minipage}{\linewidth}
     \begin{lstlisting}[style = R, title = {R Code Example 3}, captionpos = t]
@@ -410,21 +463,19 @@ values for the simplex routine.
 \end{minipage}
 
 Users can fit DMC to their own data using the function dmcObservedData (see
-Code Example 6). This function takes an R dataframe (or a *.txt file with tab
-separated values, one header line) (see Table 1) and calculates the required
-variables. Four data columns are required: one for participant number, one for
-compatibility, one for reaction time, and one for error rate. The specific
-column names and column codings can be specified using function arguments.
+Code Example 6). The function dmcObservedData an R dataframe (or *.txt file(s))
+(see Table \ref{tab:dmc_raw_data} and calculates the required variables. Four
+data columns are required: one for participant number, one for compatibility,
+one for reaction time, and one for error rate. The specific column names and
+column codings can be specified using function arguments.
 
 \begin{minipage}{\linewidth}
     \begin{lstlisting}[style = R, title = {R Code Example 4}, captionpos = t]
     flankerDataRaw      # raw flanker data
     flankerData         # summarised flanker data
-    flankerData$summary # aggregated flanker data
     plot(flankerData)
     simonDataRaw        # raw simon data
     simonData           # summarised simon data
-    simonData$summary   # aggregated simon data
     plot(simonData)
     \end{lstlisting}
 \end{minipage}
@@ -470,18 +521,45 @@ d <- read.table("../data/flankerData.txt", header = TRUE)
     \end{lstlisting}
 \end{minipage}
 
-<<< raw_data_example1, include = TRUE, results = 'asis' >>=
-printTable(d[1:6, ], caption = "Raw Data file example")
-@
+\begin{table}
+    \centering
+    \caption{
+        Example Raw Data Format. To calculate the required observed data from
+        raw reaction times and error data, four columns are essential: 1) A
+        column coding participant number 2) A colum coding compatibility
+        condition 3) The trial RT (in ms) and 4) A colum coding if the trial
+        was correct/incorrect. It should be noted that the column names and the
+        coding used within the compatibility and error columns can be set
+        within the function dmcObservedData. The function dmcObservedData
+        accepts both a filename(s) or an existing R dataframe.
+        into R.
+    }
+    \begin{tabular}{llll}
+        \hline
+        VP&Comp&RT&Error\\ 
+        \hline
+        1&comp&509&0\\ 
+        1&comp&451&0\\ 
+        1&comp&398&0\\ 
+        1&incomp&539&1\\ 
+        ...&...&...&...\\ 
+        2&incomp&712&0\\ 
+        2&comp&589&1\\ 
+        2&incomp&756&0\\ 
+    \end{tabular}
+    \label{tab:dmc_raw_data}
+\end{table}
+
+
 
 \begin{figure}[H]
-    \includegraphics[width=1\textwidth]{../figures/figure5.png}
+    \includegraphics[width=1\textwidth]{../figures/figure5.pdf}
     \caption{DMC Fit from the Flanker data presented in \textcite{ulrich2015automatic}. Refer to Code Example 5.}
     \label{fig:5}
 \end{figure}
 
 \begin{figure}[H]
-    \includegraphics[width=1\textwidth]{../figures/figure6.png}
+    \includegraphics[width=1\textwidth]{../figures/figure6.pdf}
     \caption{DMC Fit from the Simon data presented in \textcite{ulrich2015automatic}. Refer to Code Example 5.}
     \label{fig:6}
 \end{figure}
