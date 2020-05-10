@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.5.2)  10 MAY 2020 11:01
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.5.2)  10 MAY 2020 13:39
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -616,39 +616,37 @@ Package biblatex Info: ... file 'DMCfun_rev1.bbl' found.
 (./DMCfun_rev1.bbl)
 Package biblatex Info: Reference section=0 on input line 134.
 Package biblatex Info: Reference segment=0 on input line 134.
-LaTeX Font Info:    Calculating math sizes for size <9.5> on input line 152.
+LaTeX Font Info:    Calculating math sizes for size <9.5> on input line 157.
 
 
 LaTeX Font Warning: Font shape `OMX/cmex/m/n' in size <9.5> not available
-(Font)              size <9> substituted on input line 152.
+(Font)              size <9> substituted on input line 157.
 
 
 Package biblatex Warning: Package option 'sortcites' enabled.
-(biblatex)                Verify postnote placement on input line 175.
+(biblatex)                Verify postnote placement on input line 180.
 
 [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
 
 Package biblatex Warning: Package option 'sortcites' enabled.
-(biblatex)                Verify postnote placement on input line 245.
+(biblatex)                Verify postnote placement on input line 250.
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [2]
-Overfull \hbox (42.50041pt too wide) in paragraph at lines 300--316
- [][] 
- []
+Underfull \vbox (badness 2582) has occurred while \output is active []
 
-[3]
-<../figures/figure1.pdf, id=19, 867.24pt x 578.16pt>
+ [3]
+<../figures/figure1.pdf, id=18, 867.24pt x 578.16pt>
 File: ../figures/figure1.pdf Graphic file (type pdf)
 <use ../figures/figure1.pdf>
-Package pdftex.def Info: ../figures/figure1.pdf  used on input line 332.
+Package pdftex.def Info: ../figures/figure1.pdf  used on input line 337.
 (pdftex.def)             Requested size: 347.0pt x 231.33047pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [4 <../figures/figure1.pdf>]
+ [4]
 (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2019/09/10 1.8c listings language file
 )
@@ -659,67 +657,42 @@ File: lstlang2.sty 2019/09/10 1.8c listings language file
 File: lstlang3.sty 2019/09/10 1.8c listings language file
 )
 LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 3
-84.
+89.
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )
-Overfull \hbox (15.0pt too wide) in paragraph at lines 383--391
-[]$[]$ 
- []
-
-
-Overfull \hbox (15.0pt too wide) in paragraph at lines 407--421
-[]$[]$ 
- []
-
-
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [5]
-Overfull \hbox (15.0pt too wide) in paragraph at lines 422--429
-[]$[]$ 
- []
-
+ [5 <../figures/figure1.pdf>]
 <../figures/figure4.pdf, id=33, 867.24pt x 578.16pt>
 File: ../figures/figure4.pdf Graphic file (type pdf)
 <use ../figures/figure4.pdf>
-Package pdftex.def Info: ../figures/figure4.pdf  used on input line 431.
+Package pdftex.def Info: ../figures/figure4.pdf  used on input line 436.
 (pdftex.def)             Requested size: 347.0pt x 231.33047pt.
-[6 <../figures/figure4.pdf>] [7]
-Overfull \hbox (15.0pt too wide) in paragraph at lines 521--536
-[]$[]$ 
- []
-
-
-Overfull \hbox (15.0pt too wide) in paragraph at lines 537--563
-[]$[]$ 
- []
-
-
-Overfull \hbox (15.0pt too wide) in paragraph at lines 566--578
-[]$[]$ 
- []
-
-<../figures/figure5.pdf, id=51, 867.24pt x 578.16pt>
-File: ../figures/figure5.pdf Graphic file (type pdf)
-<use ../figures/figure5.pdf>
-Package pdftex.def Info: ../figures/figure5.pdf  used on input line 609.
-(pdftex.def)             Requested size: 347.0pt x 231.33047pt.
-
+ [6] [7 <../figures/figure4.pdf>]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [8]
-<../figures/figure6.pdf, id=55, 867.24pt x 578.16pt>
-File: ../figures/figure6.pdf Graphic file (type pdf)
-<use ../figures/figure6.pdf>
-Package pdftex.def Info: ../figures/figure6.pdf  used on input line 615.
+<../figures/figure5.pdf, id=54, 867.24pt x 578.16pt>
+File: ../figures/figure5.pdf Graphic file (type pdf)
+<use ../figures/figure5.pdf>
+Package pdftex.def Info: ../figures/figure5.pdf  used on input line 643.
 (pdftex.def)             Requested size: 347.0pt x 231.33047pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [9 <../figures/figure5.pdf>] [10 <../figures/figure6.pdf>] [11] (./DMCfun_rev1
-.aux)
+ [9]
+<../figures/figure6.pdf, id=58, 867.24pt x 578.16pt>
+File: ../figures/figure6.pdf Graphic file (type pdf)
+<use ../figures/figure6.pdf>
+Package pdftex.def Info: ../figures/figure6.pdf  used on input line 649.
+(pdftex.def)             Requested size: 347.0pt x 231.33047pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [10 <../figures/figure5.pdf>] [11 <../figures/figure6.pdf>] [12] [13] (./DMCfu
+n_rev1.aux)
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 0.5pt have occurred.
@@ -730,8 +703,8 @@ Package logreq Info: Writing requests to 'DMCfun_rev1.run.xml'.
  ) 
 Here is how much of TeX's memory you used:
  13205 strings out of 481239
- 225360 string characters out of 5920378
- 1074422 words of memory out of 5000000
+ 225372 string characters out of 5920378
+ 1075428 words of memory out of 5000000
  28308 multiletter control sequences out of 15000+600000
  557750 words of font info for 77 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -748,10 +721,10 @@ cmsy9.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></u
 sr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texliv
 e/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fo
 nts/type1/urw/times/utmri8a.pfb>
-Output written on DMCfun_rev1.pdf (11 pages, 220466 bytes).
+Output written on DMCfun_rev1.pdf (13 pages, 222614 bytes).
 PDF statistics:
- 117 PDF objects out of 1000 (max. 8388607)
- 83 compressed objects within 1 object stream
+ 124 PDF objects out of 1000 (max. 8388607)
+ 88 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  21 words of extra memory for PDF output out of 10000 (max. 10000000)
 

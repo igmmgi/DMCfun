@@ -132,15 +132,20 @@ grestore
 \journalname{Behavior Research Methods}
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
+\setlength{\parskip}{12pt}
+\setlength\parindent{0pt}
+
 \title{DMCfun: An R package for fitting Diffusion Model of Conflict (DMC) to reaction time and error rate data}
 \subtitle{}
 \titlerunning{DMCfun}
 
-\author{Ian G. Mackenzie \and
+\author{
+    Ian G. Mackenzie \and
     Carolin Dudschig
 }
 
-\institute{Ian G. Mackenzie \at
+\institute{
+    Ian G. Mackenzie \at
     Schleichstrasse 4, Rm 4.427\\
     Tübingen\\
     Germany\\
@@ -194,7 +199,7 @@ dimensions indicate the same response (compatible) than when they indicate
 different responses (incompatible). The longer reaction time and larger error
 rate in incompatible trials indicates that task-irrelevant information
 interferes with the processing of the task relevant information.
-\par
+
 This compatibility effect pattern is consistent across all conflict-like tasks.
 However, when the size of the effect (incompatible - compatible) is compared
 across different percentiles of the RT distribution, different patterns can
@@ -269,7 +274,7 @@ function with a shape parameter (aaShape, with $\alpha$ $>$ 1) and a scale
 parameter (tau, $\tau$) multiplied by a constant (amp, +ve for compatible, -ve
 for incompatible trials), with the drift rate (mu, $\mu$) being the first
 derivative of the density function. This gives DMC 7 parameters that can vary:
-amp, tau, aaShape, mu, bnds, resMean, and resSD (see Table \ref{tab:dmc_parameters}).
+amp, tau, aaShape, mu, bnds, resMean, and resSD (see Table \ref{tab:dmc_sim_parameters}).
 Like standard diffusion models \parencite[see][]{ratcliff2013parameter}, DMC
 also allows increased trial-to-trial variability by allowing the starting point
 to vary. This starting point is sampled from a general beta distribution
@@ -296,23 +301,23 @@ whenever total activation exceeds some boundary (\textit{b}).
 
 \begin{table}
     \centering
-    \caption{DMC Model Parameters and Default Values within the function dmcSim}
-    \begin{tabular}{lll}
+    \caption{DMC Model Parameters and Default Values within the function dmcSim.}
+    \begin{tabular}{llr}
         \hline
-        Parameter&Description&Default Value \\ 
+        Parameter & Description & Default \\ 
         \hline
-        amp & Amplitude of automatic activation & 20\\ 
-        tau & Time of peak automatic activation with peak being tau $\cdot$ (aaShape - 1) & 30\\ 
-        aaShape & Shape parameter of the gamma density function for timecourse of automatic activation & 2\\ 
-        mu & Drift rate of the controlled activation & 0.5\\ 
-        bnds & Decision boundary where response executed & $\pm$75\\ 
-        resMean & Mean of the normal distribution of the residual (R) stage & 300\\ 
-        resSD & Standard deviation of the normal distribution of the residual (R) stage & 30\\ 
-        spShape & Shape parameter of the beta distribution for starting point variability & 3\\ 
-        sigm & Scalling parameter of the drift diffusion process & 4\\ 
+        amp     & Amplitude of automatic activation                                            &  20     \\ 
+        tau     & Time of peak automatic activation with peak being tau $\cdot$ (aaShape - 1)  &  30     \\ 
+        aaShape & Shape parameter of the gamma distribution for tau                            &   2     \\ 
+        mu      & Drift rate of the controlled activation                                      &   0.5   \\ 
+        bnds    & Decision boundary where response executed                                    & $\pm$75 \\ 
+        resMean & Mean of the normal distribution of the residual (R) stage                    & 300     \\ 
+        resSD   & Standard deviation of the normal distribution of the residual (R) stage      &  30     \\ 
+        spShape & Shape parameter of the beta distribution for starting point variability      &   3     \\ 
+        sigm    & Scalling parameter of the drift diffusion process                            &   4     \\ 
         \hline
     \end{tabular}
-    \label{tab:dmc_parameters}
+    \label{tab:dmc_sim_parameters}
 \end{table}
 
 Figure \ref{fig:1} (top-left panel) illustrates the model dynamics for
@@ -392,7 +397,7 @@ devtools package (via install\_github, see Code Example 1).
 \subsection{DMC Simulation}
 \label{dmc_simulation}
 The DMC simulation is run using the function \textit{dmcSim} (see Code Example
-2 and Table \ref{tab:dmc_parameters} for DMC parameters). This function allows
+2 and Table \ref{tab:dmc_sim_parameters} for DMC parameters). This function allows
 the user to specify parameter values using named arguments (?dmcSim). A single
 simulation run with 100,000 (default) trials in each compatibility condition
 takes approximately $<$ 150 ms (standard desktop PC). Figures from the
@@ -436,29 +441,53 @@ see Figure \ref{fig:2}).
 \subsection{DMC Fit: Real data} 
 \label{dmc_fit} 
 
-The package
-includes the raw data used in the original simuluations from
-\textcite{ulrich2015automatic}. It can be accessed in raw form or a summarized
-form from within R (see Code Example 2). The raw data contains the four essential
-columns required; specifically, a column coding participant number (VP), a
-column coding the compatibility condition (Comp), a column with the reaction
-time data (RT) and a column indicating if the response was correct or incorrect
-(Error, with 1 indicating an error). The summarized data contains the particpant 
-and grand-average mean RTs, erorr-rates, CAF values and delta values. 
+The package includes the raw data used in the original simuluations from
+\textcite{ulrich2015automatic}. This data was collected from a participants
+performing both a standard visual simon task and a flanker task. It can be
+accessed in raw form or a summarized form from within R (see Code Example 2).
+The raw data contains the four essential columns required; specifically, a
+column coding participant number (VP), a column coding the compatibility
+condition (Comp), a column with the reaction time data (RT) and a column
+indicating if the response was correct or incorrect (Error, with 1 indicating
+an error). The summarized data contains the particpant and grand-average mean
+RTs, erorr-rates, CAF values and delta values. This data can be fitted to DMC
+via the function \textit{dmcFitAgg} (see Code Example 5). This will fit DMC to
+the data averaged across all participants, whereas the function
+\textit{dmcFitVPs} will fit DMC to individual participants. A summary of the
+fit is provided. It is possible to fit the following parameters: amp, tau, mu,
+bnds, resMean, resSD, aaShape, spShape and sigm (NB. By default, the value sigm
+is fixed). The functions \textit{dmcFitAgg/dmcFitVPs} use the R-package optimr
+\parencite{optimr} with method = ``Nelder-Mead'', and allows the specification
+of a number of options including which parameters to fit and their starting
+values. Table \ref{tab:dmc_fit_parameters} provides a summary of the initial
+starting values for the to-be-estimated parameters and also the boundaries of
+the search space for each parameter. 
 
-The package includes the raw data from \textcite{ulrich2015automatic} (see Code
-Example 4). This data was collected from a participants performing both a
-standard visual simon task and a flanker task. The data is available in both
-raw form (flankerDataRaw, simonDataRaw) and a summarized form (output from
-dmcObservedData, flankerData, simonData). This data can be fitted to DMC via
-the function dmcFitAgg (see Code Example 5). This will fit DMC to the data
-averaged across all participants, whereas the function dmcFitVPs will fit DMC
-to individual participants. A summary of the fit is provided. By default,
-dmcFit* fits the following parameters: amp, tau, mu, bnds, resMean, resSD,
-aaShape, spShape. The function dmcFit* uses the R-package optimr
-\parencite{optimr} with method = ``Nelder-Mead'', and allow the specification of a
-number of options including which parameters to fit and their starting values. 
-   
+\begin{table}
+    \centering
+    \caption{
+        DMC Fitting Parameters and Default Values within the functions
+        \textit{dicFitAgg/dmcFitVPs}. Note that the defualt settings within
+        \textit{dicFitAgg/dmcFitVPs} fix the sigm value to its starting value.
+    }
+    \begin{tabular}{lrrr}
+        \hline
+        Parameter&Starting Value&Min Value& Max Value \\ 
+        \hline
+        amp     &  20   &  10    &  40 \\ 
+        tau     & 200   &   5    & 300 \\ 
+        mu      &   0.5 &   0.1  &   1 \\ 
+        bnds    &  75   &  20    & 150 \\ 
+        resMean & 300   & 200    & 800 \\ 
+        resSD   &  30   &   5    & 100 \\ 
+        aaShape &   2   &   1    &   3 \\ 
+        spShape &   3   &   2    &   4 \\ 
+        sigm    &   4   &   1    &  10 \\ 
+        \hline
+    \end{tabular}
+    \label{tab:dmc_fit_parameters}
+\end{table}
+
 The cost function to minimize was identical to that used within
 \textcite{ulrich2015automatic}; specifically, the root-mean-square-error
 (RMSE). In detail, a cost value was calculated for both the percentile reaction time data
@@ -469,13 +498,11 @@ total cost being a weighted sum of the two
 \end{equation*}
 with \textit{w}\textsubscript{RT} being determined by the number of bins 
 within the RT and CAF data across both compatibility conditions such that 
-
 \begin{equation*}
     \textit{w}\textsubscript{RT} = \frac{2 \cdot N\textsubscript{RT}} {2 \cdot N\textsubscript{RT} + N\textsubscript{CAF}} \quad and \quad  \textit{w}\textsubscript{CAF} = (1 - \textit{w}\textsubscript{RT}) \cdot 1500
 \end{equation*}
 where N is the number of bins. The actual calculation of the RMSE\textsubscript{CAF} and
 RMSE\textsubscript{RT} is as follows:
-
 \begin{equation*}
     RMSE\textsubscript{RT/CAF} = \sqrt{\frac{1}{N\cdot2} \sum_{b=1}^{N} \sum_{c=1}^{2} \left[X\textsubscript{\textit{th;b,c}} - X\textsubscript{\textit{ob;b,c}} \right] \textsuperscript{2}} 
 \end{equation*}
@@ -486,10 +513,11 @@ conditions, and \textit{th} and \textit{ob} are the theoretical and observed
 data, respectively. 
 
 \textcite{ulrich2015automatic} observed that the model fit was highly
-influenced by the tau parameter. The function dmcFit* first searches a grid
-space (default N = 10) within this single parameter to find the ``best'' starting
-value of tau before the simplex minimisation routine is implemented. An initial
-search of a parameter space has been shown to improve parameter recovery
+influenced by the tau parameter. By default setting of
+\textit{dmcFitAgg/dmcFitVPs} is to first searche a grid space (default steps N
+= 10) within this single parameter to find the ``best'' starting value of tau
+before the simplex minimisation routine is implemented. An initial search of a
+parameter space has been shown to improve parameter recovery
 \parencite{hubnerimproving}. Such a initial search grid and subsequent fitting
 procedure takes $<$ 1 minute. It is also possible to search the initial grid
 space across multiple parameters with the search space being determined by the
@@ -500,23 +528,23 @@ prior to the simplex minimisation routine dramatically. For example, searching
 Although these are independent and are run in parallel, such an initial grid
 space takes approximately 20 minutes (tested on 12 core desktop PC). As a
 result, the default setting is to perform the initial search in the tau space
-only. Such a procedure produced consistently good fits with the data of
-\textcite{ulrich2015automatic} (RMSE $<$ 15), although this does not exclude the
-possibility that other datasets would benefit from an extended search grid (or
-alternative starting values) regarding the initial values for the simplex
+only. This procedure produces consistently good fits with the data of
+\textcite{ulrich2015automatic} (RMSE $<$ 15), although this does not exclude
+the possibility that other datasets would benefit from an extended search grid
+(or alternative starting values) regarding the initial values for the simplex
 routine.
 
-
-
-Users can fit DMC to their own data using the function dmcObservedData (see
-Code Example 6). Whilst the focus of the \textcite{ulrich2015automatic} paper
-was on the flanker and simon tasks, DMC can be used to fit data from any
-``conflict-like'' task where there is both a task-relevant and a task
-irrelevant dimension. The function dmcObservedData an R dataframe (or *.txt
-file(s)) (see Table \ref{tab:dmc_raw_data} and calculates the required
-variables. Four data columns are required: one for participant number, one for
-compatibility, one for reaction time, and one for error rate. The specific
-column names and column codings can be specified using function arguments.
+The function \textit{dmcObservedData} creates the required dataformat for
+\textit{dmcFitAgg/dmcFitVPs} from raw behavioural data (see Code Example 6).
+Whilst the focus of the \textcite{ulrich2015automatic} paper was on the flanker
+and simon tasks, DMC can be used to fit data from any ``conflict-like'' task ,
+where there is both a task-relevant and a task-irrelevant dimension. The
+function dmcObservedData accepts as the first argument, an R dataframe (or
+*.txt file(s)) (see Table \ref{tab:dmc_raw_data} and calculates the required
+variables. The R dataframe or *.txt data files require a minimum of rour data
+columns: one for participant number, one for compatibility, one for reaction
+time, and one for error rate. The specific column names and column codings can
+be specified using function arguments.
 
 \begin{minipage}{\linewidth}
     \begin{lstlisting}[style = R, title = {
@@ -538,10 +566,11 @@ column names and column codings can be specified using function arguments.
     \begin{lstlisting}[style = R, title = {
     R Code Example 5: The example data from \textcite{ulrich2015automatic} can
     be fitted using the function \textit{dmcFitAgg}. This fits DMC to the
-    aggregated data.  A call to \textit{plot} with the output of fit as the
+    aggregated data. A call to \textit{plot} with the output of fit as the
     first input argument and the observed data as the second input argument
     will plot the predicted values from the model fit against the observed
-    values from the data (see Figures \ref{fig:5} and \ref{fig:6})
+    values from the data (see Figures \ref{fig:5} and \ref{fig:6}). A call to
+    \textit{summary} will display the parameter estimates.
     }, captionpos = t]
     > fit <- dmcFitAgg(flankerData) # flanker data from Ulrich et al. (2015)
     > plot(fit, flankerData)
@@ -564,15 +593,18 @@ column names and column codings can be specified using function arguments.
 
 
 \begin{minipage}{\linewidth}
-    \begin{lstlisting}[style = R, title = {R Code Example 6}, captionpos = t]
+    \begin{lstlisting}[style = R, 
+    title = {
+    R Code Example 6: The function \textit{dmcObservedData} creates the required data format to use within \textit{dmcFitAgg}.
+    }, captionpos = t]
     > ?dmcObservedData
-    > datOb <- dmcObservedData(datframe, 
-                               columns = c("SNo","comp","rt","err"), 
+    > datOb <- dmcObservedData(dat, 
+                               columns = c("SNo", "comp", "rt", "err"), 
                                compCoding = c(1, 2), 
                                errorCoding = c(0, 1)) 
     > plot(datOb)
     > dmcFit <- dmcFitAgg(datOb)
-    > plot(dmcFit,datOb)
+    > plot(dmcFit, datOb)
     \end{lstlisting}
 \end{minipage}
 
@@ -585,9 +617,9 @@ column names and column codings can be specified using function arguments.
         condition 3) The trial RT (in ms) and 4) A colum coding if the trial
         was correct/incorrect. It should be noted that the column names and the
         coding used within the compatibility and error columns can be set
-        within the function dmcObservedData. The function dmcObservedData
-        accepts both a filename(s) or an existing R dataframe.
-        into R.
+        within the function dmcObservedData. The function
+        \textit{dmcObservedData} accepts both a filename(s) or an existing R
+        dataframe. 
     }
     \begin{tabular}{llll}
         \hline
@@ -601,6 +633,8 @@ column names and column codings can be specified using function arguments.
         2&incomp&712&0\\ 
         2&comp&589&1\\ 
         2&incomp&756&0\\ 
+        2&incomp&639&1\\ 
+        ...&...&...&...\\ 
     \end{tabular}
     \label{tab:dmc_raw_data}
 \end{table}
@@ -633,7 +667,7 @@ this model to observed behavioural data from within conflict-like tasks.
 \section*{Conflict of interest}
 The authors declare that they have no conflict of interest.
 
-\section*{The code and data used are available at https://github.com/igmmgi/DMCfun}
+\section*{The source code and data used are available at https://github.com/igmmgi/DMCfun}
 
 \printbibliography
 \end{document}

@@ -2589,11 +2589,11 @@
     <bcf:citekey order="24">ulrich2015automatic</bcf:citekey>
     <bcf:citekey order="25">ulrich2015automatic</bcf:citekey>
     <bcf:citekey order="26">ulrich2015automatic</bcf:citekey>
-    <bcf:citekey order="27">ulrich2015automatic</bcf:citekey>
-    <bcf:citekey order="28">optimr</bcf:citekey>
+    <bcf:citekey order="27">optimr</bcf:citekey>
+    <bcf:citekey order="28">ulrich2015automatic</bcf:citekey>
     <bcf:citekey order="29">ulrich2015automatic</bcf:citekey>
-    <bcf:citekey order="30">ulrich2015automatic</bcf:citekey>
-    <bcf:citekey order="31">hubnerimproving</bcf:citekey>
+    <bcf:citekey order="30">hubnerimproving</bcf:citekey>
+    <bcf:citekey order="31">ulrich2015automatic</bcf:citekey>
     <bcf:citekey order="32">ulrich2015automatic</bcf:citekey>
     <bcf:citekey order="33">ulrich2015automatic</bcf:citekey>
     <bcf:citekey order="34">ulrich2015automatic</bcf:citekey>
@@ -2602,7 +2602,6 @@
     <bcf:citekey order="37">ulrich2015automatic</bcf:citekey>
     <bcf:citekey order="38">ulrich2015automatic</bcf:citekey>
     <bcf:citekey order="39">ulrich2015automatic</bcf:citekey>
-    <bcf:citekey order="40">ulrich2015automatic</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nyt">
