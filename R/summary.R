@@ -1,8 +1,9 @@
 #' @title summary.dmcsim
 #'
-#' @description Summary of the simulation results from dmcSim
+#' @description Summary of the overall results from dmcSim
 #'
 #' @param object Output from dmcSim
+#' @param digits Number of digits in the output
 #' @param ... pars
 #'
 #' @return list
@@ -20,8 +21,10 @@
 #' }
 #'
 #' @export
-summary.dmcsim <- function(object, ...) {
-  return(list(tibble::as_tibble(object$prms[1:9]), object$means))
+summary.dmcsim <- function(object, digits = 1, ...) {
+  df <- as.data.frame(object$means) 
+  df[, c(2:6)] <- round(df[, c(2:6)], digits)
+  return(df)
 }
 
 
@@ -31,6 +34,7 @@ summary.dmcsim <- function(object, ...) {
 #' @description Summary of the simulation results from dmcFitAgg
 #'
 #' @param object Output from dmcFitAgg
+#' @param digits Number of digits in the output
 #' @param ... pars
 #'
 #' @return DataFrame (tibble)
@@ -39,12 +43,12 @@ summary.dmcsim <- function(object, ...) {
 #' \dontrun{
 #' # Example 1
 #' fitAgg <- dmcFitAgg(flankerData, nTrl = 1000)
-#' summary(fitAgg)  # this is just fitAgg$means
+#' summary(fitAgg)  
 #' }
 #'
 #' @export
-summary.dmcfit <- function(object, ...) {
-    return(object$means)
+summary.dmcfit <- function(object, digits = 2, ...) {
+  return(round(do.call(cbind.data.frame, object$par), digits))
 }
 
 
@@ -54,6 +58,7 @@ summary.dmcfit <- function(object, ...) {
 #' @description Summary of the simulation results from dmcFitVPs
 #'
 #' @param object Output from dmcFitVPs
+#' @param digits Number of digits in the output
 #' @param ... pars
 #'
 #' @return list of DataFrames (tibbles) with the first being individual participant fitted parameters and the 
@@ -68,14 +73,15 @@ summary.dmcfit <- function(object, ...) {
 #' }
 #'
 #' @export
-summary.dmcfitvp <- function(object, ...) {
+summary.dmcfitvp <- function(object, digits = 2, ...) {
   
   VPs <- which(!unlist(lapply(object, is.null)))
   outVP <- NULL
   for (VP in VPs) {
     outVP <- rbind(outVP, cbind(VP, tibble::as_tibble(object[[VP]]$par)))
   }
-  outAvg <- tibble::as_tibble(t(c(colMeans(outVP[, c(2:11)]))))
+  outVP  <- round(outVP, digits)
+  outAvg <- round(as.data.frame(t(colMeans(data.matrix(outVP[, 2:11])))), digits)
   out    <- list(outVP, outAvg)
   
   return(out)

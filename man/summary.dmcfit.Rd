@@ -4,10 +4,12 @@
 \alias{summary.dmcfit}
 \title{summary.dmcfit}
 \usage{
-\method{summary}{dmcfit}(object, ...)
+\method{summary}{dmcfit}(object, digits = 2, ...)
 }
 \arguments{
 \item{object}{Output from dmcFitAgg}
+
+\item{digits}{Number of digits in the output}
 
 \item{...}{pars}
 }
@@ -21,7 +23,7 @@ Summary of the simulation results from dmcFitAgg
 \dontrun{
 # Example 1
 fitAgg <- dmcFitAgg(flankerData, nTrl = 1000)
-summary(fitAgg)  # this is just fitAgg$means
+summary(fitAgg)  
 }
 
 }

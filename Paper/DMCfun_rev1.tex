@@ -194,7 +194,7 @@ dimensions indicate the same response (compatible) than when they indicate
 different responses (incompatible). The longer reaction time and larger error
 rate in incompatible trials indicates that task-irrelevant information
 interferes with the processing of the task relevant information.
-    
+\par
 This compatibility effect pattern is consistent across all conflict-like tasks.
 However, when the size of the effect (incompatible - compatible) is compared
 across different percentiles of the RT distribution, different patterns can
@@ -296,20 +296,20 @@ whenever total activation exceeds some boundary (\textit{b}).
 
 \begin{table}
     \centering
-    \caption{DMC Model Parameters}
-    \begin{tabular}{ll}
+    \caption{DMC Model Parameters and Default Values within the function dmcSim}
+    \begin{tabular}{lll}
         \hline
-        Parameter&Description \\ 
+        Parameter&Description&Default Value \\ 
         \hline
-        amp & Amplitude of automatic activation\\ 
-        tau & Time of peak automatic activation with peak being tau $\cdot$ (aaShape - 1) \\ 
-        aaShape & Shape parameter of the gamma density function for timecourse of automatic activation \\ 
-        mu & Drift rate of the controlled activation \\ 
-        bnds & Decision boundary where response executed \\ 
-        resMean & Mean of the normal distribution of the residual (R) stage \\ 
-        resSD & Standard deviation of the normal distribution of the residual (R) stage \\ 
-        spShape & Shape parameter of the beta distribution for starting point variability \\ 
-        sigm & Scalling parameter of the drift diffusion process \\ 
+        amp & Amplitude of automatic activation & 20\\ 
+        tau & Time of peak automatic activation with peak being tau $\cdot$ (aaShape - 1) & 30\\ 
+        aaShape & Shape parameter of the gamma density function for timecourse of automatic activation & 2\\ 
+        mu & Drift rate of the controlled activation & 0.5\\ 
+        bnds & Decision boundary where response executed & $\pm$75\\ 
+        resMean & Mean of the normal distribution of the residual (R) stage & 300\\ 
+        resSD & Standard deviation of the normal distribution of the residual (R) stage & 30\\ 
+        spShape & Shape parameter of the beta distribution for starting point variability & 3\\ 
+        sigm & Scalling parameter of the drift diffusion process & 4\\ 
         \hline
     \end{tabular}
     \label{tab:dmc_parameters}
@@ -378,57 +378,52 @@ data from \textcite{ulrich2015automatic}.
 The package is currently hosted on GitHub (https://github.com/igmmgi/DMCfun).
 It is anticipated that the package will also be submitted to the R CRAN
 repository. The package can be installed directly from GitHub using the
-devtools package (via install\_github, see Code Example 1). The package
-includes the raw data used in the original simuluations from
-\textcite{ulrich2015automatic}. It can be accessed in raw form or a summarized
-form from within R (see Code Example 2). The raw data contains the four essential
-columns required; specifically, a column coding participant number (VP), a
-column coding the compatibility condition (Comp), a column with the reaction
-time data (RT) and a column indicating if the response was correct or incorrect
-(Error, with 1 indicating an error). The summarized data contains the particpant 
-and grand-average mean RTs, erorr-rates, CAF values and delta values. 
+devtools package (via install\_github, see Code Example 1).
 
 \begin{minipage}{\linewidth}
     \begin{lstlisting}[style = R, title={R Code Example 1: Instalation}, captionpos=t]
-    > # install.packages("devtools")
+    > # install.packages("devtools")  # if required
     > devtools::install_github("igmmgi/DMCfun")
     > library(DMCfun)
-    > help(package = "DMCfun")  \end{lstlisting}
-\end{minipage}
-
-\begin{minipage}{\linewidth}
-    \begin{lstlisting}[style = R, title={R Code Example 2: Example Data}, captionpos=t]
-    > flankerDataRaw 
-    > simonDataRaw 
-    > flankerData       # created with dmcObservedData
-    > plot(flankerData) 
-    > simonData         # created with dmcObservedData
-    > plot(simonData) 
+    > help(package = "DMCfun") # or ?DMCfun
     \end{lstlisting}
 \end{minipage}
 
 \subsection{DMC Simulation}
 \label{dmc_simulation}
-The simulation code is within the function dmcSim (see Code Example 2). The
-function dmcSim() allows the user to specify parameter values using named
-arguments (?dmcSim). A single simulation run with 100,000 trials in each
-compatibility condition takes approximately $<$ 150 ms (standard desktop PC).
-The function dmcSims allows the user to specify a list of input parameters in
-order to run multiple simulations. For example, \textcite{ulrich2015automatic}
+The DMC simulation is run using the function \textit{dmcSim} (see Code Example
+2 and Table \ref{tab:dmc_parameters} for DMC parameters). This function allows
+the user to specify parameter values using named arguments (?dmcSim). A single
+simulation run with 100,000 (default) trials in each compatibility condition
+takes approximately $<$ 150 ms (standard desktop PC). Figures from the
+simulation are produced by calling \textit{plot} on the output of dmcSim. The
+function dmcSims allows the user to specify a list of input parameters in order
+to run multiple simulations. For example, \textcite{ulrich2015automatic}
 observed that the parameter tau ($\tau$) largely determined the slope to the
 delta function. In Code Example 3, the DMC simulation is run using tau starting
-parameters from 20 to 170 in steps of 10 (see Figure \ref{fig:2}).
+parameters ranging from 20 to 170 in steps of 10 (all other parameters held constant,
+see Figure \ref{fig:2}).
 
 \begin{minipage}{\linewidth}
-    \begin{lstlisting}[style = R, title = {R Code Example 2}, captionpos = t]
+    \begin{lstlisting}[style = R, title = {R Code Example 2: Calling dmcSim and plotting output}, captionpos = t]
     > dmc <- dmcSim(fullData = TRUE)            # Fig 3 Ulrich et al. (2015)
     > dmc <- dmcSim(fullData = TRUE, tau = 150) # Fig 4 Ulrich et al. (2015)
+    > ?plot.dmcsim                              # Plot options for dmcSim 
     > plot(dmc)
     > plot(dmc, figType = "caf")    
     > plot(dmc, figType = "delta")
     > 
     > dmc <- dmcSim()                            
     > plot(dmc)                                 # Fig 3 Ulrich et al. (2015)
+    > dmc <- dmcSim(tau = 150, bnds = 100)                            
+    \end{lstlisting}
+\end{minipage}
+
+\begin{minipage}{\linewidth}
+    \begin{lstlisting}[style = R, title = {R Code Example 3: Calling dmcSims and plotting output}, captionpos = t]
+    > dmc <- dmcSims(list(tau = seq(20,170,10)))
+    > plot(dmc[[1]])  # full plot first combination only
+    > plot(dmc)       # plot delta functions for each combination 
     \end{lstlisting}
 \end{minipage}
 
@@ -440,6 +435,16 @@ parameters from 20 to 170 in steps of 10 (see Figure \ref{fig:2}).
 
 \subsection{DMC Fit: Real data} 
 \label{dmc_fit} 
+
+The package
+includes the raw data used in the original simuluations from
+\textcite{ulrich2015automatic}. It can be accessed in raw form or a summarized
+form from within R (see Code Example 2). The raw data contains the four essential
+columns required; specifically, a column coding participant number (VP), a
+column coding the compatibility condition (Comp), a column with the reaction
+time data (RT) and a column indicating if the response was correct or incorrect
+(Error, with 1 indicating an error). The summarized data contains the particpant 
+and grand-average mean RTs, erorr-rates, CAF values and delta values. 
 
 The package includes the raw data from \textcite{ulrich2015automatic} (see Code
 Example 4). This data was collected from a participants performing both a
@@ -502,53 +507,57 @@ alternative starting values) regarding the initial values for the simplex
 routine.
 
 
-\begin{minipage}{\linewidth}
-    \begin{lstlisting}[style = R, title = {R Code Example 3}, captionpos = t]
-    > dmc <- dmcSims(list(tau = seq(20,170,10)))
-    > plot(dmc[[1]])  # full plot first combination
-    > plot(dmc)       # plot delta functions for each combination
-    \end{lstlisting}
-\end{minipage}
 
 Users can fit DMC to their own data using the function dmcObservedData (see
-Code Example 6). The function dmcObservedData an R dataframe (or *.txt file(s))
-(see Table \ref{tab:dmc_raw_data} and calculates the required variables. Four
-data columns are required: one for participant number, one for compatibility,
-one for reaction time, and one for error rate. The specific column names and
-column codings can be specified using function arguments.
+Code Example 6). Whilst the focus of the \textcite{ulrich2015automatic} paper
+was on the flanker and simon tasks, DMC can be used to fit data from any
+``conflict-like'' task where there is both a task-relevant and a task
+irrelevant dimension. The function dmcObservedData an R dataframe (or *.txt
+file(s)) (see Table \ref{tab:dmc_raw_data} and calculates the required
+variables. Four data columns are required: one for participant number, one for
+compatibility, one for reaction time, and one for error rate. The specific
+column names and column codings can be specified using function arguments.
 
 \begin{minipage}{\linewidth}
-    \begin{lstlisting}[style = R, title = {R Code Example 4}, captionpos = t]
+    \begin{lstlisting}[style = R, title = {
+        R Code Example 4: The package contains the data from
+        \textcite{ulrich2015automatic}. A figure of the summarized data can be
+        produced by calling \textit{plot} with the observed data as an input
+        argument.
+        }, captionpos = t]
     flankerDataRaw      # raw flanker data
     flankerData         # summarised flanker data
     plot(flankerData)
     simonDataRaw        # raw simon data
     simonData           # summarised simon data
     plot(simonData)
-    \end{lstlisting}
-\end{minipage}
+        \end{lstlisting}
+    \end{minipage}
 
 \begin{minipage}{\linewidth}
-    \begin{lstlisting}[style = R, title = {R Code Example 5}, captionpos = t]
-    > fit<-dmcFitAgg(flankerData) # flanker data from Ulrich et al. (2015)
-    > plot(fit,flankerData)
+    \begin{lstlisting}[style = R, title = {
+    R Code Example 5: The example data from \textcite{ulrich2015automatic} can
+    be fitted using the function \textit{dmcFitAgg}. This fits DMC to the
+    aggregated data.  A call to \textit{plot} with the output of fit as the
+    first input argument and the observed data as the second input argument
+    will plot the predicted values from the model fit against the observed
+    values from the data (see Figures \ref{fig:5} and \ref{fig:6})
+    }, captionpos = t]
+    > fit <- dmcFitAgg(flankerData) # flanker data from Ulrich et al. (2015)
+    > plot(fit, flankerData)
     > summary(fit)
     
     # output values from flanker data
-    # A tibble: 1 x 9 
-        amp   tau    mu  bnds resMean resSD aaShape spShape  rmse
-      <dbl> <dbl> <dbl> <dbl>   <dbl> <dbl>   <dbl>   <dbl> <dbl>
-    1  17.7  106. 0.599  55.7    326.  28.8    2.02    3.04  7.50
+        amp   tau  mu  bnds resMean resSD aaShape spShape sigm RMSE
+    1 19.42 84.22 0.6 56.47  325.14 28.28    2.24     2.8    4 7.69
     
-    > fit<-dmcFitAgg(simonData) # simon data from Ulrich et al. (2015)
-    > plot(fit,simonData)
+    > fit <- dmcFitAgg(simonData)   # simon data from Ulrich et al. (2015)
+    > plot(fit, simonData)
     > summary(fit)
     
     # output values from simon data
-    # A tibble: 1 x 9
-        amp   tau    mu  bnds resMean resSD aaShape spShape  rmse
-      <dbl> <dbl> <dbl> <dbl>   <dbl> <dbl>   <dbl>   <dbl> <dbl>
-    1  17.9  27.9 0.595  58.1    315.  31.5    2.32    3.20  11.6
+       amp   tau   mu  bnds resMean resSD aaShape spShape sigm  RMSE
+    1 17.5 41.33 0.61 61.31  312.51 30.67    1.93    3.32    4 11.57
     \end{lstlisting}
 \end{minipage}
 
@@ -595,8 +604,6 @@ column codings can be specified using function arguments.
     \end{tabular}
     \label{tab:dmc_raw_data}
 \end{table}
-
-
 
 \begin{figure}[H]
     \includegraphics[width=1\textwidth]{../figures/figure5.pdf}

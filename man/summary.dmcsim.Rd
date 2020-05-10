@@ -4,10 +4,12 @@
 \alias{summary.dmcsim}
 \title{summary.dmcsim}
 \usage{
-\method{summary}{dmcsim}(object, ...)
+\method{summary}{dmcsim}(object, digits = 1, ...)
 }
 \arguments{
 \item{object}{Output from dmcSim}
+
+\item{digits}{Number of digits in the output}
 
 \item{...}{pars}
 }
@@ -15,7 +17,7 @@
 list
 }
 \description{
-Summary of the simulation results from dmcSim
+Summary of the overall results from dmcSim
 }
 \examples{
 \dontrun{

@@ -4,10 +4,12 @@
 \alias{summary.dmcfitvp}
 \title{summary.dmcfitvp}
 \usage{
-\method{summary}{dmcfitvp}(object, ...)
+\method{summary}{dmcfitvp}(object, digits = 2, ...)
 }
 \arguments{
 \item{object}{Output from dmcFitVPs}
+
+\item{digits}{Number of digits in the output}
 
 \item{...}{pars}
 }
