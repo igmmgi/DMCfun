@@ -159,15 +159,16 @@ grestore
 \begin{abstract}
 
     Decision processes within choice reaction-time (CRT) tasks are often
-    modelled using variations of a Diffusion Decision Model \parencite[DDM, for
-    a review, see][] {ratcliff2008diffusion}. \textcite{ulrich2015automatic}
-    introduced a Diffusion Model for Conflict tasks (DMC). The DMC model
-    combines common features from within standard diffusion models with the
-    addition of superimposed controlled and automatic activation. The DMC model
-    is used to explain distributional reaction time (and error rate) patterns
-    in common behavioural conflict-like tasks (e.g., Flanker task, Simon task).
-    This paper introduces the R-package DMCfun, which implements the DMC model
-    and provides functionality to fit the model to observed data.
+    modelled using evidence accumulation models (EAMs), a variation of which is
+    the Diffusion Decision Model \parencite[DDM, for a review, see][]
+    {ratcliff2008diffusion}. \textcite{ulrich2015automatic} introduced a
+    Diffusion Model for Conflict tasks (DMC). The DMC model combines common
+    features from within standard diffusion models with the addition of
+    superimposed controlled and automatic activation. The DMC model is used to
+    explain distributional reaction time (and error rate) patterns in common
+    behavioural conflict-like tasks (e.g., Flanker task, Simon task). This
+    paper introduces the R-package DMCfun, which implements the DMC model and
+    provides functionality to fit the model to observed data.
 
 \keywords{reaction time \and conflict task \and Diffusion Model Conflict (DMC) \and R package}
 
@@ -240,32 +241,61 @@ the lowest level of accuracy is observed at fastest RT bins. At the slowest RT
 bins, there is little difference in accuracy between compatible and
 incompatible conditions.
 
-The following section introduces the DMC model \textcite{ulrich2015automatic}.
-It must be noted that other extensions of standard drift diffusion models with
+The following section introduces the basic rationale behind EAMs before
+introducing the DMC model \textcite{ulrich2015automatic} in more detail. It
+must be noted that other extensions of standard drift diffusion models with
 specific reference to conflict-like tasks have been proposed. For example, the
-dual-stage two-phase model \parencite[DSTP, ][]{hubner2010dual} or the shrinking
-spotlight model \parencite[SSP, ][]{white2011diffusion}. A direct comparison
-between such models is beyond the scope of the current paper with such
-comparisons provided elsewhere \parencite[see][albeit with specific reference
-to the flanker task only]{white2018testing, evans2020comparison}.
+dual-stage two-phase model \parencite[DSTP, ][]{hubner2010dual} or the
+shrinking spotlight model \parencite[SSP, ][]{white2011diffusion}. A direct
+comparison between such models is beyond the scope of the current paper with
+such comparisons provided elsewhere \parencite[see][albeit with specific
+reference to the flanker task only]{white2018testing, evans2020comparison}.
 
-\subsection{DMC Model Details} 
+\subsection{Evidence Accumulation Models (EAMs)} 
+
+Evidence accumulation models or diffusion models have contributed fundamentally
+to theoretical investigations of choice behaviour; specifically, behaviour when
+a speeded two-alternative forced choice (2AFC) response is required. A recent
+review of the DDM is provided in \textcite{ratcliff2016diffusion}, whilst
+\textcite{evanswagenmakers2019} provide a critique of the use of EAMs within
+current research and outline future directions for the methodology. EAMs
+propose that when faced with a simple 2AFC task, evidence for one choice over
+the other (typically left vs. right responses) accumulates gradually. This is
+known as the \textit{drift rate}. The response is executed whenever the level
+of accumulated evidence exceeds a certain threshold termed the \textit{response
+boundary}. Here, \textit{drift rate} can be thought of a ease of
+task-processing, whilst \textit{response boundary} as response caution. As
+highlighted by \textcite{evanswagenmakers2019}, examining the drift rate and
+response boundary parameter can have theoretical significance for theoretical
+interpretations of individual or group reaction time differences. For example,
+the reported cognitive slowdown with increasing age reported by
+\textcite{salthouse1996processing} may be due to differences in response
+caution (\textit{response boundary}) and non-decision components rather than
+processing speed (\textit{drift rate}) with increasing age
+\parencite{ratcliff2001effects}. Developments of the DDM (full diffusion model)
+have elaborated the basic model with the additional parameters such as between
+trial variability in both the drift rate, starting point, and non-decision
+components \parencite[see ][]{ratcliff2016diffusion}. 
+
+
+\subsubsection{Diffusion Model for Conflict Tasks (DMC)}
 \label{model_details} 
 
-The DMC model of \textcite{ulrich2015automatic} builds upon the idea that
-conflict tasks consist of two processes that proceed in parallel (automatic and
-controlled processing). Here, controlled processing concerns the task-relative
-information, whereas automatic processing concerns the task-irrelevant
-information. Whilst the architecture of such combined controlled/automatic
-processing within individual conflict tasks is under-specified,
-\textcite{ulrich2015automatic} suggest two possible architectures
-\parencite[see Figure 1 in ][]{ulrich2015automatic} under which automatic and
-controlled processing interact. Under both architectures, DMC assumes that a
-single accumulation process (combined automatic and controlled) determines the
-executed response. Critically, automatic processes will facilitate (impede)
-controlled processes in compatible (incompatible) trials. In addition, it is
-assumed that the activation output from automatic processes increases to a
-maximum before decreasing back to zero (pulse function).
+The DMC model of \textcite{ulrich2015automatic} is an elaboration of the
+standard diffusion model specific for conflict-like tasks.  The DMC model
+builds upon the idea that conflict tasks consist of two processes that proceed
+in parallel (automatic and controlled processing). Here, controlled processing
+concerns the task-relative information, whereas automatic processing concerns
+the task-irrelevant information. Whilst the architecture of such combined
+controlled/automatic processing within individual conflict tasks is
+under-specified, \textcite{ulrich2015automatic} suggest two possible
+architectures \parencite[see Figure 1 in ][]{ulrich2015automatic} under which
+automatic and controlled processing interact. Under both architectures, DMC
+assumes that a single accumulation process (combined automatic and controlled)
+determines the executed response. Critically, automatic processes will
+facilitate (impede) controlled processes in compatible (incompatible) trials.
+In addition, it is assumed that the activation output from automatic processes
+increases to a maximum before decreasing back to zero (pulse function).
 
 The formal model specification for DMC is provided in
 \textcite{ulrich2015automatic} and thus, will only be briefly described here.
@@ -501,7 +531,7 @@ within the RT and CAF data across both compatibility conditions such that
 \begin{equation*}
     \textit{w}\textsubscript{RT} = \frac{2 \cdot N\textsubscript{RT}} {2 \cdot N\textsubscript{RT} + N\textsubscript{CAF}} \quad and \quad  \textit{w}\textsubscript{CAF} = (1 - \textit{w}\textsubscript{RT}) \cdot 1500
 \end{equation*}
-where N is the number of bins. The actual calculation of the RMSE\textsubscript{CAF} and
+where N is the number of bins. The calculation of the RMSE\textsubscript{CAF} and
 RMSE\textsubscript{RT} is as follows:
 \begin{equation*}
     RMSE\textsubscript{RT/CAF} = \sqrt{\frac{1}{N\cdot2} \sum_{b=1}^{N} \sum_{c=1}^{2} \left[X\textsubscript{\textit{th;b,c}} - X\textsubscript{\textit{ob;b,c}} \right] \textsuperscript{2}} 

@@ -200,7 +200,6 @@
       \field{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{year}
-      \true{uniqueprimaryauthor}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{Psychological Review}
@@ -209,6 +208,48 @@
       \field{year}{2020}
       \field{pages}{114\bibrangedash 135}
       \range{pages}{22}
+    \endentry
+    \entry{evanswagenmakers2019}{misc}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=c53130be257f186d898c5b1c0b64120a}{%
+           family={Evans},
+           familyi={E\bibinitperiod},
+           given={Nathan\bibnamedelima J},
+           giveni={N\bibinitperiod\bibinitdelim J\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=d0127560e030afe2fdab5e2b35378c37}{%
+           family={Wagenmakers},
+           familyi={W\bibinitperiod},
+           given={Eric-Jan},
+           giveni={E\bibinithyphendelim J\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {PsyArXiv}%
+      }
+      \strng{namehash}{23603fe64450192191eaaeca90b926ef}
+      \strng{fullhash}{23603fe64450192191eaaeca90b926ef}
+      \strng{bibnamehash}{23603fe64450192191eaaeca90b926ef}
+      \strng{authorbibnamehash}{23603fe64450192191eaaeca90b926ef}
+      \strng{authornamehash}{23603fe64450192191eaaeca90b926ef}
+      \strng{authorfullhash}{23603fe64450192191eaaeca90b926ef}
+      \field{sortinit}{E}
+      \field{sortinithash}{c554bd1a0b76ea92b9f105fe36d9c7b0}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Evidence Accumulation Models: Current Limitations and Future Directions}
+      \field{year}{2019}
+      \verb{doi}
+      \verb 10.31234/osf.io/74df9
+      \endverb
+      \verb{urlraw}
+      \verb psyarxiv.com/74df9
+      \endverb
+      \verb{url}
+      \verb psyarxiv.com/74df9
+      \endverb
     \endentry
     \entry{hubnerimproving}{article}{}
       \name{author}{2}{}{%
@@ -583,6 +624,134 @@
       \field{year}{2008}
       \field{pages}{873\bibrangedash 922}
       \range{pages}{50}
+    \endentry
+    \entry{ratcliff2016diffusion}{article}{}
+      \name{author}{4}{}{%
+        {{un=0,uniquepart=base,hash=f8f3e25ff3eca44052e7ea8417d818b2}{%
+           family={Ratcliff},
+           familyi={R\bibinitperiod},
+           given={Roger},
+           giveni={R\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=a92d2f65d17392b3c0e8cb8709703a70}{%
+           family={Smith},
+           familyi={S\bibinitperiod},
+           given={Philip\bibnamedelima L},
+           giveni={P\bibinitperiod\bibinitdelim L\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=7c45a8eeded8ac3f0346f06537d9a683}{%
+           family={Brown},
+           familyi={B\bibinitperiod},
+           given={Scott\bibnamedelima D},
+           giveni={S\bibinitperiod\bibinitdelim D\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=c3707075a8d41c3bb0fc3d3c1c7683ad}{%
+           family={McKoon},
+           familyi={M\bibinitperiod},
+           given={Gail},
+           giveni={G\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier}%
+      }
+      \strng{namehash}{ae2175b3eb00996eabf9d1155b8af199}
+      \strng{fullhash}{69d410213e53756632e7ed455c7bf0c9}
+      \strng{bibnamehash}{69d410213e53756632e7ed455c7bf0c9}
+      \strng{authorbibnamehash}{69d410213e53756632e7ed455c7bf0c9}
+      \strng{authornamehash}{ae2175b3eb00996eabf9d1155b8af199}
+      \strng{authorfullhash}{69d410213e53756632e7ed455c7bf0c9}
+      \field{extraname}{1}
+      \field{sortinit}{R}
+      \field{sortinithash}{b9c68a358aea118dfa887b6e902414a7}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Trends in cognitive sciences}
+      \field{number}{4}
+      \field{title}{Diffusion decision model: Current issues and history}
+      \field{volume}{20}
+      \field{year}{2016}
+      \field{pages}{260\bibrangedash 281}
+      \range{pages}{22}
+    \endentry
+    \entry{ratcliff2001effects}{article}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=f8f3e25ff3eca44052e7ea8417d818b2}{%
+           family={Ratcliff},
+           familyi={R\bibinitperiod},
+           given={Roger},
+           giveni={R\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=4969a4f2427e12c9b4a01972ed4b70e7}{%
+           family={Thapar},
+           familyi={T\bibinitperiod},
+           given={Anjali},
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=c3707075a8d41c3bb0fc3d3c1c7683ad}{%
+           family={McKoon},
+           familyi={M\bibinitperiod},
+           given={Gail},
+           giveni={G\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {American Psychological Association}%
+      }
+      \strng{namehash}{ae2175b3eb00996eabf9d1155b8af199}
+      \strng{fullhash}{9bd68b2a980df94dcba24e1844660139}
+      \strng{bibnamehash}{9bd68b2a980df94dcba24e1844660139}
+      \strng{authorbibnamehash}{9bd68b2a980df94dcba24e1844660139}
+      \strng{authornamehash}{ae2175b3eb00996eabf9d1155b8af199}
+      \strng{authorfullhash}{9bd68b2a980df94dcba24e1844660139}
+      \field{extraname}{2}
+      \field{sortinit}{R}
+      \field{sortinithash}{b9c68a358aea118dfa887b6e902414a7}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Psychology and Aging}
+      \field{title}{The effects of aging on reaction time in a signal detection task.}
+      \field{volume}{16}
+      \field{year}{2001}
+      \field{pages}{323}
+      \range{pages}{1}
+    \endentry
+    \entry{salthouse1996processing}{article}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=e1e0f36c60ea25945fe4c954f7341e42}{%
+           family={Salthouse},
+           familyi={S\bibinitperiod},
+           given={Timothy\bibnamedelima A},
+           giveni={T\bibinitperiod\bibinitdelim A\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {American Psychological Association}%
+      }
+      \strng{namehash}{e1e0f36c60ea25945fe4c954f7341e42}
+      \strng{fullhash}{e1e0f36c60ea25945fe4c954f7341e42}
+      \strng{bibnamehash}{e1e0f36c60ea25945fe4c954f7341e42}
+      \strng{authorbibnamehash}{e1e0f36c60ea25945fe4c954f7341e42}
+      \strng{authornamehash}{e1e0f36c60ea25945fe4c954f7341e42}
+      \strng{authorfullhash}{e1e0f36c60ea25945fe4c954f7341e42}
+      \field{sortinit}{S}
+      \field{sortinithash}{c319cff79d99c853d775f88277d4e45f}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Psychological review}
+      \field{number}{3}
+      \field{title}{The processing-speed theory of adult age differences in cognition.}
+      \field{volume}{103}
+      \field{year}{1996}
+      \field{pages}{403}
+      \range{pages}{1}
     \endentry
     \entry{servant2016}{article}{}
       \name{author}{4}{}{%
