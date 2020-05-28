@@ -22,9 +22,7 @@ plot(dmc)
 
 ``` r
 dmc$means
-# A tibble: 2 x 6
   Comp   rtCor sdRtCor perErr rtErr sdRtErr
-  <chr>  <dbl>   <dbl>  <dbl> <dbl>   <dbl>
 1 comp    440.   105.   0.633  479.   104. 
 2 incomp  459.    94.8  1.38   406.    95.2
 ```
@@ -37,9 +35,7 @@ plot(dmc)
 
 ``` r
 dmc$means
-# A tibble: 2 x 6
   Comp   rtCor sdRtCor perErr rtErr sdRtErr
-  <chr>  <dbl>   <dbl>  <dbl> <dbl>   <dbl>
 1 comp    421.    90.4  0.259  504.   119. 
 2 incomp  484.   103.   2.37   425.    82.7
 ```
@@ -60,9 +56,7 @@ plot(fit, flankerData)
 
 ``` r
 summary(fit)
-# A tibble: 1 x 10
     amp   tau    mu  bnds resMean resSD aaShape spShape sigm  rmse
-  <dbl> <dbl> <dbl> <dbl>   <dbl> <dbl>   <dbl>   <dbl> <dbl> <dbl>
 1  19.3  98.8 0.593  55.8    325.  28.4    2.26    2.84     4  8.91
 ```
 
@@ -73,8 +67,6 @@ plot(fit, simonData)
 ![alt text](figures/figure6.png)     
 
 ``` r
-# A tibble: 1 x 10
     amp   tau    mu  bnds resMean resSD aaShape spShape sigm  rmse
-  <dbl> <dbl> <dbl> <dbl>   <dbl> <dbl>   <dbl>   <dbl> <dbl> <dbl>
 1  17.5  33.8 0.577  58.7    311.  29.9    2.31    3.41     4  11.5
 ```
