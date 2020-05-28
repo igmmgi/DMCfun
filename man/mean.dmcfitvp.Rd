@@ -12,7 +12,7 @@
 \item{...}{pars}
 }
 \value{
-dmcfit 
+dmcfit
 
 The function returns a list with the relevant aggregated results dmcFitVPs. The list
 is accessed with obj$name and so on with the the following:
