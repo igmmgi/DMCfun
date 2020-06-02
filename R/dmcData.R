@@ -387,7 +387,7 @@ dmcObservedData <- function(dat,
   # conditional accuracy functions (CAF)
   datVP_caf <- dat %>%
     dplyr::filter(RT >= rtMin, RT <= rtMax) %>%
-    calculateCAF(.) 
+    calculateCAF(., stepCAF = stepCAF) 
   
   datAgg_caf <- datVP_caf %>%
     dplyr::group_by(Comp, bin) %>%
@@ -396,7 +396,7 @@ dmcObservedData <- function(dat,
   # DELTA
   datVP_dec <- dat %>%
     dplyr::filter(Error == 0, RT >= rtMin, RT <= rtMax) %>%
-    calculateDelta(.)  
+    calculateDelta(., stepDelta = stepDelta)  
   
   datAgg_dec <- datVP_dec %>%
     dplyr::group_by(bin) %>%
