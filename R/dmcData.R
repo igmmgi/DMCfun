@@ -27,7 +27,7 @@ NULL
 #'   \item VP Subject number
 #'   \item Comp comp vs. incomp
 #'   \item RT
-#'   \item Error 0 = correct, 1 = error 
+#'   \item Error 0 = correct, 1 = error
 #' }
 #'
 #' @docType data
@@ -67,7 +67,7 @@ NULL
 #'   \item VP Subject number
 #'   \item Comp comp vs. incomp
 #'   \item RT
-#'   \item Error 0 = correct, 1 = error 
+#'   \item Error 0 = correct, 1 = error
 #' }
 #'
 #' @docType data
@@ -104,7 +104,7 @@ createDF <- function(nVP = 20,
                      nTrl = 50,
                      design = list("A" = c("A1", "A2"), "B" = c("B1", "B2"))) {
 
-  dat <-  data.frame(expand.grid(modifyList(design, list(VP = c(1:nVP), Trial = c(1:nTrl))))) 
+  dat <-  data.frame(expand.grid(modifyList(design, list(VP = c(1:nVP), Trial = c(1:nTrl)))))
   return(dat[c("VP", names(design))])
 
 }
@@ -249,12 +249,12 @@ addDataDF <- function(dat, RT=NULL, Error=NULL) {
 #' @title dmcObservedData
 #'
 #' @description Basic example analysis script to create data object required
-#' for observed data. Example raw *.txt files are flankerData.txt and simonData.txt. There 
+#' for observed data. Example raw *.txt files are flankerData.txt and simonData.txt. There
 #' are four critical columns:
 #' A column containing participant number
-#' A column coding for compatible or incompatible 
+#' A column coding for compatible or incompatible
 #' A column with RT (in ms)
-#' A column indicating of the response was correct 
+#' A column indicating of the response was correct
 #' @param dat Text file(s) containing the observed data or an R DataFrame (see createDF/addDataDF)
 #' @param stepCAF Step size for the CAF bins. For example, a step size of 20 would result
 #' in 5 CAF bins centered on 10, 30, 50, 70, and 90\%.
@@ -312,8 +312,8 @@ addDataDF <- function(dat, RT=NULL, Error=NULL) {
 #'                            "Congruency_incong" = c(530, 100, 110)),
 #'                  Error = list("Congruency_cong"   = c(3, 2, 2, 1, 1),
 #'                               "Congruency_incong" = c(21, 3, 2, 1, 1)))
-#' datOb <- dmcObservedData(dat, stepCAF = 20, stepDelta = 10, 
-#'                          columns = c("VP", "Congruency", "RT", "Error"), 
+#' datOb <- dmcObservedData(dat, stepCAF = 20, stepDelta = 10,
+#'                          columns = c("VP", "Congruency", "RT", "Error"),
 #'                          compCoding = c("cong", "incong"))
 #' plot(datOb, labels = c("Congruent", "Incongruent"))
 #' plot(datOb, VP = 1)
@@ -325,25 +325,25 @@ dmcObservedData <- function(dat,
                             outlier = c(200, 1200),
                             columns = c("VP", "Comp", "RT", "Error"),
                             compCoding = c("comp", "incomp"),
-                            errorCoding = c(0, 1), 
+                            errorCoding = c(0, 1),
                             quantileType = 5,
                             delim = "\t",
                             skip = 0) {
-  
+
   # if dat external file(s)
-  if (is.character(dat)) {  
+  if (is.character(dat)) {
     dat <- do.call(rbind, lapply(dat, read.table, header = TRUE, sep = delim, skip = skip))
-  } 
-      
+  }
+
   # select required columns and give default names
-  dat <- dat[columns] 
+  dat <- dat[columns]
   if (ncol(dat) < 4) {
     stop("dat does not contain required/requested columns!")
   }
   if (any(names(dat) != c("VP", "Comp", "RT", "Error"))) {
     names(dat) = c("VP", "Comp", "RT", "Error")
   }
-  
+
   # create default column values for comp and error coding
   if (any(compCoding != c("comp", "incomp"))) {
     dat$Comp <- ifelse(dat$Comp == compCoding[1], "comp", "incomp")
@@ -351,10 +351,10 @@ dmcObservedData <- function(dat,
   if (any(errorCoding != c(0, 1))) {
     dat$Error <- ifelse(dat$Error == errorCoding[1], 0, 1)
   }
-  
+
   rtMin  <- outlier[1]
   rtMax  <- outlier[2]
-  
+
   # aggregate data across trials within VPs
   datVP <- dat %>%
     dplyr::mutate(outlier = RT <= rtMin | RT >= rtMax) %>%
@@ -365,8 +365,9 @@ dmcObservedData <- function(dat,
                      nOutVP   = sum(outlier),
                      rtCorVP  = mean(RT[Error == 0 & outlier == 0]),
                      rtErrVP  = mean(RT[Error == 1 & outlier == 0]),
-                     perErrVP = (nErrVP/(nErrVP + nCorVP))*100)
-  
+                     perErrVP = (nErrVP/(nErrVP + nCorVP))*100,
+                     .groups = 'drop')
+
   # aggregate data across VPs
   datAgg <- datVP %>%
     dplyr::group_by(Comp) %>%
@@ -382,22 +383,24 @@ dmcObservedData <- function(dat,
                      seRtErr  = sdRtErr/sqrt(N),
                      perErr   = mean(perErrVP, na.rm = TRUE),
                      sdPerErr = sd(perErrVP, na.rm = TRUE),
-                     sePerErr = sdPerErr/sqrt(N))
-  
+                     sePerErr = sdPerErr/sqrt(N),
+                     .groups  = 'drop')
+
   # conditional accuracy functions (CAF)
   datVP_caf <- dat %>%
     dplyr::filter(RT >= rtMin, RT <= rtMax) %>%
-    calculateCAF(., stepCAF = stepCAF) 
-  
+    calculateCAF(., stepCAF = stepCAF)
+
   datAgg_caf <- datVP_caf %>%
     dplyr::group_by(Comp, bin) %>%
-    dplyr::summarize(accPer = mean(accPerVP))
-  
+    dplyr::summarize(accPer  = mean(accPerVP),
+                     .groups = 'drop')
+
   # DELTA
   datVP_dec <- dat %>%
     dplyr::filter(Error == 0, RT >= rtMin, RT <= rtMax) %>%
-    calculateDelta(., stepDelta = stepDelta)  
-  
+    calculateDelta(., stepDelta = stepDelta)
+
   datAgg_dec <- datVP_dec %>%
     dplyr::group_by(bin) %>%
     dplyr::summarize(meanComp   = mean(meanCompVP),
@@ -405,44 +408,45 @@ dmcObservedData <- function(dat,
                      meanBin    = mean(meanBinVP),
                      meanEffect = mean(meanEffectVP),
                      sdEffect   = sd(meanEffectVP),
-                     seEffect   = sdEffect/sqrt(n()))
-  
+                     seEffect   = sdEffect/sqrt(n()),
+                     .groups    = 'drop')
+
   ##############################################################################
   # save results
   obj <- list()
-  
+
   # summary
   obj$summaryVP        <- datVP[ , c(1, 2, 7, 9, 8)]
   obj$summary          <- datAgg[ , c(1, 6, 7, 8, 12, 13, 14, 9, 10, 11)]
   names(obj$summaryVP) <- c("VP", "Comp", "rtCor", "perErr", "rtErr")
-  
+
   # caf
   obj$cafVP        <- datVP_caf
   names(obj$cafVP) <- c("VP", "Comp", "bin", "accPer")
   obj$caf          <- datAgg_caf
-  
+
   # delta
   obj$deltaVP        <- datVP_dec
   names(obj$deltaVP) <- c("VP", "bin", "meanComp", "meanIncomp", "meanBin", "meanEffect")
   obj$delta          <- datAgg_dec
-  
+
   class(obj) <- "dmcob"
-  
+
   return(obj)
-  
+
 }
 
 
 
 #' @title calculateCAF
 #'
-#' @description Calculate conditional accuracy function (CAF). 
-#' The DataFrame should contain columns defining the participant, compatibility condition, 
+#' @description Calculate conditional accuracy function (CAF).
+#' The DataFrame should contain columns defining the participant, compatibility condition,
 #' RT and error (Default column names: "VP", "Comp", "RT", "Error"). The "Comp" column should
 #' define compatibility condition (Default: c("comp", "incomp")) and the "Error" column should
-#' define if the trial was an error or not (Default: c(0, 1) ). 
+#' define if the trial was an error or not (Default: c(0, 1) ).
 #'
-#' @param dat DataFrame with columns containing the participant number, condition 
+#' @param dat DataFrame with columns containing the participant number, condition
 #' compatibility, RT data (in ms) and an Error column.
 #' @param stepCAF Step size for the CAF bins. For example, a step size of 20 would
 #' result in 5 CAF bins centered on 10, 30, 50, 70, and 90\%.
@@ -461,7 +465,7 @@ dmcObservedData <- function(dat,
 #'                  Error = list("Comp_comp"   = c(5, 4,3,2,1),
 #'                               "Comp_incomp" = c(20, 8, 6, 4, 2)))
 #' caf <- calculateCAF(dat)
-#' 
+#'
 #' # Example 2
 #' dat <- createDF(nVP = 1, nTrl = 100, design = list("Congruency" = c("cong", "incong")))
 #' dat <- addDataDF(dat,
@@ -470,28 +474,28 @@ dmcObservedData <- function(dat,
 #'                  Error = list("Congruency_cong"   = c(5, 4,3,2,1),
 #'                               "Congruency_incong" = c(20, 8, 6, 4, 2)))
 #' head(dat)
-#' caf <- calculateCAF(dat, columns = c("VP", "Congruency", "RT", "Error"), 
+#' caf <- calculateCAF(dat, columns = c("VP", "Congruency", "RT", "Error"),
 #'                     compCoding = c("cong", "incong"))
 #
 #'
 #' @export
-calculateCAF <- function(dat, 
-                         stepCAF = 20, 
+calculateCAF <- function(dat,
+                         stepCAF = 20,
                          columns = c("VP", "Comp", "RT", "Error"),
                          compCoding = c("comp", "incomp"),
                          errorCoding = c(0, 1)) {
-                          
+
   # select required columns
-  dat <- dat[columns] 
+  dat <- dat[columns]
   if (ncol(dat) < 4) {
     stop("dat does not contain required/requested columns!")
   }
-  
+
   # create default column names
   if (any(names(dat) != c("VP", "Comp", "RT", "Error"))) {
     names(dat) = c("VP", "Comp", "RT", "Error")
   }
-  
+
   # create default column values for comp and error coding
   if (any(compCoding != c("comp", "incomp"))) {
     dat$Comp <- ifelse(dat$Comp == compCoding[1], "comp", "incomp")
@@ -499,16 +503,18 @@ calculateCAF <- function(dat,
   if (any(errorCoding != c(0, 1))) {
     dat$Error <- ifelse(dat$Error == errorCoding[1], 0, 1)
   }
-      
+
   # conditional accuracy functions (CAF)
   dat_caf <- dat %>%
     dplyr::group_by(VP, Comp) %>%
     dplyr::mutate(bin = ntile(RT, (100/stepCAF))) %>%
     dplyr::group_by(VP, Comp, bin) %>%
     dplyr::summarize(N        = n(),
-                     accPerVP = sum(Error == 0)/N)  %>%
+                     accPerVP = sum(Error == 0)/N,
+                     .groups  = 'drop')  %>%
     dplyr::group_by(VP, Comp, bin) %>%
-    dplyr::summarize(accPerVP = mean(accPerVP))
+    dplyr::summarize(accPerVP = mean(accPerVP),
+                     .groups  = 'drop')
 
     return(dat_caf)
 
@@ -519,11 +525,11 @@ calculateCAF <- function(dat,
 #' @title calculateDelta
 #'
 #' @description Calculate delta plot. Here RTs are split into n bins (Default: 5) for compatible and
-#' incompatible trials separately. Mean RT is calculated for each condition in each bin then 
+#' incompatible trials separately. Mean RT is calculated for each condition in each bin then
 #' subtracted (incompatible - compatible) to give a compatibility effect (delta) at each bin.
 #'
-#' @param dat DataFrame with columns containing the participant number, condition 
-#' compatibility, and RT data (in ms).  
+#' @param dat DataFrame with columns containing the participant number, condition
+#' compatibility, and RT data (in ms).
 #' @param stepDelta Step size for the Delta bins. For example, a step size of 5 would result
 #' in 19 CAF bins positioned at 5, 10, 15, ... 85, 90, 95\%.
 #' @param columns Name of required columns Default: c("VP", "Comp", "RT")
@@ -539,60 +545,57 @@ calculateCAF <- function(dat,
 #'                  RT = list("Comp_comp"   = c(500, 80, 100),
 #'                            "Comp_incomp" = c(600, 80, 140)))
 #' delta <- calculateDelta(dat)
-#' 
+#'
 #' # Example 2
 #' dat <- createDF(nVP = 50, nTrl = 100, design = list("Congruency" = c("cong", "incong")))
 #' dat <- addDataDF(dat,
 #'                  RT = list("Congruency_cong"   = c(500, 80, 100),
 #'                            "Congruency_incong" = c(600, 80, 140)))
 #' head(dat)
-#' delta <- calculateDelta(dat, columns = c("VP", "Congruency", "RT"), 
+#' delta <- calculateDelta(dat, columns = c("VP", "Congruency", "RT"),
 #'                         compCoding = c("cong", "incong"))
 #
 #'
 #' @export
-calculateDelta <- function(dat, 
-                           stepDelta = 5, 
+calculateDelta <- function(dat,
+                           stepDelta = 5,
                            columns = c("VP", "Comp", "RT"),
                            compCoding = c("comp", "incomp"),
                            quantileType = 5) {
-  
+
   # select required columns
-  dat <- dat[columns] 
+  dat <- dat[columns]
   if (ncol(dat) != 3) {
     stop("dat does not contain required/requested columns!")
   }
-  
+
   # create default column names
   if (any(names(dat) != c("VP", "Comp", "RT"))) {
     names(dat) = c("VP", "Comp", "RT")
   }
-  
+
   # create default column values for comp and error coding
   if (any(compCoding != c("comp", "incomp"))) {
     dat$Comp <- ifelse(dat$Comp == compCoding[1], "comp", "incomp")
   }
- 
+
   deltaSeq <- seq(stepDelta, 100, stepDelta)
   deltaSeq <- deltaSeq[!deltaSeq %in% 100]
- 
+
   dat_delta <- dat %>%
     dplyr::group_by(VP, Comp) %>%
-    dplyr::do(tibble::as_tibble(t(quantile(.$RT, deltaSeq/100, type = quantileType))))  %>%
-    setNames(c("VP", "Comp", seq(1, length(deltaSeq)))) %>%
-    tidyr::pivot_longer(., cols = -c("VP", "Comp"), names_to = "bin", values_to = "rt") %>%
-    tidyr::pivot_wider(., names_from = "Comp", values_from = "rt") %>%
+    dplyr::summarize(bin     = deltaSeq,
+                     rt      = quantile(RT, deltaSeq/100, type = quantileType),
+                     .groups = 'drop')  %>%
+    tidyr::pivot_wider(., id_cols = c("VP", "bin"), names_from = "Comp", values_from = "rt") %>%
     dplyr::mutate(meanCompVP   = comp,
                   meanIncompVP = incomp,
                   meanBinVP    = (comp + incomp)/2,
                   meanEffectVP = (incomp - comp)) %>%
-    dplyr::select(-dplyr::one_of("comp", "incomp")) %>%
-    dplyr::mutate(bin = as.integer(bin)) %>%
-    dplyr::arrange(VP, bin)
-  
-    
+    dplyr::select(-dplyr::one_of("comp", "incomp"))
+
   return(dat_delta)
-  
+
 }
 
 

@@ -12,7 +12,7 @@ simonDataRaw
   \item VP Subject number
   \item Comp comp vs. incomp
   \item RT
-  \item Error 0 = correct, 1 = error 
+  \item Error 0 = correct, 1 = error
 }
 }
 \keyword{datasets}

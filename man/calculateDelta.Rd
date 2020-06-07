@@ -13,7 +13,7 @@ calculateDelta(
 )
 }
 \arguments{
-\item{dat}{DataFrame with columns containing the participant number, condition 
+\item{dat}{DataFrame with columns containing the participant number, condition
 compatibility, and RT data (in ms).}
 
 \item{stepDelta}{Step size for the Delta bins. For example, a step size of 5 would result
@@ -30,7 +30,7 @@ DataFrame (tibble)
 }
 \description{
 Calculate delta plot. Here RTs are split into n bins (Default: 5) for compatible and
-incompatible trials separately. Mean RT is calculated for each condition in each bin then 
+incompatible trials separately. Mean RT is calculated for each condition in each bin then
 subtracted (incompatible - compatible) to give a compatibility effect (delta) at each bin.
 }
 \examples{
@@ -47,7 +47,7 @@ dat <- addDataDF(dat,
                  RT = list("Congruency_cong"   = c(500, 80, 100),
                            "Congruency_incong" = c(600, 80, 140)))
 head(dat)
-delta <- calculateDelta(dat, columns = c("VP", "Congruency", "RT"), 
+delta <- calculateDelta(dat, columns = c("VP", "Congruency", "RT"),
                         compCoding = c("cong", "incong"))
 
 }

@@ -13,7 +13,7 @@ calculateCAF(
 )
 }
 \arguments{
-\item{dat}{DataFrame with columns containing the participant number, condition 
+\item{dat}{DataFrame with columns containing the participant number, condition
 compatibility, RT data (in ms) and an Error column.}
 
 \item{stepCAF}{Step size for the CAF bins. For example, a step size of 20 would
@@ -29,8 +29,8 @@ result in 5 CAF bins centered on 10, 30, 50, 70, and 90\%.}
 DataFrame (tibble)
 }
 \description{
-Calculate conditional accuracy function (CAF). 
-The DataFrame should contain columns defining the participant, compatibility condition, 
+Calculate conditional accuracy function (CAF).
+The DataFrame should contain columns defining the participant, compatibility condition,
 RT and error (Default column names: "VP", "Comp", "RT", "Error"). The "Comp" column should
 define compatibility condition (Default: c("comp", "incomp")) and the "Error" column should
 define if the trial was an error or not (Default: c(0, 1) ).
@@ -53,7 +53,7 @@ dat <- addDataDF(dat,
                  Error = list("Congruency_cong"   = c(5, 4,3,2,1),
                               "Congruency_incong" = c(20, 8, 6, 4, 2)))
 head(dat)
-caf <- calculateCAF(dat, columns = c("VP", "Congruency", "RT", "Error"), 
+caf <- calculateCAF(dat, columns = c("VP", "Congruency", "RT", "Error"),
                     compCoding = c("cong", "incong"))
 
 }

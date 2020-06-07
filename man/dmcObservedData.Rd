@@ -45,10 +45,10 @@ DataFrame
 }
 \description{
 Basic example analysis script to create data object required
-for observed data. Example raw *.txt files are flankerData.txt and simonData.txt. There 
+for observed data. Example raw *.txt files are flankerData.txt and simonData.txt. There
 are four critical columns:
 A column containing participant number
-A column coding for compatible or incompatible 
+A column coding for compatible or incompatible
 A column with RT (in ms)
 A column indicating of the response was correct
 }
@@ -94,8 +94,8 @@ dat <- addDataDF(dat,
                            "Congruency_incong" = c(530, 100, 110)),
                  Error = list("Congruency_cong"   = c(3, 2, 2, 1, 1),
                               "Congruency_incong" = c(21, 3, 2, 1, 1)))
-datOb <- dmcObservedData(dat, stepCAF = 20, stepDelta = 10, 
-                         columns = c("VP", "Congruency", "RT", "Error"), 
+datOb <- dmcObservedData(dat, stepCAF = 20, stepDelta = 10,
+                         columns = c("VP", "Congruency", "RT", "Error"),
                          compCoding = c("cong", "incong"))
 plot(datOb, labels = c("Congruent", "Incongruent"))
 plot(datOb, VP = 1)
