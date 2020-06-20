@@ -80,7 +80,7 @@ dmcFitAgg <- function(resOb,
                       maxVals         = list(),
                       fixedFit        = list(),
                       fitInitialGrid  = TRUE,
-                      fitInitialGridN = 1000,      # reduce if grid search 3/4+ parameters
+                      fitInitialGridN = 10,      # reduce if grid search 3/4+ parameters
                       fixedGrid       = list(),  # default only initial search tau
                       stepCAF         = 20,
                       stepDelta       = 5,
