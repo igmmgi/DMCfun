@@ -10,11 +10,10 @@ Encoding: UTF-8
 Depends: R (>= 3.5.0)
 Imports: 
   Rcpp (>= 0.12.16),
-  doSNOW,
   dplyr (>= 1.0.0),
-  foreach,
   optimr,
   parallel,
+  pbapply,
   tibble,
   tidyr,
 Suggests:

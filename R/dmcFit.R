@@ -80,7 +80,7 @@ dmcFitAgg <- function(resOb,
                       maxVals         = list(),
                       fixedFit        = list(),
                       fitInitialGrid  = TRUE,
-                      fitInitialGridN = 10,      # reduce if grid search 3/4+ parameters
+                      fitInitialGridN = 1000,      # reduce if grid search 3/4+ parameters
                       fixedGrid       = list(),  # default only initial search tau
                       stepCAF         = 20,
                       stepDelta       = 5,
@@ -134,7 +134,7 @@ dmcFitAgg <- function(resOb,
 
   ############################# FIT PROCEDURE ##################################
   if (fitInitialGrid) {
-
+    
     minValsGrid   <- minVals
     maxValsGrid   <- maxVals
     startValsGrid <- startVals
@@ -149,37 +149,33 @@ dmcFitAgg <- function(resOb,
     startValsGrid <- dplyr::distinct(expand.grid(Map(unique, startValsGrid)))
     message("Searching initial parameter gridspace: N = ", nrow(startValsGrid))
 
-    # progress bar
-    pb <- txtProgressBar(min = 0, max = nrow(startValsGrid), style = 3)
-    progress <- function(n) {
-      setTxtProgressBar(pb, n)
-    }
-
     # R check limits number of cores to 2 (https://cran.r-project.org/web/packages/policies.html)
     chk <- Sys.getenv("_R_CHECK_LIMIT_CORES_", "")
-    if (nzchar(chk) && chk == "TRUE") {
-      num_cores <- 2
-    } else {
-      num_cores <- parallel::detectCores() / 2
+    num_cores <- ifelse(nzchar(chk) && chk == "TRUE", 2, parallel::detectCores() / 2) 
+  
+    # Older code (pre June 2020) used doSNOW progress bar 
+    # R CMD check --as-cran -->  doSNOW warning “superseded packages”
+    # Use pbapply for progress bar
+    # https://stackoverflow.com/questions/58473626/r-doparallel-progress-bar-to-monitor-finished-jobs
+    
+    pCostValue <- function(i){
+      resTh <- dmcSim(amp = startValsGrid$amp[i], tau = startValsGrid$tau[i], mu = startValsGrid$mu[i],
+                      bnds = startValsGrid$bnds[i], resMean = startValsGrid$resMean[i], resSD = startValsGrid$resSD[i],
+                      aaShape = startValsGrid$aaShape[i], varSP = TRUE, spShape = startValsGrid$spShape[i],
+                      sigm = startValsGrid$sigm[i],  spLim = c(-startValsGrid$bnds[i], startValsGrid$bnds[i]),
+                      nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,
+                      printInputArgs = TRUE, printResults = FALSE)
+      return(calculateCostValue(resTh, resOb))
     }
-
+    
     cl <- parallel::makeCluster(num_cores)
-    doSNOW::registerDoSNOW(cl)
-    costValue <- foreach::foreach(i = 1:nrow(startValsGrid),
-                                  .packages = "DMCfun",
-                                  .options.snow = list(progress = progress)) %dopar% {
-                                    resTh <- dmcSim(amp = startValsGrid$amp[i], tau = startValsGrid$tau[i], mu = startValsGrid$mu[i],
-                                                    bnds = startValsGrid$bnds[i], resMean = startValsGrid$resMean[i], resSD = startValsGrid$resSD[i],
-                                                    aaShape = startValsGrid$aaShape[i], varSP = TRUE, spShape = startValsGrid$spShape[i],
-                                                    sigm = startValsGrid$sigm[i],  spLim = c(-startValsGrid$bnds[i], startValsGrid$bnds[i]),
-                                                    nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,
-                                                    printInputArgs = FALSE, printResults = FALSE)
-                                    return(calculateCostValue(resTh, resOb))
-                                  }
-    close(pb)
-    stopCluster(cl)
-
+    invisible(parallel::clusterExport(cl = cl, varlist=c("dmcSim", "calculateCostValue")))
+  
+    # calculate initial cost values across grid starting values and find min
+    costValue <- pbapply::pblapply(cl = cl, X = 1:nrow(startValsGrid), FUN = pCostValue)
     startVals <- startValsGrid[which.min(costValue), ]
+    
+    parallel::stopCluster(cl)
 
   } else {
 

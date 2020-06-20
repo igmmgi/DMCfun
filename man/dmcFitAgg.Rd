@@ -12,7 +12,7 @@ dmcFitAgg(
   maxVals = list(),
   fixedFit = list(),
   fitInitialGrid = TRUE,
-  fitInitialGridN = 10,
+  fitInitialGridN = 1000,
   fixedGrid = list(),
   stepCAF = 20,
   stepDelta = 5,
