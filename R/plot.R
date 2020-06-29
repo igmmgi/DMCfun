@@ -24,7 +24,6 @@
 #' @param ylabs TRUE/FALSE
 #' @param xaxts TRUE/FALSE
 #' @param yaxts TRUE/FALSE
-#' @param resetLayout TRUE (default)/FALSE Set to FALSE if using custom par(mfrow=c()) before calling plot
 #' @param ... additional plot pars
 #'
 #' @return NULL
@@ -65,8 +64,10 @@ plot.dmcsim <- function(x,
                         ylabs = TRUE,
                         xaxts = TRUE,
                         yaxts = TRUE,
-                        resetLayout = TRUE, 
                         ...)  {
+
+  # original plot par
+  opar <- par(no.readonly = TRUE)
 
   figTypes <- c("summary1", "summary2", "summary3", "all", "activation", "trials", "pdf", "cdf", "caf", "delta", "rtCorrect", "rtErrors", "errorRate")
   if (length(figType) > 1 || !figType %in% figTypes) {
@@ -335,10 +336,8 @@ plot.dmcsim <- function(x,
     }
   }
 
-  # reset par
-  if (resetLayout) {
-    par(mfrow=c(1, 1))
-  }
+  # reset plot par
+  on.exit(par(opar))
 
 }
 
@@ -444,7 +443,6 @@ plot.dmclist <- function(x,
 #' @param ylabs TRUE/FALSE
 #' @param xaxts TRUE/FALSE
 #' @param yaxts TRUE/FALSE
-#' @param resetLayout TRUE (default)/FALSE Set to FALSE if using custom par(mfrow=c()) before calling plot
 #' @param ... additional plot pars
 #'
 #' @return NULL
@@ -504,9 +502,11 @@ plot.dmcob <- function(x,
                        ylabs = TRUE,
                        xaxts = TRUE,
                        yaxts = TRUE,
-                       resetLayout = TRUE,
                        ...) {
 
+  # original plot par
+  opar <- par(no.readonly = TRUE)
+  
   figTypes <- c("summary", "all", "rtCorrect", "errorRate", "rtErrors", "cdf", "caf", "delta")
   if (length(figType) > 1 || !figType %in% figTypes) {
     stop("figType must be one of:", paste0(figTypes, collapse = ", "))
@@ -686,10 +686,8 @@ plot.dmcob <- function(x,
     }
   }
 
-  # reset par
-  if (resetLayout) {
-    par(mfrow=c(1, 1))
-  }
+  # reset plot par
+  on.exit(par(opar))
 
 }
 
@@ -722,7 +720,6 @@ plot.dmcob <- function(x,
 #' @param ylabs TRUE/FALSE
 #' @param xaxts TRUE/FALSE
 #' @param yaxts TRUE/FALSE
-#' @param resetLayout TRUE (default)/FALSE Set to FALSE if using custom par(mfrow=c()) before calling plot
 #' @param ... additional plot pars
 #'
 #' @return NULL
@@ -760,9 +757,11 @@ plot.dmcfit <- function(x,
                         ylabs = TRUE,
                         xaxts = TRUE,
                         yaxts = TRUE,
-                        resetLayout = TRUE,
                         ...) {
 
+  # original plot par
+  opar <- par(no.readonly = TRUE)
+  
   figTypes <- c("summary", "all", "rtCorrect", "errorRate", "rtErrors", "cdf", "caf", "delta")
   if (length(figType) > 1 || !figType %in% figTypes) {
     stop("figType must be one of:", paste0(figTypes, collapse = ", "))
@@ -955,10 +954,8 @@ plot.dmcfit <- function(x,
 
   }
 
-  # reset par
-  if (resetLayout) {
-    par(mfrow = c(1, 1))
-  }
+  # reset plot par
+  on.exit(par(opar))
 
 }
 
@@ -992,7 +989,6 @@ plot.dmcfit <- function(x,
 #' @param ylabs TRUE/FALSE
 #' @param xaxts TRUE/FALSE
 #' @param yaxts TRUE/FALSE
-#' @param resetLayout TRUE (default)/FALSE Set to FALSE if using custom par(mfrow=c()) before calling plot
 #' @param ... additional plot pars
 #'
 #' @return NULL
@@ -1024,7 +1020,6 @@ plot.dmcfitvp <- function(x,
                           ylabs = TRUE,
                           xaxts = TRUE,
                           yaxts = TRUE,
-                          resetLayout = TRUE,
                           ...) {
 
   VPs <- which(!unlist(lapply(x, is.null)))
@@ -1050,7 +1045,6 @@ plot.dmcfitvp <- function(x,
           ylabs = ylabs,
           xaxts = xaxts,
           yaxts = yaxts,
-          resetLayout = resetLayout,
           ...)
      
   } 

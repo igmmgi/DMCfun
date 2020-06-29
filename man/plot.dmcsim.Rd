@@ -20,7 +20,6 @@
   ylabs = TRUE,
   xaxts = TRUE,
   yaxts = TRUE,
-  resetLayout = TRUE,
   ...
 )
 }
@@ -54,8 +53,6 @@
 \item{xaxts}{TRUE/FALSE}
 
 \item{yaxts}{TRUE/FALSE}
-
-\item{resetLayout}{TRUE (default)/FALSE Set to FALSE if using custom par(mfrow=c()) before calling plot}
 
 \item{...}{additional plot pars}
 }
