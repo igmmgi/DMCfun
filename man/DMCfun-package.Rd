@@ -6,7 +6,7 @@
 \alias{DMCfun-package}
 \title{DMCfun}
 \description{
-DMC model simulation detailed in Ulrich, R., Schroeter, H., Leuthold, H., & Birngruber, T. (2015). Automatic and controlled stimulus processing in conflict tasks: Superimposed diffusion processes and delta functions. Cognitive Psychology, 78, 148-174.
+DMC model simulation detailed in Ulrich, R., Schroeter, H., Leuthold, H., & Birngruber, T. (2015). Automatic and controlled stimulus processing in conflict tasks: Superimposed diffusion processes and delta functions. Cognitive Psychology, 78, 148-174. <doi:10.1016/j.cogpsych.2015.02.005>
 }
 \author{
 \strong{Maintainer}: Mackenzie G. Ian \email{ian.mackenzie@uni-tuebingen.de}
