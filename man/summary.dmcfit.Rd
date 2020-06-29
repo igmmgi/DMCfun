@@ -20,7 +20,7 @@ DataFrame (tibble)
 Summary of the simulation results from dmcFitAgg
 }
 \examples{
-\dontrun{
+\donttest{
 # Example 1
 fitAgg <- dmcFitAgg(flankerData, nTrl = 1000)
 summary(fitAgg)  

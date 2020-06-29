@@ -79,7 +79,7 @@ type summary2 contains only the PDF, CDF, CAF and delta plots and does not requi
 that dmcSim is run with fullData = TRUE.
 }
 \examples{
-\dontrun{
+\donttest{
 # Example 1 (real dataset)
 plot(flankerData)
 plot(flankerData, errorBars = TRUE, errorBarType = "se")

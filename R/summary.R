@@ -9,7 +9,7 @@
 #' @return list
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Example 1
 #' dmc <- dmcSim()
 #' summary(dmc)
@@ -40,7 +40,7 @@ summary.dmcsim <- function(object, digits = 1, ...) {
 #' @return DataFrame (tibble)
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Example 1
 #' fitAgg <- dmcFitAgg(flankerData, nTrl = 1000)
 #' summary(fitAgg)  
@@ -65,7 +65,7 @@ summary.dmcfit <- function(object, digits = 2, ...) {
 #' second being the mean fitted parameters
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Example 1
 #' fitVPs <- dmcFitVPs(flankerData, nTrl = 1000, VP = c(1, 10))
 #' summary(fitVPs)

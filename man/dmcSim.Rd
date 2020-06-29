@@ -95,7 +95,7 @@ Automatic and controlled stimulus processing in conflict tasks: Superimposed dif
 Cognitive Psychology, 78, 148-174. This function is essentially a wrapper around the c++ function runDMC
 }
 \examples{
-\dontrun{
+\donttest{
 # Example 1
 dmc <- dmcSim(fullData = TRUE)  # full data only required for activation plot (top left)
 plot(dmc)

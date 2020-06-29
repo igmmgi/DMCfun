@@ -1,7 +1,7 @@
 Package: DMCfun
 Type: Package
 Title: Diffusion Model of Conflict (DMC) in Reaction Time Tasks
-Version: 0.11.0
+Version: 0.11.1
 Date: 2020-06-20
 Authors@R: c(person("Mackenzie G.", "Ian", email="ian.mackenzie@uni-tuebingen.de", role = c("cre", "aut")))
 Description: DMC model simulation detailed in Ulrich, R., Schroeter, H., Leuthold, H., & Birngruber, T. (2015). Automatic and controlled stimulus processing in conflict tasks: Superimposed diffusion processes and delta functions. Cognitive Psychology, 78, 148-174.

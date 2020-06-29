@@ -41,7 +41,7 @@
 #' \item{obj$par}{The fitted model parameters + final RMSE of the fit}
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Example 1: Flanker data from Ulrich et al. (2015)
 #' fit <- dmcFitAgg(flankerData)  # only initial search tau
 #' plot(fit, flankerData)
@@ -53,10 +53,10 @@
 #' summary(fit)
 #'
 #' # Example 3: Flanker data from Ulrich et al. (2015) with non-default
-#' start vals and some fixed values
+#' # start vals and some fixed values
 #' fit <- dmcFitAgg(flankerData,
 #'                  startVals = list(mu = 0.6, aaShape = 2.5),
-#'                  fixedFit = list(mu = T, aaShape = T))
+#'                  fixedFit = list(mu = TRUE, aaShape = TRUE))
 #'
 #' # Example 4: Simulated Data (+ve going delta function)
 #' dat <- createDF(nVP = 20, nTrl = 500, design = list("Comp" = c("comp", "incomp")))
@@ -147,7 +147,7 @@ dmcFitAgg <- function(resOb,
 
     startValsGrid <- Map(seq, minValsGrid, maxValsGrid, length.out = fitInitialGridN)
     startValsGrid <- dplyr::distinct(expand.grid(Map(unique, startValsGrid)))
-    message("Searching initial parameter gridspace: N = ", nrow(startValsGrid))
+    # message("Searching initial parameter gridspace: N = ", nrow(startValsGrid))
 
     # R check limits number of cores to 2 (https://cran.r-project.org/web/packages/policies.html)
     chk <- Sys.getenv("_R_CHECK_LIMIT_CORES_", "")
@@ -201,7 +201,7 @@ dmcFitAgg <- function(resOb,
   }
   prms <- as.list(prms)
 
-  cat(sprintf("RMSE: %.3f\n", fit$value))
+  message(sprintf("RMSE: %.3f\n", fit$value))
   dmcfit <- dmcSim(amp = prms$amp, tau = prms$tau, mu = prms$mu,
                    bnds = prms$bnds, resMean = prms$resMean, resSD = prms$resSD,
                    aaShape = prms$aaShape, sigm = prms$sigm,
@@ -247,7 +247,7 @@ dmcFitAgg <- function(resOb,
 #' @return dmcfitvp List of dmcfit per participant fitted (see dmcFitAgg)
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Example 1: Flanker data from Ulrich et al. (2015)
 #' fit <- dmcFitVPs(flankerData, nTrl = 1000, VP = c(1, 2))
 #' plot(fit, flankerData, VP = 1)
@@ -345,7 +345,7 @@ dmcFitVPs <- function(resOb,
 #' \item{obj$prms}{par}
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Example 1: Fit individual data then aggregate
 #' fitVPs <- dmcFitVPs(flankerData, nTrl = 1000, VP = c(2))
 #' fitAgg <- mean(fitVPs)
@@ -439,7 +439,7 @@ calculateCostValue <- function(resTh, resOb) {
 
   costValue <- (weightCAF * costCAF) + (weightRT * costRT)
 
-  cat(sprintf("RMSE: %.3f\n", costValue))
+  message(sprintf("RMSE: %.3f\n", costValue))
 
   return(costValue)
 

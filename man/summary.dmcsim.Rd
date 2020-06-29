@@ -20,7 +20,7 @@ list
 Summary of the overall results from dmcSim
 }
 \examples{
-\dontrun{
+\donttest{
 # Example 1
 dmc <- dmcSim()
 summary(dmc)

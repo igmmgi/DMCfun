@@ -40,7 +40,7 @@
 #' \item{obj$prms}{The input parameters used in the simulation}
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Example 1
 #' dmc <- dmcSim(fullData = TRUE)  # full data only required for activation plot (top left)
 #' plot(dmc)
@@ -131,7 +131,7 @@ dmcSim <- function(amp = 20, tau = 30, mu = 0.5, bnds = 75, resMean = 300, resSD
 #' @return list of dmcsim
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Example 1
 #' params <- list(amp = seq(10, 20, 5), tau = c(50, 100, 150), nTrl = 50000)
 #' dmc <- dmcSims(params)
@@ -165,7 +165,7 @@ dmcSims <- function(params,
 
     # inputs for each dmcSim call taken from params + add default of not printing individual results
     dmcInputs <- params[[i]]
-    cat("DMC ", i, "of", length(params), ":", paste0(names(dmcInputs), "=", dmcInputs), "\n")
+    message("DMC ", i, " of ", length(params), ": ", paste0(names(dmcInputs), "=", dmcInputs, sep="", collapse=", "))
     dmcInputs$printInputArgs <- printInputArgs
     dmcInputs$printResults   <- printResults
 

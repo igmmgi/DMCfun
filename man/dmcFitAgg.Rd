@@ -76,7 +76,7 @@ minimizing the root-mean-square error (RMSE) between a weighted combination
 of the CAF and CDF functions.
 }
 \examples{
-\dontrun{
+\donttest{
 # Example 1: Flanker data from Ulrich et al. (2015)
 fit <- dmcFitAgg(flankerData)  # only initial search tau
 plot(fit, flankerData)
@@ -88,10 +88,10 @@ plot(fit, simonData)
 summary(fit)
 
 # Example 3: Flanker data from Ulrich et al. (2015) with non-default
-start vals and some fixed values
+# start vals and some fixed values
 fit <- dmcFitAgg(flankerData,
                  startVals = list(mu = 0.6, aaShape = 2.5),
-                 fixedFit = list(mu = T, aaShape = T))
+                 fixedFit = list(mu = TRUE, aaShape = TRUE))
 
 # Example 4: Simulated Data (+ve going delta function)
 dat <- createDF(nVP = 20, nTrl = 500, design = list("Comp" = c("comp", "incomp")))

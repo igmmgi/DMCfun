@@ -76,7 +76,7 @@ summary2 contains only the PDF, CDF, CAF and delta plots and does not require
 that dmcSim is run with fullData = TRUE.
 }
 \examples{
-\dontrun{
+\donttest{
 # Example 1
 resTh <- dmcFitVPs(flankerData, nTrl = 5000, VP = c(2, 3))
 plot(resTh, flankerData)

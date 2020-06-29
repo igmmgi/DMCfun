@@ -30,7 +30,7 @@
 #' @return NULL
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Example 1
 #' dmc = dmcSim(fullData = TRUE)
 #' plot(dmc)
@@ -367,7 +367,7 @@ plot.dmcsim <- function(x,
 #' @return NULL
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Example 1
 #' params <- list(amp = seq(20, 30, 2))
 #' dmc <- dmcSims(params)
@@ -450,7 +450,7 @@ plot.dmclist <- function(x,
 #' @return NULL
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Example 1 (real dataset)
 #' plot(flankerData)
 #' plot(flankerData, errorBars = TRUE, errorBarType = "se")
@@ -728,7 +728,7 @@ plot.dmcob <- function(x,
 #' @return NULL
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Example 1
 #' resTh <- dmcFitAgg(flankerData, nTrl = 5000)
 #' plot(resTh, flankerData)
@@ -998,7 +998,7 @@ plot.dmcfit <- function(x,
 #' @return NULL
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Example 1
 #' resTh <- dmcFitVPs(flankerData, nTrl = 5000, VP = c(2, 3))
 #' plot(resTh, flankerData)

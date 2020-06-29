@@ -21,7 +21,7 @@ second being the mean fitted parameters
 Summary of the simulation results from dmcFitVPs
 }
 \examples{
-\dontrun{
+\donttest{
 # Example 1
 fitVPs <- dmcFitVPs(flankerData, nTrl = 1000, VP = c(1, 10))
 summary(fitVPs)

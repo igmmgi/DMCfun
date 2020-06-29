@@ -61,7 +61,7 @@ minimizing the root-mean-square error (RMSE) between a weighted combination
 of the CAF and CDF functions.
 }
 \examples{
-\dontrun{
+\donttest{
 # Example 1: Flanker data from Ulrich et al. (2015)
 fit <- dmcFitVPs(flankerData, nTrl = 1000, VP = c(1, 2))
 plot(fit, flankerData, VP = 1)

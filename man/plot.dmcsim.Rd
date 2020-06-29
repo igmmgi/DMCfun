@@ -70,7 +70,7 @@ summary2 contains only the PDF, CDF, CAF and delta plots and does not require
 that dmcSim is run with fullData = TRUE.
 }
 \examples{
-\dontrun{
+\donttest{
 # Example 1
 dmc = dmcSim(fullData = TRUE)
 plot(dmc)

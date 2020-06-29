@@ -25,7 +25,7 @@ is accessed with obj$name and so on with the the following:
 Aggregated simulation results from dmcFitVPs.
 }
 \examples{
-\dontrun{
+\donttest{
 # Example 1: Fit individual data then aggregate
 fitVPs <- dmcFitVPs(flankerData, nTrl = 1000, VP = c(2))
 fitAgg <- mean(fitVPs)
