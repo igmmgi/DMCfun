@@ -68,6 +68,7 @@ plot.dmcsim <- function(x,
 
   # original plot par
   opar <- par(no.readonly = TRUE)
+  on.exit(par(opar))
 
   figTypes <- c("summary1", "summary2", "summary3", "all", "activation", "trials", "pdf", "cdf", "caf", "delta", "rtCorrect", "rtErrors", "errorRate")
   if (length(figType) > 1 || !figType %in% figTypes) {
@@ -336,9 +337,6 @@ plot.dmcsim <- function(x,
     }
   }
 
-  # reset plot par
-  on.exit(par(opar))
-
 }
 
 
@@ -506,6 +504,7 @@ plot.dmcob <- function(x,
 
   # original plot par
   opar <- par(no.readonly = TRUE)
+  on.exit(par(opar))
   
   figTypes <- c("summary", "all", "rtCorrect", "errorRate", "rtErrors", "cdf", "caf", "delta")
   if (length(figType) > 1 || !figType %in% figTypes) {
@@ -686,9 +685,6 @@ plot.dmcob <- function(x,
     }
   }
 
-  # reset plot par
-  on.exit(par(opar))
-
 }
 
 
@@ -761,6 +757,7 @@ plot.dmcfit <- function(x,
 
   # original plot par
   opar <- par(no.readonly = TRUE)
+  on.exit(par(opar))
   
   figTypes <- c("summary", "all", "rtCorrect", "errorRate", "rtErrors", "cdf", "caf", "delta")
   if (length(figType) > 1 || !figType %in% figTypes) {
@@ -953,9 +950,6 @@ plot.dmcfit <- function(x,
     }
 
   }
-
-  # reset plot par
-  on.exit(par(opar))
 
 }
 
