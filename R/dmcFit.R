@@ -150,8 +150,8 @@ dmcFitAgg <- function(resOb,
     message("Searching initial parameter gridspace: N = ", nrow(startValsGrid))
     
     # R check limits number of cores to 2 (https://stackoverflow.com/questions/50571325/r-cran-check-fail-when-using-parallel-functions)
-    chk <- Sys.getenv("_R_CHECK_LIMIT_CORES_", "")
-    if (nzchar(chk) && chk == "TRUE") {
+    chk <- tolower(Sys.getenv("_R_CHECK_LIMIT_CORES_", ""))
+    if (nzchar(chk) && (chk == "true")) {
       num_cores <- 2L
     } else {
       num_cores <- parallel::detectCores() / 2
