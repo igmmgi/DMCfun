@@ -152,9 +152,9 @@ dmcFitAgg <- function(resOb,
     # R check limits number of cores to 2 (https://stackoverflow.com/questions/50571325/r-cran-check-fail-when-using-parallel-functions)
     chk <- Sys.getenv("_R_CHECK_LIMIT_CORES_", "")
     if (nzchar(chk) && chk == "TRUE") {
-      num_workers <- 2L
+      num_cores <- 2L
     } else {
-      num_workers <- parallel::detectCores() / 2
+      num_cores <- parallel::detectCores() / 2
     }
   
     # Older code (pre June 2020) used doSNOW progress bar 
