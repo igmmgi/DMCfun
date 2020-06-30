@@ -44,7 +44,6 @@ test_that("plot.dmcob", {
   testthat::expect_error(plot(DMCfun::simonData, legend = function(){}), NA)
   testthat::expect_error(plot(DMCfun::simonData, cafBinLabels = TRUE), NA)
   
-
   # simulated datasets
   dat <- createDF(nVP = 50, nTrl = 50,
                   design = list("Comp" = c("comp", "incomp")))

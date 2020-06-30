@@ -9,26 +9,16 @@ test_that("plot.dmcfit", {
   testthat::expect_error(plot(resTh, DMCfun::flankerData), NA)
 
   # test 2
-  resTh <- dmcFitAgg(DMCfun::flankerData, nTrl = 1000,
-                     printInputArgs = FALSE, printResults = FALSE)
-  testthat::expect_error(plot(resTh, DMCfun::flankerData), NA)
-
-  # test 3
   resTh <- dmcFitAgg(DMCfun::simonData, nTrl = 1000,
                      printInputArgs = FALSE, printResults = FALSE)
   testthat::expect_error(plot(resTh, DMCfun::simonData), NA)
 
-  # test 4
+  # test 3
   resTh <- dmcFitVPs(DMCfun::flankerData, nTrl = 1000, VP = 10,
                      printInputArgs = FALSE, printResults = FALSE)
   testthat::expect_error(plot(resTh, DMCfun::flankerData, VP = 10), NA)
 
-  # test 5
-  resTh <- dmcFitVPs(DMCfun::simonData, nTrl = 1000, VP = 4,
-                     printInputArgs = FALSE, printResults = FALSE)
-  testthat::expect_error(plot(resTh, DMCfun::flankerData, VP = 4), NA)
-
-  # test 6
+  # test 4
   dat <- createDF(nVP = 50, nTrl = 50,
                   design = list("Comp" = c("comp", "incomp")))
   dat <- addDataDF(dat,
@@ -40,19 +30,5 @@ test_that("plot.dmcfit", {
 
   resTh <- dmcFitAgg(datOb, nTrl = 1000, printInputArgs = FALSE, printResults = FALSE)
   testthat::expect_error(plot(resTh, datOb), NA)
-
-  # test 7
-  dat <- createDF(nVP = 2, nTrl = 1000,
-                  design = list("Comp" = c("comp", "incomp")))
-  dat <- addDataDF(dat,
-                   RT = list("Comp_comp"   = c(500, 30, 100),
-                             "Comp_incomp" = c(530, 30, 130)),
-                   Error = list("Comp_comp"   = c(5, 3, 2, 1, 1),
-                                "Comp_incomp" = c(15, 12, 5, 2, 1)))
-  datOb <- dmcObservedData(dat)
-
-  resTh <- dmcFitVPs(datOb, nTrl = 1000, VP = 2,
-                     printInputArgs = FALSE, printResults = FALSE)
-  testthat::expect_error(plot(resTh, datOb, VP = 2), NA)
 
 })

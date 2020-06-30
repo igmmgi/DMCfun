@@ -13,7 +13,7 @@ test_that("dmcFitAgg", {
   testthat::expect_s3_class(fit, "dmcfit")
 
   # fit with some non-default starting values and some fixed parameters
-  fit <- dmcFitAgg(flankerData,  nTrl = 1000, printInputArgs = FALSE, printResults = FALSE,
+  fit <- dmcFitAgg(DMCfun::flankerData,  nTrl = 1000, printInputArgs = FALSE, printResults = FALSE,
                    startVals = list(mu = 0.6, aaShape = 2.5), 
                    fixedFit = list(mu = T, aaShape = T))
  
