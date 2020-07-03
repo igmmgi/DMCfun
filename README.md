@@ -7,6 +7,10 @@ in conflict tasks: Superimposed diffusion processes and delta functions
 ## Installation
 
 ``` r
+# install version from CRAN
+install.packages("DMCfun")
+library(DMCfun)
+
 # install version from  GitHub
 # install.packages("devtools")
 devtools::install_github("igmmgi/DMCfun")
