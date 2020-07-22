@@ -256,10 +256,8 @@ addDataDF <- function(dat, RT=NULL, Error=NULL) {
 #' A column with RT (in ms)
 #' A column indicating of the response was correct
 #' @param dat Text file(s) containing the observed data or an R DataFrame (see createDF/addDataDF)
-#' @param stepCAF Step size for the CAF bins. For example, a step size of 20 would result
-#' in 5 CAF bins centered on 10, 30, 50, 70, and 90\%.
-#' @param stepDelta Step size for the Delta bins. For example, a step size of 5 would result
-#' in 19 CAF bins positioned at 5, 10, 15, ... 85, 90, 95\%.
+#' @param nCAF Number of CAF bins. 
+#' @param nDelta Number of delta bins. 
 #' @param outlier Outlier limits in ms (e.g., c(200, 1200))
 #' @param columns Name of required columns DEFAULT = c("VP", "Comp", "RT", "Error")
 #' @param compCoding Coding for compatibility DEFAULT = c("comp", "incomp")
@@ -312,7 +310,7 @@ addDataDF <- function(dat, RT=NULL, Error=NULL) {
 #'                            "Congruency_incong" = c(530, 100, 110)),
 #'                  Error = list("Congruency_cong"   = c(3, 2, 2, 1, 1),
 #'                               "Congruency_incong" = c(21, 3, 2, 1, 1)))
-#' datOb <- dmcObservedData(dat, stepCAF = 20, stepDelta = 10,
+#' datOb <- dmcObservedData(dat, nCAF = 5, nDelta = 10,
 #'                          columns = c("VP", "Congruency", "RT", "Error"),
 #'                          compCoding = c("cong", "incong"))
 #' plot(datOb, labels = c("Congruent", "Incongruent"))
@@ -320,8 +318,8 @@ addDataDF <- function(dat, RT=NULL, Error=NULL) {
 #
 #' @export
 dmcObservedData <- function(dat,
-                            stepCAF = 20,
-                            stepDelta = 5,
+                            nCAF = 5,
+                            nDelta = 19,
                             outlier = c(200, 1200),
                             columns = c("VP", "Comp", "RT", "Error"),
                             compCoding = c("comp", "incomp"),
@@ -389,7 +387,7 @@ dmcObservedData <- function(dat,
   # conditional accuracy functions (CAF)
   datVP_caf <- dat %>%
     dplyr::filter(RT >= rtMin, RT <= rtMax) %>%
-    calculateCAF(., stepCAF = stepCAF)
+    calculateCAF(., nCAF = nCAF)
 
   datAgg_caf <- datVP_caf %>%
     dplyr::group_by(Comp, bin) %>%
@@ -399,7 +397,7 @@ dmcObservedData <- function(dat,
   # DELTA
   datVP_dec <- dat %>%
     dplyr::filter(Error == 0, RT >= rtMin, RT <= rtMax) %>%
-    calculateDelta(., stepDelta = stepDelta)
+    calculateDelta(., nDelta = nDelta)
 
   datAgg_dec <- datVP_dec %>%
     dplyr::group_by(bin) %>%
@@ -448,8 +446,7 @@ dmcObservedData <- function(dat,
 #'
 #' @param dat DataFrame with columns containing the participant number, condition
 #' compatibility, RT data (in ms) and an Error column.
-#' @param stepCAF Step size for the CAF bins. For example, a step size of 20 would
-#' result in 5 CAF bins centered on 10, 30, 50, 70, and 90\%.
+#' @param nCAF Number of CAF bins. 
 #' @param columns Name of required columns Default: c("VP", "Comp", "RT", "Error")
 #' @param compCoding Coding for compatibility Default: c("comp", "incomp")
 #' @param errorCoding Coding for errors Default: c(0, 1))
@@ -480,7 +477,7 @@ dmcObservedData <- function(dat,
 #'
 #' @export
 calculateCAF <- function(dat,
-                         stepCAF = 20,
+                         nCAF = 5,
                          columns = c("VP", "Comp", "RT", "Error"),
                          compCoding = c("comp", "incomp"),
                          errorCoding = c(0, 1)) {
@@ -507,7 +504,7 @@ calculateCAF <- function(dat,
   # conditional accuracy functions (CAF)
   dat_caf <- dat %>%
     dplyr::group_by(VP, Comp) %>%
-    dplyr::mutate(bin = ntile(RT, (100/stepCAF))) %>%
+    dplyr::mutate(bin = ntile(RT, nCAF)) %>%
     dplyr::group_by(VP, Comp, bin) %>%
     dplyr::summarize(N        = n(),
                      accPerVP = sum(Error == 0)/N,
@@ -530,8 +527,7 @@ calculateCAF <- function(dat,
 #'
 #' @param dat DataFrame with columns containing the participant number, condition
 #' compatibility, and RT data (in ms).
-#' @param stepDelta Step size for the Delta bins. For example, a step size of 5 would result
-#' in 19 CAF bins positioned at 5, 10, 15, ... 85, 90, 95\%.
+#' @param nDelta Number of delta bins. 
 #' @param columns Name of required columns Default: c("VP", "Comp", "RT")
 #' @param compCoding Coding for compatibility Default: c("comp", "incomp")
 #' @param quantileType Argument (1-9) from R function quantile specifying the algorithm (?quantile)
@@ -558,7 +554,7 @@ calculateCAF <- function(dat,
 #'
 #' @export
 calculateDelta <- function(dat,
-                           stepDelta = 5,
+                           nDelta = 19,
                            columns = c("VP", "Comp", "RT"),
                            compCoding = c("comp", "incomp"),
                            quantileType = 5) {
@@ -578,9 +574,9 @@ calculateDelta <- function(dat,
   if (any(compCoding != c("comp", "incomp"))) {
     dat$Comp <- ifelse(dat$Comp == compCoding[1], "comp", "incomp")
   }
-
-  deltaSeq <- seq(stepDelta, 100, stepDelta)
-  deltaSeq <- deltaSeq[!deltaSeq %in% 100]
+ 
+  deltaSeq <- seq(0, 100, length.out = nDelta + 2) 
+  deltaSeq <- deltaSeq[2:(length(deltaSeq)-1)]
 
   dat_delta <- dat %>%
     dplyr::group_by(VP, Comp) %>%

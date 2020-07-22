@@ -6,7 +6,7 @@
 \usage{
 calculateCAF(
   dat,
-  stepCAF = 20,
+  nCAF = 5,
   columns = c("VP", "Comp", "RT", "Error"),
   compCoding = c("comp", "incomp"),
   errorCoding = c(0, 1)
@@ -16,8 +16,7 @@ calculateCAF(
 \item{dat}{DataFrame with columns containing the participant number, condition
 compatibility, RT data (in ms) and an Error column.}
 
-\item{stepCAF}{Step size for the CAF bins. For example, a step size of 20 would
-result in 5 CAF bins centered on 10, 30, 50, 70, and 90\%.}
+\item{nCAF}{Number of CAF bins.}
 
 \item{columns}{Name of required columns Default: c("VP", "Comp", "RT", "Error")}
 

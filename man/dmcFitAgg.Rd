@@ -14,8 +14,8 @@ dmcFitAgg(
   fitInitialGrid = TRUE,
   fitInitialGridN = 10,
   fixedGrid = list(),
-  stepCAF = 20,
-  stepDelta = 5,
+  nCAF = 5,
+  nDelta = 19,
   printInputArgs = TRUE,
   printResults = FALSE
 )
@@ -49,11 +49,9 @@ resSD = F, aaShape = F, spShape = F, sigm = T))}
 amp, tau, mu, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedGrid = list(amp = T, tau = F, mu = T, bnds = T, resMean = T,
 resSD = T, aaShape = T, spShape = T, sigm = T))}
 
-\item{stepCAF}{Step size for the CAF bins. For example, a step size of 20 would result
-in 5 CAF bins centered on 10, 30, 50, 70, and 90\%.}
+\item{nCAF}{Number of CAF bins.}
 
-\item{stepDelta}{Step size for the Delta bins. For example, a step size of 5 would result
-in 19 CAF bins positioned at 5, 10, 15, ... 85, 90, 95\%.}
+\item{nDelta}{Number of delta bins.}
 
 \item{printInputArgs}{TRUE/FALSE}
 

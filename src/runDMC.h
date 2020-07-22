@@ -16,7 +16,7 @@ void run_dmc_sim_ci(Prms &p,
 
 std::vector<double> calculate_summary(std::vector<double> &rts, std::vector<double> &errs, unsigned long nTrl);
 
-std::vector<double> calculate_percentile( int nDelta, std::vector<double> rts);
+std::vector<double> calculate_percentile( std::vector<double> vDelta, std::vector<double> rts);
 
 void calculate_delta(std::map<std::string,  std::vector<double>> &rdelta);
 
@@ -25,6 +25,8 @@ void variable_drift_rate(Prms &p, std::vector<double> &dr, int sign);
 void variable_starting_point(Prms &p, std::vector<double> &sp, int sign);
 
 std::vector<double> calculate_caf(std::vector<double> &rts, std::vector<double> &errs, int nBins);
+
+std::vector<double> linspace(int start, int end, int n);
 
 void run_simulation(Prms &p, 
                     std::vector<double> &activation_sum, 

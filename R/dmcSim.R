@@ -22,8 +22,8 @@
 #' @param drLim limit range of distribution of drift rate
 #' @param fullData TRUE/FALSE (Default: FALSE)
 #' @param nTrlData Number of trials to plot
-#' @param stepDelta Number of delta bins
-#' @param stepCAF Number of CAF bins
+#' @param nDelta Number of delta bins
+#' @param nCAF Number of CAF bins
 #' @param printInputArgs TRUE/FALSE
 #' @param printResults TRUE/FALSE
 #' @param setSeed TRUE/FALSE
@@ -64,7 +64,7 @@
 #' plot(dmc, "caf")
 #'
 #' # Example 6
-#' dmc <- dmcSim(stepDelta = 10, stepCAF = 10)
+#' dmc <- dmcSim(nDelta = 10, nCAF = 10)
 #' plot(dmc)
 #' }
 #'
@@ -74,7 +74,7 @@ dmcSim <- function(amp = 20, tau = 30, mu = 0.5, bnds = 75, resMean = 300, resSD
                    varSP = FALSE, spLim = c(-75, 75),
                    varDR = FALSE, drShape = 3, drLim = c(0.1, 0.7),
                    fullData = FALSE, nTrlData = 5,
-                   stepDelta = 5, stepCAF = 20,
+                   nDelta = 9, nCAF = 5,
                    printInputArgs = TRUE, printResults = TRUE,
                    setSeed = FALSE) {
 
@@ -83,7 +83,7 @@ dmcSim <- function(amp = 20, tau = 30, mu = 0.5, bnds = 75, resMean = 300, resSD
                              varSP = varSP, spLimLow = spLim[1], spLimHigh = spLim[2],
                              varDR = varDR, drShape = 3, drLimLow = drLim[1], drLimHigh = drLim[2],
                              fullData = fullData, nTrlData = nTrlData,
-                             stepDelta = stepDelta, stepCAF = stepCAF,
+                             nDelta = nDelta, nCAF = nCAF,
                              printInputArgs = printInputArgs, printResults = printResults,
                              setSeed = setSeed))
   
@@ -96,13 +96,13 @@ dmcSim <- function(amp = 20, tau = 30, mu = 0.5, bnds = 75, resMean = 300, resSD
   dmc$means <- tibble::add_column(Comp = c("comp", "incomp"), dmc$means, .before = TRUE)
 
   # caf
-  nCAF    <- length(summary$caf_comp)
+  # nCAF    <- length(summary$caf_comp)
   dmc$caf <- tibble::tibble(accPer = c(summary$caf_comp, summary$caf_incomp))
   dmc$caf <- tibble::add_column(bin = rep(1:nCAF, each = 1, times = 2), dmc$caf, .before = TRUE)
   dmc$caf <- tibble::add_column(Comp = rep(c("comp", "incomp"), each = nCAF), dmc$caf, .before = TRUE)
 
   # delta
-  nDelta    <- length(summary$delta_pct_comp)
+  # nDelta    <- length(summary$delta_pct_comp)
   dmc$delta <- tibble::tibble("meanComp" = summary$delta_pct_comp,
                               "meanIncomp" = summary$delta_pct_incomp,
                               "meanBin" = summary$delta_pct_mean,

@@ -1,6 +1,7 @@
 #ifndef CPP_INPUTS_HPP
 #define CPP_INPUTS_HPP
 #include <chrono>
+#include <vector>
 
 struct Prms {
     double amp = 20;
@@ -23,8 +24,10 @@ struct Prms {
     double drLimHigh = 0.7;
     bool fullData = false;
     unsigned long nTrlData = 5;
-    int stepDelta = 10;
-    int stepCAF = 20;
+    int nDelta = 10;
+    std::vector<double> vDelta;
+    int nCAF = 5;
+    std::vector<double> vCAF;
     bool printInputArgs = true;
     bool printResults = true;
     bool setSeed = false; // if true, use RNGType rng(1) called

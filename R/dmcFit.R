@@ -23,10 +23,8 @@
 #' @param fixedGrid Fix parameter for initial grid search.  This is a list with bool values specified individually for
 #' amp, tau, mu, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedGrid = list(amp = T, tau = F, mu = T, bnds = T, resMean = T,
 #' resSD = T, aaShape = T, spShape = T, sigm = T))
-#' @param stepCAF Step size for the CAF bins. For example, a step size of 20 would result
-#' in 5 CAF bins centered on 10, 30, 50, 70, and 90\%.
-#' @param stepDelta Step size for the Delta bins. For example, a step size of 5 would result
-#' in 19 CAF bins positioned at 5, 10, 15, ... 85, 90, 95\%.
+#' @param nCAF Number of CAF bins. 
+#' @param nDelta Number of delta bins. 
 #' @param printInputArgs TRUE/FALSE
 #' @param printResults TRUE/FALSE
 #'
@@ -82,8 +80,8 @@ dmcFitAgg <- function(resOb,
                       fitInitialGrid  = TRUE,
                       fitInitialGridN = 10,      # reduce if grid search 3/4+ parameters
                       fixedGrid       = list(),  # default only initial search tau
-                      stepCAF         = 20,
-                      stepDelta       = 5,
+                      nCAF            = 5,
+                      nDelta          = 19,
                       printInputArgs  = TRUE,
                       printResults    = FALSE) {
 
@@ -106,15 +104,15 @@ dmcFitAgg <- function(resOb,
   prms <- startVals
 
   # check observed data contains correct number of delta/CAF bins
-  if (nrow(resOb$delta) != sum(!seq(stepDelta, 100, stepDelta) %in% 100)) {
+  if (nrow(resOb$delta) != nDelta) {
     stop("Number of delta bins in observed data and nDelta bins are not equal!")
   }
-  if ((nrow(resOb$caf)/2) != length(seq(0, 100 - stepCAF, stepCAF))) {
+  if ((nrow(resOb$caf)/2) != nCAF) {
     stop("Number of CAF bins in observed data and nCAF bins are not equal!")
   }
 
   # function to minimise
-  minimizeCostValue <- function(x, prms, fixedFit, resOb, nTrl, stepDelta, stepCAF, minVals, maxVals, printInputArgs, printResults) {
+  minimizeCostValue <- function(x, prms, fixedFit, resOb, nTrl, nDelta, nCAF, minVals, maxVals, printInputArgs, printResults) {
 
     prms[!as.logical(fixedFit)] <- x
 
@@ -125,7 +123,7 @@ dmcFitAgg <- function(resOb,
     resTh <- dmcSim(amp = prms$amp, tau = prms$tau, mu = prms$mu, bnds = prms$bnds,
                     resMean = prms$resMean, resSD = prms$resSD, aaShape = prms$aaShape,
                     varSP = TRUE, spShape = prms$spShape, sigm = prms$sigm, spLim = c(-prms$bnds, prms$bnds),
-                    nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,
+                    nTrl = nTrl, nDelta = nDelta, nCAF = nCAF,
                     printInputArgs = printInputArgs, printResults = printResults)
 
     return(calculateCostValue(resTh, resOb))
@@ -167,7 +165,7 @@ dmcFitAgg <- function(resOb,
                       bnds = startValsGrid$bnds[i], resMean = startValsGrid$resMean[i], resSD = startValsGrid$resSD[i],
                       aaShape = startValsGrid$aaShape[i], varSP = TRUE, spShape = startValsGrid$spShape[i],
                       sigm = startValsGrid$sigm[i],  spLim = c(-startValsGrid$bnds[i], startValsGrid$bnds[i]),
-                      nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,
+                      nTrl = nTrl, nDelta = nDelta, nCAF = nCAF,
                       printInputArgs = TRUE, printResults = FALSE)
       return(calculateCostValue(resTh, resOb))
     }
@@ -190,7 +188,7 @@ dmcFitAgg <- function(resOb,
   # optimize
   fit <- optimr::optimr(par = startVals[!as.logical(fixedFit)], fn = minimizeCostValue,
                         prms = prms, fixedFit = fixedFit, resOb = resOb,
-                        nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF, minVals = minVals, maxVals = maxVals,
+                        nTrl = nTrl, nDelta = nDelta, nCAF = nCAF, minVals = minVals, maxVals = maxVals,
                         printInputArgs = printInputArgs, printResults = printResults,
                         method = "Nelder-Mead",
                         control = list(parscale = parScale[!as.logical(fixedFit)]))
@@ -210,7 +208,7 @@ dmcFitAgg <- function(resOb,
                    bnds = prms$bnds, resMean = prms$resMean, resSD = prms$resSD,
                    aaShape = prms$aaShape, sigm = prms$sigm,
                    varSP = TRUE, spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
-                   nTrl = nTrl, stepDelta = stepDelta, stepCAF = stepCAF,
+                   nTrl = nTrl, nDelta = nDelta, nCAF = nCAF,
                    printResults = TRUE)
 
   dmcfit$prms <- NULL
@@ -240,10 +238,8 @@ dmcFitAgg <- function(resOb,
 #' @param fitInitialGrid TRUE/FALSE (NB. overrides fitInitialTau)
 #' @param fitInitialGridN 10
 #' @param fixedGrid Fix parameter for initial grid search
-#' @param stepCAF Step size for the CAF bins. For example, a step size of 20 would result
-#' in 5 CAF bins centered on 10, 30, 50, 70, and 90\%.
-#' @param stepDelta Step size for the Delta bins. For example, a step size of 5 would result
-#' in 19 CAF bins positioned at 5, 10, 15, ... 85, 90, 95\%.
+#' @param nCAF Number of CAF bins. 
+#' @param nDelta Number of delta bins. 
 #' @param VP NULL (aggregated data across all participants) or integer for participant number
 #' @param printInputArgs TRUE/FALSE
 #' @param printResults TRUE/FALSE
@@ -279,8 +275,8 @@ dmcFitVPs <- function(resOb,
                       fitInitialGrid   = TRUE,
                       fitInitialGridN  = 10,       # reduce if grid search 3/4+ parameters
                       fixedGrid        = list(),   # default only initial tau search
-                      stepCAF          = 20,
-                      stepDelta        = 5,
+                      nCAF             = 5,
+                      nDelta           = 19,
                       VP               = c(),
                       printInputArgs   = TRUE,
                       printResults     = FALSE) {
@@ -317,8 +313,8 @@ dmcFitVPs <- function(resOb,
                               fitInitialGrid   = fitInitialGrid,
                               fitInitialGridN  = fitInitialGridN, # reduce if grid search 3/4+ parameters
                               fixedGrid        = fixedGrid,       # only fit tau
-                              stepCAF          = stepCAF,
-                              stepDelta        = stepDelta,
+                              nCAF             = nCAF,
+                              nDelta           = nDelta,
                               printInputArgs   = printInputArgs,
                               printResults     = printResults)
 

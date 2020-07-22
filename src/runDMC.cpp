@@ -12,6 +12,10 @@ void run_dmc_sim(Prms &p,
                  std::map<std::string, std::vector<double>> &rsum, 
                  std::map<std::string, std::vector<double>> &rsim, 
                  std::map<std::string, std::vector<std::vector<double>>> &trials) {
+   
+    // values for delta/CAF
+    p.vDelta = linspace(0, 100, p.nDelta + 2);
+    p.vCAF = linspace(0, 100, p.nCAF + 1);
     
     // equation 4
     std::vector<double> eq4(p.tmax);
@@ -77,8 +81,8 @@ void run_dmc_sim_ci(Prms &p,
     rsim["rts_" + comp]        = rts;
     rsim["errs_" + comp]       = errs;
     rsum["resSum_" + comp]     = calculate_summary(rts, errs, p.nTrl );
-    rsum["delta_pct_" + comp]  = calculate_percentile(p.stepDelta, rts);
-    rsum["caf_" + comp]        = calculate_caf(rts, errs, p.stepCAF);
+    rsum["delta_pct_" + comp]  = calculate_percentile(p.vDelta, rts);
+    rsum["caf_" + comp]        = calculate_caf(rts, errs, p.nCAF);
     m.unlock();
 
 }
@@ -178,17 +182,19 @@ std::vector<double> calculate_summary(std::vector<double> &rts, std::vector<doub
 
 }
 
-std::vector<double> calculate_percentile( int stepDelta, std::vector<double> rts ) {
+std::vector<double> calculate_percentile( std::vector<double> vDelta, std::vector<double> rts ) {
 
-    std::sort(rts.begin(), rts.end());
-
+    int nDelta = vDelta.size() - 2;
     float pct_idx;
     int pct_idx_int;
     float pct_idx_dec;
     std::vector<double> res;
-    for (auto step = stepDelta; step < 100; step += stepDelta) {
+    
+    std::sort(rts.begin(), rts.end());
+    
+    for (int i = 1; i <= nDelta; i++) {
 
-        pct_idx     = (step / 100.0) * (rts.size());
+        pct_idx     = (vDelta[i] / 100.0) * rts.size();
         pct_idx_int = int(pct_idx);
         pct_idx_dec = pct_idx - pct_idx_int;
 
@@ -207,7 +213,7 @@ void calculate_delta( std::map<std::string, std::vector<double> > &rdelta) {
     
 }
 
-std::vector<double> calculate_caf(std::vector<double> &rts, std::vector<double> &errs, int stepCAF) {
+std::vector<double> calculate_caf(std::vector<double> &rts, std::vector<double> &errs, int nCAF) {
 
     std::vector<std::pair<double, bool>> comb;
     comb.reserve(rts.size() + errs.size());
@@ -216,12 +222,11 @@ std::vector<double> calculate_caf(std::vector<double> &rts, std::vector<double> 
 
     std::sort(comb.begin(), comb.end());
     std::vector<int> bins(comb.size());
-    int nBins = 100 / stepCAF;
     for (auto i = 0u; i < comb.size(); i++) 
-        bins[i] = int(nBins * (i) / comb.size());
+        bins[i] = int(nCAF * (i) / comb.size());
 
-    std::vector<long int> nErr(nBins, 0);
-    std::vector<long int> nCor(nBins, 0);
+    std::vector<long int> nErr(nCAF, 0);
+    std::vector<long int> nCor(nCAF, 0);
     for (auto i = 0u; i < bins.size(); i++) 
         (comb[i].second == 0) ? nCor[bins[i]]++ : nErr[bins[i]]++;
 
@@ -232,3 +237,15 @@ std::vector<double> calculate_caf(std::vector<double> &rts, std::vector<double> 
     return res;
 
 }
+
+std::vector<double> linspace(int start, int end, int n) {
+    double step = (end - start) / double(n-1);
+    std::vector<double> out(n);
+    double val = start;
+    for (int i = 0; i < n; i++) {
+        out[i] = val;
+        val += step;
+    }
+    return out;
+}
+

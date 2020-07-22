@@ -6,8 +6,8 @@
 \usage{
 dmcObservedData(
   dat,
-  stepCAF = 20,
-  stepDelta = 5,
+  nCAF = 5,
+  nDelta = 19,
   outlier = c(200, 1200),
   columns = c("VP", "Comp", "RT", "Error"),
   compCoding = c("comp", "incomp"),
@@ -20,11 +20,9 @@ dmcObservedData(
 \arguments{
 \item{dat}{Text file(s) containing the observed data or an R DataFrame (see createDF/addDataDF)}
 
-\item{stepCAF}{Step size for the CAF bins. For example, a step size of 20 would result
-in 5 CAF bins centered on 10, 30, 50, 70, and 90\%.}
+\item{nCAF}{Number of CAF bins.}
 
-\item{stepDelta}{Step size for the Delta bins. For example, a step size of 5 would result
-in 19 CAF bins positioned at 5, 10, 15, ... 85, 90, 95\%.}
+\item{nDelta}{Number of delta bins.}
 
 \item{outlier}{Outlier limits in ms (e.g., c(200, 1200))}
 
@@ -94,7 +92,7 @@ dat <- addDataDF(dat,
                            "Congruency_incong" = c(530, 100, 110)),
                  Error = list("Congruency_cong"   = c(3, 2, 2, 1, 1),
                               "Congruency_incong" = c(21, 3, 2, 1, 1)))
-datOb <- dmcObservedData(dat, stepCAF = 20, stepDelta = 10,
+datOb <- dmcObservedData(dat, nCAF = 5, nDelta = 10,
                          columns = c("VP", "Congruency", "RT", "Error"),
                          compCoding = c("cong", "incong"))
 plot(datOb, labels = c("Congruent", "Incongruent"))

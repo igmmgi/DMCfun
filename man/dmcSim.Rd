@@ -23,8 +23,8 @@ dmcSim(
   drLim = c(0.1, 0.7),
   fullData = FALSE,
   nTrlData = 5,
-  stepDelta = 5,
-  stepCAF = 20,
+  nDelta = 9,
+  nCAF = 5,
   printInputArgs = TRUE,
   printResults = TRUE,
   setSeed = FALSE
@@ -67,9 +67,9 @@ dmcSim(
 
 \item{nTrlData}{Number of trials to plot}
 
-\item{stepDelta}{Number of delta bins}
+\item{nDelta}{Number of delta bins}
 
-\item{stepCAF}{Number of CAF bins}
+\item{nCAF}{Number of CAF bins}
 
 \item{printInputArgs}{TRUE/FALSE}
 
@@ -119,7 +119,7 @@ dmc <- dmcSim(tau = 130, varDR = TRUE)
 plot(dmc, "caf")
 
 # Example 6
-dmc <- dmcSim(stepDelta = 10, stepCAF = 10)
+dmc <- dmcSim(nDelta = 10, nCAF = 10)
 plot(dmc)
 }
 
