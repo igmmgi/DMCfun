@@ -19,6 +19,6 @@ Imports:
 Suggests:
   testthat
 LinkingTo: Rcpp, BH
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 LazyData: true
 SystemRequirements: C++11

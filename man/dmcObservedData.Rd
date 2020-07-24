@@ -92,7 +92,7 @@ dat <- addDataDF(dat,
                            "Congruency_incong" = c(530, 100, 110)),
                  Error = list("Congruency_cong"   = c(3, 2, 2, 1, 1),
                               "Congruency_incong" = c(21, 3, 2, 1, 1)))
-datOb <- dmcObservedData(dat, nCAF = 5, nDelta = 10,
+datOb <- dmcObservedData(dat, nCAF = 5, nDelta = 9,
                          columns = c("VP", "Congruency", "RT", "Error"),
                          compCoding = c("cong", "incong"))
 plot(datOb, labels = c("Congruent", "Incongruent"))

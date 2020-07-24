@@ -24,6 +24,7 @@
 #' @param ylabs TRUE/FALSE
 #' @param xaxts TRUE/FALSE
 #' @param yaxts TRUE/FALSE
+#' @param resetPar TRUE/FALSE Reset graphical parameters
 #' @param ... additional plot pars
 #'
 #' @return NULL
@@ -64,11 +65,14 @@ plot.dmcsim <- function(x,
                         ylabs = TRUE,
                         xaxts = TRUE,
                         yaxts = TRUE,
+                        resetPar = TRUE,
                         ...)  {
 
   # original plot par
-  opar <- par(no.readonly = TRUE)
-  on.exit(par(opar))
+  if (resetPar) {
+    opar <- par(no.readonly = TRUE)
+    on.exit(par(opar))
+  }
 
   figTypes <- c("summary1", "summary2", "summary3", "all", "activation", "trials", "pdf", "cdf", "caf", "delta", "rtCorrect", "rtErrors", "errorRate")
   if (length(figType) > 1 || !figType %in% figTypes) {
@@ -441,6 +445,7 @@ plot.dmclist <- function(x,
 #' @param ylabs TRUE/FALSE
 #' @param xaxts TRUE/FALSE
 #' @param yaxts TRUE/FALSE
+#' @param resetPar TRUE/FALSE Reset graphical parameters
 #' @param ... additional plot pars
 #'
 #' @return NULL
@@ -500,11 +505,14 @@ plot.dmcob <- function(x,
                        ylabs = TRUE,
                        xaxts = TRUE,
                        yaxts = TRUE,
+                       resetPar = TRUE,
                        ...) {
 
   # original plot par
-  opar <- par(no.readonly = TRUE)
-  on.exit(par(opar))
+  if (resetPar) {
+    opar <- par(no.readonly = TRUE)
+    on.exit(par(opar))
+  }
   
   figTypes <- c("summary", "all", "rtCorrect", "errorRate", "rtErrors", "cdf", "caf", "delta")
   if (length(figType) > 1 || !figType %in% figTypes) {
@@ -644,7 +652,7 @@ plot.dmcob <- function(x,
     if (xaxts == "n") axis(side=1, labels = FALSE)  # keep tick marks
     if (yaxts == "n") axis(side=2, labels = FALSE)  # keep tick marks
     
-    lines(x$caf$accPer[x$caf$Comp == "incomp"],  type = "b", col = tail(cols, 2)[2], ...)
+    lines(x$caf$accPer[x$caf$Comp == "incomp"],  type = "o", col = tail(cols, 2)[2], ...)
     if (xaxts == "s") {
       nCAF <- length(x$caf$bin) / 2
       if (cafBinLabels) {
@@ -716,6 +724,7 @@ plot.dmcob <- function(x,
 #' @param ylabs TRUE/FALSE
 #' @param xaxts TRUE/FALSE
 #' @param yaxts TRUE/FALSE
+#' @param resetPar TRUE/FALSE Reset graphical parameters
 #' @param ... additional plot pars
 #'
 #' @return NULL
@@ -753,11 +762,14 @@ plot.dmcfit <- function(x,
                         ylabs = TRUE,
                         xaxts = TRUE,
                         yaxts = TRUE,
+                        resetPar = TRUE,
                         ...) {
 
   # original plot par
-  opar <- par(no.readonly = TRUE)
-  on.exit(par(opar))
+  if (resetPar) {
+    opar <- par(no.readonly = TRUE)
+    on.exit(par(opar))
+  }
   
   figTypes <- c("summary", "all", "rtCorrect", "errorRate", "rtErrors", "cdf", "caf", "delta")
   if (length(figType) > 1 || !figType %in% figTypes) {
@@ -983,6 +995,7 @@ plot.dmcfit <- function(x,
 #' @param ylabs TRUE/FALSE
 #' @param xaxts TRUE/FALSE
 #' @param yaxts TRUE/FALSE
+#' @param resetPar TRUE/FALSE Reset graphical parameters
 #' @param ... additional plot pars
 #'
 #' @return NULL
@@ -1014,6 +1027,7 @@ plot.dmcfitvp <- function(x,
                           ylabs = TRUE,
                           xaxts = TRUE,
                           yaxts = TRUE,
+                          resetPar = TRUE,
                           ...) {
 
   VPs <- which(!unlist(lapply(x, is.null)))
@@ -1039,6 +1053,7 @@ plot.dmcfitvp <- function(x,
           ylabs = ylabs,
           xaxts = xaxts,
           yaxts = yaxts,
+          resetPar = resetPar,
           ...)
      
   } 

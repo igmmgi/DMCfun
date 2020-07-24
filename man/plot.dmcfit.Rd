@@ -21,6 +21,7 @@
   ylabs = TRUE,
   xaxts = TRUE,
   yaxts = TRUE,
+  resetPar = TRUE,
   ...
 )
 }
@@ -56,6 +57,8 @@
 \item{xaxts}{TRUE/FALSE}
 
 \item{yaxts}{TRUE/FALSE}
+
+\item{resetPar}{TRUE/FALSE Reset graphical parameters}
 
 \item{...}{additional plot pars}
 }
