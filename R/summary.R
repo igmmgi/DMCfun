@@ -37,7 +37,7 @@ summary.dmcsim <- function(object, digits = 1, ...) {
 #' @param digits Number of digits in the output
 #' @param ... pars
 #'
-#' @return DataFrame (tibble)
+#' @return DataFrame 
 #'
 #' @examples
 #' \donttest{
@@ -61,7 +61,7 @@ summary.dmcfit <- function(object, digits = 2, ...) {
 #' @param digits Number of digits in the output
 #' @param ... pars
 #'
-#' @return list of DataFrames (tibbles) with the first being individual participant fitted parameters and the 
+#' @return list of DataFrames with the first being individual participant fitted parameters and the 
 #' second being the mean fitted parameters
 #'
 #' @examples
@@ -78,7 +78,7 @@ summary.dmcfitvp <- function(object, digits = 2, ...) {
   VPs <- which(!unlist(lapply(object, is.null)))
   outVP <- NULL
   for (VP in VPs) {
-    outVP <- rbind(outVP, cbind(VP, tibble::as_tibble(object[[VP]]$par)))
+    outVP <- rbind(outVP, cbind(VP, as.data.frame(object[[VP]]$par)))
   }
   outVP  <- round(outVP, digits)
   outAvg <- round(as.data.frame(t(colMeans(data.matrix(outVP[, 2:11])))), digits)

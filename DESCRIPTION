@@ -14,7 +14,6 @@ Imports:
   optimr,
   parallel,
   pbapply,
-  tibble,
   tidyr,
 Suggests:
   testthat
