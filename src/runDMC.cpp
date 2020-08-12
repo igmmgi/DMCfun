@@ -194,7 +194,7 @@ std::vector<double> calculate_percentile( std::vector<double> vDelta, std::vecto
     
     for (int i = 1; i <= nDelta; i++) {
 
-        pct_idx     = (vDelta[i] / 100.0) * rts.size();
+        pct_idx     = (vDelta[i] / 100.0) * (rts.size()-1);
         pct_idx_int = int(pct_idx);
         pct_idx_dec = pct_idx - pct_idx_int;
 
