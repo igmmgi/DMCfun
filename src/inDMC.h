@@ -25,6 +25,7 @@ struct Prms {
     bool fullData = false;
     unsigned long nTrlData = 5;
     int nDelta = 10;
+    std::vector<double> pDelta;
     std::vector<double> vDelta;
     int nCAF = 5;
     std::vector<double> vCAF;

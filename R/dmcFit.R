@@ -25,6 +25,7 @@
 #' resSD = T, aaShape = T, spShape = T, sigm = T))
 #' @param nCAF Number of CAF bins. 
 #' @param nDelta Number of delta bins. 
+#' @param pDelta Alternative to nDelta by directly specifying required percentile values   
 #' @param printInputArgs TRUE/FALSE
 #' @param printResults TRUE/FALSE
 #'
@@ -82,6 +83,7 @@ dmcFitAgg <- function(resOb,
                       fixedGrid       = list(),  # default only initial search tau
                       nCAF            = 5,
                       nDelta          = 19,
+                      pDelta          = vector(),
                       printInputArgs  = TRUE,
                       printResults    = FALSE) {
 
@@ -112,7 +114,7 @@ dmcFitAgg <- function(resOb,
   }
 
   # function to minimise
-  minimizeCostValue <- function(x, prms, fixedFit, resOb, nTrl, nDelta, nCAF, minVals, maxVals, printInputArgs, printResults) {
+  minimizeCostValue <- function(x, prms, fixedFit, resOb, nTrl, nDelta, pDelta, nCAF, minVals, maxVals, printInputArgs, printResults) {
 
     prms[!as.logical(fixedFit)] <- x
 
@@ -123,7 +125,7 @@ dmcFitAgg <- function(resOb,
     resTh <- dmcSim(amp = prms$amp, tau = prms$tau, mu = prms$mu, bnds = prms$bnds,
                     resMean = prms$resMean, resSD = prms$resSD, aaShape = prms$aaShape,
                     varSP = TRUE, spShape = prms$spShape, sigm = prms$sigm, spLim = c(-prms$bnds, prms$bnds),
-                    nTrl = nTrl, nDelta = nDelta, nCAF = nCAF,
+                    nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, nCAF = nCAF,
                     printInputArgs = printInputArgs, printResults = printResults)
 
     return(calculateCostValue(resTh, resOb))
@@ -165,7 +167,7 @@ dmcFitAgg <- function(resOb,
                       bnds = startValsGrid$bnds[i], resMean = startValsGrid$resMean[i], resSD = startValsGrid$resSD[i],
                       aaShape = startValsGrid$aaShape[i], varSP = TRUE, spShape = startValsGrid$spShape[i],
                       sigm = startValsGrid$sigm[i],  spLim = c(-startValsGrid$bnds[i], startValsGrid$bnds[i]),
-                      nTrl = nTrl, nDelta = nDelta, nCAF = nCAF,
+                      nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, nCAF = nCAF,
                       printInputArgs = TRUE, printResults = FALSE)
       return(calculateCostValue(resTh, resOb))
     }
@@ -188,7 +190,7 @@ dmcFitAgg <- function(resOb,
   # optimize
   fit <- optimr::optimr(par = startVals[!as.logical(fixedFit)], fn = minimizeCostValue,
                         prms = prms, fixedFit = fixedFit, resOb = resOb,
-                        nTrl = nTrl, nDelta = nDelta, nCAF = nCAF, minVals = minVals, maxVals = maxVals,
+                        nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, nCAF = nCAF, minVals = minVals, maxVals = maxVals,
                         printInputArgs = printInputArgs, printResults = printResults,
                         method = "Nelder-Mead",
                         control = list(parscale = parScale[!as.logical(fixedFit)]))
@@ -208,7 +210,7 @@ dmcFitAgg <- function(resOb,
                    bnds = prms$bnds, resMean = prms$resMean, resSD = prms$resSD,
                    aaShape = prms$aaShape, sigm = prms$sigm,
                    varSP = TRUE, spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
-                   nTrl = nTrl, nDelta = nDelta, nCAF = nCAF,
+                   nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, nCAF = nCAF,
                    printResults = TRUE)
 
   dmcfit$prms <- NULL
@@ -240,6 +242,7 @@ dmcFitAgg <- function(resOb,
 #' @param fixedGrid Fix parameter for initial grid search
 #' @param nCAF Number of CAF bins. 
 #' @param nDelta Number of delta bins. 
+#' @param pDelta Alternative to nDelta by directly specifying required percentile values   
 #' @param VP NULL (aggregated data across all participants) or integer for participant number
 #' @param printInputArgs TRUE/FALSE
 #' @param printResults TRUE/FALSE
@@ -277,6 +280,7 @@ dmcFitVPs <- function(resOb,
                       fixedGrid        = list(),   # default only initial tau search
                       nCAF             = 5,
                       nDelta           = 19,
+                      pDelta           = vector(),
                       VP               = c(),
                       printInputArgs   = TRUE,
                       printResults     = FALSE) {
@@ -315,6 +319,7 @@ dmcFitVPs <- function(resOb,
                               fixedGrid        = fixedGrid,       # only fit tau
                               nCAF             = nCAF,
                               nDelta           = nDelta,
+                              pDelta           = pDelta,
                               printInputArgs   = printInputArgs,
                               printResults     = printResults)
 

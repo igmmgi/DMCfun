@@ -23,6 +23,7 @@
 #' @param fullData TRUE/FALSE (Default: FALSE)
 #' @param nTrlData Number of trials to plot
 #' @param nDelta Number of delta bins
+#' @param pDelta Alternative to nDelta by directly specifying required percentile values   
 #' @param nCAF Number of CAF bins
 #' @param printInputArgs TRUE/FALSE
 #' @param printResults TRUE/FALSE
@@ -74,16 +75,21 @@ dmcSim <- function(amp = 20, tau = 30, mu = 0.5, bnds = 75, resMean = 300, resSD
                    varSP = FALSE, spLim = c(-75, 75),
                    varDR = FALSE, drShape = 3, drLim = c(0.1, 0.7),
                    fullData = FALSE, nTrlData = 5,
-                   nDelta = 9, nCAF = 5,
+                   nDelta = 9, pDelta = vector(), nCAF = 5,
                    printInputArgs = TRUE, printResults = TRUE,
                    setSeed = FALSE) {
 
+  # change nDelta to length of pDelta if pDelta not empty
+  if (length(pDelta) != 0) {
+    nDelta = length(pDelta)
+  }
+  
   dmc <- dmcCppR(r_in = list(amp = amp, tau = tau, mu = mu, bnds = bnds, resMean = resMean, resSD = resSD, aaShape = aaShape, spShape = spShape,
                              sigm = sigm,  nTrl = nTrl, tmax = tmax,
                              varSP = varSP, spLimLow = spLim[1], spLimHigh = spLim[2],
                              varDR = varDR, drShape = 3, drLimLow = drLim[1], drLimHigh = drLim[2],
                              fullData = fullData, nTrlData = nTrlData,
-                             nDelta = nDelta, nCAF = nCAF,
+                             nDelta = nDelta, pDelta = pDelta, nCAF = nCAF,
                              printInputArgs = printInputArgs, printResults = printResults,
                              setSeed = setSeed))
   
