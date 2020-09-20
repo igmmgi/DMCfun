@@ -16,6 +16,7 @@ dmcFitAgg(
   fixedGrid = list(),
   nCAF = 5,
   nDelta = 19,
+  pDelta = vector(),
   printInputArgs = TRUE,
   printResults = FALSE
 )
@@ -52,6 +53,8 @@ resSD = T, aaShape = T, spShape = T, sigm = T))}
 \item{nCAF}{Number of CAF bins.}
 
 \item{nDelta}{Number of delta bins.}
+
+\item{pDelta}{Alternative to nDelta by directly specifying required percentile values}
 
 \item{printInputArgs}{TRUE/FALSE}
 

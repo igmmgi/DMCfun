@@ -23,6 +23,7 @@
 #' @param fullData TRUE/FALSE (Default: FALSE)
 #' @param nTrlData Number of trials to plot
 #' @param nDelta Number of delta bins
+#' @param pDelta Alternative to nDelta by directly specifying required percentile values   
 #' @param nCAF Number of CAF bins
 #' @param printInputArgs TRUE/FALSE
 #' @param printResults TRUE/FALSE
@@ -74,16 +75,21 @@ dmcSim <- function(amp = 20, tau = 30, mu = 0.5, bnds = 75, resMean = 300, resSD
                    varSP = FALSE, spLim = c(-75, 75),
                    varDR = FALSE, drShape = 3, drLim = c(0.1, 0.7),
                    fullData = FALSE, nTrlData = 5,
-                   nDelta = 9, nCAF = 5,
+                   nDelta = 9, pDelta = vector(), nCAF = 5,
                    printInputArgs = TRUE, printResults = TRUE,
                    setSeed = FALSE) {
 
+  # change nDelta to length of pDelta if pDelta not empty
+  if (length(pDelta) != 0) {
+    nDelta = length(pDelta)
+  }
+  
   dmc <- dmcCppR(r_in = list(amp = amp, tau = tau, mu = mu, bnds = bnds, resMean = resMean, resSD = resSD, aaShape = aaShape, spShape = spShape,
                              sigm = sigm,  nTrl = nTrl, tmax = tmax,
                              varSP = varSP, spLimLow = spLim[1], spLimHigh = spLim[2],
                              varDR = varDR, drShape = 3, drLimLow = drLim[1], drLimHigh = drLim[2],
                              fullData = fullData, nTrlData = nTrlData,
-                             nDelta = nDelta, nCAF = nCAF,
+                             nDelta = nDelta, pDelta = pDelta, nCAF = nCAF,
                              printInputArgs = printInputArgs, printResults = printResults,
                              setSeed = setSeed))
   
@@ -91,23 +97,21 @@ dmcSim <- function(amp = 20, tau = 30, mu = 0.5, bnds = 75, resMean = 300, resSD
   dmc$summary <- NULL
   
   # means
-  dmc$means <- tibble::as_tibble(rbind(summary$resSum_comp, summary$resSum_incomp), .name_repair = "minimal")
-  colnames(dmc$means) <- c("rtCor", "sdRtCor", "perErr", "rtErr", "sdRtErr")
-  dmc$means <- tibble::add_column(Comp = c("comp", "incomp"), dmc$means, .before = TRUE)
+  dmc$means        <- as.data.frame(rbind(summary$resSum_comp, summary$resSum_incomp)) 
+  names(dmc$means) <- c("rtCor", "sdRtCor", "perErr", "rtErr", "sdRtErr")
+  dmc$means        <- cbind(Comp = c("comp", "incomp"), dmc$means)
 
   # caf
-  # nCAF    <- length(summary$caf_comp)
-  dmc$caf <- tibble::tibble(accPer = c(summary$caf_comp, summary$caf_incomp))
-  dmc$caf <- tibble::add_column(bin = rep(1:nCAF, each = 1, times = 2), dmc$caf, .before = TRUE)
-  dmc$caf <- tibble::add_column(Comp = rep(c("comp", "incomp"), each = nCAF), dmc$caf, .before = TRUE)
-
+  dmc$caf <- cbind(Comp = rep(c("comp", "incomp"), each = nCAF), 
+                   as.data.frame(cbind(bin    = as.numeric(rep(1:nCAF, each = 1, times = 2)), 
+                                       accPer =  as.numeric(c(summary$caf_comp, summary$caf_incomp)))))
+  
   # delta
-  # nDelta    <- length(summary$delta_pct_comp)
-  dmc$delta <- tibble::tibble("meanComp" = summary$delta_pct_comp,
-                              "meanIncomp" = summary$delta_pct_incomp,
-                              "meanBin" = summary$delta_pct_mean,
-                              "meanEffect" = summary$delta_pct_delta)
-  dmc$delta <- tibble::add_column("Bin" = rep(1:nDelta, each = 1, times = 1), dmc$delta, .before = TRUE)
+  dmc$delta <- as.data.frame(cbind(Bin        = rep(1:nDelta, each = 1, times = 1),
+                                   meanComp   = summary$delta_pct_comp, 
+                                   meanIncomp = summary$delta_pct_incomp, 
+                                   meanBin    = summary$delta_pct_mean,
+                                   meanEffect = summary$delta_pct_delta))
   
   # store parameters used to call function
   dmc$prms <- as.list(environment())

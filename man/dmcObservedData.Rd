@@ -58,9 +58,9 @@ plot(flankerData)  # flanker data from Ulrich et al. (2015)
 plot(simonData)    # simon data from Ulrich et al. (2015)
 
 # Example 3 (Basic behavioural analysis from Ulrich et al. 2015)
-flankerDat <- tibble::add_column(Task = "flanker", flankerData$summaryVP, .before = 2)
-simonDat   <- tibble::add_column(Task = "simon",   simonData$summaryVP,   .before = 2)
-datAgg     <- rbind(rbind(flankerDat, simonDat))
+flankerDat <- cbind(Task = "flanker", flankerData$summaryVP)
+simonDat   <- cbind(Task = "simon",   simonData$summaryVP)
+datAgg     <- rbind(flankerDat, simonDat)
 
 datAgg$VP   <- factor(datAgg$VP)
 datAgg$Task <- factor(datAgg$Task)

@@ -276,9 +276,9 @@ addDataDF <- function(dat, RT=NULL, Error=NULL) {
 #' plot(simonData)    # simon data from Ulrich et al. (2015)
 #'
 #' # Example 3 (Basic behavioural analysis from Ulrich et al. 2015)
-#' flankerDat <- tibble::add_column(Task = "flanker", flankerData$summaryVP, .before = 2)
-#' simonDat   <- tibble::add_column(Task = "simon",   simonData$summaryVP,   .before = 2)
-#' datAgg     <- rbind(rbind(flankerDat, simonDat))
+#' flankerDat <- cbind(Task = "flanker", flankerData$summaryVP)
+#' simonDat   <- cbind(Task = "simon",   simonData$summaryVP)
+#' datAgg     <- rbind(flankerDat, simonDat)
 #'
 #' datAgg$VP   <- factor(datAgg$VP)
 #' datAgg$Task <- factor(datAgg$Task)
@@ -414,19 +414,19 @@ dmcObservedData <- function(dat,
   obj <- list()
 
   # summary
-  obj$summaryVP        <- datVP[ , c(1, 2, 7, 9, 8)]
-  obj$summary          <- datAgg[ , c(1, 6, 7, 8, 12, 13, 14, 9, 10, 11)]
+  obj$summaryVP        <- as.data.frame(datVP[ , c(1, 2, 7, 9, 8)])
   names(obj$summaryVP) <- c("VP", "Comp", "rtCor", "perErr", "rtErr")
+  obj$summary          <- as.data.frame(datAgg[ , c(1, 6, 7, 8, 12, 13, 14, 9, 10, 11)])
 
   # caf
-  obj$cafVP        <- datVP_caf
+  obj$cafVP        <- as.data.frame(datVP_caf)
   names(obj$cafVP) <- c("VP", "Comp", "bin", "accPer")
-  obj$caf          <- datAgg_caf
+  obj$caf          <- as.data.frame(datAgg_caf)
 
   # delta
-  obj$deltaVP        <- datVP_dec
+  obj$deltaVP        <- as.data.frame(datVP_dec)
   names(obj$deltaVP) <- c("VP", "bin", "meanComp", "meanIncomp", "meanBin", "meanEffect")
-  obj$delta          <- datAgg_dec
+  obj$delta          <- as.data.frame(datAgg_dec)
 
   class(obj) <- "dmcob"
 
@@ -451,7 +451,7 @@ dmcObservedData <- function(dat,
 #' @param compCoding Coding for compatibility Default: c("comp", "incomp")
 #' @param errorCoding Coding for errors Default: c(0, 1))
 #'
-#' @return DataFrame (tibble)
+#' @return DataFrame 
 #'
 #' @examples
 #' # Example 1
@@ -532,7 +532,7 @@ calculateCAF <- function(dat,
 #' @param compCoding Coding for compatibility Default: c("comp", "incomp")
 #' @param quantileType Argument (1-9) from R function quantile specifying the algorithm (?quantile)
 #'
-#' @return DataFrame (tibble)
+#' @return DataFrame 
 #'
 #' @examples
 #' # Example 1

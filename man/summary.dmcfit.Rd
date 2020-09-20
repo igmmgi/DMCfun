@@ -14,7 +14,7 @@
 \item{...}{pars}
 }
 \value{
-DataFrame (tibble)
+DataFrame
 }
 \description{
 Summary of the simulation results from dmcFitAgg

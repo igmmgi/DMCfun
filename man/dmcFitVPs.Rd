@@ -16,6 +16,7 @@ dmcFitVPs(
   fixedGrid = list(),
   nCAF = 5,
   nDelta = 19,
+  pDelta = vector(),
   VP = c(),
   printInputArgs = TRUE,
   printResults = FALSE
@@ -43,6 +44,8 @@ dmcFitVPs(
 \item{nCAF}{Number of CAF bins.}
 
 \item{nDelta}{Number of delta bins.}
+
+\item{pDelta}{Alternative to nDelta by directly specifying required percentile values}
 
 \item{VP}{NULL (aggregated data across all participants) or integer for participant number}
 

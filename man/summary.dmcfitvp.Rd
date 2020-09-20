@@ -14,7 +14,7 @@
 \item{...}{pars}
 }
 \value{
-list of DataFrames (tibbles) with the first being individual participant fitted parameters and the 
+list of DataFrames with the first being individual participant fitted parameters and the 
 second being the mean fitted parameters
 }
 \description{

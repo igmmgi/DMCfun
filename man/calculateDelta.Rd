@@ -25,7 +25,7 @@ compatibility, and RT data (in ms).}
 \item{quantileType}{Argument (1-9) from R function quantile specifying the algorithm (?quantile)}
 }
 \value{
-DataFrame (tibble)
+DataFrame
 }
 \description{
 Calculate delta plot. Here RTs are split into n bins (Default: 5) for compatible and

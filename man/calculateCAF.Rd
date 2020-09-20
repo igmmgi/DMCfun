@@ -25,7 +25,7 @@ compatibility, RT data (in ms) and an Error column.}
 \item{errorCoding}{Coding for errors Default: c(0, 1))}
 }
 \value{
-DataFrame (tibble)
+DataFrame
 }
 \description{
 Calculate conditional accuracy function (CAF).

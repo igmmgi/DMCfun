@@ -13,9 +13,15 @@ void run_dmc_sim(Prms &p,
                  std::map<std::string, std::vector<double>> &rsim, 
                  std::map<std::string, std::vector<std::vector<double>>> &trials) {
    
-    // values for delta/CAF
-    p.vDelta = linspace(0, 100, p.nDelta + 2);
-    p.vCAF = linspace(0, 100, p.nCAF + 1);
+   // values for delta/CAF
+   if (!p.pDelta.empty()) {
+       p.vDelta = p.pDelta; // take specific values
+       p.vDelta.insert(p.vDelta.begin(), 0);
+       p.vDelta.push_back(100);
+   } else {
+       p.vDelta = linspace(0, 100, p.nDelta + 2);
+   }
+   p.vCAF = linspace(0, 100, p.nCAF + 1);
     
     // equation 4
     std::vector<double> eq4(p.tmax);
@@ -194,7 +200,7 @@ std::vector<double> calculate_percentile( std::vector<double> vDelta, std::vecto
     
     for (int i = 1; i <= nDelta; i++) {
 
-        pct_idx     = (vDelta[i] / 100.0) * rts.size();
+        pct_idx     = (vDelta[i] / 100.0) * (rts.size()-1);
         pct_idx_int = int(pct_idx);
         pct_idx_dec = pct_idx - pct_idx_int;
 

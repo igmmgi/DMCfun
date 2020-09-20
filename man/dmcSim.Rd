@@ -24,6 +24,7 @@ dmcSim(
   fullData = FALSE,
   nTrlData = 5,
   nDelta = 9,
+  pDelta = vector(),
   nCAF = 5,
   printInputArgs = TRUE,
   printResults = TRUE,
@@ -68,6 +69,8 @@ dmcSim(
 \item{nTrlData}{Number of trials to plot}
 
 \item{nDelta}{Number of delta bins}
+
+\item{pDelta}{Alternative to nDelta by directly specifying required percentile values}
 
 \item{nCAF}{Number of CAF bins}
 
