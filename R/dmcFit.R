@@ -145,7 +145,7 @@ dmcFitAgg <- function(resOb,
 
     startValsGrid <- Map(seq, minValsGrid, maxValsGrid, length.out = fitInitialGridN)
     startValsGrid <- dplyr::distinct(expand.grid(Map(unique, startValsGrid)))
-    message("Searching initial parameter gridspace: N = ", nrow(startValsGrid))
+    message("Searching initial parameter gridspace: N = ", nrow(startValsGrid), ", with ", nTrl, " trials per simulation.")
     
     # R check limits number of cores to 2 (https://stackoverflow.com/questions/50571325/r-cran-check-fail-when-using-parallel-functions)
     chk <- tolower(Sys.getenv("_R_CHECK_LIMIT_CORES_", ""))
