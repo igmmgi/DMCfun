@@ -7,6 +7,7 @@
 \method{plot}{dmcfit}(
   x,
   y,
+  subject = NULL,
   figType = "summary",
   legend = TRUE,
   labels = c("Compatible", "Incompatible", "Observed", "Predicted"),
@@ -26,9 +27,11 @@
 )
 }
 \arguments{
-\item{x}{Output from dmcFitAgg}
+\item{x}{Output from dmcFit}
 
 \item{y}{Observed data}
+
+\item{subject}{NULL (aggregated data across all subjects) or integer for subject number}
 
 \item{figType}{summary, rtCorrect, errorRate, rtErrors, cdf, caf, delta, all}
 
@@ -63,7 +66,7 @@
 \item{...}{additional plot pars}
 }
 \description{
-Plot the simulation results from the output of dmcFitAgg. The plot
+Plot the simulation results from the output of dmcFit. The plot
 can be an overall summary, or individual plots (activation, trials, pdf, cdf,
 caf, delta, all). Plot type summary1 contains an activation plot, example
 individual trials, the probability distribution function (PDF), the cumulative
@@ -75,16 +78,16 @@ that dmcSim is run with fullData = TRUE.
 \examples{
 \donttest{
 # Example 1
-resTh <- dmcFitAgg(flankerData, nTrl = 5000)
+resTh <- dmcFit(flankerData, nTrl = 5000)
 plot(resTh, flankerData)
 
 # Example 2
-resTh <- dmcFitAgg(flankerData, nTrl = 5000)
+resTh <- dmcFit(flankerData, nTrl = 5000)
 plot(resTh, flankerData)
 plot(resTh, flankerData, figType = "all")
 
 # Example 3
-resTh <- dmcFitAgg(simonData, nTrl = 5000)
+resTh <- dmcFit(simonData, nTrl = 5000)
 plot(resTh, simonData)
 }
 

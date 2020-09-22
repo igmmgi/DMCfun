@@ -535,7 +535,7 @@ calculateCAF <- function(dat,
 #'
 #' @examples
 #' # Example 1
-#' dat <- createDF(nSubject = 50, nTrl = 100, design = list("Comp" = c("comp", "incomp")))
+#' dat <- createDF(nSubjects = 50, nTrl = 100, design = list("Comp" = c("comp", "incomp")))
 #' dat <- addDataDF(dat,
 #'                  RT = list("Comp_comp"   = c(500, 80, 100),
 #'                            "Comp_incomp" = c(600, 80, 140)))

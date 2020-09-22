@@ -16,8 +16,7 @@ flankerData
   \item $summary --> Reaction time correct, standard deviation correct, percentage
   error, reaction time incorrect, and standard deviation for incorrect trials
   for both compatible and incompatible trials
-  \item $caf --> Proportion correct for compatible and incompatible trials across
-  5 bins
+  \item $caf --> Proportion correct for compatible and incompatible trials across 5 bins
   \item $delta --> Compatible reactions times, incompatible mean reaction times,
   mean reaction times, incompatible - compatible reaction times (delta), and
   standard deviation + standard error of this difference across 10 bins.

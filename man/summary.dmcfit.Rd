@@ -22,7 +22,7 @@ Summary of the simulation results from dmcFitAgg
 \examples{
 \donttest{
 # Example 1
-fitAgg <- dmcFitAgg(flankerData, nTrl = 1000)
+fitAgg <- dmcFit(flankerData, nTrl = 1000)
 summary(fitAgg)  
 }
 

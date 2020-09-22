@@ -7,7 +7,7 @@
 calculateDelta(
   dat,
   nDelta = 19,
-  columns = c("VP", "Comp", "RT"),
+  columns = c("Subject", "Comp", "RT"),
   compCoding = c("comp", "incomp"),
   quantileType = 5
 )
@@ -18,7 +18,7 @@ compatibility, and RT data (in ms).}
 
 \item{nDelta}{Number of delta bins.}
 
-\item{columns}{Name of required columns Default: c("VP", "Comp", "RT")}
+\item{columns}{Name of required columns Default: c("Subject", "Comp", "RT")}
 
 \item{compCoding}{Coding for compatibility Default: c("comp", "incomp")}
 
@@ -34,19 +34,19 @@ subtracted (incompatible - compatible) to give a compatibility effect (delta) at
 }
 \examples{
 # Example 1
-dat <- createDF(nVP = 50, nTrl = 100, design = list("Comp" = c("comp", "incomp")))
+dat <- createDF(nSubjects = 50, nTrl = 100, design = list("Comp" = c("comp", "incomp")))
 dat <- addDataDF(dat,
                  RT = list("Comp_comp"   = c(500, 80, 100),
                            "Comp_incomp" = c(600, 80, 140)))
 delta <- calculateDelta(dat)
 
 # Example 2
-dat <- createDF(nVP = 50, nTrl = 100, design = list("Congruency" = c("cong", "incong")))
+dat <- createDF(nSubject = 50, nTrl = 100, design = list("Congruency" = c("cong", "incong")))
 dat <- addDataDF(dat,
                  RT = list("Congruency_cong"   = c(500, 80, 100),
                            "Congruency_incong" = c(600, 80, 140)))
 head(dat)
-delta <- calculateDelta(dat, columns = c("VP", "Congruency", "RT"),
+delta <- calculateDelta(dat, columns = c("Subject", "Congruency", "RT"),
                         compCoding = c("cong", "incong"))
 
 }

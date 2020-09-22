@@ -9,7 +9,7 @@ dmcObservedData(
   nCAF = 5,
   nDelta = 19,
   outlier = c(200, 1200),
-  columns = c("VP", "Comp", "RT", "Error"),
+  columns = c("Subject", "Comp", "RT", "Error"),
   compCoding = c("comp", "incomp"),
   errorCoding = c(0, 1),
   quantileType = 5,
@@ -26,7 +26,7 @@ dmcObservedData(
 
 \item{outlier}{Outlier limits in ms (e.g., c(200, 1200))}
 
-\item{columns}{Name of required columns DEFAULT = c("VP", "Comp", "RT", "Error")}
+\item{columns}{Name of required columns DEFAULT = c("Subject", "Comp", "RT", "Error")}
 
 \item{compCoding}{Coding for compatibility DEFAULT = c("comp", "incomp")}
 
@@ -45,7 +45,7 @@ DataFrame
 Basic example analysis script to create data object required
 for observed data. Example raw *.txt files are flankerData.txt and simonData.txt. There
 are four critical columns:
-A column containing participant number
+A column containing subject number
 A column coding for compatible or incompatible
 A column with RT (in ms)
 A column indicating of the response was correct
@@ -58,24 +58,24 @@ plot(flankerData)  # flanker data from Ulrich et al. (2015)
 plot(simonData)    # simon data from Ulrich et al. (2015)
 
 # Example 3 (Basic behavioural analysis from Ulrich et al. 2015)
-flankerDat <- cbind(Task = "flanker", flankerData$summaryVP)
-simonDat   <- cbind(Task = "simon",   simonData$summaryVP)
+flankerDat <- cbind(Task = "flanker", flankerData$summarySubject)
+simonDat   <- cbind(Task = "simon",   simonData$summarySubject)
 datAgg     <- rbind(flankerDat, simonDat)
 
-datAgg$VP   <- factor(datAgg$VP)
-datAgg$Task <- factor(datAgg$Task)
-datAgg$Comp <- factor(datAgg$Comp)
+datAgg$Subject <- factor(datAgg$Subject)
+datAgg$Task    <- factor(datAgg$Task)
+datAgg$Comp    <- factor(datAgg$Comp)
 
-aovErr <- aov(perErr ~ Comp*Task + Error(VP/(Comp*Task)), datAgg)
+aovErr <- aov(perErr ~ Comp*Task + Error(Subject/(Comp*Task)), datAgg)
 summary(aovErr)
 model.tables(aovErr, type = "mean")
 
-aovRt <- aov(rtCor ~ Comp*Task + Error(VP/(Comp*Task)), datAgg)
+aovRt <- aov(rtCor ~ Comp*Task + Error(Subject/(Comp*Task)), datAgg)
 summary(aovRt)
 model.tables(aovRt, type = "mean")
 
 # Example 4
-dat <- createDF(nVP = 50, nTrl = 500, design = list("Comp" = c("comp", "incomp")))
+dat <- createDF(nSubjects = 50, nTrl = 500, design = list("Comp" = c("comp", "incomp")))
 dat <- addDataDF(dat,
                  RT = list("Comp_comp"    = c(500, 75, 120),
                            "Comp_incomp"  = c(530, 75, 100)),
@@ -83,18 +83,18 @@ dat <- addDataDF(dat,
                             "Comp_incomp" = c(21, 3, 2, 1, 1)))
 datOb <- dmcObservedData(dat)
 plot(datOb)
-plot(datOb, VP = 1)
+plot(datOb, subject = 1)
 
 # Example 5
-dat <- createDF(nVP = 50, nTrl = 500, design = list("Congruency" = c("cong", "incong")))
+dat <- createDF(nSubjects = 50, nTrl = 500, design = list("Congruency" = c("cong", "incong")))
 dat <- addDataDF(dat,
                  RT = list("Congruency_cong"   = c(500, 75, 100),
                            "Congruency_incong" = c(530, 100, 110)),
                  Error = list("Congruency_cong"   = c(3, 2, 2, 1, 1),
                               "Congruency_incong" = c(21, 3, 2, 1, 1)))
 datOb <- dmcObservedData(dat, nCAF = 5, nDelta = 9,
-                         columns = c("VP", "Congruency", "RT", "Error"),
+                         columns = c("Subject", "Congruency", "RT", "Error"),
                          compCoding = c("cong", "incong"))
 plot(datOb, labels = c("Congruent", "Incongruent"))
-plot(datOb, VP = 1)
+plot(datOb, subject = 1)
 }

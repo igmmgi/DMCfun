@@ -7,7 +7,7 @@
 \method{plot}{dmcob}(
   x,
   figType = "summary",
-  VP = NULL,
+  subject = NULL,
   legend = TRUE,
   labels = c("Compatible", "Incompatible"),
   cols = c("black", "green", "red"),
@@ -28,11 +28,11 @@
 )
 }
 \arguments{
-\item{x}{Output from dmcFitAgg}
+\item{x}{Output from dmcObservedData}
 
 \item{figType}{summary, rtCorrect, errorRate, rtErrors, cdf, caf, delta, all}
 
-\item{VP}{NULL (aggregated data across all participants) or integer for participant number}
+\item{subject}{NULL (aggregated data across all subjects) or integer for subject number}
 
 \item{legend}{TRUE/FALSE (or FUNCTION) plot legend on each plot}
 
@@ -92,7 +92,7 @@ plot(simonData, errorBars = TRUE, errorBarType = "se")
 plot(simonData, figType = "delta", errorBars = TRUE, errorBarType = "sd")
 
 # Example 3 (simulated dataset)
-dat <- createDF(nVP = 50, nTrl = 50,
+dat <- createDF(nSubjects = 50, nTrl = 50,
                 design = list("Comp" = c("comp", "incomp")))
 dat <- addDataDF(dat,
                  RT = list("Comp_comp"   = c(420, 100, 80),
@@ -103,7 +103,7 @@ datOb <- dmcObservedData(dat)
 plot(datOb, errorBars = TRUE, errorBarType = "sd")
 
 # Example 4 (simulated dataset)
-dat <- createDF(nVP = 50, nTrl = 50,
+dat <- createDF(nSubjects = 50, nTrl = 50,
                 design = list("Comp" = c("comp", "incomp")))
 dat <- addDataDF(dat,
                  RT = list("Comp_comp"   = c(420, 100, 150),

@@ -7,7 +7,7 @@
 calculateCAF(
   dat,
   nCAF = 5,
-  columns = c("VP", "Comp", "RT", "Error"),
+  columns = c("Subject", "Comp", "RT", "Error"),
   compCoding = c("comp", "incomp"),
   errorCoding = c(0, 1)
 )
@@ -18,7 +18,7 @@ compatibility, RT data (in ms) and an Error column.}
 
 \item{nCAF}{Number of CAF bins.}
 
-\item{columns}{Name of required columns Default: c("VP", "Comp", "RT", "Error")}
+\item{columns}{Name of required columns Default: c("Subject", "Comp", "RT", "Error")}
 
 \item{compCoding}{Coding for compatibility Default: c("comp", "incomp")}
 
@@ -30,13 +30,13 @@ DataFrame
 \description{
 Calculate conditional accuracy function (CAF).
 The DataFrame should contain columns defining the participant, compatibility condition,
-RT and error (Default column names: "VP", "Comp", "RT", "Error"). The "Comp" column should
+RT and error (Default column names: "Subject", "Comp", "RT", "Error"). The "Comp" column should
 define compatibility condition (Default: c("comp", "incomp")) and the "Error" column should
 define if the trial was an error or not (Default: c(0, 1) ).
 }
 \examples{
 # Example 1
-dat <- createDF(nVP = 1, nTrl = 100, design = list("Comp" = c("comp", "incomp")))
+dat <- createDF(nSubjects = 1, nTrl = 100, design = list("Comp" = c("comp", "incomp")))
 dat <- addDataDF(dat,
                  RT = list("Comp_comp"   = c(500, 80, 100),
                            "Comp_incomp" = c(600, 80, 140)),
@@ -45,14 +45,14 @@ dat <- addDataDF(dat,
 caf <- calculateCAF(dat)
 
 # Example 2
-dat <- createDF(nVP = 1, nTrl = 100, design = list("Congruency" = c("cong", "incong")))
+dat <- createDF(nSubjects = 1, nTrl = 100, design = list("Congruency" = c("cong", "incong")))
 dat <- addDataDF(dat,
                  RT = list("Congruency_cong"   = c(500, 80, 100),
                            "Congruency_incong" = c(600, 80, 140)),
                  Error = list("Congruency_cong"   = c(5, 4,3,2,1),
                               "Congruency_incong" = c(20, 8, 6, 4, 2)))
 head(dat)
-caf <- calculateCAF(dat, columns = c("VP", "Congruency", "RT", "Error"),
+caf <- calculateCAF(dat, columns = c("Subject", "Congruency", "RT", "Error"),
                     compCoding = c("cong", "incong"))
 
 }

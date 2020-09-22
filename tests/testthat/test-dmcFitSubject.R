@@ -6,7 +6,7 @@ test_that("dmcFitSubject", {
   fit <- dmcFitSubject(DMCfun::flankerData, nTrl = 1000, subjects = c(1),
                        printInputArgs = FALSE, printResults = FALSE)
   testthat::expect_type(fit, "list")
-  testthat::expect_s3_class(fit, "dmcfit_subject")
+  testthat::expect_s3_class(fit, "dmcfit")
   testthat::expect_s3_class(fit[[1]], "dmcfit")
 
   # test 2

@@ -420,9 +420,9 @@ plot.dmclist <- function(x,
 #' type summary2 contains only the PDF, CDF, CAF and delta plots and does not require
 #' that dmcSim is run with fullData = TRUE.
 #'
-#' @param x Output from dmcFitAgg
+#' @param x Output from dmcObservedData
 #' @param figType summary, rtCorrect, errorRate, rtErrors, cdf, caf, delta, all
-#' @param subjects NULL (aggregated data across all subjects) or integer for subject number
+#' @param subject NULL (aggregated data across all subjects) or integer for subject number
 #' @param legend TRUE/FALSE (or FUNCTION) plot legend on each plot
 #' @param labels Condition labels c("Compatible", "Incompatible") default
 #' @param cols Condition colours c("green", "red") default
@@ -482,7 +482,7 @@ plot.dmclist <- function(x,
 #' @export
 plot.dmcob <- function(x,
                        figType = "summary",
-                       subjects = NULL,
+                       subject = NULL,
                        legend = TRUE,
                        labels = c("Compatible", "Incompatible"),
                        cols = c("black", "green", "red"),
@@ -518,7 +518,7 @@ plot.dmcob <- function(x,
     stop("legend must be TRUE/FALSE or a function")
   }
 
-  if (!is.null(subjects)) {
+  if (!is.null(subject)) {
     # select individual dataset
     if (!subject %in% x$summarySubject$Subject) {
       stop("datOb does not contain requested subject number!")
@@ -692,7 +692,7 @@ plot.dmcob <- function(x,
 
 #' @title plot.dmcfit: Plot observed + fitted data
 #'
-#' @description Plot the simulation results from the output of dmcFitAgg. The plot
+#' @description Plot the simulation results from the output of dmcFit. The plot
 #' can be an overall summary, or individual plots (activation, trials, pdf, cdf,
 #' caf, delta, all). Plot type summary1 contains an activation plot, example
 #' individual trials, the probability distribution function (PDF), the cumulative
@@ -701,8 +701,9 @@ plot.dmcob <- function(x,
 #' summary2 contains only the PDF, CDF, CAF and delta plots and does not require
 #' that dmcSim is run with fullData = TRUE.
 #'
-#' @param x Output from dmcFitAgg
+#' @param x Output from dmcFit
 #' @param y Observed data
+#' @param subject NULL (aggregated data across all subjects) or integer for subject number
 #' @param figType summary, rtCorrect, errorRate, rtErrors, cdf, caf, delta, all
 #' @param legend TRUE/FALSE (or FUNCTION) plot legend on each plot
 #' @param labels Condition labels c("Compatible", "Incompatible", "Observed", "Predicted") default
@@ -725,22 +726,23 @@ plot.dmcob <- function(x,
 #' @examples
 #' \donttest{
 #' # Example 1
-#' resTh <- dmcFitAgg(flankerData, nTrl = 5000)
+#' resTh <- dmcFit(flankerData, nTrl = 5000)
 #' plot(resTh, flankerData)
 #'
 #' # Example 2
-#' resTh <- dmcFitAgg(flankerData, nTrl = 5000)
+#' resTh <- dmcFit(flankerData, nTrl = 5000)
 #' plot(resTh, flankerData)
 #' plot(resTh, flankerData, figType = "all")
 #'
 #' # Example 3
-#' resTh <- dmcFitAgg(simonData, nTrl = 5000)
+#' resTh <- dmcFit(simonData, nTrl = 5000)
 #' plot(resTh, simonData)
 #' }
 #'
 #' @export
 plot.dmcfit <- function(x,
                         y,
+                        subject = NULL,
                         figType = "summary",
                         legend = TRUE,
                         labels = c("Compatible", "Incompatible", "Observed", "Predicted"),
@@ -775,6 +777,21 @@ plot.dmcfit <- function(x,
     stop("labels must be length 4")
   }
 
+  if (!is.null(subject)) { 
+    # select individual dataset
+    subjects <- which(!unlist(lapply(x, is.null)))
+    if (!subject %in% subjects) {
+      stop("datFit does not contain requested subject number!")
+    }
+    
+    x <- x[[subject]]   
+    
+    y$summary <- y$summarySubject[y$summarySubject$Subject == subject, ]
+    y$delta   <- y$deltaSubject[y$deltaSubject$Subject == subject, ]
+    y$caf     <- y$cafSubject[y$cafSubject$Subject == subject, ]
+    
+  }
+  
   showFig = rep(FALSE, 6)
 
   # xlabels
@@ -960,98 +977,98 @@ plot.dmcfit <- function(x,
 
 
 
-#' @title plot.dmcfit_subject: Plot fitted data from individual participants.
-#'
-#' @description Plot the simulation results from the output of dmcFitSubject. The plot
-#' can be an overall summary, or individual plots (activation, trials, pdf, cdf,
-#' caf, delta, all). Plot type summary1 contains an activation plot, example
-#' individual trials, the probability distribution function (PDF), the cumulative
-#' distribution function (CDF), the conditional accuracy function (CAF) and
-#' delta plots. This required that dmcSim is run with fullData = TRUE. Plot type
-#' summary2 contains only the PDF, CDF, CAF and delta plots and does not require
-#' that dmcSim is run with fullData = TRUE.
-#'
-#' @param x Output from dmcFitSubject
-#' @param y Observed data
-#' @param figType summary, rtCorrect, errorRate, rtErrors, cdf, caf, delta, all
-#' @param subject NULL (aggregated data across all subjects) or integer for subject number
-#' @param legend TRUE/FALSE (or FUNCTION) plot legend on each plot
-#' @param labels Condition labels c("Compatible", "Incompatible", "Observed", "Predicted") default
-#' @param cols Condition colours c("green", "red") default
-#' @param ylimRt ylimit for Rt plots
-#' @param ylimEr ylimit for error rate plots
-#' @param ylimCAF ylimit for CAF plot
-#' @param cafBinLabels TRUE/FALSE
-#' @param ylimDelta ylimit for delta plot
-#' @param xlimDelta xlimit for delta plot
-#' @param xlabs TRUE/FALSE
-#' @param ylabs TRUE/FALSE
-#' @param xaxts TRUE/FALSE
-#' @param yaxts TRUE/FALSE
-#' @param resetPar TRUE/FALSE Reset graphical parameters
-#' @param ... additional plot pars
-#'
-#' @return NULL
-#'
-#' @examples
-#' \donttest{
-#' # Example 1
-#' resTh <- dmcFitSubjects(flankerData, nTrl = 5000, subjects = c(2, 3))
-#' plot(resTh, flankerData)
-#' plot(flankerData, subjects = 2)
-#' plot(resTh, flankerData)
-#' }
-#'
-#' @export
-plot.dmcfit_subject <- function(x,
-                                y,
-                                figType      = "summary",
-                                subject      = NULL,
-                                legend       = TRUE,
-                                labels       = c("Compatible", "Incompatible", "Observed", "Predicted"),
-                                cols         = c("black", "green", "red"),
-                                ylimRt       = c(200, 800),
-                                ylimEr       = c(0, 20),
-                                ylimCAF      = c(0, 1),
-                                cafBinLabels = FALSE,
-                                ylimDelta    = c(-50, 100),
-                                xlimDelta    = c(200, 1000),
-                                xlabs        = TRUE,
-                                ylabs        = TRUE,
-                                xaxts        = TRUE,
-                                yaxts        = TRUE,
-                                resetPar     = TRUE,
-                                ...) {
-
-  subjectss <- which(!unlist(lapply(x, is.null)))
-  yvp <- NULL
-  for (subject in subjectss) {
-    
-     yvp$summary <- y$summarySubjects[y$summaryVP$Subject == subject, ]
-     yvp$delta   <- y$deltaSubjects[y$deltaSubject$Subject == subject, ]
-     yvp$caf     <- y$cafSubjects[y$cafSubject$Subject == subject, ]
-      
-     plot(x[[subject]], yvp, 
-          figType = "summary", 
-          legend = legend,
-          labels = labels,
-          cols = cols,
-          ylimRt = ylimRt,
-          ylimEr = ylimEr,
-          ylimCAF = ylimCAF,
-          cafBinLabels = cafBinLabels,
-          ylimDelta = ylimDelta,
-          xlimDelta = xlimDelta,
-          xlabs = xlabs,
-          ylabs = ylabs,
-          xaxts = xaxts,
-          yaxts = yaxts,
-          resetPar = resetPar,
-          ...)
-     
-  } 
-  
-}
+# #' @title plot.dmcfit_subject: Plot fitted data from individual participants.
+# #'
+# #' @description Plot the simulation results from the output of dmcFitSubject. The plot
+# #' can be an overall summary, or individual plots (activation, trials, pdf, cdf,
+# #' caf, delta, all). Plot type summary1 contains an activation plot, example
+# #' individual trials, the probability distribution function (PDF), the cumulative
+# #' distribution function (CDF), the conditional accuracy function (CAF) and
+# #' delta plots. This required that dmcSim is run with fullData = TRUE. Plot type
+# #' summary2 contains only the PDF, CDF, CAF and delta plots and does not require
+# #' that dmcSim is run with fullData = TRUE.
+# #'
+# #' @param x Output from dmcFitSubject
+# #' @param y Observed data
+# #' @param figType summary, rtCorrect, errorRate, rtErrors, cdf, caf, delta, all
+# #' @param subject NULL (aggregated data across all subjects) or integer for subject number
+# #' @param legend TRUE/FALSE (or FUNCTION) plot legend on each plot
+# #' @param labels Condition labels c("Compatible", "Incompatible", "Observed", "Predicted") default
+# #' @param cols Condition colours c("green", "red") default
+# #' @param ylimRt ylimit for Rt plots
+# #' @param ylimEr ylimit for error rate plots
+# #' @param ylimCAF ylimit for CAF plot
+# #' @param cafBinLabels TRUE/FALSE
+# #' @param ylimDelta ylimit for delta plot
+# #' @param xlimDelta xlimit for delta plot
+# #' @param xlabs TRUE/FALSE
+# #' @param ylabs TRUE/FALSE
+# #' @param xaxts TRUE/FALSE
+# #' @param yaxts TRUE/FALSE
+# #' @param resetPar TRUE/FALSE Reset graphical parameters
+# #' @param ... additional plot pars
+# #'
+# #' @return NULL
+# #'
+# #' @examples
+# #' \donttest{
+# #' # Example 1
+# #' resTh <- dmcFitSubject(flankerData, nTrl = 5000, subjects = c(2, 3))
+# #' plot(resTh, flankerData)
+# #' plot(flankerData, subject = 2)
+# #' plot(resTh, flankerData)
+# #' }
+# #'
+# #' @export
+# plot.dmcfit_subject <- function(x,
+#                                 y,
+#                                 figType      = "summary",
+#                                 subject      = NULL,
+#                                 legend       = TRUE,
+#                                 labels       = c("Compatible", "Incompatible", "Observed", "Predicted"),
+#                                 cols         = c("black", "green", "red"),
+#                                 ylimRt       = c(200, 800),
+#                                 ylimEr       = c(0, 20),
+#                                 ylimCAF      = c(0, 1),
+#                                 cafBinLabels = FALSE,
+#                                 ylimDelta    = c(-50, 100),
+#                                 xlimDelta    = c(200, 1000),
+#                                 xlabs        = TRUE,
+#                                 ylabs        = TRUE,
+#                                 xaxts        = TRUE,
+#                                 yaxts        = TRUE,
+#                                 resetPar     = TRUE,
+#                                 ...) {
+# 
+#   subjectss <- which(!unlist(lapply(x, is.null)))
+#   yvp <- NULL
+#   for (subject in subjectss) {
+#     
+#      yvp$summary <- y$summarySubjects[y$summaryVP$Subject == subject, ]
+#      yvp$delta   <- y$deltaSubjects[y$deltaSubject$Subject == subject, ]
+#      yvp$caf     <- y$cafSubjects[y$cafSubject$Subject == subject, ]
+#       
+#      plot(x[[subject]], yvp, 
+#           figType = "summary", 
+#           legend = legend,
+#           labels = labels,
+#           cols = cols,
+#           ylimRt = ylimRt,
+#           ylimEr = ylimEr,
+#           ylimCAF = ylimCAF,
+#           cafBinLabels = cafBinLabels,
+#           ylimDelta = ylimDelta,
+#           xlimDelta = xlimDelta,
+#           xlabs = xlabs,
+#           ylabs = ylabs,
+#           xaxts = xaxts,
+#           yaxts = yaxts,
+#           resetPar = resetPar,
+#           ...)
+#      
+#   } 
+#   
+# }
   
   
 
