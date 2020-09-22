@@ -1,4 +1,4 @@
-VP	Comp	RT	Error
+Subject	Comp	RT	Error
 1	incomp	451.400105	0
 1	incomp	534.88539	0
 1	incomp	468.089984	0

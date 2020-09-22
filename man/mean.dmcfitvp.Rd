@@ -2,7 +2,7 @@
 % Please edit documentation in R/dmcFit.R
 \name{mean.dmcfitvp}
 \alias{mean.dmcfitvp}
-\title{mean.dmcfitvp}
+\title{mean.dmcfitvp: Return mean simulation results from dmcFitVPs}
 \usage{
 \method{mean}{dmcfitvp}(x, ...)
 }

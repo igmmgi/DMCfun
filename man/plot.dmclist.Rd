@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.R
 \name{plot.dmclist}
 \alias{plot.dmclist}
-\title{plot.dmclist}
+\title{plot.dmclist: Plot delta plots from multiple dmc simulations.}
 \usage{
 \method{plot}{dmclist}(
   x,
@@ -33,14 +33,7 @@
 \item{...}{pars for legend}
 }
 \description{
-Plot the simulation results from the output of dmcSim. The plot
-can be an overall summary, or individual plots (activation, trials, pdf, cdf,
-caf, delta, all). Plot type summary1 contains an activation plot, example
-individual trials, the probability distribution function (PDF), the cumulative
-distribution function (CDF), the conditional accuracy function (CAF) and
-delta plot. This requires that dmcSim is run with fullData = TRUE. Plot type
-summary2 contains only the PDF, CDF, CAF and delta plots and does not require
-that dmcSim is run with fullData = TRUE.
+Plot delta function from multiple dmc simulations (i.e., dmcSims).
 }
 \examples{
 \donttest{
@@ -50,7 +43,7 @@ dmc <- dmcSims(params)
 plot(dmc, ncol = 2, xlim = c(0, 1300), ylim = c(-100, 200))
 
 # Example 2
-params <- list(amp=c(10, 20), tau = seq(20, 80, 40), mu = seq(0.2, 0.6, 0.2), nTrl = 50000)
+params <- list(amp=c(10, 20), tau = seq(20, 80, 40), drc = seq(0.2, 0.6, 0.2), nTrl = 50000)
 dmc <- dmcSims(params)
 plot(dmc, ncol = 2, col=c("green", "blue"), lineType = "l")
 

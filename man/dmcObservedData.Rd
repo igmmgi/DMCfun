@@ -2,7 +2,7 @@
 % Please edit documentation in R/dmcData.R
 \name{dmcObservedData}
 \alias{dmcObservedData}
-\title{dmcObservedData}
+\title{dmcObservedData: Run standard analyses on observed data}
 \usage{
 dmcObservedData(
   dat,

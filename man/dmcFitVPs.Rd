@@ -2,7 +2,7 @@
 % Please edit documentation in R/dmcFit.R
 \name{dmcFitVPs}
 \alias{dmcFitVPs}
-\title{dmcFitVPs}
+\title{dmcFitVPs: Fit individual participant data to dmc}
 \usage{
 dmcFitVPs(
   resOb,

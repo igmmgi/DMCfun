@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.R
 \name{plot.dmcfit}
 \alias{plot.dmcfit}
-\title{plot.dmcfit}
+\title{plot.dmcfit: Plot observed + fitted data}
 \usage{
 \method{plot}{dmcfit}(
   x,

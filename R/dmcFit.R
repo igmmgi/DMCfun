@@ -1,4 +1,4 @@
-#' @title dmcFitAgg
+#' @title dmcFit: Fit DMC to aggregated data
 #'
 #' @description Fit theoretical data generated from dmcSim to observed data by
 #' minimizing the root-mean-square error (RMSE) between a weighted combination
@@ -7,21 +7,21 @@
 #' @param resOb Observed data (see flankerData and simonTask for data format)
 #' @param nTrl Number of trials to use within dmcSim.
 #' @param startVals Starting values for to-be estimated parameters. This is a list with values specified individually for
-#' amp, tau, mu, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., startVals = list(amp = 20, tau = 200, mu = 0.5, bnds = 75, resMean = 300,
+#' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., startVals = list(amp = 20, tau = 200, drc = 0.5, bnds = 75, resMean = 300,
 #' resSD = 30, aaShape = 2, spShape = 3, sigm = 4)).
 #' @param minVals Minimum values for the to-be estimated parameters. This is a list with values specified individually for
-#' amp, tau, mu, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., minVals = list(amp = 10, tau = 5, mu = 0.1, bnds = 20, resMean = 200,
+#' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., minVals = list(amp = 10, tau = 5, drc = 0.1, bnds = 20, resMean = 200,
 #' resSD = 5, aaShape = 1, spShape = 2, sigm = 1)).
 #' @param maxVals Maximum values for the to-be estimated parameters. This is a list with values specified individually for
-#' amp, tau, mu, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., maxVals = list(amp = 40, tau = 300, mu = 1.0, bnds = 150, resMean = 800,
+#' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., maxVals = list(amp = 40, tau = 300, drc = 1.0, bnds = 150, resMean = 800,
 #' resSD = 100, aaShape = 3, spShape = 4, sigm = 10))
 #' @param fixedFit Fix parameter to starting value. This is a list with bool values specified individually for
-#' amp, tau, mu, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedFit = list(amp = F,  tau = F, mu = F, bnds = F, resMean = F,
+#' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedFit = list(amp = F,  tau = F, drc = F, bnds = F, resMean = F,
 #' resSD = F, aaShape = F, spShape = F, sigm = T))
 #' @param fitInitialGrid TRUE/FALSE
 #' @param fitInitialGridN 10 reduce if searching more than 1 initial parameter
 #' @param fixedGrid Fix parameter for initial grid search.  This is a list with bool values specified individually for
-#' amp, tau, mu, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedGrid = list(amp = T, tau = F, mu = T, bnds = T, resMean = T,
+#' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedGrid = list(amp = T, tau = F, drc = T, bnds = T, resMean = T,
 #' resSD = T, aaShape = T, spShape = T, sigm = T))
 #' @param nCAF Number of CAF bins. 
 #' @param nDelta Number of delta bins. 
@@ -42,58 +42,58 @@
 #' @examples
 #' \donttest{
 #' # Example 1: Flanker data from Ulrich et al. (2015)
-#' fit <- dmcFitAgg(flankerData)  # only initial search tau
+#' fit <- dmcFit(flankerData)  # only initial search tau
 #' plot(fit, flankerData)
 #' summary(fit)
 #'
 #' # Example 2: Simon data from Ulrich et al. (2015)
-#' fit <- dmcFitAgg(simonData)    # only initial search tau
+#' fit <- dmcFit(simonData)    # only initial search tau
 #' plot(fit, simonData)
 #' summary(fit)
 #'
 #' # Example 3: Flanker data from Ulrich et al. (2015) with non-default
 #' # start vals and some fixed values
-#' fit <- dmcFitAgg(flankerData,
-#'                  startVals = list(mu = 0.6, aaShape = 2.5),
-#'                  fixedFit = list(mu = TRUE, aaShape = TRUE))
+#' fit <- dmcFit(flankerData,
+#'                  startVals = list(drc = 0.6, aaShape = 2.5),
+#'                  fixedFit = list(drc = TRUE, aaShape = TRUE))
 #'
 #' # Example 4: Simulated Data (+ve going delta function)
-#' dat <- createDF(nVP = 20, nTrl = 500, design = list("Comp" = c("comp", "incomp")))
+#' dat <- createDF(nSubjects = 20, nTrl = 500, design = list("Comp" = c("comp", "incomp")))
 #' dat <- addDataDF(dat,
 #'                  RT = list("Comp_comp"   = c(510, 100, 100),
 #'                            "Comp_incomp" = c(540, 130, 85)),
 #'                  Error = list("Comp_comp"   = c(4, 3, 2, 1, 1),
 #'                               "Comp_incomp" = c(20, 4, 3, 1, 1)))
-#' datOb <- dmcObservedData(dat, columns = c("VP", "Comp", "RT", "Error"))
+#' datOb <- dmcObservedData(dat, columns = c("Subject", "Comp", "RT", "Error"))
 #' plot(datOb)
-#' fit <- dmcFitAgg(datOb, nTrl = 5000)
+#' fit <- dmcFit(datOb, nTrl = 5000)
 #' plot(fit, datOb)
 #' summary(fit)
 #' }
 #'
 #' @export
-dmcFitAgg <- function(resOb,
-                      nTrl            = 100000,
-                      startVals       = list(),
-                      minVals         = list(),
-                      maxVals         = list(),
-                      fixedFit        = list(),
-                      fitInitialGrid  = TRUE,
-                      fitInitialGridN = 10,      # reduce if grid search 3/4+ parameters
-                      fixedGrid       = list(),  # default only initial search tau
-                      nCAF            = 5,
-                      nDelta          = 19,
-                      pDelta          = vector(),
-                      printInputArgs  = TRUE,
-                      printResults    = FALSE) {
+dmcFit <- function(resOb,
+                   nTrl            = 100000,
+                   startVals       = list(),
+                   minVals         = list(),
+                   maxVals         = list(),
+                   fixedFit        = list(),
+                   fitInitialGrid  = TRUE,
+                   fitInitialGridN = 10,      # reduce if grid search 3/4+ parameters
+                   fixedGrid       = list(),  # default only initial search tau
+                   nCAF            = 5,
+                   nDelta          = 19,
+                   pDelta          = vector(),
+                   printInputArgs  = TRUE,
+                   printResults    = FALSE) {
 
 
   # default parameter space
-  defaultStartVals <- list(amp = 20, tau = 200, mu = 0.5, bnds =  75, resMean = 300, resSD =  30, aaShape = 2, spShape = 3, sigm =  4)
-  defaultMinVals   <- list(amp = 10, tau =   5, mu = 0.1, bnds =  20, resMean = 200, resSD =  5,  aaShape = 1, spShape = 2, sigm =  1)
-  defaultMaxVals   <- list(amp = 40, tau = 300, mu = 1.0, bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, sigm = 10)
-  defaultFixedFit  <- list(amp = F,  tau = F,   mu = F,   bnds = F,   resMean = F,   resSD = F,   aaShape = F, spShape = F, sigm = T)
-  defaultFixedGrid <- list(amp = T,  tau = F,   mu = T,   bnds = T,   resMean = T,   resSD = T,   aaShape = T, spShape = T, sigm = T)
+  defaultStartVals <- list(amp = 20, tau = 200, drc = 0.5, bnds =  75, resMean = 300, resSD =  30, aaShape = 2, spShape = 3, sigm =  4)
+  defaultMinVals   <- list(amp = 10, tau =   5, drc = 0.1, bnds =  20, resMean = 200, resSD =  5,  aaShape = 1, spShape = 2, sigm =  1)
+  defaultMaxVals   <- list(amp = 40, tau = 300, drc = 1.0, bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, sigm = 10)
+  defaultFixedFit  <- list(amp = F,  tau = F,   drc = F,   bnds = F,   resMean = F,   resSD = F,   aaShape = F, spShape = F, sigm = T)
+  defaultFixedGrid <- list(amp = T,  tau = F,   drc = T,   bnds = T,   resMean = T,   resSD = T,   aaShape = T, spShape = T, sigm = T)
 
   startVals <- modifyList(defaultStartVals, startVals)
   minVals   <- modifyList(defaultMinVals,   minVals)
@@ -122,7 +122,7 @@ dmcFitAgg <- function(resOb,
     prms <- as.list(pmax(unlist(prms), unlist(minVals)))
     prms <- as.list(pmin(unlist(prms), unlist(maxVals)))
 
-    resTh <- dmcSim(amp = prms$amp, tau = prms$tau, mu = prms$mu, bnds = prms$bnds,
+    resTh <- dmcSim(amp = prms$amp, tau = prms$tau, drc = prms$drc, bnds = prms$bnds,
                     resMean = prms$resMean, resSD = prms$resSD, aaShape = prms$aaShape,
                     varSP = TRUE, spShape = prms$spShape, sigm = prms$sigm, spLim = c(-prms$bnds, prms$bnds),
                     nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, nCAF = nCAF,
@@ -163,7 +163,7 @@ dmcFitAgg <- function(resOb,
     # https://stackoverflow.com/questions/58473626/r-doparallel-progress-bar-to-monitor-finished-jobs
     
     pCostValue <- function(i){
-      resTh <- dmcSim(amp = startValsGrid$amp[i], tau = startValsGrid$tau[i], mu = startValsGrid$mu[i],
+      resTh <- dmcSim(amp = startValsGrid$amp[i], tau = startValsGrid$tau[i], drc = startValsGrid$drc[i],
                       bnds = startValsGrid$bnds[i], resMean = startValsGrid$resMean[i], resSD = startValsGrid$resSD[i],
                       aaShape = startValsGrid$aaShape[i], varSP = TRUE, spShape = startValsGrid$spShape[i],
                       sigm = startValsGrid$sigm[i],  spLim = c(-startValsGrid$bnds[i], startValsGrid$bnds[i]),
@@ -206,7 +206,7 @@ dmcFitAgg <- function(resOb,
   prms <- as.list(prms)
 
   message(sprintf("RMSE: %.3f\n", fit$value))
-  dmcfit <- dmcSim(amp = prms$amp, tau = prms$tau, mu = prms$mu,
+  dmcfit <- dmcSim(amp = prms$amp, tau = prms$tau, drc = prms$drc,
                    bnds = prms$bnds, resMean = prms$resMean, resSD = prms$resSD,
                    aaShape = prms$aaShape, sigm = prms$sigm,
                    varSP = TRUE, spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
@@ -225,7 +225,7 @@ dmcFitAgg <- function(resOb,
 
 
 
-#' @title dmcFitVPs
+#' @title dmcFitSubject: Fit individual subjects data to dmc
 #'
 #' @description Fit theoretical data generated from dmcSim to observed data by
 #' minimizing the root-mean-square error (RMSE) between a weighted combination
@@ -243,58 +243,58 @@ dmcFitAgg <- function(resOb,
 #' @param nCAF Number of CAF bins. 
 #' @param nDelta Number of delta bins. 
 #' @param pDelta Alternative to nDelta by directly specifying required percentile values   
-#' @param VP NULL (aggregated data across all participants) or integer for participant number
+#' @param subjects NULL (aggregated data across all subjects) or integer for subject number
 #' @param printInputArgs TRUE/FALSE
 #' @param printResults TRUE/FALSE
 #'
-#' @return dmcfitvp List of dmcfit per participant fitted (see dmcFitAgg)
+#' @return dmcfit_subject List of dmcfit per subject fitted (see dmcFit)
 #'
 #' @examples
 #' \donttest{
 #' # Example 1: Flanker data from Ulrich et al. (2015)
-#' fit <- dmcFitVPs(flankerData, nTrl = 1000, VP = c(1, 2))
-#' plot(fit, flankerData, VP = 1)
-#' plot(fit, flankerData, VP = 2)
+#' fit <- dmcFitSubject(flankerData, nTrl = 1000, subjects = c(1, 2))
+#' plot(fit, flankerData, subject = 1)
+#' plot(fit, flankerData, subject = 2)
 #' summary(fit)
 #' fitAgg <- mean(fit)
 #' plot(fitAgg, flankerData)
 #'
 #' # Example 2: Simon data from Ulrich et al. (2015)
-#' fit <- dmcFitVPs(simonData, nTrl = 1000, VP = c(1, 2))
-#' plot(fit, simonData, VP = 1)
-#' plot(fit, simonData, VP = 2)
+#' fit <- dmcFitSubject(simonData, nTrl = 1000, subject = c(1, 2))
+#' plot(fit, simonData, subject = 1)
+#' plot(fit, simonData, subject = 2)
 #' summary(fit)
 #' fitAgg <- mean(fit)
 #' plot(fitAgg, simonData)
 #' }
 #'
 #' @export
-dmcFitVPs <- function(resOb,
-                      nTrl             = 100000,
-                      startVals        = list(),
-                      minVals          = list(),
-                      maxVals          = list(),
-                      fixedFit         = list(),
-                      fitInitialGrid   = TRUE,
-                      fitInitialGridN  = 10,       # reduce if grid search 3/4+ parameters
-                      fixedGrid        = list(),   # default only initial tau search
-                      nCAF             = 5,
-                      nDelta           = 19,
-                      pDelta           = vector(),
-                      VP               = c(),
-                      printInputArgs   = TRUE,
-                      printResults     = FALSE) {
+dmcFitSubject <- function(resOb,
+                          nTrl             = 100000,
+                          startVals        = list(),
+                          minVals          = list(),
+                          maxVals          = list(),
+                          fixedFit         = list(),
+                          fitInitialGrid   = TRUE,
+                          fitInitialGridN  = 10,       # reduce if grid search 3/4+ parameters
+                          fixedGrid        = list(),   # default only initial tau search
+                          nCAF             = 5,
+                          nDelta           = 19,
+                          pDelta           = vector(),
+                          subjects         = c(),
+                          printInputArgs   = TRUE,
+                          printResults     = FALSE) {
 
-  if (length(VP) == 0) {
-    VP = unique(resOb$summaryVP$VP)  # fit all individual VPs in data
+  if (length(subjects) == 0) {
+    subjects = unique(resOb$summarySubject$subjects)  # fit all individual subjects in data
   }
 
   # default parameter space
-  defaultStartVals <- list(amp = 20, tau = 200, mu = 0.5, bnds =  75, resMean = 300, resSD =  30, aaShape = 2, spShape = 3, sigm =  4)
-  defaultMinVals   <- list(amp = 10, tau =   5, mu = 0.1, bnds =  20, resMean = 200, resSD =  5,  aaShape = 1, spShape = 2, sigm =  1)
-  defaultMaxVals   <- list(amp = 40, tau = 300, mu = 1.0, bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, sigm = 10)
-  defaultFixedFit  <- list(amp = F,  tau = F,   mu = F,   bnds = F,   resMean = F,   resSD = F,   aaShape = F, spShape = F, sigm = T)
-  defaultFixedGrid <- list(amp = T,  tau = F,   mu = T,   bnds = T,   resMean = T,   resSD = T,   aaShape = T, spShape = T, sigm = T)
+  defaultStartVals <- list(amp = 20, tau = 200, drc = 0.5, bnds =  75, resMean = 300, resSD =  30, aaShape = 2, spShape = 3, sigm =  4)
+  defaultMinVals   <- list(amp = 10, tau =   5, drc = 0.1, bnds =  20, resMean = 200, resSD =  5,  aaShape = 1, spShape = 2, sigm =  1)
+  defaultMaxVals   <- list(amp = 40, tau = 300, drc = 1.0, bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, sigm = 10)
+  defaultFixedFit  <- list(amp = F,  tau = F,   drc = F,   bnds = F,   resMean = F,   resSD = F,   aaShape = F, spShape = F, sigm = T)
+  defaultFixedGrid <- list(amp = T,  tau = F,   drc = T,   bnds = T,   resMean = T,   resSD = T,   aaShape = T, spShape = T, sigm = T)
 
   startVals <- modifyList(defaultStartVals, startVals)
   minVals   <- modifyList(defaultMinVals,   minVals)
@@ -302,30 +302,30 @@ dmcFitVPs <- function(resOb,
   fixedFit  <- modifyList(defaultFixedFit,  fixedFit)
   fixedGrid <- modifyList(defaultFixedGrid, fixedGrid)
 
-  dmcfit <- vector("list", max(VP))
-  for (vp in VP) {
+  dmcfit <- vector("list", max(subjects))
+  for (subject in subjects) {
 
-    resObVP <- list(deltaAgg = resOb$deltaVP[resOb$deltaVP$VP == vp,],
-                    cafAgg = resOb$cafVP[resOb$cafVP$VP == vp,])
+    resObSubject <- list(deltaAgg = resOb$deltaSubject[resOb$deltaSubject$Subject == subject,],
+                    cafAgg = resOb$cafSubject[resOb$cafSubject$Subject == subject,])
 
-    dmcfit[[vp]] <- dmcFitAgg(resObVP,
-                              nTrl             = nTrl,
-                              startVals        = startVals,
-                              minVals          = minVals,
-                              maxVals          = maxVals,
-                              fixedFit         = fixedFit,
-                              fitInitialGrid   = fitInitialGrid,
-                              fitInitialGridN  = fitInitialGridN, # reduce if grid search 3/4+ parameters
-                              fixedGrid        = fixedGrid,       # only fit tau
-                              nCAF             = nCAF,
-                              nDelta           = nDelta,
-                              pDelta           = pDelta,
-                              printInputArgs   = printInputArgs,
-                              printResults     = printResults)
+    dmcfit[[subject]] <- dmcFit(resObSubject,
+                                nTrl             = nTrl,
+                                startVals        = startVals,
+                                minVals          = minVals,
+                                maxVals          = maxVals,
+                                fixedFit         = fixedFit,
+                                fitInitialGrid   = fitInitialGrid,
+                                fitInitialGridN  = fitInitialGridN, # reduce if grid search 3/4+ parameters
+                                fixedGrid        = fixedGrid,       # only fit tau
+                                nCAF             = nCAF,
+                                nDelta           = nDelta,
+                                pDelta           = pDelta,
+                                printInputArgs   = printInputArgs,
+                                printResults     = printResults)
 
   }
 
-  class(dmcfit) <- "dmcfitvp"
+  class(dmcfit) <- "dmcfit_subject"
 
   return(dmcfit)
 
@@ -333,16 +333,16 @@ dmcFitVPs <- function(resOb,
 
 
 
-#' @title mean.dmcfitvp
+#' @title mean.dmcfit_subject: Return mean simulation results from dmcFitSubject
 #'
-#' @description Aggregated simulation results from dmcFitVPs.
+#' @description Aggregated simulation results from dmcFitSubject.
 #'
-#' @param x Output from dmcFitVPs
+#' @param x Output from dmcFitSubject
 #' @param ... pars
 #'
 #' @return dmcfit
 #'
-#' The function returns a list with the relevant aggregated results dmcFitVPs. The list
+#' The function returns a list with the relevant aggregated results dmcFitIndividual. The list
 #' is accessed with obj$name and so on with the the following:
 #' \item{obj$means}{means}
 #' \item{obj$delta}{delta}
@@ -352,13 +352,13 @@ dmcFitVPs <- function(resOb,
 #' @examples
 #' \donttest{
 #' # Example 1: Fit individual data then aggregate
-#' fitVPs <- dmcFitVPs(flankerData, nTrl = 1000, VP = c(2))
-#' fitAgg <- mean(fitVPs)
+#' fitSubjects <- dmcFitSubjects(flankerData, nTrl = 1000, subjects = c(2))
+#' fitAgg <- mean(fitSubjects)
 #' plot(fitAgg, flankerData)
 #' }
 #'
 #' @export
-mean.dmcfitvp <- function(x, ...) {
+mean.dmcfit_subject <- function(x, ...) {
 
   mergeLists <- function(lists, name) {
     return(lapply(c(name), function(x) do.call(rbind, lapply(lists, `[[`, x)))[[1]])
@@ -392,7 +392,7 @@ mean.dmcfitvp <- function(x, ...) {
   meanfit$par <- as.data.frame(mergeLists(x, "par")) %>%
     dplyr::summarise(amp = mean(unlist(amp)),
                      tau = mean(unlist(tau)),
-                     mu = mean(unlist(mu)),
+                     drc = mean(unlist(drc)),
                      bnds = mean(unlist(bnds)),
                      resMean = mean(unlist(resMean)),
                      resSD = mean(unlist(resSD)),
@@ -409,7 +409,7 @@ mean.dmcfitvp <- function(x, ...) {
 
 
 
-#' @title calculateCostValue
+#' @title calculateCostValue: Calculate RMSE from RT and error data
 #'
 #' @description Calculate cost value (fit) from combination of RT and error rate.
 #'

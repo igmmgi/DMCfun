@@ -3,7 +3,7 @@ context("dmcObservedData")
 test_that("dmcObservedData", {
 
   # create data frame
-  dat <- createDF(nVP = 50, nTrl = 100,
+  dat <- createDF(nSubjects = 50, nTrl = 100,
                   design = list("Comp" = c("comp", "incomp")))
   dat <- addDataDF(dat)
   datOb <- dmcObservedData(dat)
@@ -11,7 +11,7 @@ test_that("dmcObservedData", {
   testthat::expect_type(datOb, "list")
   testthat::expect_s3_class(datOb, "dmcob")
 
-  dat <- createDF(nVP = 50, nTrl = 50,
+  dat <- createDF(nSubjects = 50, nTrl = 50,
                   design = list("Comp" = c("comp", "incomp")))
   dat <- addDataDF(dat,
                    RT = list("Comp_comp"   = c(500, 150, 100),

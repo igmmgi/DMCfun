@@ -2,7 +2,7 @@
 % Please edit documentation in R/dmcData.R
 \name{addDataDF}
 \alias{addDataDF}
-\title{addDataDF}
+\title{addDataDF: Add data to a simuluated dataframe}
 \usage{
 addDataDF(dat, RT = NULL, Error = NULL)
 }

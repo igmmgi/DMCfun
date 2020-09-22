@@ -1,7 +1,5 @@
-#' @title DMCfun
-#'
+#' @keywords internal
 "_PACKAGE"
-#> [1] "_PACKAGE"
 
 #' dmcCppR
 #' @name dmcCppR

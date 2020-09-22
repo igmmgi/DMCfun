@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary.R
 \name{summary.dmcfitvp}
 \alias{summary.dmcfitvp}
-\title{summary.dmcfitvp}
+\title{summary.dmcfitvp: dmc fit inddiiviidual summary}
 \usage{
 \method{summary}{dmcfitvp}(object, digits = 2, ...)
 }

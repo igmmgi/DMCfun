@@ -17,7 +17,7 @@ List dmcCppR(List r_in) {
   Prms p; // default parameters
   if (r_in.containsElementNamed("amp"))            p.amp            = as<double>(r_in["amp"]);
   if (r_in.containsElementNamed("tau"))            p.tau            = as<double>(r_in["tau"]);
-  if (r_in.containsElementNamed("mu"))             p.mu             = as<double>(r_in["mu"]);
+  if (r_in.containsElementNamed("drc"))            p.drc            = as<double>(r_in["drc"]);
   if (r_in.containsElementNamed("bnds"))           p.bnds           = as<double>(r_in["bnds"]);
   if (r_in.containsElementNamed("resMean"))        p.resMean        = as<double>(r_in["resMean"]);
   if (r_in.containsElementNamed("resSD"))          p.resSD          = as<double>(r_in["resSD"]);

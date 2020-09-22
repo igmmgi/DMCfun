@@ -2,12 +2,12 @@
 % Please edit documentation in R/dmcSim.R
 \name{dmcSim}
 \alias{dmcSim}
-\title{dmcSim}
+\title{dmcSim: Run dmc simulation}
 \usage{
 dmcSim(
   amp = 20,
   tau = 30,
-  mu = 0.5,
+  drc = 0.5,
   bnds = 75,
   resMean = 300,
   resSD = 30,
@@ -36,7 +36,7 @@ dmcSim(
 
 \item{tau}{time to peak automatic activation}
 
-\item{mu}{drift rate of controlled processes}
+\item{drc}{drift rate of controlled processes}
 
 \item{bnds}{+- response criterion}
 

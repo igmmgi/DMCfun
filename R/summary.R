@@ -1,4 +1,4 @@
-#' @title summary.dmcsim
+#' @title summary.dmcsim: dmc simulation summary
 #'
 #' @description Summary of the overall results from dmcSim
 #'
@@ -29,7 +29,7 @@ summary.dmcsim <- function(object, digits = 1, ...) {
 
 
 
-#' @title summary.dmcfit
+#' @title summary.dmcfit: dmc fit aggregate summary
 #'
 #' @description Summary of the simulation results from dmcFitAgg
 #'
@@ -53,11 +53,11 @@ summary.dmcfit <- function(object, digits = 2, ...) {
 
 
 
-#' @title summary.dmcfitvp
+#' @title summary.dmcfit_subject: dmc fit inddiiviidual summary 
 #'
-#' @description Summary of the simulation results from dmcFitVPs
+#' @description Summary of the simulation results from dmcFitSubject
 #'
-#' @param object Output from dmcFitVPs
+#' @param object Output from dmcFitSubject
 #' @param digits Number of digits in the output
 #' @param ... pars
 #'
@@ -67,22 +67,22 @@ summary.dmcfit <- function(object, digits = 2, ...) {
 #' @examples
 #' \donttest{
 #' # Example 1
-#' fitVPs <- dmcFitVPs(flankerData, nTrl = 1000, VP = c(1, 10))
-#' summary(fitVPs)
-#' fit <- mean(fitVPs)
+#' fitSubjects <- dmcFitSubject(flankerData, nTrl = 1000, subjects = c(1, 10))
+#' summary(fitSubjects)
+#' fit <- mean(fitSubjects)
 #' }
 #'
 #' @export
-summary.dmcfitvp <- function(object, digits = 2, ...) {
+summary.dmcfit_subject <- function(object, digits = 2, ...) {
   
-  VPs <- which(!unlist(lapply(object, is.null)))
-  outVP <- NULL
-  for (VP in VPs) {
-    outVP <- rbind(outVP, cbind(VP, as.data.frame(object[[VP]]$par)))
+  subjects <- which(!unlist(lapply(object, is.null)))
+  outSubject <- NULL
+  for (subject in subjects) {
+    outSubject <- rbind(outSubject, cbind(subject, as.data.frame(object[[subject]]$par)))
   }
-  outVP  <- round(outVP, digits)
-  outAvg <- round(as.data.frame(t(colMeans(data.matrix(outVP[, 2:11])))), digits)
-  out    <- list(outVP, outAvg)
+  outSubject <- round(outSubject, digits)
+  outAvg     <- round(as.data.frame(t(colMeans(data.matrix(outSubject[, 2:11])))), digits)
+  out        <- list(outSubject, outAvg)
   
   return(out)
   

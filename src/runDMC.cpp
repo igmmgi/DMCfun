@@ -64,22 +64,22 @@ void run_dmc_sim_ci(Prms &p,
     std::vector<double> activation_sum(p.tmax);
     std::vector<std::vector<double>> trl_mat(p.nTrlData, std::vector<double>(p.tmax));  // needed if plotting individual trials
 
-    std::vector<double> mu_vec(p.tmax);
-    for (auto i = 0u; i < mu_vec.size(); i++)
-        mu_vec[i] = sign * rsim["eq4"][i] * ((p.aaShape - 1) / (i + 1) - 1 / p.tau);
+    std::vector<double> u_vec(p.tmax);
+    for (auto i = 0u; i < u_vec.size(); i++)
+        u_vec[i] = sign * rsim["eq4"][i] * ((p.aaShape - 1) / (i + 1) - 1 / p.tau);
 
     // variable drift rate/starting point?
-    std::vector<double> dr(p.nTrl, p.mu);
+    std::vector<double> dr(p.nTrl, p.drc);
     if (p.varDR) variable_drift_rate(p, dr, sign);
     std::vector<double> sp(p.nTrl);
     if (p.varSP) variable_starting_point(p, sp, sign);
 
     // run simulation and store rts for correct/incorrect trials
     if (p.fullData) {
-        run_simulation(p, activation_sum, trl_mat, mu_vec, sp, dr, rts, errs, sign);
+        run_simulation(p, activation_sum, trl_mat, u_vec, sp, dr, rts, errs, sign);
         trials[comp] = trl_mat;
     } else{
-        run_simulation(p, mu_vec, sp, dr, rts, errs, sign);
+        run_simulation(p, u_vec, sp, dr, rts, errs, sign);
     }
     
     m.lock();
@@ -113,7 +113,7 @@ void variable_starting_point(Prms &p, std::vector<double> &sp, int sign) {
 
 
 void run_simulation(Prms &p, 
-                    std::vector<double> &mu_vec, 
+                    std::vector<double> &u_vec, 
                     std::vector<double> &sp, 
                     std::vector<double> &dr, 
                     std::vector<double> &rts, 
@@ -129,7 +129,7 @@ void run_simulation(Prms &p,
     for (auto trl = 0u; trl < p.nTrl; trl++) {
         activation_trial = sp[trl];
         for (auto i = 0u; i < p.tmax; i++) {
-            activation_trial += mu_vec[i] + dr[trl] + (p.sigm * snd(rng));
+            activation_trial += u_vec[i] + dr[trl] + (p.sigm * snd(rng));
             if (fabs(activation_trial) > p.bnds) {
                 (activation_trial > p.bnds ? rts : errs).push_back(i + nd_mean_sd(rng) + 1); // zero index
                 break;
@@ -142,7 +142,7 @@ void run_simulation(Prms &p,
 void run_simulation(Prms &p, 
                     std::vector<double> &activation_sum, 
                     std::vector<std::vector<double>> &trial_matrix, 
-                    std::vector<double> &mu_vec, 
+                    std::vector<double> &u_vec, 
                     std::vector<double> &sp, 
                     std::vector<double> &dr, 
                     std::vector<double> &rts, 
@@ -160,7 +160,7 @@ void run_simulation(Prms &p,
         criterion = false;
         activation_trial = sp[trl];
         for (auto i = 0u; i < activation_sum.size(); i++) {
-            activation_trial += mu_vec[i] + dr[trl] + (p.sigm * snd(rng));
+            activation_trial += u_vec[i] + dr[trl] + (p.sigm * snd(rng));
             if (!criterion && fabs(activation_trial) > p.bnds) {
                 (activation_trial > p.bnds ? rts : errs).push_back(i + nd_mean_sd(rng) + 1); // zero index
                 criterion = true;

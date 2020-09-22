@@ -2,7 +2,7 @@
 % Please edit documentation in R/dmcData.R
 \name{calculateDelta}
 \alias{calculateDelta}
-\title{calculateDelta}
+\title{calculateDelta: Calculate delta function}
 \usage{
 calculateDelta(
   dat,

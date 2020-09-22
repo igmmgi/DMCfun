@@ -2,7 +2,7 @@
 % Please edit documentation in R/dmcData.R
 \name{errDist}
 \alias{errDist}
-\title{errDist}
+\title{errDist: Create random binary vector}
 \usage{
 errDist(n = 10000, proportion = 10)
 }

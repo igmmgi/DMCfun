@@ -38,14 +38,14 @@ test_that("plot.dmcob", {
   testthat::expect_error(plot(DMCfun::simonData, figType = "xxx"))
   testthat::expect_error(plot(DMCfun::simonData, labels = c("a", "b", "c")))
   testthat::expect_error(plot(DMCfun::simonData, legend = "xxx"))
-  testthat::expect_error(plot(DMCfun::simonData, VP = 1), NA)
-  testthat::expect_error(plot(DMCfun::simonData, VP = 999))
+  testthat::expect_error(plot(DMCfun::simonData, subjects = 1), NA)
+  testthat::expect_error(plot(DMCfun::simonData, subjects = 999))
   testthat::expect_error(plot(DMCfun::simonData, xlabs = FALSE, ylabs = FALSE, xaxts = FALSE, yaxts = FALSE), NA)
   testthat::expect_error(plot(DMCfun::simonData, legend = function(){}), NA)
   testthat::expect_error(plot(DMCfun::simonData, cafBinLabels = TRUE), NA)
   
   # simulated datasets
-  dat <- createDF(nVP = 50, nTrl = 50,
+  dat <- createDF(nSubjects = 50, nTrl = 50,
                   design = list("Comp" = c("comp", "incomp")))
   dat <- addDataDF(dat,
                    RT = list("Comp_comp"   = c(420, 100, 80),

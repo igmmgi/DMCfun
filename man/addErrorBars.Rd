@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.R
 \name{addErrorBars}
 \alias{addErrorBars}
-\title{addErrorBars}
+\title{addErrorBars: Add errorbars to plot.}
 \usage{
 addErrorBars(xpos, ypos, errorSize, arrowSize = 0.1)
 }

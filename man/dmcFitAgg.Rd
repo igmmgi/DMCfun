@@ -2,7 +2,7 @@
 % Please edit documentation in R/dmcFit.R
 \name{dmcFitAgg}
 \alias{dmcFitAgg}
-\title{dmcFitAgg}
+\title{dmcFitAgg: Fit DMC to aggregated data}
 \usage{
 dmcFitAgg(
   resOb,
@@ -27,19 +27,19 @@ dmcFitAgg(
 \item{nTrl}{Number of trials to use within dmcSim.}
 
 \item{startVals}{Starting values for to-be estimated parameters. This is a list with values specified individually for
-amp, tau, mu, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., startVals = list(amp = 20, tau = 200, mu = 0.5, bnds = 75, resMean = 300,
+amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., startVals = list(amp = 20, tau = 200, drc = 0.5, bnds = 75, resMean = 300,
 resSD = 30, aaShape = 2, spShape = 3, sigm = 4)).}
 
 \item{minVals}{Minimum values for the to-be estimated parameters. This is a list with values specified individually for
-amp, tau, mu, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., minVals = list(amp = 10, tau = 5, mu = 0.1, bnds = 20, resMean = 200,
+amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., minVals = list(amp = 10, tau = 5, drc = 0.1, bnds = 20, resMean = 200,
 resSD = 5, aaShape = 1, spShape = 2, sigm = 1)).}
 
 \item{maxVals}{Maximum values for the to-be estimated parameters. This is a list with values specified individually for
-amp, tau, mu, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., maxVals = list(amp = 40, tau = 300, mu = 1.0, bnds = 150, resMean = 800,
+amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., maxVals = list(amp = 40, tau = 300, drc = 1.0, bnds = 150, resMean = 800,
 resSD = 100, aaShape = 3, spShape = 4, sigm = 10))}
 
 \item{fixedFit}{Fix parameter to starting value. This is a list with bool values specified individually for
-amp, tau, mu, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedFit = list(amp = F,  tau = F, mu = F, bnds = F, resMean = F,
+amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedFit = list(amp = F,  tau = F, drc = F, bnds = F, resMean = F,
 resSD = F, aaShape = F, spShape = F, sigm = T))}
 
 \item{fitInitialGrid}{TRUE/FALSE}
@@ -47,7 +47,7 @@ resSD = F, aaShape = F, spShape = F, sigm = T))}
 \item{fitInitialGridN}{10 reduce if searching more than 1 initial parameter}
 
 \item{fixedGrid}{Fix parameter for initial grid search.  This is a list with bool values specified individually for
-amp, tau, mu, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedGrid = list(amp = T, tau = F, mu = T, bnds = T, resMean = T,
+amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedGrid = list(amp = T, tau = F, drc = T, bnds = T, resMean = T,
 resSD = T, aaShape = T, spShape = T, sigm = T))}
 
 \item{nCAF}{Number of CAF bins.}
@@ -91,8 +91,8 @@ summary(fit)
 # Example 3: Flanker data from Ulrich et al. (2015) with non-default
 # start vals and some fixed values
 fit <- dmcFitAgg(flankerData,
-                 startVals = list(mu = 0.6, aaShape = 2.5),
-                 fixedFit = list(mu = TRUE, aaShape = TRUE))
+                 startVals = list(drc = 0.6, aaShape = 2.5),
+                 fixedFit = list(drc = TRUE, aaShape = TRUE))
 
 # Example 4: Simulated Data (+ve going delta function)
 dat <- createDF(nVP = 20, nTrl = 500, design = list("Comp" = c("comp", "incomp")))

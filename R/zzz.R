@@ -10,7 +10,7 @@
         "sdEffect", "N", "rtErrVP", "sdRtErr", "perErrVP", "sdPerErr", "bin", "meanBinVP",
         "meanCompVP", "meanEffectVP", "meanIncompVP", ".", "Bin", "rtCor", "perErr",
         "rtErr", "meanComp", "meanIncomp", "meanBin", "meanEffect", "accPer", "i", 
-        "amp", "tau", "mu", "bnds", "resMean", "resSD", "aaShape", "spShape", "sigm", "RMSE")
+        "amp", "tau", "drc", "bnds", "resMean", "resSD", "aaShape", "spShape", "sigm", "RMSE")
       )
   invisible()
 }

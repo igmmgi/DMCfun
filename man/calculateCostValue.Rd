@@ -2,7 +2,7 @@
 % Please edit documentation in R/dmcFit.R
 \name{calculateCostValue}
 \alias{calculateCostValue}
-\title{calculateCostValue}
+\title{calculateCostValue: Calculate RMSE from RT and error data}
 \usage{
 calculateCostValue(resTh, resOb)
 }

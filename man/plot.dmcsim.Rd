@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.R
 \name{plot.dmcsim}
 \alias{plot.dmcsim}
-\title{plot.dmcsim}
+\title{plot.dmcsim: Plot dmc simulation}
 \usage{
 \method{plot}{dmcsim}(
   x,

@@ -9,7 +9,7 @@ void print_input_args(Prms &p) {
     Rcpp::Rcout << "amp: " << p.amp << "\n";
     Rcpp::Rcout << "tau: " << p.tau << "\n";
     Rcpp::Rcout << "aaShape: " << p.aaShape << "\n";
-    Rcpp::Rcout << "mu: " << p.mu << "\n";
+    Rcpp::Rcout << "drc: " << p.drc << "\n";
     Rcpp::Rcout << "bnds: " << p.bnds << "\n";
     Rcpp::Rcout << "resMean: " << p.resMean << "\n";
     Rcpp::Rcout << "resSD: " << p.resSD << "\n";

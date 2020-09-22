@@ -2,7 +2,7 @@
 % Please edit documentation in R/dmcSim.R
 \name{dmcSims}
 \alias{dmcSims}
-\title{dmcSims}
+\title{dmcSims: Run multiple dmc simulations}
 \usage{
 dmcSims(params, printInputArgs = FALSE, printResults = FALSE)
 }

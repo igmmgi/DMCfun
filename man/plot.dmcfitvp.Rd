@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.R
 \name{plot.dmcfitvp}
 \alias{plot.dmcfitvp}
-\title{plot.dmcfitvp}
+\title{plot.dmcfitvp: Plot fitted data from individual participants.}
 \usage{
 \method{plot}{dmcfitvp}(
   x,

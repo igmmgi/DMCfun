@@ -7,7 +7,7 @@ struct Prms {
     double amp = 20;
     double tau = 30;
     double aaShape = 2;
-    double mu = 0.5;
+    double drc = 0.5;
     double sigm = 4;
     double bnds = 75;
     double resMean = 300;

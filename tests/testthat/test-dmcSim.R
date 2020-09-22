@@ -86,12 +86,12 @@ test_that("dmcSim5", {
 test_that("dmcSim6", {
 
   amp = 20
-  mu = 0.5
+  drc = 0.5
   
-  dmc <- dmcSim(amp = amp, mu = mu)
+  dmc <- dmcSim(amp = amp, drc = drc)
 
   testthat::expect_equal(dmc$prms$amp, 20)
-  testthat::expect_equal(dmc$prms$mu, 0.5)
+  testthat::expect_equal(dmc$prms$drc, 0.5)
 
 })
 

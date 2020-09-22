@@ -2,7 +2,7 @@
 % Please edit documentation in R/dmcData.R
 \name{createDF}
 \alias{createDF}
-\title{createDF}
+\title{createDF: Create a simulated dataframe}
 \usage{
 createDF(
   nVP = 20,

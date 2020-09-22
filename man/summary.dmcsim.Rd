@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary.R
 \name{summary.dmcsim}
 \alias{summary.dmcsim}
-\title{summary.dmcsim}
+\title{summary.dmcsim: dmc simulation summary}
 \usage{
 \method{summary}{dmcsim}(object, digits = 1, ...)
 }

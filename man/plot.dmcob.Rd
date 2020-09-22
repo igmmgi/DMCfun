@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.R
 \name{plot.dmcob}
 \alias{plot.dmcob}
-\title{plot.dmcob}
+\title{plot.dmcob: Plot observed data}
 \usage{
 \method{plot}{dmcob}(
   x,
@@ -28,7 +28,7 @@
 )
 }
 \arguments{
-\item{x}{Output from fitDMC}
+\item{x}{Output from dmcFitAgg}
 
 \item{figType}{summary, rtCorrect, errorRate, rtErrors, cdf, caf, delta, all}
 

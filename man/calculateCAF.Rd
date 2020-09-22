@@ -2,7 +2,7 @@
 % Please edit documentation in R/dmcData.R
 \name{calculateCAF}
 \alias{calculateCAF}
-\title{calculateCAF}
+\title{calculateCAF: Calculate conditional accuracy function (CAF).}
 \usage{
 calculateCAF(
   dat,
