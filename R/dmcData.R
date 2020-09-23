@@ -402,12 +402,13 @@ dmcObservedData <- function(dat,
     calculateDelta(., nDelta = nDelta)
 
   datAgg_dec <- datSubject_dec %>%
+    dplyr::mutate(mEffect = meanEffect) %>%
     dplyr::group_by(bin) %>%
     dplyr::summarize(meanComp   = mean(meanComp),
                      meanIncomp = mean(meanIncomp),
                      meanBin    = mean(meanBin),
-                     meanEffect = mean(meanEffect),
-                     sdEffect   = sd(meanEffect),
+                     meanEffect = mean(mEffect),
+                     sdEffect   = sd(mEffect),
                      seEffect   = sdEffect/sqrt(n()),
                      .groups    = 'drop')
 

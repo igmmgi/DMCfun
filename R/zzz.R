@@ -6,7 +6,7 @@
 
   utils::globalVariables(
     c("Bin",  "N",  "RMSE", "aaShape",  "accPer",  "amp",  "bin",  "bnds", 
-      "comp",  "deltaCI",  "drc",  "i",  "incomp",  "meanBin", "meanCI", "meanComp",  "meanEffect", 
+      "comp",  "deltaCI",  "drc",  "i",  "incomp",  "meanBin", "meanCI", "meanComp", "mEffect", "meanEffect", 
       "meanIncomp", ".",  "perErr",  "resMean",  "resSD",  "rtCor",  "rtErr",  "sdEffect",  "sdPerErr", 
       "sdRtCor",  "sdRtErr",  "sigm",  "spShape",  "tau",  "Comp",  "Error",  "RT",  "Subject", 
       "errs",  "nCor",  "nErr",  "nOut", "rtC", "rtE", "perE", "rtCor", "rts") 
