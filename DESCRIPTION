@@ -1,8 +1,8 @@
 Package: DMCfun
 Type: Package
 Title: Diffusion Model of Conflict (DMC) in Reaction Time Tasks
-Version: 0.16.0
-Date: 2020-09-20
+Version: 1.0.0
+Date: 2020-09-23
 Authors@R: c(person("Mackenzie G.", "Ian", email="ian.mackenzie@uni-tuebingen.de", role = c("cre", "aut")))
 Description: 
   DMC model simulation detailed in Ulrich, R., Schroeter, H., Leuthold, H., & Birngruber, T. (2015). 

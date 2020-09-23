@@ -357,29 +357,32 @@ dmcObservedData <- function(dat,
     dplyr::mutate(outlier = RT <= rtMin | RT >= rtMax) %>%
     dplyr::group_by(Subject, Comp) %>%
     dplyr::summarize(N            = n(),
-                     nCorSubject  = sum(Error == 0),
-                     nErrSubject  = sum(Error),
-                     nOutSubject  = sum(outlier),
-                     rtCorSubject = mean(RT[Error == 0 & outlier == 0]),
-                     rtErrSubject = mean(RT[Error == 1 & outlier == 0]),
-                     perErrSubject = (nErrSubject/(nErrSubject + nCorSubject))*100,
+                     nCor    = sum(Error == 0),
+                     nErr    = sum(Error),
+                     nOut    = sum(outlier),
+                     rtCor   = mean(RT[Error == 0 & outlier == 0]),
+                     rtErr   = mean(RT[Error == 1 & outlier == 0]),
+                     perErr  = (nErr/(nErr + nCor))*100,
                      .groups = 'drop')
 
   # aggregate data across subjects
   datAgg <- datSubject %>%
+    dplyr::mutate(rtC = rtCor,
+                  rtE = rtErr,
+                  perE = perErr) %>%
     dplyr::group_by(Comp) %>%
     dplyr::summarize(N        = n(),
-                     NCor     = sum(nCorSubject),
-                     NErr     = sum(nErrSubject),
-                     NOut     = sum(nOutSubject),
-                     rtCor    = mean(rtCorSubject, na.rm = TRUE),
-                     sdRtCor  = sd(rtCorSubject, na.rm = TRUE),
+                     NCor     = sum(nCor),
+                     NErr     = sum(nErr),
+                     NOut     = sum(nOut),
+                     rtCor    = mean(rtC, na.rm = TRUE),
+                     sdRtCor  = sd(rtC, na.rm = TRUE),
                      seRtCor  = sdRtCor/sqrt(N),
-                     rtErr    = mean(rtErrSubject, na.rm = TRUE),
-                     sdRtErr  = sd(rtErrSubject, na.rm = TRUE),
+                     rtErr    = mean(rtE, na.rm = TRUE),
+                     sdRtErr  = sd(rtE, na.rm = TRUE),
                      seRtErr  = sdRtErr/sqrt(N),
-                     perErr   = mean(perErrSubject, na.rm = TRUE),
-                     sdPerErr = sd(perErrSubject, na.rm = TRUE),
+                     perErr   = mean(perE, na.rm = TRUE),
+                     sdPerErr = sd(perE, na.rm = TRUE),
                      sePerErr = sdPerErr/sqrt(N),
                      .groups  = 'drop')
 
@@ -390,7 +393,7 @@ dmcObservedData <- function(dat,
 
   datAgg_caf <- datSubject_caf %>%
     dplyr::group_by(Comp, bin) %>%
-    dplyr::summarize(accPer  = mean(accPerSubject),
+    dplyr::summarize(accPer  = mean(accPer),
                      .groups = 'drop')
 
   # DELTA
@@ -400,11 +403,11 @@ dmcObservedData <- function(dat,
 
   datAgg_dec <- datSubject_dec %>%
     dplyr::group_by(bin) %>%
-    dplyr::summarize(meanComp   = mean(meanCompSubject),
-                     meanIncomp = mean(meanIncompSubject),
-                     meanBin    = mean(meanBinSubject),
-                     meanEffect = mean(meanEffectSubject),
-                     sdEffect   = sd(meanEffectSubject),
+    dplyr::summarize(meanComp   = mean(meanComp),
+                     meanIncomp = mean(meanIncomp),
+                     meanBin    = mean(meanBin),
+                     meanEffect = mean(meanEffect),
+                     sdEffect   = sd(meanEffect),
                      seEffect   = sdEffect/sqrt(n()),
                      .groups    = 'drop')
 
@@ -505,12 +508,12 @@ calculateCAF <- function(dat,
     dplyr::group_by(Subject, Comp) %>%
     dplyr::mutate(bin = ntile(RT, nCAF)) %>%
     dplyr::group_by(Subject, Comp, bin) %>%
-    dplyr::summarize(N             = n(),
-                     accPerSubject = sum(Error == 0)/N,
-                     .groups       = 'drop')  %>%
+    dplyr::summarize(N       = n(),
+                     accPer  = sum(Error == 0)/N,
+                     .groups = 'drop')  %>%
     dplyr::group_by(Subject, Comp, bin) %>%
-    dplyr::summarize(accPerSubject = mean(accPerSubject),
-                     .groups  = 'drop')
+    dplyr::summarize(accPer  = mean(accPer),
+                     .groups = 'drop')
 
     return(dat_caf)
 
@@ -583,10 +586,10 @@ calculateDelta <- function(dat,
                      rt      = quantile(RT, deltaSeq/100, type = quantileType),
                      .groups = 'drop')  %>%
     tidyr::pivot_wider(., id_cols = c("Subject", "bin"), names_from = "Comp", values_from = "rt") %>%
-    dplyr::mutate(meanCompSubject   = comp,
-                  meanIncompSubject = incomp,
-                  meanBinSubject    = (comp + incomp)/2,
-                  meanEffectSubject = (incomp - comp)) %>%
+    dplyr::mutate(meanComp   = comp,
+                  meanIncomp = incomp,
+                  meanBin    = (comp + incomp)/2,
+                  meanEffect = (incomp - comp)) %>%
     dplyr::select(-dplyr::one_of("comp", "incomp"))
 
   return(dat_delta)
