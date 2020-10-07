@@ -78,7 +78,7 @@ void run_dmc_sim_ci(Prms &p,
     if (p.fullData) {
         run_simulation(p, activation_sum, trl_mat, u_vec, sp, dr, rts, errs, sign);
         trials[comp] = trl_mat;
-    } else{
+    } else {
         run_simulation(p, u_vec, sp, dr, rts, errs, sign);
     }
     

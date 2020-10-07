@@ -273,18 +273,21 @@ plot.dmcsim <- function(x,
     if (yaxts == "n") axis(side=2, labels = FALSE)  # keep tick marks
     
     lines(x$caf$accPer[x$caf$Comp == "incomp"], col = tail(cols, 2)[2], type = "o", ...)
-    if (xaxts == "s") {
+    
+    # xlabels
+    if (xaxts == "s" | cafBinLabels) {
       nCAF <- length(x$caf$bin) / 2
       if (cafBinLabels) {
         stepCAF <- 100 / nCAF
         cafLabels <- paste0(paste(seq(0, 100 - stepCAF, stepCAF), seq(stepCAF, 100, stepCAF), sep = "-"), "%")
-        axis(1, at = seq(1, nCAF, 1), labels = cafLabels)
+        axis(1, at = seq(1, nCAF, 1), labels = cafLabels, ...)
       } else {
-        axis(1, at = seq(1, nCAF, 1))
+        axis(1, at = seq(1, nCAF, 1), ...)
       }
     } else {
       axis(side=1,labels=F) 
     }
+    
     if (yaxts == "s") {
       axis(2, at = seq(0, 1, 0.2), labels = as.character(seq(0, 1, 0.2)))
     }
@@ -648,18 +651,21 @@ plot.dmcob <- function(x,
     if (yaxts == "n") axis(side=2, labels = FALSE)  # keep tick marks
     
     lines(x$caf$accPer[x$caf$Comp == "incomp"],  type = "o", col = tail(cols, 2)[2], ...)
-    if (xaxts == "s") {
+    
+    # xlabels
+    if (xaxts == "s" | cafBinLabels) {
       nCAF <- length(x$caf$bin) / 2
       if (cafBinLabels) {
         stepCAF <- 100 / nCAF
         cafLabels <- paste0(paste(seq(0, 100 - stepCAF, stepCAF), seq(stepCAF, 100, stepCAF), sep = "-"), "%")
-        axis(1, at = seq(1, nCAF, 1), labels = cafLabels)
+        axis(1, at = seq(1, nCAF, 1), labels = cafLabels, ...)
       } else {
-        axis(1, at = seq(1, nCAF, 1))
+        axis(1, at = seq(1, nCAF, 1), ...)
       }
     } else {
       axis(side = 1,labels = FALSE) 
     }
+    
     if (yaxts == "s") {
       axis(2, at = seq(0, 1, 0.2), labels = as.character(seq(0, 1, 0.2)))
     }
