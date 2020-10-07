@@ -163,8 +163,10 @@ plot.dmcsim <- function(x,
     lines(c(1:x$prms$tmax), -x$sim$eq4, type = "l", lty = 2, col = tail(cols, 2)[2], ...)
     
     # controlled
-    dr <- ifelse(x$prms$varDR, mean(as.numeric(as.character(x$prms$drLim)[2:3])), x$prms$drc)
-    lines(c(1:x$prms$tmax), cumsum(rep(dr, x$prms$tmax)), ...)
+    dr <- ifelse(x$prms$varDR, mean(as.numeric(as.character(x$prms$drLim)[2:3])), x$prms$drc) 
+    dr <- cumsum(rep(dr, x$prms$tmax))
+    dr <- dr + mean(x$prms$spLim)
+    lines(c(1:x$prms$tmax), dr, ...)
     
     # superimposed automatic + controlled comp/incomp
     lines(c(1:x$prms$tmax), x$sim$activation_comp,   col = tail(cols, 2)[1], ...)
