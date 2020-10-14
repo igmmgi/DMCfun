@@ -269,7 +269,7 @@ plot.dmcsim <- function(x,
     plot(x$caf$accPer[x$caf$Comp == "comp"], type = "o",
          ylim = ylimCAF,
          ylab = ylabs[5],  xlab = xlabs[5],
-         xaxt = xaxts,  yaxt = "n",
+         xaxt = "n",  yaxt = "n",
          col = tail(cols, 2)[1], ...)
     if (xaxts == "n") axis(side=1, labels = FALSE)  # keep tick marks
     if (yaxts == "n") axis(side=2, labels = FALSE)  # keep tick marks
@@ -672,7 +672,7 @@ plot.dmcob <- function(x,
     }
     
     if (yaxts == "s") {
-      axis(2, at = seq(0, 1, 0.2), labels = as.character(seq(0, 1, 0.2)))
+      axis(2, at = seq(0, 1, 0.2), labels = as.character(seq(0, 1, 0.2)), ...)
     }
     
     if (is.function(legend)) {
