@@ -14,6 +14,7 @@
 #' @param ylimCAF ylimit for CAF plot
 #' @param cafBinLabels TRUE/FALSE
 #' @param ylimDelta ylimit for delta plot
+#' @param xlimDelta xlimit for delta plot (Default is 0 to tmax)
 #' @param ylimRt ylimit for rt plot
 #' @param ylimErr ylimit for er plot
 #' @param legend TRUE/FALSE (or FUNCTION) plot legend on each plot
@@ -55,6 +56,7 @@ plot.dmcsim <- function(x,
                         ylimCAF = c(0, 1),
                         cafBinLabels = FALSE,
                         ylimDelta = c(-50, 150),
+                        xlimDelta = NULL,
                         ylimRt = c(200, 800),
                         ylimErr = c(0, 20),
                         legend = TRUE,
@@ -289,7 +291,7 @@ plot.dmcsim <- function(x,
     }
     
     if (yaxts == "s") {
-      axis(2, at = seq(0, 1, 0.2), labels = as.character(seq(0, 1, 0.2)))
+      axis(2, at = seq(0, 1, 0.2), labels = as.character(seq(0, 1, 0.2)), ...)
     }
     
     if (is.function(legend)) {
@@ -302,8 +304,11 @@ plot.dmcsim <- function(x,
   
   # delta
   if (showFig[6]) {
+    if (is.null(xlimDelta)) { 
+      xlimDelta <- c(0, x$prms$tmax)
+    }
     plot(x$delta$meanBin, x$delta$meanEffect, type = "o", col = cols[1],
-         ylim = ylimDelta, xlim = c(0, x$prms$tmax),
+         ylim = ylimDelta, xlim = xlimDelta,
          ylab = ylabs[6],  xlab = xlabs[6],
          xaxt = xaxts, yaxt = yaxts, ...)
     axis(side=1,labels = FALSE) 
