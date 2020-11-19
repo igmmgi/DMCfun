@@ -848,7 +848,7 @@ plot.dmcfit <- function(x,
          ylim = ylimRt, xlim = c(0.5, 2.5),
          ylab = ylabs[1], xlab = "",
          xaxt = "n", yaxt = yaxts, ...)
-    lines(c(x$means$rtCor), type = "o", lty = 2, ...)
+    lines(c(x$summary$rtCor), type = "o", lty = 2, ...)
     axis(1, at = c(1, 2), labels = xlabs[1:2])
     axis(2, labels = FALSE)
     
@@ -866,7 +866,7 @@ plot.dmcfit <- function(x,
          ylim = ylimEr, xlim = c(0.5, 2.5),
          ylab = ylabs[2], xlab = "",
          xaxt = "n", yaxt = yaxts, ...)
-    lines(x$means$perErr, type = "b", lty = 2, ...)
+    lines(x$summary$perErr, type = "b", lty = 2, ...)
     axis(1, at = c(1, 2), labels = xlabs[1:2])
     axis(2, labels = FALSE)
     
@@ -884,7 +884,7 @@ plot.dmcfit <- function(x,
          ylim = ylimRt, xlim = c(0.5, 2.5),
          ylab = ylabs[3], xlab = "",
          xaxt = "n", yaxt = yaxts, ...)
-    lines(x$means$rtErr, type = "b", lty = 2, ...)
+    lines(x$summary$rtErr, type = "b", lty = 2, ...)
     axis(1, at = c(1, 2), labels = xlabs[1:2])
     axis(2, labels = FALSE)
     

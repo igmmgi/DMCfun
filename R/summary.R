@@ -22,7 +22,7 @@
 #'
 #' @export
 summary.dmcsim <- function(object, digits = 1, ...) {
-  df <- as.data.frame(object$means) 
+  df <- as.data.frame(object$summary) 
   df[, c(2:6)] <- round(df[, c(2:6)], digits)
   return(df)
 }

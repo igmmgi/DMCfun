@@ -97,9 +97,9 @@ dmcSim <- function(amp = 20, tau = 30, drc = 0.5, bnds = 75, resMean = 300, resS
   dmc$summary <- NULL
   
   # means
-  dmc$means        <- as.data.frame(rbind(summary$resSum_comp, summary$resSum_incomp)) 
-  names(dmc$means) <- c("rtCor", "sdRtCor", "perErr", "rtErr", "sdRtErr")
-  dmc$means        <- cbind(Comp = c("comp", "incomp"), dmc$means)
+  dmc$summary        <- as.data.frame(rbind(summary$resSum_comp, summary$resSum_incomp)) 
+  names(dmc$summary) <- c("rtCor", "sdRtCor", "perErr", "rtErr", "sdRtErr")
+  dmc$summary        <- cbind(Comp = c("comp", "incomp"), dmc$summary)
 
   # caf
   dmc$caf <- cbind(Comp = rep(c("comp", "incomp"), each = nCAF), 

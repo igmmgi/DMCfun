@@ -87,7 +87,6 @@ dmcFit <- function(resOb,
                    printInputArgs  = TRUE,
                    printResults    = FALSE) {
   
-  
   # default parameter space
   defaultStartVals <- list(amp = 20, tau = 200, drc = 0.5, bnds =  75, resMean = 300, resSD =  30, aaShape = 2, spShape = 3, sigm =  4)
   defaultMinVals   <- list(amp = 10, tau =   5, drc = 0.1, bnds =  20, resMean = 200, resSD =  5,  aaShape = 1, spShape = 2, sigm =  1)
@@ -194,7 +193,7 @@ dmcFit <- function(resOb,
                         printInputArgs = printInputArgs, printResults = printResults,
                         method = "Nelder-Mead",
                         control = list(parscale = parScale[!as.logical(fixedFit)]))
-  
+    
   prms[!as.logical(fixedFit)] <- fit$par
   
   # bounds check
@@ -369,7 +368,7 @@ mean.dmcfit <- function(x, ...) {
   meanfit <- list()
   
   # summary
-  meanfit$means <- mergeLists(x, "means") %>%
+  meanfit$summary <- mergeLists(x, "summary") %>%
     dplyr::group_by(Comp) %>%
     dplyr::summarise(rtCor   = mean(rtCor),
                      sdCor   = mean(sdRtCor),
