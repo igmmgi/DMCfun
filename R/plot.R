@@ -105,14 +105,14 @@ plot.dmcsim <- function(x,
     xlabs <- rep("", 9)
   }
   
-  # ylabels
+  # y-labels
   if (ylabs) {
     ylabs <- c("E[X(t)]", "X(t)", "PDF", "CDF", "CAF", expression(Delta), "RT Correct [ms]", "Error Rate [%]", "RT Error [%]")
   } else {
     ylabs <- rep("", 9)
   }
   
-  # xaxts & yaxts
+  # x-axts & y-axts
   xaxts <- ifelse(xaxts, "s", "n")
   yaxts <- ifelse(yaxts, "s", "n")
   
@@ -217,17 +217,19 @@ plot.dmcsim <- function(x,
   
   # PDF
   if (showFig[3]) {
+    
     plot(density(x$sim$rts_comp), col = tail(cols, 2)[1], main = NA, type = "l",
          ylim = c(0, 0.01), xlim = c(0, x$prms$tmax),
          ylab = ylabs[3], xlab = xlabs[3], xaxt = xaxts, yaxt = "n", ...)
+    
     if (xaxts == "n") axis(side=1, labels = FALSE)  # keep tick marks
-    if (yaxts == "n") axis(side=2, labels = FALSE)  # keep tick marks
+    if (yaxts == "n") {
+      axis(side=2, labels = FALSE)  # keep tick marks
+    } else if (yaxts == "s") {
+      axis(side = 2, at = c(0, 0.005, 0.01), labels = c("0", ".005", ".001"))
+    }
     
     lines(density(x$sim$rts_incomp), col = tail(cols, 2)[2], type = "l", ...)
-    
-    if (yaxts == "s") {
-      axis(2, at = c(0, 0.005, 0.01), labels = c("0", ".005", ".001"))
-    }
     
     if (is.function(legend)) {
       legend()
@@ -239,22 +241,25 @@ plot.dmcsim <- function(x,
   
   # CDF
   if (showFig[4]) {
+    
     density_comp   <- density(x$sim$rts_comp)
     cdf_comp       <- cumsum(density_comp$y * diff(density_comp$x[1:2]))
     density_incomp <- density(x$sim$rts_incomp)
     cdf_incomp     <- cumsum(density_incomp$y * diff(density_incomp$x[1:2]))
+    
     plot(density_comp$x, cdf_comp, type="l", col = tail(cols, 2)[1],
          ylab = ylabs[4], xlab = xlabs[4],
          ylim = c(0, 1), xaxt = xaxts, yaxt = "n", xlim = c(0, x$prms$tmax))
+    
     if (xaxts == "n") axis(side=1, labels = FALSE)  # keep tick marks
-    if (yaxts == "n") axis(side=2, labels = FALSE)  # keep tick marks
+    if (yaxts == "n") {
+      axis(side=2, labels = FALSE)  # keep tick marks
+    } else if (yaxts == "s") {
+      axis(side = 2, at = seq(0, 1, 0.5), labels = as.character(seq(0, 1, 0.5)))
+    }
     
     lines(density_incomp$x, cdf_incomp, type = "l", col = tail(cols, 2)[2])
     abline(h = 0, lty = 2); abline(h = 1, lty = 2)
-    
-    if (yaxts == "s") {
-      axis(2, at = seq(0, 1, 0.5), labels = as.character(seq(0, 1, 0.5)))
-    }
     
     if (is.function(legend)) {
       legend()
@@ -266,18 +271,16 @@ plot.dmcsim <- function(x,
   
   # CAF
   if (showFig[5]) {
+    
     plot(x$caf$accPer[x$caf$Comp == "comp"], type = "o",
          ylim = ylimCAF,
          ylab = ylabs[5],  xlab = xlabs[5],
          xaxt = "n",  yaxt = "n",
          col = tail(cols, 2)[1], ...)
-    if (xaxts == "n") axis(side=1, labels = FALSE)  # keep tick marks
-    if (yaxts == "n") axis(side=2, labels = FALSE)  # keep tick marks
     
-    lines(x$caf$accPer[x$caf$Comp == "incomp"], col = tail(cols, 2)[2], type = "o", ...)
-    
-    # xlabels
-    if (xaxts == "s" | cafBinLabels) {
+    if (xaxts == "n") {
+      axis(side=1, labels = FALSE)  # keep tick marks
+    } else if (xaxts == "s" | cafBinLabels) {
       nCAF <- length(x$caf$bin) / 2
       if (cafBinLabels) {
         stepCAF <- 100 / nCAF
@@ -290,9 +293,13 @@ plot.dmcsim <- function(x,
       axis(side=1,labels=F) 
     }
     
-    if (yaxts == "s") {
+    if (yaxts == "n") {
+      axis(side=2, labels = FALSE)  # keep tick marks
+    } else if (yaxts == "s") {
       axis(2, at = seq(0, 1, 0.2), labels = as.character(seq(0, 1, 0.2)), ...)
     }
+    
+    lines(x$caf$accPer[x$caf$Comp == "incomp"], col = tail(cols, 2)[2], type = "o", ...)
     
     if (is.function(legend)) {
       legend()
@@ -304,9 +311,11 @@ plot.dmcsim <- function(x,
   
   # delta
   if (showFig[6]) {
+    
     if (is.null(xlimDelta)) { 
       xlimDelta <- c(0, x$prms$tmax)
     }
+    
     plot(x$delta$meanBin, x$delta$meanEffect, type = "o", col = cols[1],
          ylim = ylimDelta, xlim = xlimDelta,
          ylab = ylabs[6],  xlab = xlabs[6],
@@ -323,9 +332,11 @@ plot.dmcsim <- function(x,
          xaxt = "n", yaxt = yaxts, ...)
     axis(1, at = c(1, 2), labels = xlabs[8:9])
     axis(2, labels = FALSE)
+    
     if (errorBars) {
       addErrorBars(c(1, 2), x$means$rtCor, x$means$sdRtCor)
     }
+    
   }
   
   # error rate
@@ -406,9 +417,15 @@ plot.dmclist <- function(x,
   plot(x[[1]]$delta$meanBin, x[[1]]$delta$meanEffect, type = lineType,
        ylim = ylim, xlim = xlim,
        ylab = expression(Delta), xlab = "Time [ms]", col = cols[1], ...)
+
   
+  # plot
+  plot(NULL, NULL, 
+       ylim = ylim, xlim = xlim,
+       ylab = expression(Delta), xlab = "Time [ms]", col = cols[1], ...)
+    
   legendText <- paste0(names(x[[1]]$params), "=", x[[1]]$params[1, ], collapse = ", ")
-  for (i in 2:length(x)) {
+  for (i in 1:length(x)) {
     lines(x[[i]]$delta$meanBin, x[[i]]$delta$meanEffect, col = cols[i], type = lineType)
     legendText <- c(NULL, legendText, paste0(names(x[[i]]$params), "=", x[[1]]$params[i, ], collapse = ", "))
   }
@@ -630,12 +647,13 @@ plot.dmcob <- function(x,
          col = tail(cols, 2)[1],
          xaxt = xaxts, yaxt = "n", ...)
     if (xaxts == "n") axis(side=1, labels = FALSE)  # keep tick marks
-    if (yaxts == "n") axis(side=2, labels = FALSE)  # keep tick marks
-    
-    lines(x$delta$meanIncomp, seq(seqStep, 100 - seqStep, seqStep)/100, type = "o", col = tail(cols, 2)[2], ...)
-    if (yaxts ==  "s") {
+    if (yaxts == "n") {
+      axis(side=2, labels = FALSE)  # keep tick marks
+    } else if (yaxts == "s") {
       axis(2, at = seq(0, 1, 0.25), labels = as.character(seq(0, 1, 0.25)))
     }
+    
+    lines(x$delta$meanIncomp, seq(seqStep, 100 - seqStep, seqStep)/100, type = "o", col = tail(cols, 2)[2], ...)
     
     if (is.function(legend)) {
       legend()
@@ -652,13 +670,9 @@ plot.dmcob <- function(x,
          ylab = ylabs[5], xlab = xlabs[5],
          col = tail(cols, 2)[1],
          xaxt = "n", yaxt = "n", ...)
-    if (xaxts == "n") axis(side=1, labels = FALSE)  # keep tick marks
-    if (yaxts == "n") axis(side=2, labels = FALSE)  # keep tick marks
-    
-    lines(x$caf$accPer[x$caf$Comp == "incomp"],  type = "o", col = tail(cols, 2)[2], ...)
-    
-    # xlabels
-    if (xaxts == "s" | cafBinLabels) {
+    if (xaxts == "n") {
+      axis(side=1, labels = FALSE)  # keep tick marks
+    } else if (xaxts == "s" | cafBinLabels) {
       nCAF <- length(x$caf$bin) / 2
       if (cafBinLabels) {
         stepCAF <- 100 / nCAF
@@ -671,9 +685,13 @@ plot.dmcob <- function(x,
       axis(side = 1,labels = FALSE) 
     }
     
-    if (yaxts == "s") {
+    if (yaxts == "n") {
+      axis(side=2, labels = FALSE)  # keep tick marks
+    } else if (yaxts == "s") {
       axis(2, at = seq(0, 1, 0.2), labels = as.character(seq(0, 1, 0.2)), ...)
     }
+    
+    lines(x$caf$accPer[x$caf$Comp == "incomp"],  type = "o", col = tail(cols, 2)[2], ...)
     
     if (is.function(legend)) {
       legend()
@@ -700,6 +718,246 @@ plot.dmcob <- function(x,
   }
   
 }
+
+# dmcobs not implemented
+# plot.dmcobs <- function(x,
+#                         figType = "summary",
+#                         subject = NULL,
+#                         legend = TRUE,
+#                         labels = c("Compatible", "Incompatible"),
+#                         cols = c("black", "green", "red"),
+#                         errorBars = FALSE,
+#                         errorBarType = "sd",
+#                         ylimRt = c(200, 800),
+#                         ylimEr = c(0, 20),
+#                         ylimCAF = c(0, 1),
+#                         cafBinLabels = FALSE,
+#                         ylimDelta = c(-50, 100),
+#                         xlimDelta = c(200, 1000),
+#                         xlabs = TRUE,
+#                         ylabs = TRUE,
+#                         xaxts = TRUE,
+#                         yaxts = TRUE,
+#                         resetPar = TRUE,
+#                         ...) {
+#   
+#   # original plot par
+#   if (resetPar) {
+#     opar <- par(no.readonly = TRUE)
+#     on.exit(par(opar))
+#   }
+#   
+#   figTypes <- c("summary", "all", "rtCorrect", "errorRate", "rtErrors", "cdf", "caf", "delta")
+#   if (length(figType) > 1 || !figType %in% figTypes) {
+#     stop("figType must be one of:", paste0(figTypes, collapse = ", "))
+#   }
+#   if (length(labels) != 2) {
+#     stop("labels must be length 2")
+#   }
+#   if (!(is.function(legend)) && !(legend %in% c(TRUE, FALSE))) {
+#     stop("legend must be TRUE/FALSE or a function")
+#   }
+#   
+#   if (!is.null(subject)) {
+#     # select individual dataset
+#     if (!subject %in% x$summarySubject$Subject) {
+#       stop("datOb does not contain requested subject number!")
+#     }
+#     x$summary <- x$summarySubject[x$summarySubject$Subject == subject, ]
+#     x$delta   <- x$deltaSubject[x$deltaSubject$Subject == subject, ]
+#     x$caf     <- x$cafSubject[x$cafSubject$Subject == subject, ]
+#     errorBars <- FALSE
+#   }
+#   
+#   if (errorBars) {
+#     if ((!is.character(errorBarType)) | (!errorBarType %in% c("sd", "se"))) {
+#       stop("errorBar must be either \"sd\", or \"se\"!")
+#     }
+#   }
+#   
+#   showFig = rep(FALSE, 6)
+#   
+#   # xlabels
+#   if (xlabs) {
+#     xlabs          <- rep("", 6)
+#     xlabs[c(1, 2)] <- labels
+#     xlabs[c(4, 6)] <- c("Time [ms]")
+#     xlabs[c(5)]    <- c("RT Bin")
+#   } else {
+#     xlabs <- rep("", 6)
+#   }
+#   
+#   # ylabels
+#   if (ylabs) {
+#     ylabs <- c("RT Correct [ms]", "Error Rate [%]", "RT Error [ms]", "CDF", "CAF", expression(Delta))
+#   } else {
+#     ylabs <- rep("", 6)
+#   }
+#   
+#   # xaxts & yaxts
+#   xaxts <- ifelse(xaxts, "s", "n")
+#   yaxts <- ifelse(yaxts, "s", "n")
+#   
+#   if (figType == "summary") {
+#     par(mar = c(4, 4, 1, 1), ...)
+#     layout(matrix(c(1, 4,
+#                     2, 5,
+#                     3, 6),
+#                   nrow = 3, ncol = 2, byrow = TRUE))
+#     showFig[1:6] = TRUE
+#   } else if (figType == "all") {
+#     par(mar = c(4, 4, 1, 1), mfrow=c(1, 1), ...)
+#     showFig[1:6] = TRUE
+#   } else {
+#     showFig[figTypes[3:8] %in% figType] = TRUE
+#   }
+#   
+#   # rtCorrect
+#   if (showFig[1]) {
+#     plot(c(1, 2), NULL,
+#          ylim = ylimRt, xlim = c(0.5, 2.5),
+#          ylab = ylabs[1], xlab = "",
+#          xaxt = "n", yaxt = yaxts, ...)
+#     axis(1, at = c(1, 2), labels = xlabs[1:2])
+#     axis(2, labels = FALSE)
+#     for (i in 1:length(x)) {
+#       lines(c(1, 2), x[[i]]$summary$rtCor, type = "o", col = cols[i])
+#       if (errorBars) {
+#         addErrorBars(c(1,2), x[[i]]$summary$rtCor, x[[i]]$summary[[paste0(errorBarType, "RtCor")]])
+#       }
+#     }
+#   }
+#   
+#   # errorRate
+#   if (showFig[2]) {
+#     plot(NULL, NULL, 
+#          ylim = ylimEr, xlim = c(0.5, 2.5),
+#          ylab = ylabs[2], xlab = "",
+#          xaxt = "n", yaxt = yaxts, ...)
+#     axis(1, at = c(1, 2), labels = xlabs[1:2])
+#     axis(2, labels = FALSE)
+#    
+#     for (i in 1:length(x)) { 
+#       lines(c(1, 2), x[[i]]$summary$perErr, type = "o", col = cols[i])
+#       if (errorBars) {
+#         addErrorBars(c(1, 2), x[[i]]$summary$perErr, x[[i]]$summary[[paste0(errorBarType, "PerErr")]])
+#       }
+#     }
+#     
+#   }
+#   
+#   # rtError
+#   if (showFig[3]) {
+#     plot(c(1, 2), NULL, 
+#          ylim = ylimRt, xlim = c(0.5, 2.5),
+#          ylab = ylabs[3], xlab = "",
+#          xaxt = "n", yaxt = yaxts, ...)
+#     axis(1, at = c(1, 2), labels = xlabs[1:2])
+#     axis(2, labels = FALSE)
+# 
+#     for (i in 1:length(x)) {
+#       lines(c(1, 2), x[[i]]$summary$rtErr, type = "o", col = cols[i])
+#       if (errorBars) {
+#         addErrorBars(c(1, 2), x[[i]]$summary$rtErr, x[[i]]$summary[[paste0(errorBarType, "RtErr")]])
+#       }
+#     }
+#  
+# 
+#   }
+#   
+#   # CDF
+#   if (showFig[4]) {
+#     seqStep <- 100 / (nrow(x[[1]]$delta) + 1)
+#     plot(NULL, NULL, 
+#          ylim = c(0, 1), xlim = c(200, 1000),
+#          ylab = ylabs[4], xlab = xlabs[4],
+#          xaxt = xaxts, yaxt = "n", ...)
+#     if (xaxts == "n") axis(side=1, labels = FALSE)  # keep tick marks
+#     if (yaxts == "n") {
+#       axis(side=2, labels = FALSE)  # keep tick marks
+#     } else if (yaxts ==  "s") {
+#       axis(2, at = seq(0, 1, 0.25), labels = as.character(seq(0, 1, 0.25)))
+#     }
+#     
+#     for (i in 1:length(x)) { 
+#       lines(x[[i]]$delta$meanComp, seq(seqStep, 100 - seqStep, seqStep)/100, type = "o",
+#            ylim = c(0, 1), xlim = c(200, 1000),
+#            ylab = ylabs[4], xlab = xlabs[4],
+#            col = tail(cols, 2)[1],
+#            xaxt = xaxts, yaxt = "n", ...)
+#       lines(x[[i]]$delta$meanIncomp, seq(seqStep, 100 - seqStep, seqStep)/100, type = "o", col = tail(cols, 2)[2], ...)
+#     }
+#     
+#     if (is.function(legend)) {
+#       legend()
+#     } else if (!is.list(legend) && legend == TRUE) {
+#       legend("bottomright", inset = c(0.025, 0.05), legend = labels, lty = c(1, 1), col = tail(cols, 2), pch = c(1, 1))
+#     }
+#     
+#   }
+#   
+#   # caf
+#   if (showFig[5]) {
+#     plot(NULL, 
+#          ylim = ylimCAF,
+#          ylab = ylabs[5], xlab = xlabs[5],
+#          xaxt = "n", yaxt = "n", ...)
+#     if (xaxts == "n") {
+#       axis(side=1, labels = FALSE)  # keep tick marks
+#     } else if (xaxts == "s" | cafBinLabels) {
+#       nCAF <- length(x[[1]]$caf$bin) / 2
+#       if (cafBinLabels) {
+#         stepCAF <- 100 / nCAF
+#         cafLabels <- paste0(paste(seq(0, 100 - stepCAF, stepCAF), seq(stepCAF, 100, stepCAF), sep = "-"), "%")
+#         axis(1, at = seq(1, nCAF, 1), labels = cafLabels, ...)
+#       } else {
+#         axis(1, at = seq(1, nCAF, 1), ...)
+#       }
+#     } else {
+#       axis(side = 1,labels = FALSE) 
+#     }
+#     
+#     if (yaxts == "n") {
+#       axis(side=2, labels = FALSE)  # keep tick marks
+#     } else if (yaxts == "s") {
+#       axis(2, at = seq(0, 1, 0.2), labels = as.character(seq(0, 1, 0.2)), ...)
+#     }
+#     
+#     # for (i in 1:length(x)) { 
+#     #   lines(x[[i]]$caf$accPer[x[[i]]$caf$Comp == "comp"],  type = "o", col = tail(cols, 2)[1], ...)
+#     #   lines(x[[i]]$caf$accPer[x[[i]]$caf$Comp == "incomp"],  type = "o", col = tail(cols, 2)[2], ...)
+#     # }
+#     
+#     if (is.function(legend)) {
+#       legend()
+#     } else if (!is.list(legend) && legend == TRUE) {
+#       legend("bottomright", inset = c(0.025, 0.05), legend = labels, lty = c(1, 1), col = tail(cols, 2), pch = c(1, 1))
+#     }
+#     
+#   }
+#   
+#   if (showFig[6]) {
+#     plot(NULL, NULL,
+#          ylim = ylimDelta, xlim = xlimDelta,
+#          ylab = ylabs[6], xlab = xlabs[6],
+#          xaxt = xaxts, yaxt = yaxts, ...)
+#     axis(side = 1,labels = FALSE) 
+#     axis(2, labels = FALSE)
+#    
+#     for (i in 1:length(x)) { 
+#       lines(x[[i]]$delta$meanBin, x[[i]]$delta$meanEffect, type = "o", col = cols[i])
+#       if (errorBars) {
+#         errorBarCol <- which(grepl(errorBarType, colnames(x$delta)))
+#         addErrorBars(x[[i]]$delta$meanBin,
+#                      x[[i]]$delta$meanEffect,
+#                      x[[i]]$delta[[errorBarCol]],
+#                      arrowSize = 0.05)
+#       }
+#     }
+#     
+#   }
+#   
+# }
 
 
 
@@ -905,14 +1163,15 @@ plot.dmcfit <- function(x,
          yaxt = "n", col = tail(cols, 2)[1],
          xaxt = xaxts, yaxt = "n", ...)
     if (xaxts == "n") axis(side = 1, labels = FALSE)  # keep tick marks
-    if (yaxts == "n") axis(side = 2, labels = FALSE)  # keep tick marks
+    if (yaxts == "n") {
+      axis(side = 2, labels = FALSE)  # keep tick marks
+    } else if (yaxts == "s") {
+      axis(2, at = seq(0, 1, 0.25), labels = as.character(seq(0, 1, 0.25)))
+    }
     
     lines(y$delta$meanIncomp, seq(seqStep, 100 - seqStep, seqStep)/100, type = "p", col = tail(cols, 2)[2], ...)
     lines(x$delta$meanComp,   seq(seqStep, 100 - seqStep, seqStep)/100, type = "l", col = tail(cols, 2)[1], ...)
     lines(x$delta$meanIncomp, seq(seqStep, 100 - seqStep, seqStep)/100, type = "l", col = tail(cols, 2)[2], ...)
-    if (yaxts ==  "s") {
-      axis(2, at = seq(0, 1, 0.25), labels = as.character(seq(0, 1, 0.25)))
-    }
     
     if (is.function(legend)) {
       legend()
@@ -934,13 +1193,9 @@ plot.dmcfit <- function(x,
          ylab = ylabs[5], xlab = xlabs[5],
          yaxt = "n", xaxt = "n",
          col = tail(cols, 2)[1], ...)
-    if (xaxts == "n") axis(side = 1, labels = FALSE)  # keep tick marks
-    if (yaxts == "n") axis(side = 2, labels = FALSE)  # keep tick marks
-    
-    lines(y$caf$accPer[y$caf$Comp == "incomp"], type = "p", col = tail(cols, 2)[2], ...)
-    lines(x$caf$accPer[x$caf$Comp == "comp"],   type = "l", col = tail(cols, 2)[1], ...)
-    lines(x$caf$accPer[x$caf$Comp == "incomp"], type = "l", col = tail(cols, 2)[2], ...)
-    if (xaxts == "s") {
+    if (xaxts == "n") {
+      axis(side = 1, labels = FALSE)  # keep tick marks
+    } else if (xaxts == "s") {
       nCAF <- length(x$caf$bin) / 2
       if (cafBinLabels) {
         stepCAF <- 100 / nCAF
@@ -950,11 +1205,18 @@ plot.dmcfit <- function(x,
         axis(1, at = seq(1, nCAF, 1))
       }
     } else {
-      axis(sidei = 1,labels = F) 
+      axis(sidei = 1,labels = F)      
     }
-    if (yaxts == "s") {
+    
+    if (yaxts == "n") {
+      axis(side = 2, labels = FALSE)  # keep tick marks
+    } else if (yaxts == "s") {
       axis(2, at = seq(0, 1, 0.2), labels = as.character(seq(0, 1, 0.2)))
     }
+    
+    lines(y$caf$accPer[y$caf$Comp == "incomp"], type = "p", col = tail(cols, 2)[2], ...)
+    lines(x$caf$accPer[x$caf$Comp == "comp"],   type = "l", col = tail(cols, 2)[1], ...)
+    lines(x$caf$accPer[x$caf$Comp == "incomp"], type = "l", col = tail(cols, 2)[2], ...)
     
     if (is.function(legend)) {
       legend()
@@ -966,6 +1228,7 @@ plot.dmcfit <- function(x,
                         paste(labels[2], labels[4], sep = " ")),
              lty = c(0, 0, 1, 1), col = tail(cols, 2), pch = c(1, 1, NA, NA))
     }
+    
   }
   
   # delta
