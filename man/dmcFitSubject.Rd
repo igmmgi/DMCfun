@@ -19,7 +19,8 @@ dmcFitSubject(
   pDelta = vector(),
   subjects = c(),
   printInputArgs = TRUE,
-  printResults = FALSE
+  printResults = FALSE,
+  maxit = 500
 )
 }
 \arguments{
@@ -52,6 +53,8 @@ dmcFitSubject(
 \item{printInputArgs}{TRUE/FALSE}
 
 \item{printResults}{TRUE/FALSE}
+
+\item{maxit}{The maximum number of iterations (Default: 500)}
 }
 \value{
 dmcfit_subject List of dmcfit per subject fitted (see dmcFit)

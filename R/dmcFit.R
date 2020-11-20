@@ -28,6 +28,7 @@
 #' @param pDelta Alternative to nDelta by directly specifying required percentile values   
 #' @param printInputArgs TRUE/FALSE
 #' @param printResults TRUE/FALSE
+#' @param maxit The maximum number of iterations (Default: 500)
 #'
 #' @return dmcfit
 #'
@@ -85,7 +86,8 @@ dmcFit <- function(resOb,
                    nDelta          = 19,
                    pDelta          = vector(),
                    printInputArgs  = TRUE,
-                   printResults    = FALSE) {
+                   printResults    = FALSE, 
+                   maxit           = 500) {
   
   # default parameter space
   defaultStartVals <- list(amp = 20, tau = 200, drc = 0.5, bnds =  75, resMean = 300, resSD =  30, aaShape = 2, spShape = 3, sigm =  4)
@@ -192,7 +194,7 @@ dmcFit <- function(resOb,
                         nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, nCAF = nCAF, minVals = minVals, maxVals = maxVals,
                         printInputArgs = printInputArgs, printResults = printResults,
                         method = "Nelder-Mead",
-                        control = list(parscale = parScale[!as.logical(fixedFit)]))
+                        control = list(parscale = parScale[!as.logical(fixedFit)], maxit = maxit))
     
   prms[!as.logical(fixedFit)] <- fit$par
   
@@ -245,6 +247,7 @@ dmcFit <- function(resOb,
 #' @param subjects NULL (aggregated data across all subjects) or integer for subject number
 #' @param printInputArgs TRUE/FALSE
 #' @param printResults TRUE/FALSE
+#' @param maxit The maximum number of iterations (Default: 500)
 #'
 #' @return dmcfit_subject List of dmcfit per subject fitted (see dmcFit)
 #'
@@ -265,20 +268,21 @@ dmcFit <- function(resOb,
 #'
 #' @export
 dmcFitSubject <- function(resOb,
-                          nTrl             = 100000,
-                          startVals        = list(),
-                          minVals          = list(),
-                          maxVals          = list(),
-                          fixedFit         = list(),
-                          fitInitialGrid   = TRUE,
-                          fitInitialGridN  = 10,       # reduce if grid search 3/4+ parameters
-                          fixedGrid        = list(),   # default only initial tau search
-                          nCAF             = 5,
-                          nDelta           = 19,
-                          pDelta           = vector(),
-                          subjects         = c(),
-                          printInputArgs   = TRUE,
-                          printResults     = FALSE) {
+                          nTrl            = 100000,
+                          startVals       = list(),
+                          minVals         = list(),
+                          maxVals         = list(),
+                          fixedFit        = list(),
+                          fitInitialGrid  = TRUE,
+                          fitInitialGridN = 10,       # reduce if grid search 3/4+ parameters
+                          fixedGrid       = list(),   # default only initial tau search
+                          nCAF            = 5,
+                          nDelta          = 19,
+                          pDelta          = vector(),
+                          subjects        = c(),
+                          printInputArgs  = TRUE,
+                          printResults    = FALSE,
+                          maxit           = 500) {
   
   if (length(subjects) == 0) {
     subjects = unique(resOb$summarySubject$subjects)  # fit all individual subjects in data
@@ -304,19 +308,20 @@ dmcFitSubject <- function(resOb,
                          cafAgg = resOb$cafSubject[resOb$cafSubject$Subject == subject,])
     
     dmcfit[[subject]] <- dmcFit(resObSubject,
-                                nTrl             = nTrl,
-                                startVals        = startVals,
-                                minVals          = minVals,
-                                maxVals          = maxVals,
-                                fixedFit         = fixedFit,
-                                fitInitialGrid   = fitInitialGrid,
-                                fitInitialGridN  = fitInitialGridN, # reduce if grid search 3/4+ parameters
-                                fixedGrid        = fixedGrid,       # only fit tau
-                                nCAF             = nCAF,
-                                nDelta           = nDelta,
-                                pDelta           = pDelta,
-                                printInputArgs   = printInputArgs,
-                                printResults     = printResults)
+                                nTrl            = nTrl,
+                                startVals       = startVals,
+                                minVals         = minVals,
+                                maxVals         = maxVals,
+                                fixedFit        = fixedFit,
+                                fitInitialGrid  = fitInitialGrid,
+                                fitInitialGridN = fitInitialGridN, # reduce if grid search 3/4+ parameters
+                                fixedGrid       = fixedGrid,       # only fit tau
+                                nCAF            = nCAF,
+                                nDelta          = nDelta,
+                                pDelta          = pDelta,
+                                printInputArgs  = printInputArgs,
+                                printResults    = printResults, 
+                                maxit           = maxit)
     
   }
   
@@ -449,7 +454,7 @@ calculateCostValue <- function(resTh, resOb) {
   
   costValue <- (weightCAF * costCAF) + (weightRT * costRT)
   
-  message(sprintf("RMSE: %.3f\n", costValue))
+  message("RMSE: ", round(costValue, 3))
   
   return(costValue)
   

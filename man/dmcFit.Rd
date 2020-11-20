@@ -18,7 +18,8 @@ dmcFit(
   nDelta = 19,
   pDelta = vector(),
   printInputArgs = TRUE,
-  printResults = FALSE
+  printResults = FALSE,
+  maxit = 500
 )
 }
 \arguments{
@@ -59,6 +60,8 @@ resSD = T, aaShape = T, spShape = T, sigm = T))}
 \item{printInputArgs}{TRUE/FALSE}
 
 \item{printResults}{TRUE/FALSE}
+
+\item{maxit}{The maximum number of iterations (Default: 500)}
 }
 \value{
 dmcfit
