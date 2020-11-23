@@ -69,14 +69,9 @@
 \item{...}{additional plot pars}
 }
 \description{
-Plot results from the output of dmcSim. The plot
-can be an overall summary, or individual plots (activation, trials,
-pdf, cdf, caf, delta, all). Plot type summary1 contains an activation plot,
-example individual trials, the probability distribution function (PDF), the
-cumulative distribution function (CDF), the conditional accuracy function (CAF)
-and delta plots. This required that dmcSim is run with fullData = TRUE. Plot
-type summary2 contains only the PDF, CDF, CAF and delta plots and does not require
-that dmcSim is run with fullData = TRUE.
+Plot results from the output of dmcObservedData. The plot
+can be an overall summary, or individual plots (rtCorrect, errorRate,
+rtErrors, cdf, caf, delta, all).
 }
 \examples{
 \donttest{

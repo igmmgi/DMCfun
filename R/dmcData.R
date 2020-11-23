@@ -356,7 +356,7 @@ dmcObservedData <- function(dat,
   datSubject <- dat %>%
     dplyr::mutate(outlier = RT <= rtMin | RT >= rtMax) %>%
     dplyr::group_by(Subject, Comp) %>%
-    dplyr::summarize(N            = n(),
+    dplyr::summarize(N       = n(),
                      nCor    = sum(Error == 0),
                      nErr    = sum(Error),
                      nOut    = sum(outlier),
@@ -437,6 +437,29 @@ dmcObservedData <- function(dat,
 
 }
 
+#' @title dmcCombineObservedData: Combine results from dmcObservedData
+#'
+#' @description 
+#' @param ... Any number of outputs from dmcObservedData
+#'
+#' @return dmcobs
+#'
+#' @examples
+#' # Example 1
+#' datFlanker <- dmcObservedData(flankerDataRaw, nDelta = 9)
+#' datSimon <- dmcObservedData(simonDataRaw, nDelta = 9)
+#' dat <- dmcCombineObservedData(datFlanker, datSimon)  # combine flanker/simon data
+#' plot(dat, figType = "delta", xlimDelta = c(200, 700), 
+#'      cols = c("black", "darkgrey"), pchs = c(1, 2), resetPar = FALSE)  
+#' legend(200, 0, legend = c("Flanker Task", "Simon Task"), 
+#'        col = c("black", "darkgrey"), lty = c(1, 1))
+#
+#' @export
+dmcCombineObservedData <- function(...) {
+  dat <- list(...) 
+  class(dat) <- "dmcobs"
+  return (dat)
+}
 
 
 #' @title calculateCAF: Calculate conditional accuracy function (CAF).
