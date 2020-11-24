@@ -314,7 +314,7 @@ addDataDF <- function(dat, RT=NULL, Error=NULL) {
 #'                          compCoding = c("cong", "incong"))
 #' plot(datOb, labels = c("Congruent", "Incongruent"))
 #' plot(datOb, subject = 1)
-#
+#'
 #' @export
 dmcObservedData <- function(dat,
                             nCAF = 5,
@@ -453,7 +453,7 @@ dmcObservedData <- function(dat,
 #'      cols = c("black", "darkgrey"), pchs = c(1, 2), resetPar = FALSE)  
 #' legend(200, 0, legend = c("Flanker Task", "Simon Task"), 
 #'        col = c("black", "darkgrey"), lty = c(1, 1))
-#
+#'
 #' @export
 dmcCombineObservedData <- function(...) {
   dat <- list(...) 
@@ -499,7 +499,7 @@ dmcCombineObservedData <- function(...) {
 #' head(dat)
 #' caf <- calculateCAF(dat, columns = c("Subject", "Congruency", "RT", "Error"),
 #'                     compCoding = c("cong", "incong"))
-#
+#'
 #'
 #' @export
 calculateCAF <- function(dat,
@@ -576,7 +576,7 @@ calculateCAF <- function(dat,
 #' head(dat)
 #' delta <- calculateDelta(dat, columns = c("Subject", "Congruency", "RT"),
 #'                         compCoding = c("cong", "incong"))
-#
+#'
 #'
 #' @export
 calculateDelta <- function(dat,

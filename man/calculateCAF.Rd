@@ -55,4 +55,5 @@ head(dat)
 caf <- calculateCAF(dat, columns = c("Subject", "Congruency", "RT", "Error"),
                     compCoding = c("cong", "incong"))
 
+
 }

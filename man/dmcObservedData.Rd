@@ -97,4 +97,5 @@ datOb <- dmcObservedData(dat, nCAF = 5, nDelta = 9,
                          compCoding = c("cong", "incong"))
 plot(datOb, labels = c("Congruent", "Incongruent"))
 plot(datOb, subject = 1)
+
 }

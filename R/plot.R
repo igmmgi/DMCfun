@@ -47,7 +47,7 @@
 #' # Example 4
 #' dmc = dmcSim()
 #' plot(dmc, figType = "summary3")
-#
+#'
 #' }
 #'
 #' @export

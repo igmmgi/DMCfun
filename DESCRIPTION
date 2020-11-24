@@ -26,7 +26,7 @@ Imports:
   optimr,
   parallel,
   pbapply,
-  tidyr,
+  tidyr
 Suggests:
   testthat
 LinkingTo: Rcpp, BH

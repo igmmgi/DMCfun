@@ -49,4 +49,5 @@ head(dat)
 delta <- calculateDelta(dat, columns = c("Subject", "Congruency", "RT"),
                         compCoding = c("cong", "incong"))
 
+
 }
