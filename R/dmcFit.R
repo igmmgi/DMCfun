@@ -355,7 +355,8 @@ dmcFitDE <- function(resOb,
   # bounds check
   prms <- pmax(unlist(prms), unlist(minVals))
   prms <- pmin(unlist(prms), unlist(maxVals))
-  if (any(prms == unlist(minVals)) || any(prms == unlist(maxVals))) {
+  if (any(prms[!as.logical(fixedFit)] == unlist(minVals[!as.logical(fixedFit)])) 
+      || any(prms[!as.logical(fixedFit)] == unlist(maxVals[!as.logical(fixedFit)]))) {
     warning("Parameter estimates at minVals/maxVals bounds!")
   }
   prms <- as.list(prms)
