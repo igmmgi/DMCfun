@@ -439,7 +439,7 @@ dmcObservedData <- function(dat,
 
 #' @title dmcCombineObservedData: Combine results from dmcObservedData
 #'
-#' @description 
+#' @description Combine observed datasets
 #' @param ... Any number of outputs from dmcObservedData
 #'
 #' @return dmcobs

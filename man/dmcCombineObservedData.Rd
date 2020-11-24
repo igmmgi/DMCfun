@@ -13,7 +13,7 @@ dmcCombineObservedData(...)
 dmcobs
 }
 \description{
-dmcCombineObservedData: Combine results from dmcObservedData
+Combine observed datasets
 }
 \examples{
 # Example 1

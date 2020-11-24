@@ -20,6 +20,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Depends: R (>= 3.5.0)
 Imports: 
+  DEoptim, 
   Rcpp (>= 0.12.16),
   dplyr (>= 1.0.0),
   optimr,

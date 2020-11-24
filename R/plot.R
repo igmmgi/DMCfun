@@ -755,7 +755,8 @@ plot.dmcob <- function(x,
 #'      cols = c("black", "darkgrey"), pchs = c(1, 2), resetPar = FALSE)  
 #' legend(200, 0, legend = c("Flanker Task", "Simon Task"), 
 #'        col = c("black", "darkgrey"), lty = c(1, 1))
-#
+#' 
+#' }
 #' @export
 plot.dmcobs <- function(x,
                         figType = "all",

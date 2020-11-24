@@ -1,8 +1,8 @@
-#' @title dmcFit: Fit DMC to aggregated data
+#' @title dmcFit: Fit DMC to aggregated data using R-package optimr
 #'
 #' @description Fit theoretical data generated from dmcSim to observed data by
 #' minimizing the root-mean-square error (RMSE) between a weighted combination
-#' of the CAF and CDF functions.
+#' of the CAF and CDF functions using the R-package optimr.
 #'
 #' @param resOb Observed data (see flankerData and simonTask for data format)
 #' @param nTrl Number of trials to use within dmcSim.
@@ -224,6 +224,159 @@ dmcFit <- function(resOb,
   
 }
 
+
+
+#' @title dmcFitDE: Fit DMC to aggregated data using R-package DEoptim
+#'
+#' @description Fit theoretical data generated from dmcSim to observed data by
+#' minimizing the root-mean-square error (RMSE) between a weighted combination
+#' of the CAF and CDF functions using the R-package DEoptim.
+#'
+#' @param resOb Observed data (see flankerData and simonTask for data format)
+#' @param nTrl Number of trials to use within dmcSim.
+#' @param minVals Minimum values for the to-be estimated parameters. This is a list with values specified individually for
+#' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., minVals = list(amp = 10, tau = 5, drc = 0.1, bnds = 20, resMean = 200,
+#' resSD = 5, aaShape = 1, spShape = 2, sigm = 1)).
+#' @param maxVals Maximum values for the to-be estimated parameters. This is a list with values specified individually for
+#' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., maxVals = list(amp = 40, tau = 300, drc = 1.0, bnds = 150, resMean = 800,
+#' resSD = 100, aaShape = 3, spShape = 4, sigm = 10))
+#' @param fixedFit Fix parameter to starting value. This is a list with bool values specified individually for
+#' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedFit = list(amp = F,  tau = F, drc = F, bnds = F, resMean = F,
+#' resSD = F, aaShape = F, spShape = F, sigm = T))
+#' @param nCAF Number of CAF bins. 
+#' @param nDelta Number of delta bins. 
+#' @param pDelta Alternative to nDelta by directly specifying required percentile values   
+#' @param control Additional control parameters passes to DEoptim  
+#'
+#' @return dmcfit
+#'
+#' The function returns a list with the relevant results from the fitting procedure. The list
+#' is accessed with obj$name with the the following:
+#' \item{obj$means}{Condition means for reaction time and error rate}
+#' \item{obj$caf}{Accuracy per bin for compatible and incompatible trials}
+#' \item{obj$delta}{Mean RT and compatibility effect per bin}
+#' \item{obj$sim}{Individual trial data points (reaction times/error) and activation vectors from simulation}
+#' \item{obj$par}{The fitted model parameters + final RMSE of the fit}
+#'
+#' @examples
+#' \donttest{
+#' # Example 1: Flanker data from Ulrich et al. (2015)
+#' fit <- dmcFitDE(flankerData)  
+#' plot(fit, flankerData)
+#' summary(fit)
+#'
+#' # Example 2: Simon data from Ulrich et al. (2015)
+#' fit <- dmcFitDE(simonData)    
+#' plot(fit, simonData)
+#' summary(fit)
+#' }
+#'
+#' @export
+dmcFitDE <- function(resOb,
+                     nTrl     = 100000,
+                     minVals  = list(),
+                     maxVals  = list(),
+                     fixedFit = list(),
+                     nCAF     = 5,
+                     nDelta   = 19,
+                     pDelta   = vector(), 
+                     control  = list()) {
+  
+  # R check limits number of cores to 2 (https://stackoverflow.com/questions/50571325/r-cran-check-fail-when-using-parallel-functions)
+  chk <- tolower(Sys.getenv("_R_CHECK_LIMIT_CORES_", ""))
+  if (nzchar(chk) && (chk == "true")) {
+    num_cores <- 2L
+  } else {
+    num_cores <- parallel::detectCores() / 2
+  }
+  cl <- parallel::makeCluster(num_cores)
+  invisible(parallel::clusterExport(cl = cl, varlist=c("dmcSim", "calculateCostValue")))
+  
+  # default parameter space
+  defaultMinVals  <- list(amp = 10, tau =   5, drc = 0.1, bnds =  20, resMean = 200, resSD =  5,  aaShape = 1, spShape = 2, sigm = 4)
+  defaultMaxVals  <- list(amp = 40, tau = 300, drc = 1.0, bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, sigm = 4)
+  defaultFixedFit <- list(amp = F,  tau = F,   drc = F,   bnds = F,   resMean = F,   resSD = F,   aaShape = F, spShape = F, sigm = T)
+  defaultControl  <- list(VTR = 1,  strategy = 1, NP = 100, itermax  = 200, trace = 1, cluster = cl )
+  
+  minVals  <- modifyList(defaultMinVals,  minVals)
+  maxVals  <- modifyList(defaultMaxVals,  maxVals)
+  fixedFit <- modifyList(defaultFixedFit, fixedFit)
+  control  <- modifyList(defaultControl,  control)
+  
+  prms <- (unlist(minVals) + unlist(maxVals)) / 2  # start in middle of min/max vals
+  
+  # check observed data contains correct number of delta/CAF bins
+  if (nrow(resOb$delta) != nDelta) {
+    stop("Number of delta bins in observed data and nDelta bins are not equal!")
+  }
+  if ((nrow(resOb$caf)/2) != nCAF) {
+    stop("Number of CAF bins in observed data and nCAF bins are not equal!")
+  }
+  
+  # function to minimise
+  minimizeCostValue <- function(x, prms, fixedFit, resOb, nTrl, nDelta, pDelta, nCAF, minVals, maxVals, printInputArgs, printResults) {
+    
+    prms[!as.logical(fixedFit)] <- x
+    
+    # implement bounds
+    prms <- as.list(pmax(unlist(prms), unlist(minVals)))
+    prms <- as.list(pmin(unlist(prms), unlist(maxVals)))
+    
+    resTh <- dmcSim(amp = prms$amp, tau = prms$tau, drc = prms$drc, bnds = prms$bnds,
+                    resMean = prms$resMean, resSD = prms$resSD, aaShape = prms$aaShape,
+                    varSP = TRUE, spShape = prms$spShape, sigm = prms$sigm, spLim = c(-prms$bnds, prms$bnds),
+                    nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, nCAF = nCAF,
+                    printInputArgs = printInputArgs, printResults = printResults)
+    
+    return(calculateCostValue(resTh, resOb))
+    
+  }
+   
+  fit = DEoptim::DEoptim(fn = minimizeCostValue, 
+                         lower = unlist(minVals[!as.logical(fixedFit)]), 
+                         upper = unlist(maxVals[!as.logical(fixedFit)]), 
+                         prms = prms, 
+                         fixedFit = fixedFit,  
+                         minVals = minVals, 
+                         maxVals = maxVals, 
+                         resOb = resOb,  
+                         nTrl = nTrl, 
+                         nDelta = nDelta, 
+                         nCAF = nCAF, 
+                         pDelta = pDelta, 
+                         printInputArgs = FALSE,  
+                         printResults = FALSE, 
+                         control = control) 
+  
+  parallel::stopCluster(cl)
+
+  prms[!as.logical(fixedFit)] <- as.list(fit$optim$bestmem)
+  
+  # bounds check
+  prms <- pmax(unlist(prms), unlist(minVals))
+  prms <- pmin(unlist(prms), unlist(maxVals))
+  if (any(prms == unlist(minVals)) || any(prms == unlist(maxVals))) {
+    warning("Parameter estimates at minVals/maxVals bounds!")
+  }
+  prms <- as.list(prms)
+  
+  message(sprintf("RMSE: %.3f\n", fit$optim$bestval))
+  dmcfit <- dmcSim(amp = prms$amp, tau = prms$tau, drc = prms$drc,
+                   bnds = prms$bnds, resMean = prms$resMean, resSD = prms$resSD,
+                   aaShape = prms$aaShape, sigm = prms$sigm,
+                   varSP = TRUE, spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
+                   nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, nCAF = nCAF,
+                   printResults = TRUE)
+  
+  dmcfit$prms <- NULL
+  dmcfit$par  <- prms
+  dmcfit$par["RMSE"] <- fit$optim$bestval
+  
+  class(dmcfit) <- "dmcfit"
+  
+  return(dmcfit)
+ 
+}
 
 
 #' @title dmcFitSubject: Fit individual subjects data to dmc
