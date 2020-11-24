@@ -2,7 +2,7 @@
 % Please edit documentation in R/dmcFit.R
 \name{dmcFit}
 \alias{dmcFit}
-\title{dmcFit: Fit DMC to aggregated data using R-package optimr}
+\title{dmcFit: Fit DMC to aggregated data using R-package optimr (Nelder-Mead)}
 \usage{
 dmcFit(
   resOb,
@@ -77,7 +77,7 @@ is accessed with obj$name with the the following:
 \description{
 Fit theoretical data generated from dmcSim to observed data by
 minimizing the root-mean-square error (RMSE) between a weighted combination
-of the CAF and CDF functions using the R-package optimr.
+of the CAF and CDF functions using the R-package optimr (Nelder-Mead).
 }
 \examples{
 \donttest{

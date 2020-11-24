@@ -68,7 +68,6 @@ summary(fit)
 fit <- dmcFitDE(simonData)    
 plot(fit, simonData)
 summary(fit)
-
 }
 
 }

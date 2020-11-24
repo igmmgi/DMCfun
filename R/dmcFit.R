@@ -1,8 +1,8 @@
-#' @title dmcFit: Fit DMC to aggregated data using R-package optimr
+#' @title dmcFit: Fit DMC to aggregated data using R-package optimr (Nelder-Mead)
 #'
 #' @description Fit theoretical data generated from dmcSim to observed data by
 #' minimizing the root-mean-square error (RMSE) between a weighted combination
-#' of the CAF and CDF functions using the R-package optimr.
+#' of the CAF and CDF functions using the R-package optimr (Nelder-Mead).
 #'
 #' @param resOb Observed data (see flankerData and simonTask for data format)
 #' @param nTrl Number of trials to use within dmcSim.
@@ -380,7 +380,7 @@ dmcFitDE <- function(resOb,
 }
 
 
-#' @title dmcFitSubject: Fit individual subjects data to dmc
+#' @title dmcFitSubject: Fit DMC to aggregated data using R-package optimr (Nelder-Mead)
 #'
 #' @description Fit theoretical data generated from dmcSim to observed data by
 #' minimizing the root-mean-square error (RMSE) between a weighted combination
@@ -486,6 +486,93 @@ dmcFitSubject <- function(resOb,
 }
 
 
+#' @title dmcFitSubjectDE: Fit DMC to aggregated data using R-package DEoptim.
+#'
+#' @description Fit theoretical data generated from dmcSim to observed data by
+#' minimizing the root-mean-square error (RMSE) between a weighted combination
+#' of the CAF and CDF functions.
+#'
+#' @param resOb Observed data (see flankerData, simonData for data format)
+#' @param nTrl Number of trials to use within dmcSim
+#' @param minVals Minimum values for the to-be estimated parameters
+#' @param maxVals Maximum values for the to-be estimated parameters
+#' @param fixedFit Fix parameter to starting value
+#' @param nCAF Number of CAF bins. 
+#' @param nDelta Number of delta bins. 
+#' @param pDelta Alternative to nDelta by directly specifying required percentile values   
+#' @param subjects NULL (aggregated data across all subjects) or integer for subject number
+#' @param control Additional control parameters passes to DEoptim  
+#'
+#' @return dmcfit_subject List of dmcfit per subject fitted (see dmcFitDM)
+#'
+#' @examples
+#' \donttest{
+#' # Example 1: Flanker data from Ulrich et al. (2015)
+#' fit <- dmcFitSubjectDE(flankerData, nTrl = 1000, subjects = c(1, 2))
+#' plot(fit, flankerData, subject = 1)
+#' plot(fit, flankerData, subject = 2)
+#' summary(fit)
+#'
+#' # Example 2: Simon data from Ulrich et al. (2015)
+#' fit <- dmcFitSubjectDE(simonData, nTrl = 1000, subject = c(1, 2))
+#' plot(fit, simonData, subject = 1)
+#' plot(fit, simonData, subject = 2)
+#' summary(fit)
+#' }
+#'
+#' @export
+dmcFitSubjectDE <- function(resOb,
+                            nTrl     = 100000,
+                            minVals  = list(),
+                            maxVals  = list(),
+                            fixedFit = list(),
+                            nCAF     = 5,
+                            nDelta   = 19,
+                            pDelta   = vector(),
+                            subjects = c(),
+                            control  = list()) {
+  
+  if (length(subjects) == 0) {
+    subjects = unique(resOb$summarySubject$subjects)  # fit all individual subjects in data
+  }
+  
+  # default parameter space
+  defaultMinVals  <- list(amp = 10, tau =   5, drc = 0.1, bnds =  20, resMean = 200, resSD =  5,  aaShape = 1, spShape = 2, sigm =  1)
+  defaultMaxVals  <- list(amp = 40, tau = 300, drc = 1.0, bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, sigm = 10)
+  defaultFixedFit <- list(amp = F,  tau = F,   drc = F,   bnds = F,   resMean = F,   resSD = F,   aaShape = F, spShape = F, sigm = T)
+  defaultControl  <- list(VTR = 1,  strategy = 1, NP = 100, itermax  = 200, trace = 1)
+  
+  minVals  <- modifyList(defaultMinVals,  minVals)
+  maxVals  <- modifyList(defaultMaxVals,  maxVals)
+  fixedFit <- modifyList(defaultFixedFit, fixedFit)
+  control  <- modifyList(defaultControl,  control)
+  
+  dmcfit <- vector("list", max(subjects))
+  for (subject in subjects) {
+    
+    resObSubject <- list(deltaAgg = resOb$deltaSubject[resOb$deltaSubject$Subject == subject,],
+                         cafAgg = resOb$cafSubject[resOb$cafSubject$Subject == subject,])
+    
+    dmcfit[[subject]] <- dmcFitDE(resObSubject,
+                                  nTrl     = nTrl,
+                                  minVals  = minVals,
+                                  maxVals  = maxVals,
+                                  fixedFit = fixedFit,
+                                  nCAF     = nCAF,
+                                  nDelta   = nDelta,
+                                  pDelta   = pDelta,
+                                  control  = control) 
+    
+  }
+  
+  class(dmcfit) <- "dmcfit"
+  
+  return(dmcfit)
+  
+}
+
+
+
 
 #' @title mean.dmcfit: Return mean simulation results from dmcFitSubject
 #'
@@ -543,12 +630,12 @@ mean.dmcfit <- function(x, ...) {
                      meanIncomp = mean(meanIncomp),
                      meanBin    = mean(meanBin),
                      meanEffect = mean(meanEffect), 
-                     .groups = 'drop')
+                     .groups    = 'drop')
   
   # caf
   meanfit$caf <- mergeLists(x, "caf") %>%
     dplyr::group_by(Comp, bin) %>%
-    dplyr::summarise(accPer = mean(accPer), 
+    dplyr::summarise(accPer  = mean(accPer), 
                      .groups = 'drop')
   
   # par
