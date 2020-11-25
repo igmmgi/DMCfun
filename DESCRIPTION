@@ -15,7 +15,7 @@ Description:
   The DMC model is used to explain distributional reaction time (and error rate) patterns in common behavioural 
   conflict-like tasks (e.g., Flanker task, Simon task). This R-package implements the DMC model and provides functionality 
   to fit the model to observed data.
-URL: https://github.com/igmmgi/DMCfun, https://cran.r-project.org/package=DMCfun
+URL: https://github.com/igmmgi/DMCfun, https://CRAN.R-project.org/package=DMCfun
 License: MIT + file LICENSE
 Encoding: UTF-8
 Depends: R (>= 3.5.0)

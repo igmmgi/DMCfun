@@ -65,7 +65,7 @@ plot(fit, flankerData)
 summary(fit)
 
 # Example 2: Simon data from Ulrich et al. (2015)
-fit <- dmcFitDE(simonData)    
+fit <- dmcFitDE(simonData, nTrl = 20000)    
 plot(fit, simonData)
 summary(fit)
 }
