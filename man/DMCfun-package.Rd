@@ -21,7 +21,7 @@ DMC model simulation detailed in Ulrich, R., Schroeter, H., Leuthold, H., & Birn
 Useful links:
 \itemize{
   \item \url{https://github.com/igmmgi/DMCfun}
-  \item \url{https://cran.r-project.org/web/packages/DMCfun}
+  \item \url{https://cran.r-project.org/package=DMCfun}
 }
 
 }

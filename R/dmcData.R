@@ -176,7 +176,7 @@ createDF <- function(nSubjects = 20,
 #'
 #' boxplot(dat$RT ~ dat$Hand + dat$Side)
 #' table(dat$Error, dat$Hand, dat$Side)
-#
+#'
 #' @export
 addDataDF <- function(dat, RT=NULL, Error=NULL) {
 

@@ -75,4 +75,5 @@ dat <- addDataDF(dat,
 
 boxplot(dat$RT ~ dat$Hand + dat$Side)
 table(dat$Error, dat$Hand, dat$Side)
+
 }

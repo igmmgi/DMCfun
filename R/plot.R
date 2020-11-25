@@ -1,3 +1,5 @@
+# TO DO: repetition
+
 #' @title plot.dmcsim: Plot dmc simulation
 #'
 #' @description Plot the simulation results from the output of dmcSim. The plot
@@ -326,7 +328,7 @@ plot.dmcsim <- function(x,
   
   # rtCorrect
   if (showFig[7]) {
-    plot(c(1, 2), x$means$rtCor, type = "o", col = cols[1],
+    plot(c(1, 2), x$summary$rtCor, type = "o", col = cols[1],
          ylim = ylimRt, xlim = c(0.5, 2.5),
          ylab = ylabs[7], xlab = "",
          xaxt = "n", yaxt = yaxts, ...)
@@ -334,14 +336,14 @@ plot.dmcsim <- function(x,
     axis(2, labels = FALSE)
     
     if (errorBars) {
-      addErrorBars(c(1, 2), x$means$rtCor, x$means$sdRtCor)
+      addErrorBars(c(1, 2), x$summary$rtCor, x$summary$sdRtCor)
     }
     
   }
   
   # error rate
   if (showFig[8]) {
-    plot(c(1, 2), x$means$perErr, type = "o", col = cols[1],
+    plot(c(1, 2), x$summary$perErr, type = "o", col = cols[1],
          ylim = ylimErr, xlim = c(0.5, 2.5),
          ylab = ylabs[8], xlab = "",
          xaxt = "n", yaxt = yaxts, ...)
@@ -351,7 +353,7 @@ plot.dmcsim <- function(x,
   
   # rtError
   if (showFig[9]) {
-    plot(c(1, 2), x$means$rtErr, type = "o", col = cols[1],
+    plot(c(1, 2), x$summary$rtErr, type = "o", col = cols[1],
          ylim = ylimRt, xlim = c(0.5, 2.5),
          ylab = ylabs[9], xlab = "",
          xaxt = "n",  yaxt = yaxts, ...)
