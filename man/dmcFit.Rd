@@ -59,6 +59,10 @@ resSD = T, aaShape = T, spShape = T, sigm = T))}
 
 \item{pDelta}{Alternative to nDelta by directly specifying required percentile values}
 
+\item{varSP}{Variable starting point TRUE/FALSE}
+
+\item{rtMax}{limit on simulated RT (decision + non-decisional component)}
+
 \item{printInputArgs}{TRUE/FALSE}
 
 \item{printResults}{TRUE/FALSE}

@@ -26,8 +26,8 @@
 #' @param nCAF Number of CAF bins. 
 #' @param nDelta Number of delta bins. 
 #' @param pDelta Alternative to nDelta by directly specifying required percentile values   
-#' @param rtMax
-#' @param varSP
+#' @param rtMax limit on simulated RT (decision + non-decisional component)
+#' @param varSP Variable starting point TRUE/FALSE
 #' @param printInputArgs TRUE/FALSE
 #' @param printResults TRUE/FALSE
 #' @param maxit The maximum number of iterations (Default: 500)
@@ -129,8 +129,8 @@ dmcFit <- function(resOb,
     
     resTh <- dmcSim(amp = prms$amp, tau = prms$tau, drc = prms$drc, bnds = prms$bnds,
                     resMean = prms$resMean, resSD = prms$resSD, rtMax = rtMax, aaShape = prms$aaShape,
-                    varSP = varSP, spShape = prms$spShape, sigm = prms$sigm, spLim = c(-prms$bnds, prms$bnds),
-                    nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, nCAF = nCAF,
+                    spShape = prms$spShape, sigm = prms$sigm, spLim = c(-prms$bnds, prms$bnds),
+                    nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, nCAF = nCAF, varSP = varSP,
                     printInputArgs = printInputArgs, printResults = printResults)
     
     return(calculateCostValue(resTh, resOb))
@@ -215,8 +215,8 @@ dmcFit <- function(resOb,
   dmcfit <- dmcSim(amp = prms$amp, tau = prms$tau, drc = prms$drc,
                    bnds = prms$bnds, resMean = prms$resMean, resSD = prms$resSD, rtMax = rtMax,
                    aaShape = prms$aaShape, sigm = prms$sigm,
-                   varSP = varSP, spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
-                   nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, nCAF = nCAF,
+                   spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
+                   nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, nCAF = nCAF, varSP = varSP,
                    printResults = TRUE)
   
   dmcfit$prms <- NULL
@@ -251,8 +251,8 @@ dmcFit <- function(resOb,
 #' @param nCAF Number of CAF bins. 
 #' @param nDelta Number of delta bins. 
 #' @param pDelta Alternative to nDelta by directly specifying required percentile values   
-#' @param varSP 
-#' @param rtMax 
+#' @param rtMax limit on simulated RT (decision + non-decisional component)
+#' @param varSP Variable starting point TRUE/FALSE
 #' @param control Additional control parameters passes to DEoptim  
 #'
 #' @return dmcfit
@@ -323,7 +323,7 @@ dmcFitDE <- function(resOb,
   }
   
   # function to minimise
-  minimizeCostValue <- function(x, prms, fixedFit, minVals, maxVals, resOb, nTrl, nDelta, nCAF, pDelta, rtMax, printInputArgs, printResults) {
+  minimizeCostValue <- function(x, prms, fixedFit, minVals, maxVals, resOb, nTrl, nDelta, nCAF, varSP, pDelta, rtMax, printInputArgs, printResults) {
     
     prms[!as.logical(fixedFit)] <- x
     
@@ -333,8 +333,8 @@ dmcFitDE <- function(resOb,
     
     resTh <- dmcSim(amp = prms$amp, tau = prms$tau, drc = prms$drc, bnds = prms$bnds,
                     resMean = prms$resMean, resSD = prms$resSD, rtMax = rtMax, aaShape = prms$aaShape,
-                    varSP = varSP, spShape = prms$spShape, sigm = prms$sigm, spLim = c(-prms$bnds, prms$bnds),
-                    nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, nCAF = nCAF,
+                    spShape = prms$spShape, sigm = prms$sigm, spLim = c(-prms$bnds, prms$bnds),
+                    nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, nCAF = nCAF, varSP = varSP,
                     printInputArgs = printInputArgs, printResults = printResults)
     
     return(calculateCostValue(resTh, resOb))
@@ -353,6 +353,7 @@ dmcFitDE <- function(resOb,
                          nDelta = nDelta, 
                          nCAF = nCAF, 
                          pDelta = pDelta, 
+                         varSP = varSP, 
                          rtMax = rtMax, 
                          printInputArgs = FALSE,  
                          printResults = FALSE, 
@@ -375,8 +376,8 @@ dmcFitDE <- function(resOb,
   dmcfit <- dmcSim(amp = prms$amp, tau = prms$tau, drc = prms$drc,
                    bnds = prms$bnds, resMean = prms$resMean, resSD = prms$resSD, rtMax = rtMax,
                    aaShape = prms$aaShape, sigm = prms$sigm,
-                   varSP = varSP, spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
-                   nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, nCAF = nCAF,
+                   spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
+                   nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, nCAF = nCAF, varSP = varSP,
                    printResults = TRUE)
   
   dmcfit$prms <- NULL
@@ -408,8 +409,8 @@ dmcFitDE <- function(resOb,
 #' @param nCAF Number of CAF bins. 
 #' @param nDelta Number of delta bins. 
 #' @param pDelta Alternative to nDelta by directly specifying required percentile values   
-#' @param varSP
-#' @param rtMax
+#' @param varSP Variable starting point TRUE/FALSE
+#' @param rtMax limit on simulated RT (decision + non-decisional component)
 #' @param subjects NULL (aggregated data across all subjects) or integer for subject number
 #' @param printInputArgs TRUE/FALSE
 #' @param printResults TRUE/FALSE
@@ -516,8 +517,8 @@ dmcFitSubject <- function(resOb,
 #' @param nCAF Number of CAF bins. 
 #' @param nDelta Number of delta bins. 
 #' @param pDelta Alternative to nDelta by directly specifying required percentile values   
-#' @param varSP
-#' @param rtMax
+#' @param varSP Variable starting point TRUE/FALSE
+#' @param rtMax limit on simulated RT (decision + non-decisional component)
 #' @param subjects NULL (aggregated data across all subjects) or integer for subject number
 #' @param control Additional control parameters passes to DEoptim  
 #'
@@ -717,9 +718,9 @@ calculateCostValue <- function(resTh, resOb) {
   
   costValue <- (weightCAF * costCAF) + (weightRT * costRT)
   
-  # if (is.na(costValue)) {
-  #   costValue = Inf;
-  # }
+  if (is.na(costValue)) {
+    costValue = Inf;
+  }
   
   message("RMSE: ", round(costValue, 3))
   

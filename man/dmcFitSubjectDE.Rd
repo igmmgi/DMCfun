@@ -36,6 +36,10 @@ dmcFitSubjectDE(
 
 \item{pDelta}{Alternative to nDelta by directly specifying required percentile values}
 
+\item{varSP}{Variable starting point TRUE/FALSE}
+
+\item{rtMax}{limit on simulated RT (decision + non-decisional component)}
+
 \item{subjects}{NULL (aggregated data across all subjects) or integer for subject number}
 
 \item{control}{Additional control parameters passes to DEoptim}
