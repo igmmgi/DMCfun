@@ -13,6 +13,8 @@ dmcFitDE(
   nCAF = 5,
   nDelta = 19,
   pDelta = vector(),
+  varSP = TRUE,
+  rtMax = 5000,
   control = list()
 )
 }
@@ -38,6 +40,10 @@ resSD = F, aaShape = F, spShape = F, sigm = T))}
 \item{nDelta}{Number of delta bins.}
 
 \item{pDelta}{Alternative to nDelta by directly specifying required percentile values}
+
+\item{varSP}{}
+
+\item{rtMax}{}
 
 \item{control}{Additional control parameters passes to DEoptim}
 }

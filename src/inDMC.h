@@ -12,6 +12,7 @@ struct Prms {
     double bnds = 75;
     double resMean = 300;
     double resSD = 30;
+    double rtMax = 5000;
     unsigned long nTrl = 100000;
     unsigned int tmax = 1000;
     bool varSP = false;

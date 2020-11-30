@@ -17,6 +17,8 @@ dmcFit(
   nCAF = 5,
   nDelta = 19,
   pDelta = vector(),
+  varSP = TRUE,
+  rtMax = 5000,
   printInputArgs = TRUE,
   printResults = FALSE,
   maxit = 500
@@ -40,7 +42,7 @@ amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., maxVals = lis
 resSD = 100, aaShape = 3, spShape = 4, sigm = 10))}
 
 \item{fixedFit}{Fix parameter to starting value. This is a list with bool values specified individually for
-amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedFit = list(amp = F,  tau = F, drc = F, bnds = F, resMean = F,
+amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedFit = list(amp = F, tau = F, drc = F, bnds = F, resMean = F,
 resSD = F, aaShape = F, spShape = F, sigm = T))}
 
 \item{fitInitialGrid}{TRUE/FALSE}

@@ -10,6 +10,7 @@
 #' @param bnds +- response criterion
 #' @param resMean mean of non-decisional component
 #' @param resSD standard deviation of non-decisional component
+#' @param rtMax limit on simulated RT (decision + non-decisional component)
 #' @param sigm diffusion constant
 #' @param aaShape shape parameter of automatic activation
 #' @param nTrl number of trials
@@ -74,6 +75,7 @@ dmcSim <- function(amp = 20, tau = 30, drc = 0.5, bnds = 75, resMean = 300, resS
                    sigm = 4,  nTrl = 100000, tmax = 1000,
                    varSP = FALSE, spLim = c(-75, 75),
                    varDR = FALSE, drShape = 3, drLim = c(0.1, 0.7), 
+                   rtMax = 5000, 
                    fullData = FALSE, nTrlData = 5,
                    nDelta = 9, pDelta = vector(), nCAF = 5,
                    printInputArgs = TRUE, printResults = TRUE,
@@ -88,6 +90,7 @@ dmcSim <- function(amp = 20, tau = 30, drc = 0.5, bnds = 75, resMean = 300, resS
                              sigm = sigm,  nTrl = nTrl, tmax = tmax,
                              varSP = varSP, spLimLow = spLim[1], spLimHigh = spLim[2],
                              varDR = varDR, drShape = 3, drLimLow = drLim[1], drLimHigh = drLim[2], 
+                             rtMax = rtMax, 
                              fullData = fullData, nTrlData = nTrlData,
                              nDelta = nDelta, pDelta = pDelta, nCAF = nCAF,
                              printInputArgs = printInputArgs, printResults = printResults,

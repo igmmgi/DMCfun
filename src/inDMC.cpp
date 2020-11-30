@@ -1,21 +1,12 @@
 #include <Rcpp.h>
-#include <getopt.h>
-#include <iostream>
-
 #include "inDMC.h"
 
 void print_input_args(Prms &p) {
-    Rcpp::Rcout << "\nDMC Parameters:" << "\n";
-    Rcpp::Rcout << "amp: " << p.amp << "\n";
-    Rcpp::Rcout << "tau: " << p.tau << "\n";
-    Rcpp::Rcout << "aaShape: " << p.aaShape << "\n";
-    Rcpp::Rcout << "drc: " << p.drc << "\n";
-    Rcpp::Rcout << "bnds: " << p.bnds << "\n";
-    Rcpp::Rcout << "resMean: " << p.resMean << "\n";
-    Rcpp::Rcout << "resSD: " << p.resSD << "\n";
-    Rcpp::Rcout << "sigm: " << p.sigm << "\n";
-    if (p.varSP) Rcpp::Rcout << "spShape: " << p.spShape << "\n";
-    if (p.varDR) Rcpp::Rcout << "drShape: " << p.drShape << "\n";
-    Rcpp::Rcout << std::endl;
+    Rprintf("\nDMC Parameters:\n");
+    Rprintf("amp: %-8.2f tau: %-8.2f aaShape: %-8.2f drc: %-8.2f bnds: %-8.2f resMean: %-8.2f resSD: %-8.2f sigm: %-8.2f", 
+            p.amp, p.tau, p.aaShape, p.drc, p.bnds, p.resMean, p.resSD, p.sigm) ;
+    if (p.varSP) Rprintf("spShape: %-8.2f", p.spShape);
+    if (p.varDR) Rprintf("drShape: %-8.2f", p.drShape);
+    Rprintf("\n\n");
 }
 

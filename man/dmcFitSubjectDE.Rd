@@ -13,6 +13,8 @@ dmcFitSubjectDE(
   nCAF = 5,
   nDelta = 19,
   pDelta = vector(),
+  varSP = TRUE,
+  rtMax = vector(),
   subjects = c(),
   control = list()
 )

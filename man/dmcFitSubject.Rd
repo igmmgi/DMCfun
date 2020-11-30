@@ -17,6 +17,8 @@ dmcFitSubject(
   nCAF = 5,
   nDelta = 19,
   pDelta = vector(),
+  varSP = TRUE,
+  rtMax = 5000,
   subjects = c(),
   printInputArgs = TRUE,
   printResults = FALSE,

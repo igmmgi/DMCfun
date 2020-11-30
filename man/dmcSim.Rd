@@ -21,6 +21,7 @@ dmcSim(
   varDR = FALSE,
   drShape = 3,
   drLim = c(0.1, 0.7),
+  rtMax = 5000,
   fullData = FALSE,
   nTrlData = 5,
   nDelta = 9,
@@ -63,6 +64,8 @@ dmcSim(
 \item{drShape}{shape parameter of drift rate}
 
 \item{drLim}{limit range of distribution of drift rate}
+
+\item{rtMax}{limit on simulated RT (decision + non-decisional component)}
 
 \item{fullData}{TRUE/FALSE (Default: FALSE)}
 

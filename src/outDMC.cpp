@@ -10,21 +10,23 @@
 void print_results(Prms &p, std::map<std::string, std::vector<double>> &rsum) {
 
     Rcpp::Rcout << "Results Summary:" << "\n";
-    Rcpp::Rcout << "\trtCor\tsdRtCor\tperErr\trtErr\tsdRtErr" << "\n";
+    Rcpp::Rcout << "\trtCor\tsdRtCor\tperErr\trtErr\tsdRtErr\tperSlow" << "\n";
     Rcpp::Rcout << "comp\t"
                 << std::fixed
                 << std::setprecision(0) << rsum["resSum_comp"][0] << "\t"
                 << std::setprecision(0) << rsum["resSum_comp"][1] << "\t"
                 << std::setprecision(2) << rsum["resSum_comp"][2] << "\t"
                 << std::setprecision(0) << rsum["resSum_comp"][3] << "\t"
-                << std::setprecision(0) << rsum["resSum_comp"][4] << "\n";
+                << std::setprecision(0) << rsum["resSum_comp"][4] << "\t"
+                << std::setprecision(1) << rsum["resSum_comp"][5] << "\n";
     Rcpp::Rcout << "incomp\t"
                 << std::fixed
                 << std::setprecision(0) << rsum["resSum_incomp"][0] << "\t"
                 << std::setprecision(0) << rsum["resSum_incomp"][1] << "\t"
                 << std::setprecision(2) << rsum["resSum_incomp"][2] << "\t"
                 << std::setprecision(0) << rsum["resSum_incomp"][3] << "\t"
-                << std::setprecision(0) << rsum["resSum_incomp"][4] << "\n\n";
+                << std::setprecision(0) << rsum["resSum_incomp"][4] << "\t"
+                << std::setprecision(1) << rsum["resSum_incomp"][5] << "\n\n";
 
     // results delta distribution
     Rcpp::Rcout << "Delta Values:\n" << "\t";
