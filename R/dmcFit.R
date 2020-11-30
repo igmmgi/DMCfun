@@ -549,7 +549,7 @@ dmcFitSubjectDE <- function(resOb,
                             nDelta   = 19,
                             pDelta   = vector(),
                             varSP    = TRUE,
-                            rtMax    = vector(),
+                            rtMax    = 5000,
                             subjects = c(),
                             control  = list()) {
   
