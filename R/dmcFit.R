@@ -218,9 +218,10 @@ dmcFit <- function(resOb,
                    spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
                    nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, nCAF = nCAF, varSP = varSP,
                    printResults = TRUE)
-  
-  dmcfit$prms <- NULL
-  dmcfit$par  <- prms
+
+  # fitted parameters  
+  dmcfit$prms <- NULL  # TO DO: Would this be useful to keep or is it only redundant?
+  dmcfit$par  <- prms  
   dmcfit$par["RMSE"] <- fit$value
   
   class(dmcfit) <- "dmcfit"
@@ -379,8 +380,9 @@ dmcFitDE <- function(resOb,
                    spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
                    nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, nCAF = nCAF, varSP = varSP,
                    printResults = TRUE)
-  
-  dmcfit$prms <- NULL
+ 
+  # fitted parameters 
+  dmcfit$prms <- NULL  # TO DO: Would this be useful to keep or is it only redundant?
   dmcfit$par  <- prms
   dmcfit$par["RMSE"] <- fit$optim$bestval
   
@@ -644,6 +646,7 @@ mean.dmcfit <- function(x, ...) {
                      perErr  = mean(perErr),
                      rtErr   = mean(rtErr),
                      sdRtErr = mean(sdRtErr), 
+                     perSlow = mean(perSlow), 
                      .groups = 'drop')
   
   # delta
