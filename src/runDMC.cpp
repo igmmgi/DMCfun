@@ -67,7 +67,7 @@ void run_dmc_sim_ci(Prms &p,
 
     std::vector<double> u_vec(p.tmax);
     for (auto i = 0u; i < u_vec.size(); i++)
-        u_vec[i] = sign * rsim["eq4"][i] * ((p.aaShape - 1) / (i + 1) - 1 / p.tau);
+        u_vec[i] = sign * rsim.at("eq4")[i] * ((p.aaShape - 1) / (i + 1) - 1 / p.tau);
 
     // variable drift rate/starting point?
     std::vector<double> dr(p.nTrl, p.drc);
