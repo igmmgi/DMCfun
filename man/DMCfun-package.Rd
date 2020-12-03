@@ -28,5 +28,10 @@ Useful links:
 \author{
 \strong{Maintainer}: Mackenzie G. Ian \email{ian.mackenzie@uni-tuebingen.de}
 
+Authors:
+\itemize{
+  \item Dudschig Carolin \email{carolin.dudschig@uni-tuebingen.de}
+}
+
 }
 \keyword{internal}
