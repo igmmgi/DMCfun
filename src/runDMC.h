@@ -26,7 +26,7 @@ void variable_starting_point(Prms &p, std::vector<double> &sp, int sign);
 
 std::vector<double> calculate_caf(std::vector<double> &rts, std::vector<double> &errs, int nBins);
 
-std::vector<double> linspace(int start, int end, int n);
+// std::vector<double> linspace(int start, int end, int n);
 
 void run_simulation(Prms &p, 
                     std::vector<double> &activation_sum, 

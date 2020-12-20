@@ -1,4 +1,5 @@
 #include <Rcpp.h>
+#include <vector>
 #include "inDMC.h"
 
 void print_input_args(Prms &p) {

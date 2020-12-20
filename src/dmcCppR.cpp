@@ -43,6 +43,17 @@ List dmcCppR(List r_in) {
   if (r_in.containsElementNamed("printResults"))   p.printResults   = as<bool>(r_in["printResults"]);
   if (r_in.containsElementNamed("setSeed"))        p.setSeed        = as<bool>(r_in["setSeed"]);
 
+  
+   // values for delta/CAF
+   if (!p.pDelta.empty()) {
+       p.vDelta = p.pDelta; // take specific values
+       p.vDelta.insert(p.vDelta.begin(), 0);
+       p.vDelta.push_back(100);
+   } else {
+       p.vDelta = linspace(0, 100, p.nDelta + 2);
+   }
+   p.vCAF = linspace(0, 100, p.nCAF + 1);
+  
   if (p.printInputArgs) print_input_args(p);
 
   std::map<std::string, std::vector<double>> rsum;                 // results summary
@@ -62,4 +73,15 @@ List dmcCppR(List r_in) {
     dmc["sim"]     = rsim;
   }
   return (dmc);
+}
+
+std::vector<double> linspace(int start, int end, int n) {
+    double step = (end - start) / double(n-1);
+    std::vector<double> out(n);
+    double val = start;
+    for (int i = 0; i < n; i++) {
+        out[i] = val;
+        val += step;
+    }
+    return out;
 }

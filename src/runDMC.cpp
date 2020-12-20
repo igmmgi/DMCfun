@@ -12,16 +12,6 @@ void run_dmc_sim(Prms &p,
                  std::map<std::string, std::vector<double>> &rsum, 
                  std::map<std::string, std::vector<double>> &rsim, 
                  std::map<std::string, std::vector<std::vector<double>>> &trials) {
-   
-   // values for delta/CAF
-   if (!p.pDelta.empty()) {
-       p.vDelta = p.pDelta; // take specific values
-       p.vDelta.insert(p.vDelta.begin(), 0);
-       p.vDelta.push_back(100);
-   } else {
-       p.vDelta = linspace(0, 100, p.nDelta + 2);
-   }
-   p.vCAF = linspace(0, 100, p.nCAF + 1);
     
     // equation 4
     std::vector<double> eq4(p.tmax);
@@ -269,16 +259,5 @@ std::vector<double> calculate_caf(std::vector<double> &rts, std::vector<double> 
     
     return res;                  
     
-}
-
-std::vector<double> linspace(int start, int end, int n) {
-    double step = (end - start) / double(n-1);
-    std::vector<double> out(n);
-    double val = start;
-    for (int i = 0; i < n; i++) {
-        out[i] = val;
-        val += step;
-    }
-    return out;
 }
 

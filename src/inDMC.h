@@ -1,6 +1,5 @@
 #ifndef CPP_INPUTS_HPP
 #define CPP_INPUTS_HPP
-#include <chrono>
 #include <vector>
 
 struct Prms {
@@ -36,5 +35,7 @@ struct Prms {
 };
 
 void print_input_args(Prms &p);
+
+std::vector<double> linspace(int start, int end, int n);
 
 #endif //CPP_INPUTS_HPP
