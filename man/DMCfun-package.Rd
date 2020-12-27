@@ -26,11 +26,11 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Mackenzie G. Ian \email{ian.mackenzie@uni-tuebingen.de}
+\strong{Maintainer}: Ian G. Mackenzie \email{ian.mackenzie@uni-tuebingen.de}
 
 Authors:
 \itemize{
-  \item Dudschig Carolin \email{carolin.dudschig@uni-tuebingen.de}
+  \item Carolin Dudschig \email{carolin.dudschig@uni-tuebingen.de}
 }
 
 }
