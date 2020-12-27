@@ -1,5 +1,3 @@
-# TO DO: repetition
-
 #' @title plot.dmcsim: Plot dmc simulation
 #'
 #' @description Plot the simulation results from the output of dmcSim. The plot
