@@ -19,7 +19,7 @@ Description:
   conflict-like tasks (e.g., Flanker task, Simon task). This R-package implements the DMC model and provides functionality
   to fit the model to observed data.
 URL: https://github.com/igmmgi/DMCfun, https://CRAN.R-project.org/package=DMCfun
-License: MIT + file license
+License: MIT + file LICENSE
 Encoding: UTF-8
 Depends: R (>= 3.5.0)
 Imports:
