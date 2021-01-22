@@ -55,6 +55,7 @@ of the CAF and CDF functions.
 \examples{
 \donttest{
 # Example 1: Flanker data from Ulrich et al. (2015)
+fit <- dmcFitSubjectDE(flankerData, nTrl = 1000) 
 fit <- dmcFitSubjectDE(flankerData, nTrl = 1000, subjects = c(1, 2))
 plot(fit, flankerData, subject = 1)
 plot(fit, flankerData, subject = 2)
