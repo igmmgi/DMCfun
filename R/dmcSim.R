@@ -89,7 +89,7 @@ dmcSim <- function(amp = 20, tau = 30, drc = 0.5, bnds = 75, resMean = 300, resS
   dmc <- dmcCppR(r_in = list(amp = amp, tau = tau, drc = drc, bnds = bnds, resMean = resMean, resSD = resSD, aaShape = aaShape, spShape = spShape,
                              sigm = sigm,  nTrl = nTrl, tmax = tmax,
                              varSP = varSP, spLimLow = spLim[1], spLimHigh = spLim[2],
-                             varDR = varDR, drShape = 3, drLimLow = drLim[1], drLimHigh = drLim[2], 
+                             varDR = varDR, drShape = drShape, drLimLow = drLim[1], drLimHigh = drLim[2], 
                              rtMax = rtMax, 
                              fullData = fullData, nTrlData = nTrlData,
                              nDelta = nDelta, pDelta = pDelta, nCAF = nCAF,
