@@ -456,7 +456,7 @@ dmcFitSubject <- function(resOb,
                           maxit           = 500) {
   
   if (length(subjects) == 0) {
-    subjects = unique(resOb$summarySubject$subjects)  # fit all individual subjects in data
+    subjects = unique(resOb$summarySubject$Subject)  # fit all individual subjects in data
   }
   
   # default parameter space
@@ -529,6 +529,7 @@ dmcFitSubject <- function(resOb,
 #' @examples
 #' \donttest{
 #' # Example 1: Flanker data from Ulrich et al. (2015)
+#' fit <- dmcFitSubjectDE(flankerData, nTrl = 1000) 
 #' fit <- dmcFitSubjectDE(flankerData, nTrl = 1000, subjects = c(1, 2))
 #' plot(fit, flankerData, subject = 1)
 #' plot(fit, flankerData, subject = 2)
@@ -556,7 +557,7 @@ dmcFitSubjectDE <- function(resOb,
                             control  = list()) {
   
   if (length(subjects) == 0) {
-    subjects = unique(resOb$summarySubject$subjects)  # fit all individual subjects in data
+    subjects = unique(resOb$summarySubject$Subject)  # fit all individual subjects in data
   }
   
   # default parameter space
