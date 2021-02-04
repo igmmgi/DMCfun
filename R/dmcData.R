@@ -399,11 +399,11 @@ dmcObservedData <- function(dat,
   # DELTA
   datSubject_dec <- dat %>%
     dplyr::filter(Error == 0, RT >= rtMin, RT <= rtMax) %>%
-    calculateDelta(., nDelta = nDelta)
+    calculateDelta(., nDelta = nDelta, quantileType = quantileType)
 
   datAgg_dec <- datSubject_dec %>%
     dplyr::mutate(mEffect = meanEffect) %>%
-    dplyr::group_by(bin) %>%
+    dplyr::group_by(bin, binN) %>%
     dplyr::summarize(meanComp   = mean(meanComp),
                      meanIncomp = mean(meanIncomp),
                      meanBin    = mean(meanBin),
@@ -428,7 +428,7 @@ dmcObservedData <- function(dat,
 
   # delta
   obj$deltaSubject        <- as.data.frame(datSubject_dec)
-  names(obj$deltaSubject) <- c("Subject", "bin", "meanComp", "meanIncomp", "meanBin", "meanEffect")
+  names(obj$deltaSubject) <- c("Subject", "binN", "bin", "meanComp", "meanIncomp", "meanBin", "meanEffect")
   obj$delta               <- as.data.frame(datAgg_dec)
 
   class(obj) <- "dmcob"
@@ -606,16 +606,29 @@ calculateDelta <- function(dat,
 
   dat_delta <- dat %>%
     dplyr::group_by(Subject, Comp) %>%
-    dplyr::summarize(bin     = deltaSeq,
+    dplyr::summarize(binN    = seq(1, length(deltaSeq)),
+                     bin     = deltaSeq,
                      rt      = quantile(RT, deltaSeq/100, type = quantileType),
                      .groups = 'drop')  %>%
-    tidyr::pivot_wider(., id_cols = c("Subject", "bin"), names_from = "Comp", values_from = "rt") %>%
+    tidyr::pivot_wider(., id_cols = c("Subject", "binN", "bin"), names_from = "Comp", values_from = "rt") %>%
     dplyr::mutate(meanComp   = comp,
                   meanIncomp = incomp,
                   meanBin    = (comp + incomp)/2,
                   meanEffect = (incomp - comp)) %>%
     dplyr::select(-dplyr::one_of("comp", "incomp"))
-
+  
+  # dat_delta <- dat %>%
+  #   dplyr::group_by(Subject, Comp) %>%
+  #   dplyr::mutate(bin = ntile(RT, nDelta)) %>%
+  #   dplyr::group_by(Subject, Comp, bin) %>%
+  #   dplyr::summarize(RT = mean(RT)) %>%
+  #   tidyr::pivot_wider(., id_cols = c("Subject", "bin"), names_from = "Comp", values_from = "RT") %>%
+  #   dplyr::mutate(meanComp   = comp,
+  #                 meanIncomp = incomp,
+  #                 meanBin    = (comp + incomp)/2,
+  #                 meanEffect = (incomp - comp)) %>%
+  #   dplyr::select(-dplyr::one_of("comp", "incomp"))
+ 
   return(dat_delta)
 
 }
