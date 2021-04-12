@@ -603,7 +603,7 @@ calculateDelta <- function(dat,
  
   deltaSeq <- seq(0, 100, length.out = nDelta + 2) 
   deltaSeq <- deltaSeq[2:(length(deltaSeq)-1)]
-
+  
   dat_delta <- dat %>%
     dplyr::group_by(Subject, Comp) %>%
     dplyr::summarize(binN    = seq(1, length(deltaSeq)),
@@ -616,19 +616,20 @@ calculateDelta <- function(dat,
                   meanBin    = (comp + incomp)/2,
                   meanEffect = (incomp - comp)) %>%
     dplyr::select(-dplyr::one_of("comp", "incomp"))
-  
+   
   # dat_delta <- dat %>%
   #   dplyr::group_by(Subject, Comp) %>%
-  #   dplyr::mutate(bin = ntile(RT, nDelta)) %>%
-  #   dplyr::group_by(Subject, Comp, bin) %>%
-  #   dplyr::summarize(RT = mean(RT)) %>%
-  #   tidyr::pivot_wider(., id_cols = c("Subject", "bin"), names_from = "Comp", values_from = "RT") %>%
+  #   dplyr::mutate(binN = ntile(RT, nDelta),
+  #                 bin  = binN) %>%
+  #   dplyr::group_by(Subject, Comp, binN, bin) %>%
+  #   dplyr::summarize(rt = mean(RT)) %>%
+  #   tidyr::pivot_wider(., id_cols = c("Subject", "binN", "bin"), names_from = "Comp", values_from = "rt") %>%
   #   dplyr::mutate(meanComp   = comp,
   #                 meanIncomp = incomp,
   #                 meanBin    = (comp + incomp)/2,
   #                 meanEffect = (incomp - comp)) %>%
   #   dplyr::select(-dplyr::one_of("comp", "incomp"))
- 
+  
   return(dat_delta)
 
 }
