@@ -1,8 +1,8 @@
-#' @title dmcFit: Fit DMC to aggregated data using R-package optimr (Nelder-Mead)
+#' @title dmcFit: Fit DMC to aggregated data using R-package optimx (Nelder-Mead)
 #'
 #' @description Fit theoretical data generated from dmcSim to observed data by
 #' minimizing the root-mean-square error (RMSE) between a weighted combination
-#' of the CAF and CDF functions using the R-package optimr (Nelder-Mead).
+#' of the CAF and CDF functions using the R-package optimx (Nelder-Mead).
 #'
 #' @param resOb Observed data (see flankerData and simonTask for data format)
 #' @param nTrl Number of trials to use within dmcSim.
@@ -193,15 +193,15 @@ dmcFit <- function(resOb,
   }
   
   # optimize
-  fit <- optimr::optimr(par = startVals[!as.logical(fixedFit)], fn = minimizeCostValue,
+  fit <- optimx::optimx(par = as.numeric(startVals[!as.logical(fixedFit)]), fn = minimizeCostValue,
                         prms = prms, fixedFit = fixedFit, resOb = resOb,
                         nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, nCAF = nCAF, varSP = varSP, 
                         rtMax = rtMax, minVals = minVals, maxVals = maxVals,
                         printInputArgs = printInputArgs, printResults = printResults,
                         method = "Nelder-Mead",
                         control = list(parscale = parScale[!as.logical(fixedFit)], maxit = maxit))
-    
-  prms[!as.logical(fixedFit)] <- fit$par
+  
+  prms[!as.logical(fixedFit)] <- fit[1:attr(fit, "npar")]
   
   # bounds check
   prms <- pmax(unlist(prms), unlist(minVals))
@@ -393,7 +393,7 @@ dmcFitDE <- function(resOb,
 }
 
 
-#' @title dmcFitSubject: Fit DMC to aggregated data using R-package optimr (Nelder-Mead)
+#' @title dmcFitSubject: Fit DMC to aggregated data using R-package optimx (Nelder-Mead)
 #'
 #' @description Fit theoretical data generated from dmcSim to observed data by
 #' minimizing the root-mean-square error (RMSE) between a weighted combination

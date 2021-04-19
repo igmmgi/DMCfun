@@ -2,7 +2,7 @@
 % Please edit documentation in R/dmcFit.R
 \name{dmcFitSubject}
 \alias{dmcFitSubject}
-\title{dmcFitSubject: Fit DMC to aggregated data using R-package optimr (Nelder-Mead)}
+\title{dmcFitSubject: Fit DMC to aggregated data using R-package optimx (Nelder-Mead)}
 \usage{
 dmcFitSubject(
   resOb,

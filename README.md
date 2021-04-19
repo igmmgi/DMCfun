@@ -53,7 +53,7 @@ plot(dmc, ncol = 2, col = c("red", "green"))
 ```
 ![alt text](figures/figure4.png)     
 
-## Basic Examples DMC Fit: Real data using optimr (Nelder-Mead)
+## Basic Examples DMC Fit: Real data using optimx (Nelder-Mead)
 ``` r
 fit <- dmcFit(flankerData) # flanker data from Ulrich et al. (2015)
 plot(fit, flankerData)
