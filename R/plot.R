@@ -159,8 +159,8 @@ plot.dmcsim <- function(x,
          ylim = c(-x$prms$bnds - 20, x$prms$bnds + 20),
          xlab = xlabs[1], ylab = ylabs[1],
          xaxt = xaxts, yaxt = yaxts, ...)
-    if (xaxts == "n") axis(side=1, labels = FALSE)  # keep tick marks
-    if (yaxts == "n") axis(side=2, labels = FALSE)  # keep tick marks
+    if (xaxts == "n") axis(side = 1, labels = FALSE)  # keep tick marks
+    if (yaxts == "n") axis(side = 2, labels = FALSE)  # keep tick marks
     
     lines(c(1:x$prms$tmax), -x$sim$eq4, type = "l", lty = 2, col = tail(cols, 2)[2], ...)
     
@@ -194,8 +194,8 @@ plot.dmcsim <- function(x,
          ylim = c(-x$prms$bnds - 20, x$prms$bnds + 20),
          xlab = xlabs[2], ylab = ylabs[2],
          xaxt = xaxts, yaxt = yaxts, ...)
-    if (xaxts == "n") axis(side=1, labels = FALSE)  # keep tick marks
-    if (yaxts == "n") axis(side=2, labels = FALSE)  # keep tick marks
+    if (xaxts == "n") axis(side = 1, labels = FALSE)  # keep tick marks
+    if (yaxts == "n") axis(side = 2, labels = FALSE)  # keep tick marks
     
     lines(c(0, x$prms$tmax), c(-x$prms$bnds, -x$prms$bnds), type = "l", col = "darkgrey", ...)
     
@@ -412,12 +412,6 @@ plot.dmclist <- function(x,
   
   # colour range
   cols <- colorRampPalette(col)(length(x))
-  
-  # plot
-  plot(x[[1]]$delta$meanBin, x[[1]]$delta$meanEffect, type = lineType,
-       ylim = ylim, xlim = xlim,
-       ylab = expression(Delta), xlab = "Time [ms]", col = cols[1], ...)
-
   
   # plot
   plot(NULL, NULL, 

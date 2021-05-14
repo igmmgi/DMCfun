@@ -161,7 +161,7 @@ dmcSims <- function(params,
 
   params  <- expand.grid(params)
   if (ncol(params) > 1) {
-    uparams <- params[, lengths(lapply(params, unique)) != 1]
+    uparams <- params[, lengths(lapply(params, unique)) != 1, drop = FALSE]
   } else {
     uparams <- params
   }
@@ -172,7 +172,7 @@ dmcSims <- function(params,
 
     # inputs for each dmcSim call taken from params + add default of not printing individual results
     dmcInputs <- params[[i]]
-    message("DMC ", i, " of ", length(params), ": ", paste0(names(dmcInputs), "=", dmcInputs, sep="", collapse=", "))
+    message("DMC ", i, " of ", length(params), ": ", paste0(names(dmcInputs), "=", dmcInputs, sep = "", collapse = ", "))
     dmcInputs$printInputArgs <- printInputArgs
     dmcInputs$printResults   <- printResults
 
