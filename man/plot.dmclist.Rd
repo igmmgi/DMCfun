@@ -40,7 +40,7 @@ Plot delta function from multiple dmc simulations (i.e., dmcSims).
 # Example 1
 params <- list(amp = seq(20, 30, 2))
 dmc <- dmcSims(params)
-plot(dmc, ncol = 2, xlim = c(0, 1300), ylim = c(-100, 200))
+plot(dmc, ncol = 2, xlim = c(0, 1300), ylim = c(-100, 200), col = c("red", "green"))
 
 # Example 2
 params <- list(amp=c(10, 20), tau = seq(20, 80, 40), drc = seq(0.2, 0.6, 0.2), nTrl = 50000)
