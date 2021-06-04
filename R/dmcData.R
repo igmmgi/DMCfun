@@ -458,7 +458,7 @@ dmcObservedData <- function(dat,
 dmcCombineObservedData <- function(...) {
   dat <- list(...) 
   class(dat) <- "dmcobs"
-  return (dat)
+  return(dat)
 }
 
 
@@ -602,7 +602,7 @@ calculateDelta <- function(dat,
   }
  
   deltaSeq <- seq(0, 100, length.out = nDelta + 2) 
-  deltaSeq <- deltaSeq[2:(length(deltaSeq)-1)]
+  deltaSeq <- deltaSeq[2:(length(deltaSeq) - 1)]
   
   dat_delta <- dat %>%
     dplyr::group_by(Subject, Comp) %>%
