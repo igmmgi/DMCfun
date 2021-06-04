@@ -13,6 +13,7 @@ dmcFitSubjectDE(
   nCAF = 5,
   nDelta = 19,
   pDelta = vector(),
+  costFunction = "RMSE",
   varSP = TRUE,
   rtMax = 5000,
   subjects = c(),
@@ -35,6 +36,8 @@ dmcFitSubjectDE(
 \item{nDelta}{Number of delta bins.}
 
 \item{pDelta}{Alternative to nDelta by directly specifying required percentile values}
+
+\item{costFunction}{Cost function to minimise root mean square error ("RMSE": default) or squared percentage error ("SPE")}
 
 \item{varSP}{Variable starting point TRUE/FALSE}
 

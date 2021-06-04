@@ -19,6 +19,7 @@ dmcFit(
   pDelta = vector(),
   varSP = TRUE,
   rtMax = 5000,
+  costFunction = "RMSE",
   printInputArgs = TRUE,
   printResults = FALSE,
   maxit = 500
@@ -62,6 +63,8 @@ resSD = T, aaShape = T, spShape = T, sigm = T))}
 \item{varSP}{Variable starting point TRUE/FALSE}
 
 \item{rtMax}{limit on simulated RT (decision + non-decisional component)}
+
+\item{costFunction}{Cost function to minimise root mean square error ("RMSE": default) or squared percentage error ("SPE")}
 
 \item{printInputArgs}{TRUE/FALSE}
 

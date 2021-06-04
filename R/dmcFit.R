@@ -26,6 +26,7 @@
 #' @param nCAF Number of CAF bins. 
 #' @param nDelta Number of delta bins. 
 #' @param pDelta Alternative to nDelta by directly specifying required percentile values   
+#' @param costFunction Cost function to minimise root mean square error ("RMSE": default) or squared percentage error ("SPE") 
 #' @param rtMax limit on simulated RT (decision + non-decisional component)
 #' @param varSP Variable starting point TRUE/FALSE
 #' @param printInputArgs TRUE/FALSE
@@ -89,6 +90,7 @@ dmcFit <- function(resOb,
                    pDelta          = vector(),
                    varSP           = TRUE,
                    rtMax           = 5000,
+                   costFunction    = "RMSE",
                    printInputArgs  = TRUE,
                    printResults    = FALSE, 
                    maxit           = 500) {
@@ -101,14 +103,16 @@ dmcFit <- function(resOb,
   defaultFixedGrid <- list(amp = T,  tau = F,   drc = T,   bnds = T,   resMean = T,   resSD = T,   aaShape = T, spShape = T, sigm = T)
   
   startVals <- modifyList(defaultStartVals, startVals)
+  if (!fitInitialGrid) { 
+    startVals <- unlist(startVals) 
+  }
   minVals   <- modifyList(defaultMinVals,   minVals)
   maxVals   <- modifyList(defaultMaxVals,   maxVals)
   fixedFit  <- modifyList(defaultFixedFit,  fixedFit)
   fixedGrid <- modifyList(defaultFixedGrid, fixedGrid)
   
   parScale  <- unlist(startVals) / min(unlist(startVals))
-  
-  prms <- startVals
+  prms      <- startVals
   
   # check observed data contains correct number of delta/CAF bins
   if (nrow(resOb$delta) != nDelta) {
@@ -117,24 +121,12 @@ dmcFit <- function(resOb,
   if ((nrow(resOb$caf)/2) != nCAF) {
     stop("Number of CAF bins in observed data and nCAF bins are not equal!")
   }
-  
-  # function to minimise
-  minimizeCostValue <- function(x, prms, fixedFit, resOb, nTrl, nDelta, pDelta, nCAF, varSP, rtMax, minVals, maxVals, printInputArgs, printResults) {
-    
-    prms[!as.logical(fixedFit)] <- x
-    
-    # implement bounds
-    prms <- as.list(pmax(unlist(prms), unlist(minVals)))
-    prms <- as.list(pmin(unlist(prms), unlist(maxVals)))
-    
-    resTh <- dmcSim(amp = prms$amp, tau = prms$tau, drc = prms$drc, bnds = prms$bnds,
-                    resMean = prms$resMean, resSD = prms$resSD, rtMax = rtMax, aaShape = prms$aaShape,
-                    spShape = prms$spShape, sigm = prms$sigm, spLim = c(-prms$bnds, prms$bnds),
-                    nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, nCAF = nCAF, varSP = varSP,
-                    printInputArgs = printInputArgs, printResults = printResults)
-    
-    return(calculateCostValue(resTh, resOb))
-    
+ 
+  # which cost function?
+  if (costFunction == "RMSE") {
+    calculateCostValue <- calculateCostValueRMSE
+  } else if (costFunction == "SPE") {
+    calculateCostValue <- calculateCostValueSPE
   }
   
   ############################# FIT PROCEDURE ##################################
@@ -166,7 +158,7 @@ dmcFit <- function(resOb,
     # R CMD check --as-cran -->  doSNOW warning “superseded packages”
     # Use pbapply for progress bar
     # https://stackoverflow.com/questions/58473626/r-doparallel-progress-bar-to-monitor-finished-jobs
-    
+   
     pCostValue <- function(i){
       resTh <- dmcSim(amp = startValsGrid$amp[i], tau = startValsGrid$tau[i], drc = startValsGrid$drc[i],
                       bnds = startValsGrid$bnds[i], resMean = startValsGrid$resMean[i], resSD = startValsGrid$resSD[i], rtMax = rtMax,
@@ -178,7 +170,7 @@ dmcFit <- function(resOb,
     }
     
     cl <- parallel::makeCluster(num_cores)
-    invisible(parallel::clusterExport(cl = cl, varlist=c("dmcSim", "calculateCostValue")))
+    invisible(parallel::clusterExport(cl = cl, varlist = c("dmcSim", "calculateCostValue"), envir = environment()))
     
     # calculate initial cost values across grid starting values and find min
     costValue <- pbapply::pblapply(cl = cl, X = 1:nrow(startValsGrid), FUN = pCostValue)
@@ -186,15 +178,11 @@ dmcFit <- function(resOb,
     
     parallel::stopCluster(cl)
     
-  } else {
-    
-    startVals <- unlist(startVals)
-    
   }
   
   # optimize
   fit <- optimx::optimx(par = as.numeric(startVals[!as.logical(fixedFit)]), fn = minimizeCostValue,
-                        prms = prms, fixedFit = fixedFit, resOb = resOb,
+                        costFunction = calculateCostValue, prms = prms, fixedFit = fixedFit, resOb = resOb,
                         nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, nCAF = nCAF, varSP = varSP, 
                         rtMax = rtMax, minVals = minVals, maxVals = maxVals,
                         printInputArgs = printInputArgs, printResults = printResults,
@@ -211,7 +199,7 @@ dmcFit <- function(resOb,
   }
   prms <- as.list(prms)
   
-  message(sprintf("RMSE: %.3f\n", fit$value))
+  message(sprintf("%s: %.3f\n", costFunction, fit$value))
   dmcfit <- dmcSim(amp = prms$amp, tau = prms$tau, drc = prms$drc,
                    bnds = prms$bnds, resMean = prms$resMean, resSD = prms$resSD, rtMax = rtMax,
                    aaShape = prms$aaShape, sigm = prms$sigm,
@@ -252,6 +240,7 @@ dmcFit <- function(resOb,
 #' @param nCAF Number of CAF bins. 
 #' @param nDelta Number of delta bins. 
 #' @param pDelta Alternative to nDelta by directly specifying required percentile values   
+#' @param costFunction Cost function to minimise root mean square error ("RMSE": default) or squared percentage error ("SPE") 
 #' @param rtMax limit on simulated RT (decision + non-decisional component)
 #' @param varSP Variable starting point TRUE/FALSE
 #' @param control Additional control parameters passes to DEoptim  
@@ -281,37 +270,26 @@ dmcFit <- function(resOb,
 #'
 #' @export
 dmcFitDE <- function(resOb,
-                     nTrl     = 100000,
-                     minVals  = list(),
-                     maxVals  = list(),
-                     fixedFit = list(),
-                     nCAF     = 5,
-                     nDelta   = 19,
-                     pDelta   = vector(), 
-                     varSP    = TRUE,
-                     rtMax    = 5000, 
-                     control  = list()) {
-  
-  # R check limits number of cores to 2 (https://stackoverflow.com/questions/50571325/r-cran-check-fail-when-using-parallel-functions)
-  chk <- tolower(Sys.getenv("_R_CHECK_LIMIT_CORES_", ""))
-  if (nzchar(chk) && (chk == "true")) {
-    num_cores <- 2L
-  } else {
-    num_cores <- parallel::detectCores() / 2
-  }
-  cl <- parallel::makeCluster(num_cores)
-  invisible(parallel::clusterExport(cl = cl, varlist=c("dmcSim", "calculateCostValue")))
+                     nTrl         = 100000,
+                     minVals      = list(),
+                     maxVals      = list(),
+                     fixedFit     = list(),
+                     nCAF         = 5,
+                     nDelta       = 19,
+                     pDelta       = vector(), 
+                     costFunction = "RMSE",
+                     varSP        = TRUE,
+                     rtMax        = 5000, 
+                     control      = list()) {
   
   # default parameter space
   defaultMinVals  <- list(amp = 10, tau =   5, drc = 0.1, bnds =  20, resMean = 200, resSD =  5,  aaShape = 1, spShape = 2, sigm = 4)
   defaultMaxVals  <- list(amp = 40, tau = 300, drc = 1.0, bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, sigm = 4)
   defaultFixedFit <- list(amp = F,  tau = F,   drc = F,   bnds = F,   resMean = F,   resSD = F,   aaShape = F, spShape = F, sigm = T)
-  defaultControl  <- list(VTR = 1,  strategy = 1, NP = 100, itermax  = 200, trace = 1, cluster = cl )
   
   minVals  <- modifyList(defaultMinVals,  minVals)
   maxVals  <- modifyList(defaultMaxVals,  maxVals)
   fixedFit <- modifyList(defaultFixedFit, fixedFit)
-  control  <- modifyList(defaultControl,  control)
   
   prms <- (unlist(minVals) + unlist(maxVals)) / 2  # start in middle of min/max vals
   
@@ -323,28 +301,30 @@ dmcFitDE <- function(resOb,
     stop("Number of CAF bins in observed data and nCAF bins are not equal!")
   }
   
-  # function to minimise
-  minimizeCostValue <- function(x, prms, fixedFit, minVals, maxVals, resOb, nTrl, nDelta, nCAF, varSP, pDelta, rtMax, printInputArgs, printResults) {
-    
-    prms[!as.logical(fixedFit)] <- x
-    
-    # implement bounds
-    prms <- as.list(pmax(unlist(prms), unlist(minVals)))
-    prms <- as.list(pmin(unlist(prms), unlist(maxVals)))
-    
-    resTh <- dmcSim(amp = prms$amp, tau = prms$tau, drc = prms$drc, bnds = prms$bnds,
-                    resMean = prms$resMean, resSD = prms$resSD, rtMax = rtMax, aaShape = prms$aaShape,
-                    spShape = prms$spShape, sigm = prms$sigm, spLim = c(-prms$bnds, prms$bnds),
-                    nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, nCAF = nCAF, varSP = varSP,
-                    printInputArgs = printInputArgs, printResults = printResults)
-    
-    return(calculateCostValue(resTh, resOb))
-    
+  # cost function 
+  if (costFunction == "RMSE") {
+    calculateCostValue <- calculateCostValueRMSE
+  } else if (costFunction == "SPE") {
+    calculateCostValue <- calculateCostValueSPE
   }
-   
+  
+  # R check limits number of cores to 2 (https://stackoverflow.com/questions/50571325/r-cran-check-fail-when-using-parallel-functions)
+  chk <- tolower(Sys.getenv("_R_CHECK_LIMIT_CORES_", ""))
+  if (nzchar(chk) && (chk == "true")) {
+    num_cores <- 2L
+  } else {
+    num_cores <- parallel::detectCores() / 2
+  }
+  cl <- parallel::makeCluster(num_cores)
+  invisible(parallel::clusterExport(cl = cl, varlist = c("dmcSim", "calculateCostValue"), envir = environment()))
+  
+  defaultControl <- list(VTR = 0,  strategy = 1, NP = 100, itermax  = 200, trace = 1, cluster = cl )
+  control        <- modifyList(defaultControl,  control)
+  
   fit = DEoptim::DEoptim(fn = minimizeCostValue, 
                          lower = unlist(minVals[!as.logical(fixedFit)]), 
                          upper = unlist(maxVals[!as.logical(fixedFit)]), 
+                         costFunction = calculateCostValue,
                          prms = prms, 
                          fixedFit = fixedFit,  
                          minVals = minVals, 
@@ -358,7 +338,7 @@ dmcFitDE <- function(resOb,
                          rtMax = rtMax, 
                          printInputArgs = FALSE,  
                          printResults = FALSE, 
-                         control = control) 
+                         control = control)  
   
   parallel::stopCluster(cl)
 
@@ -373,7 +353,7 @@ dmcFitDE <- function(resOb,
   }
   prms <- as.list(prms)
   
-  message(sprintf("RMSE: %.3f\n", fit$optim$bestval))
+  message(sprintf("%s: %.3f\n", costFunction, fit$optim$bestval))
   dmcfit <- dmcSim(amp = prms$amp, tau = prms$tau, drc = prms$drc,
                    bnds = prms$bnds, resMean = prms$resMean, resSD = prms$resSD, rtMax = rtMax,
                    aaShape = prms$aaShape, sigm = prms$sigm,
@@ -411,6 +391,7 @@ dmcFitDE <- function(resOb,
 #' @param nCAF Number of CAF bins. 
 #' @param nDelta Number of delta bins. 
 #' @param pDelta Alternative to nDelta by directly specifying required percentile values   
+#' @param costFunction Cost function to minimise root mean square error ("RMSE": default) or squared percentage error ("SPE") 
 #' @param varSP Variable starting point TRUE/FALSE
 #' @param rtMax limit on simulated RT (decision + non-decisional component)
 #' @param subjects NULL (aggregated data across all subjects) or integer for subject number
@@ -448,6 +429,7 @@ dmcFitSubject <- function(resOb,
                           nCAF            = 5,
                           nDelta          = 19,
                           pDelta          = vector(),
+                          costFunction    = "RMSE",
                           varSP           = TRUE,
                           rtMax           = 5000,
                           subjects        = c(),
@@ -490,6 +472,7 @@ dmcFitSubject <- function(resOb,
                                 nCAF            = nCAF,
                                 nDelta          = nDelta,
                                 pDelta          = pDelta,
+                                costFunction    = costFunction,
                                 varSP           = varSP,
                                 rtMax           = rtMax,
                                 printInputArgs  = printInputArgs,
@@ -519,6 +502,7 @@ dmcFitSubject <- function(resOb,
 #' @param nCAF Number of CAF bins. 
 #' @param nDelta Number of delta bins. 
 #' @param pDelta Alternative to nDelta by directly specifying required percentile values   
+#' @param costFunction Cost function to minimise root mean square error ("RMSE": default) or squared percentage error ("SPE") 
 #' @param varSP Variable starting point TRUE/FALSE
 #' @param rtMax limit on simulated RT (decision + non-decisional component)
 #' @param subjects NULL (aggregated data across all subjects) or integer for subject number
@@ -544,17 +528,18 @@ dmcFitSubject <- function(resOb,
 #'
 #' @export
 dmcFitSubjectDE <- function(resOb,
-                            nTrl     = 100000,
-                            minVals  = list(),
-                            maxVals  = list(),
-                            fixedFit = list(),
-                            nCAF     = 5,
-                            nDelta   = 19,
-                            pDelta   = vector(),
-                            varSP    = TRUE,
-                            rtMax    = 5000,
-                            subjects = c(),
-                            control  = list()) {
+                            nTrl         = 100000,
+                            minVals      = list(),
+                            maxVals      = list(),
+                            fixedFit     = list(),
+                            nCAF         = 5,
+                            nDelta       = 19,
+                            pDelta       = vector(),
+                            costFunction = "RMSE",
+                            varSP        = TRUE,
+                            rtMax        = 5000,
+                            subjects     = c(),
+                            control      = list()) {
   
   if (length(subjects) == 0) {
     subjects = unique(resOb$summarySubject$Subject)  # fit all individual subjects in data
@@ -578,16 +563,17 @@ dmcFitSubjectDE <- function(resOb,
                          cafAgg = resOb$cafSubject[resOb$cafSubject$Subject == subject,])
     
     dmcfit[[subject]] <- dmcFitDE(resObSubject,
-                                  nTrl     = nTrl,
-                                  minVals  = minVals,
-                                  maxVals  = maxVals,
-                                  fixedFit = fixedFit,
-                                  nCAF     = nCAF,
-                                  nDelta   = nDelta,
-                                  pDelta   = pDelta,
-                                  varSP    = varSP,
-                                  rtMax    = rtMax,
-                                  control  = control) 
+                                  nTrl         = nTrl,
+                                  minVals      = minVals,
+                                  maxVals      = maxVals,
+                                  fixedFit     = fixedFit,
+                                  nCAF         = nCAF,
+                                  nDelta       = nDelta,
+                                  pDelta       = pDelta,
+                                  costFunction = costFunction,
+                                  varSP        = varSP,
+                                  rtMax        = rtMax,
+                                  control      = control) 
     
   }
   
@@ -685,9 +671,40 @@ mean.dmcfit <- function(x, ...) {
   
 }
 
+# function to minimise
+minimizeCostValue <- function(x, 
+                              costFunction, 
+                              prms, 
+                              fixedFit, 
+                              resOb, 
+                              nTrl, 
+                              nDelta, 
+                              pDelta, 
+                              nCAF, 
+                              varSP, 
+                              rtMax, 
+                              minVals, 
+                              maxVals, 
+                              printInputArgs, 
+                              printResults) {
+  
+  prms[!as.logical(fixedFit)] <- x
+  
+  # implement bounds
+  prms <- as.list(pmax(unlist(prms), unlist(minVals)))
+  prms <- as.list(pmin(unlist(prms), unlist(maxVals)))
+  
+  resTh <- dmcSim(amp = prms$amp, tau = prms$tau, drc = prms$drc, bnds = prms$bnds,
+                  resMean = prms$resMean, resSD = prms$resSD, rtMax = rtMax, aaShape = prms$aaShape,
+                  spShape = prms$spShape, sigm = prms$sigm, spLim = c(-prms$bnds, prms$bnds),
+                  nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, nCAF = nCAF, varSP = varSP,
+                  printInputArgs = printInputArgs, printResults = printResults)
+  
+  return(costFunction(resTh, resOb))
+  
+}
 
-
-#' @title calculateCostValue: Calculate RMSE from RT and error data
+#' @title calculateCostValueRMSE: Calculate RMSE from RT and error data
 #'
 #' @description Calculate cost value (fit) from combination of RT and error rate.
 #'
@@ -702,15 +719,15 @@ mean.dmcfit <- function(x, ...) {
 #' # Example 1:
 #' resTh <- dmcSim()
 #' resOb <- dmcSim()
-#' cost  <- calculateCostValue(resTh, resOb)
+#' cost  <- calculateCostValueRMSE(resTh, resOb)
 #'
 #' # Example 2:
 #' resTh <- dmcSim()
 #' resOb <- dmcSim(tau = 150)
-#' cost  <- calculateCostValue(resTh, resOb)
+#' cost  <- calculateCostValueRMSE(resTh, resOb)
 #'
 #' @export
-calculateCostValue <- function(resTh, resOb) {
+calculateCostValueRMSE <- function(resTh, resOb) {
   
   n_rt  <- nrow(resTh$delta) * 2
   n_err <- nrow(resTh$caf)
@@ -731,3 +748,45 @@ calculateCostValue <- function(resTh, resOb) {
   return(costValue)
   
 }
+
+#' @title calculateCostValueSPE: Calculate squared percentage error (SPE) from RT and error data
+#'
+#' @description Calculate cost value (fit) from combination of RT and error rate.
+#'
+#' @param resTh list containing caf values for comp/incomp conditions (nbins*2*3) and
+#' delta values for comp/incomp conditions (nbins*5). See output from dmcSim (.$caf).
+#' @param resOb list containing caf values for comp/incomp conditions (n*2*3) and
+#' delta values for comp/incomp conditions (nbins*5). See output from dmcSim ($delta).
+#'
+#' @return cost value (SPE)
+#'
+#' @examples
+#' # Example 1:
+#' resTh <- dmcSim()
+#' resOb <- dmcSim()
+#' cost  <- calculateCostValueSPE(resTh, resOb)
+#'
+#' # Example 2:
+#' resTh <- dmcSim()
+#' resOb <- dmcSim(tau = 150)
+#' cost  <- calculateCostValueSPE(resTh, resOb)
+#'
+#' @export
+calculateCostValueSPE <- function(resTh, resOb) {
+ 
+  costCAF <- sum(((resOb$caf$accPer  - resTh$caf$accPer) / resOb$caf$accPer)**2)
+  costRT <- sum(((resOb$delta[,2:3]  - resTh$delta[,2:3]) / resOb$delta[2:3])**2)
+  
+  costValue <- costRT + costCAF 
+  
+  if (is.na(costValue)) {
+    costValue = Inf;
+  }
+  
+  message("SPE: ", round(costValue, 3))
+  
+  return(costValue)
+  
+}
+
+
