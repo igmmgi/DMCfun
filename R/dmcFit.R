@@ -788,5 +788,3 @@ calculateCostValueSPE <- function(resTh, resOb) {
   return(costValue)
   
 }
-
-

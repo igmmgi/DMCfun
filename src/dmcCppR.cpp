@@ -13,12 +13,13 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 
 List dmcCppR(List r_in) {
-
+  
   Prms p; // default parameters
   if (r_in.containsElementNamed("amp"))            p.amp            = as<double>(r_in["amp"]);
   if (r_in.containsElementNamed("tau"))            p.tau            = as<double>(r_in["tau"]);
   if (r_in.containsElementNamed("drc"))            p.drc            = as<double>(r_in["drc"]);
   if (r_in.containsElementNamed("bnds"))           p.bnds           = as<double>(r_in["bnds"]);
+  if (r_in.containsElementNamed("resDist"))        p.resDist        = as<double>(r_in["resDist"]);
   if (r_in.containsElementNamed("resMean"))        p.resMean        = as<double>(r_in["resMean"]);
   if (r_in.containsElementNamed("resSD"))          p.resSD          = as<double>(r_in["resSD"]);
   if (r_in.containsElementNamed("rtMax"))          p.rtMax          = as<double>(r_in["rtMax"]);
@@ -42,27 +43,26 @@ List dmcCppR(List r_in) {
   if (r_in.containsElementNamed("printInputArgs")) p.printInputArgs = as<bool>(r_in["printInputArgs"]);
   if (r_in.containsElementNamed("printResults"))   p.printResults   = as<bool>(r_in["printResults"]);
   if (r_in.containsElementNamed("setSeed"))        p.setSeed        = as<bool>(r_in["setSeed"]);
-
   
-   // values for delta/CAF
-   if (!p.pDelta.empty()) {
-       p.vDelta = p.pDelta; // take specific values
-       p.vDelta.insert(p.vDelta.begin(), 0);
-       p.vDelta.push_back(100);
-   } else {
-       p.vDelta = linspace(0, 100, p.nDelta + 2);
-   }
-   p.vCAF = linspace(0, 100, p.nCAF + 1);
+  // values for delta/CAF
+  if (!p.pDelta.empty()) {
+    p.vDelta = p.pDelta; // take specific values
+    p.vDelta.insert(p.vDelta.begin(), 0);
+    p.vDelta.push_back(100);
+  } else {
+    p.vDelta = linspace(0, 100, p.nDelta + 2);
+  }
+  p.vCAF = linspace(0, 100, p.nCAF + 1);
   
   if (p.printInputArgs) print_input_args(p);
-
+  
   std::map<std::string, std::vector<double>> rsum;                 // results summary
   std::map<std::string, std::vector<double>> rsim;                 // results simulation
   std::map<std::string, std::vector<std::vector<double>>> trials;  // individual trials
-
+  
   run_dmc_sim(p, rsum, rsim, trials);
   if (p.printResults) print_results(p, rsum);
-
+  
   List dmc;
   if (p.fullData) {
     dmc["summary"] = rsum;
@@ -76,12 +76,12 @@ List dmcCppR(List r_in) {
 }
 
 std::vector<double> linspace(int start, int end, int n) {
-    double step = (end - start) / double(n-1);
-    std::vector<double> out(n);
-    double val = start;
-    for (int i = 0; i < n; i++) {
-        out[i] = val;
-        val += step;
-    }
-    return out;
+  double step = (end - start) / double(n-1);
+  std::vector<double> out(n);
+  double val = start;
+  for (int i = 0; i < n; i++) {
+    out[i] = val;
+    val += step;
+  }
+  return out;
 }

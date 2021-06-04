@@ -9,6 +9,7 @@ struct Prms {
     double drc = 0.5;
     double sigm = 4;
     double bnds = 75;
+    int resDist = 1;
     double resMean = 300;
     double resSD = 30;
     double rtMax = 5000;

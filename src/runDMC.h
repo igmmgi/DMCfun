@@ -1,6 +1,7 @@
 #ifndef CPP_RUNDMCSIM_HPP
 #define CPP_RUNDMCSIM_HPP
 
+# include <map>
 #include "inDMC.h"
 
 void run_dmc_sim(Prms &p, 
@@ -23,6 +24,8 @@ void calculate_delta(std::map<std::string,  std::vector<double>> &rdelta);
 void variable_drift_rate(Prms &p, std::vector<double> &dr, int sign);
 
 void variable_starting_point(Prms &p, std::vector<double> &sp, int sign);
+
+void residual_rt(Prms &p, std::vector<double> &residual_distribution);
 
 std::vector<double> calculate_caf(std::vector<double> &rts, std::vector<double> &errs, int nBins);
 

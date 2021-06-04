@@ -9,6 +9,7 @@ dmcSim(
   tau = 30,
   drc = 0.5,
   bnds = 75,
+  resDist = 1,
   resMean = 300,
   resSD = 30,
   aaShape = 2,
@@ -40,6 +41,8 @@ dmcSim(
 \item{drc}{drift rate of controlled processes}
 
 \item{bnds}{+- response criterion}
+
+\item{resDist}{1=normal, 2=uniform}
 
 \item{resMean}{mean of non-decisional component}
 

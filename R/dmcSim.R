@@ -8,6 +8,7 @@
 #' @param tau time to peak automatic activation
 #' @param drc drift rate of controlled processes
 #' @param bnds +- response criterion
+#' @param resDist 1=normal, 2=uniform
 #' @param resMean mean of non-decisional component
 #' @param resSD standard deviation of non-decisional component
 #' @param rtMax limit on simulated RT (decision + non-decisional component)
@@ -71,7 +72,7 @@
 #' }
 #'
 #' @export
-dmcSim <- function(amp = 20, tau = 30, drc = 0.5, bnds = 75, resMean = 300, resSD = 30, aaShape = 2, spShape = 3,
+dmcSim <- function(amp = 20, tau = 30, drc = 0.5, bnds = 75, resDist = 1, resMean = 300, resSD = 30, aaShape = 2, spShape = 3,
                    sigm = 4,  nTrl = 100000, tmax = 1000,
                    varSP = FALSE, spLim = c(-75, 75),
                    varDR = FALSE, drShape = 3, drLim = c(0.1, 0.7), 
@@ -86,7 +87,7 @@ dmcSim <- function(amp = 20, tau = 30, drc = 0.5, bnds = 75, resMean = 300, resS
     nDelta = length(pDelta)
   }
   
-  dmc <- dmcCppR(r_in = list(amp = amp, tau = tau, drc = drc, bnds = bnds, resMean = resMean, resSD = resSD, aaShape = aaShape, spShape = spShape,
+  dmc <- dmcCppR(r_in = list(amp = amp, tau = tau, drc = drc, bnds = bnds, resDist = resDist, resMean = resMean, resSD = resSD, aaShape = aaShape, spShape = spShape,
                              sigm = sigm,  nTrl = nTrl, tmax = tmax,
                              varSP = varSP, spLimLow = spLim[1], spLimHigh = spLim[2],
                              varDR = varDR, drShape = drShape, drLimLow = drLim[1], drLimHigh = drLim[2], 
