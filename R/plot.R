@@ -139,13 +139,13 @@ plot.dmcsim <- function(x,
       nrow = 6, ncol = 2, byrow = TRUE))
     showFig[3:6] = TRUE
   } else if (figType == "summary3") {
-    par(mar = c(4, 4, 2, 2), mfrow=c(3, 1), ...)
+    par(mar = c(4, 4, 2, 2), mfrow = c(3, 1), ...)
     showFig[7:9] = TRUE
   } else if (figType == "all" & length(x) == 6) {
-    par(mar = c(4, 4, 2, 2), mfrow=c(1, 1), ...)
+    par(mar = c(4, 4, 2, 2), mfrow = c(1, 1), ...)
     showFig[1:9] = TRUE
   } else if (figType == "all" & length(x) == 5) {
-    par(mar = c(4, 4, 2, 2), mfrow=c(1, 1), ...)
+    par(mar = c(4, 4, 2, 2), mfrow = c(1, 1), ...)
     showFig[4:9] = TRUE
   } else {
     showFig[figTypes[5:13] %in% figType] = TRUE
@@ -222,9 +222,9 @@ plot.dmcsim <- function(x,
          ylim = c(0, 0.01), xlim = c(0, x$prms$tmax),
          ylab = ylabs[3], xlab = xlabs[3], xaxt = xaxts, yaxt = "n", ...)
     
-    if (xaxts == "n") axis(side=1, labels = FALSE)  # keep tick marks
+    if (xaxts == "n") axis(side = 1, labels = FALSE)  # keep tick marks
     if (yaxts == "n") {
-      axis(side=2, labels = FALSE)  # keep tick marks
+      axis(side = 2, labels = FALSE)  # keep tick marks
     } else if (yaxts == "s") {
       axis(side = 2, at = c(0, 0.005, 0.01), labels = c("0", ".005", ".001"))
     }
@@ -247,13 +247,13 @@ plot.dmcsim <- function(x,
     density_incomp <- density(x$sim$rts_incomp)
     cdf_incomp     <- cumsum(density_incomp$y * diff(density_incomp$x[1:2]))
     
-    plot(density_comp$x, cdf_comp, type="l", col = tail(cols, 2)[1],
+    plot(density_comp$x, cdf_comp, type = "l", col = tail(cols, 2)[1],
          ylab = ylabs[4], xlab = xlabs[4],
          ylim = c(0, 1), xaxt = xaxts, yaxt = "n", xlim = c(0, x$prms$tmax))
     
-    if (xaxts == "n") axis(side=1, labels = FALSE)  # keep tick marks
+    if (xaxts == "n") axis(side = 1, labels = FALSE)  # keep tick marks
     if (yaxts == "n") {
-      axis(side=2, labels = FALSE)  # keep tick marks
+      axis(side = 2, labels = FALSE)  # keep tick marks
     } else if (yaxts == "s") {
       axis(side = 2, at = seq(0, 1, 0.5), labels = as.character(seq(0, 1, 0.5)))
     }
@@ -279,7 +279,7 @@ plot.dmcsim <- function(x,
          col = tail(cols, 2)[1], ...)
     
     if (xaxts == "n") {
-      axis(side=1, labels = FALSE)  # keep tick marks
+      axis(side = 1, labels = FALSE)  # keep tick marks
     } else if (xaxts == "s" | cafBinLabels) {
       nCAF <- length(x$caf$bin) / 2
       if (cafBinLabels) {
@@ -290,11 +290,11 @@ plot.dmcsim <- function(x,
         axis(1, at = seq(1, nCAF, 1), ...)
       }
     } else {
-      axis(side=1,labels=F) 
+      axis(side = 1,labels = F) 
     }
     
     if (yaxts == "n") {
-      axis(side=2, labels = FALSE)  # keep tick marks
+      axis(side = 2, labels = FALSE)  # keep tick marks
     } else if (yaxts == "s") {
       axis(2, at = seq(0, 1, 0.2), labels = as.character(seq(0, 1, 0.2)), ...)
     }
@@ -320,8 +320,8 @@ plot.dmcsim <- function(x,
          ylim = ylimDelta, xlim = xlimDelta,
          ylab = ylabs[6],  xlab = xlabs[6],
          xaxt = xaxts, yaxt = yaxts, ...)
-    axis(side=1,labels = FALSE) 
-    axis(side=2,labels = FALSE) 
+    axis(side = 1,labels = FALSE) 
+    axis(side = 2,labels = FALSE) 
   }
   
   # rtCorrect
@@ -582,7 +582,7 @@ plot.dmcob <- function(x,
                   nrow = 3, ncol = 2, byrow = TRUE))
     showFig[1:6] = TRUE
   } else if (figType == "all") {
-    par(mar = c(4, 4, 1, 1), mfrow=c(1, 1), ...)
+    par(mar = c(4, 4, 1, 1), mfrow = c(1, 1), ...)
     showFig[1:6] = TRUE
   } else {
     showFig[figTypes[3:8] %in% figType] = TRUE
@@ -635,9 +635,9 @@ plot.dmcob <- function(x,
          ylab = ylabs[4], xlab = xlabs[4],
          col = tail(cols, 2)[1],
          xaxt = xaxts, yaxt = "n", ...)
-    if (xaxts == "n") axis(side=1, labels = FALSE)  # keep tick marks
+    if (xaxts == "n") axis(side = 1, labels = FALSE)  # keep tick marks
     if (yaxts == "n") {
-      axis(side=2, labels = FALSE)  # keep tick marks
+      axis(side = 2, labels = FALSE)  # keep tick marks
     } else if (yaxts == "s") {
       axis(2, at = seq(0, 1, 0.25), labels = as.character(seq(0, 1, 0.25)))
     }
@@ -660,7 +660,7 @@ plot.dmcob <- function(x,
          col = tail(cols, 2)[1],
          xaxt = "n", yaxt = "n", ...)
     if (xaxts == "n") {
-      axis(side=1, labels = FALSE)  # keep tick marks
+      axis(side = 1, labels = FALSE)  # keep tick marks
     } else if (xaxts == "s" | cafBinLabels) {
       nCAF <- length(x$caf$bin) / 2
       if (cafBinLabels) {
@@ -675,7 +675,7 @@ plot.dmcob <- function(x,
     }
     
     if (yaxts == "n") {
-      axis(side=2, labels = FALSE)  # keep tick marks
+      axis(side = 2, labels = FALSE)  # keep tick marks
     } else if (yaxts == "s") {
       axis(2, at = seq(0, 1, 0.2), labels = as.character(seq(0, 1, 0.2)), ...)
     }
@@ -833,7 +833,7 @@ plot.dmcobs <- function(x,
   yaxts <- ifelse(yaxts, "s", "n")
   
   if (figType == "all") {
-    par(mar = c(4, 4, 1, 1), mfrow=c(1, 1), ...)
+    par(mar = c(4, 4, 1, 1), mfrow = c(1, 1), ...)
     showFig[1:6] = TRUE
   } else {
     showFig[figTypes[2:7] %in% figType] = TRUE
@@ -903,9 +903,9 @@ plot.dmcobs <- function(x,
          ylim = c(0, 1), xlim = c(200, 1000),
          ylab = ylabs[4], xlab = xlabs[4],
          xaxt = xaxts, yaxt = "n", ...)
-    if (xaxts == "n") axis(side=1, labels = FALSE)  # keep tick marks
+    if (xaxts == "n") axis(side = 1, labels = FALSE)  # keep tick marks
     if (yaxts == "n") {
-      axis(side=2, labels = FALSE)  # keep tick marks
+      axis(side = 2, labels = FALSE)  # keep tick marks
     } else if (yaxts ==  "s") {
       axis(2, at = seq(0, 1, 0.25), labels = as.character(seq(0, 1, 0.25)))
     }
@@ -938,7 +938,7 @@ plot.dmcobs <- function(x,
          ylab = ylabs[5], xlab = xlabs[5], xlim = c(0.5, nCAF + 0.5),
          xaxt = "n", yaxt = "n", ...)
     if (xaxts == "n") {
-      axis(side=1, labels = FALSE)  # keep tick marks
+      axis(side = 1, labels = FALSE)  # keep tick marks
     } else if (xaxts == "s" | cafBinLabels) {
       if (cafBinLabels) {
         stepCAF <- 100 / nCAF
@@ -952,7 +952,7 @@ plot.dmcobs <- function(x,
     }
     
     if (yaxts == "n") {
-      axis(side=2, labels = FALSE)  # keep tick marks
+      axis(side = 2, labels = FALSE)  # keep tick marks
     } else if (yaxts == "s") {
       axis(2, at = seq(0, 1, 0.2), labels = as.character(seq(0, 1, 0.2)), ...)
     }
