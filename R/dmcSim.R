@@ -116,9 +116,14 @@ dmcSim <- function(amp = 20, tau = 30, drc = 0.5, bnds = 75, resDist = 1, resMea
                                    meanIncomp = summary$delta_pct_incomp, 
                                    meanBin    = summary$delta_pct_mean,
                                    meanEffect = summary$delta_pct_delta))
-  
+    
   # store parameters used to call function
-  dmc$prms <- as.list(environment())
+  dmc$prms <- data.frame(amp = amp, tau = tau, drc = drc, bnds = bnds, 
+                         resDist = resDist, resMean = resMean, resSD = resSD, 
+                         aaShape = aaShape, spShape = spShape, sigm = sigm,
+                         nTrl = nTrl, nTrlData = nTrlData, tmax = tmax,
+                         spLim1 = spLim[1], spLim2 = spLim[2], varDR = varDR,
+                         drShape = drShape, drLim1 = drLim[1], drLim2 = drLim[2])
   
   class(dmc) <- "dmcsim"
   
