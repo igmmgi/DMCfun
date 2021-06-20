@@ -372,9 +372,6 @@ dmcObservedData <- function(dat,
                   perE = perErr) %>%
     dplyr::group_by(Comp) %>%
     dplyr::summarize(N        = n(),
-                     NCor     = sum(nCor),
-                     NErr     = sum(nErr),
-                     NOut     = sum(nOut),
                      rtCor    = mean(rtC, na.rm = TRUE),
                      sdRtCor  = sd(rtC, na.rm = TRUE),
                      seRtCor  = sdRtCor/sqrt(N),
@@ -419,7 +416,7 @@ dmcObservedData <- function(dat,
   # summary
   obj$summarySubject        <- as.data.frame(datSubject[ , c(1, 2, 7, 9, 8)])
   names(obj$summarySubject) <- c("Subject", "Comp", "rtCor", "perErr", "rtErr")
-  obj$summary               <- as.data.frame(datAgg[ , c(1, 6, 7, 8, 12, 13, 14, 9, 10, 11)])
+  obj$summary               <- as.data.frame(datAgg[ , c(1, 3, 4, 5, 9, 10, 11, 6, 7, 8)])
 
   # caf
   obj$cafSubject        <- as.data.frame(datSubject_caf)
@@ -672,10 +669,8 @@ rtDist <- function(n=10000, gaussMean=600, gaussSD=50, expRate=200) {
 #'
 #' @description Returns a random vector of 0's (correct) and 1's (incorrect) with
 #' defined proportions (default = 10\% errors).
-#'
 #' @param n Number
 #' @param proportion Approximate proportion of errors in percentage
-#'
 #' @return double
 #'
 #' @examples
