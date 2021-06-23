@@ -629,8 +629,9 @@ plot.dmcob <- function(x,
   
   # CDF
   if (showFig[4]) {
-    seqStep <- 100 / (nrow(x$delta) + 1)
-    plot(x$delta$meanComp, seq(seqStep, 100 - seqStep, seqStep)/100, type = "o",
+    ndelta <- nrow(x$delta)
+    ypoints <- seq(0, 1, length.out=ndelta+2)[2:(ndelta+1)]
+    plot(x$delta$meanComp, ypoints, type = "o",
          ylim = c(0, 1), xlim = c(200, 1000),
          ylab = ylabs[4], xlab = xlabs[4],
          col = tail(cols, 2)[1],
@@ -642,7 +643,7 @@ plot.dmcob <- function(x,
       axis(2, at = seq(0, 1, 0.25), labels = as.character(seq(0, 1, 0.25)))
     }
     
-    lines(x$delta$meanIncomp, seq(seqStep, 100 - seqStep, seqStep)/100, type = "o", col = tail(cols, 2)[2], ...)
+    lines(x$delta$meanIncomp, ypoints, type = "o", col = tail(cols, 2)[2], ...)
     
     if (is.function(legend)) {
       legend()
@@ -909,15 +910,16 @@ plot.dmcobs <- function(x,
     } else if (yaxts ==  "s") {
       axis(2, at = seq(0, 1, 0.25), labels = as.character(seq(0, 1, 0.25)))
     }
-    
-    seqStep <- 100 / (nrow(x[[1]]$delta) + 1)
+   
+    ndelta <- nrow(x[[1]]$delta) 
+    ypoints <- seq(0, 1, length.out=ndelta+2)[2:(ndelta+1)]
     for (i in 1:length(x)) { 
-      lines(x[[i]]$delta$meanComp, seq(seqStep, 100 - seqStep, seqStep)/100, type = "o",
+      lines(x[[i]]$delta$meanComp, ypoints, type = "o",
            ylim = c(0, 1), xlim = c(200, 1000),
            ylab = ylabs[4], xlab = xlabs[4],
            col = tail(cols, 2)[1], lty = ltys[i], pch = pchs[i], 
            xaxt = xaxts, yaxt = "n", ...)
-      lines(x[[i]]$delta$meanIncomp, seq(seqStep, 100 - seqStep, seqStep)/100, type = "o", col = tail(cols, 2)[2], ...)
+      lines(x[[i]]$delta$meanIncomp, ypoints, type = "o", col = tail(cols, 2)[2], ...)
     }
     
     if (is.function(legend)) {
@@ -1191,8 +1193,9 @@ plot.dmcfit <- function(x,
   
   # cdf
   if (showFig[4]) {
-    seqStep <- 100 / (nrow(y$delta) + 1)
-    plot(y$delta$meanComp, seq(seqStep, 100 - seqStep, seqStep)/100, type = "p",
+    ndelta <- nrow(y$delta)
+    ypoints <- seq(0, 1, length.out=ndelta+2)[2:(ndelta+1)]
+    plot(y$delta$meanComp, ypoints, type = "p",
          ylim = c(0, 1), xlim = c(200, 1000),
          ylab = ylabs[4], xlab = xlabs[4],
          yaxt = "n", col = tail(cols, 2)[1],
@@ -1204,9 +1207,9 @@ plot.dmcfit <- function(x,
       axis(2, at = seq(0, 1, 0.25), labels = as.character(seq(0, 1, 0.25)))
     }
     
-    lines(y$delta$meanIncomp, seq(seqStep, 100 - seqStep, seqStep)/100, type = "p", col = tail(cols, 2)[2], ...)
-    lines(x$delta$meanComp,   seq(seqStep, 100 - seqStep, seqStep)/100, type = "l", col = tail(cols, 2)[1], ...)
-    lines(x$delta$meanIncomp, seq(seqStep, 100 - seqStep, seqStep)/100, type = "l", col = tail(cols, 2)[2], ...)
+    lines(y$delta$meanIncomp, ypoints, type = "p", col = tail(cols, 2)[2], ...)
+    lines(x$delta$meanComp,   ypoints, type = "l", col = tail(cols, 2)[1], ...)
+    lines(x$delta$meanIncomp, ypoints, type = "l", col = tail(cols, 2)[2], ...)
     
     if (is.function(legend)) {
       legend()
