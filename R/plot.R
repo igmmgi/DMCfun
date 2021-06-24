@@ -11,6 +11,8 @@
 #'
 #' @param x Output from dmcSim
 #' @param figType summary1, summary2, summary3, activation, trials, pdf, cdf, caf, delta, rtCorrect, rtErrors, errorRate, all
+#' @param xlimPDF xlimit for PDF plot
+#' @param xlimCDF xlimit for CDF plot
 #' @param ylimCAF ylimit for CAF plot
 #' @param cafBinLabels TRUE/FALSE
 #' @param ylimDelta ylimit for delta plot
@@ -53,6 +55,8 @@
 #' @export
 plot.dmcsim <- function(x,
                         figType = "summary1",
+                        xlimPDF = NULL,
+                        xlimCDF = NULL,
                         ylimCAF = c(0, 1),
                         cafBinLabels = FALSE,
                         ylimDelta = c(-50, 150),
@@ -218,8 +222,12 @@ plot.dmcsim <- function(x,
   # PDF
   if (showFig[3]) {
     
+    if (is.null(xlimPDF)) {
+      xlimPDF <- c(0, x$prms$tmax)
+    }
+    
     plot(density(x$sim$rts_comp), col = tail(cols, 2)[1], main = NA, type = "l",
-         ylim = c(0, 0.01), xlim = c(0, x$prms$tmax),
+         ylim = c(0, 0.01), xlim = xlimPDF,
          ylab = ylabs[3], xlab = xlabs[3], xaxt = xaxts, yaxt = "n", ...)
     
     if (xaxts == "n") axis(side = 1, labels = FALSE)  # keep tick marks
@@ -247,9 +255,13 @@ plot.dmcsim <- function(x,
     density_incomp <- density(x$sim$rts_incomp)
     cdf_incomp     <- cumsum(density_incomp$y * diff(density_incomp$x[1:2]))
     
+    if (is.null(xlimCDF)) {
+      xlimCDF <- c(0, x$prms$tmax)
+    }
+    
     plot(density_comp$x, cdf_comp, type = "l", col = tail(cols, 2)[1],
          ylab = ylabs[4], xlab = xlabs[4],
-         ylim = c(0, 1), xaxt = xaxts, yaxt = "n", xlim = c(0, x$prms$tmax))
+         ylim = c(0, 1), xaxt = xaxts, yaxt = "n", xlim = xlimCDF)
     
     if (xaxts == "n") axis(side = 1, labels = FALSE)  # keep tick marks
     if (yaxts == "n") {
@@ -439,6 +451,7 @@ plot.dmclist <- function(x,
 #' @param x Output from dmcObservedData
 #' @param figType summary, rtCorrect, errorRate, rtErrors, cdf, caf, delta, all
 #' @param subject NULL (aggregated data across all subjects) or integer for subject number
+#' @param xlimCDF xlimit for CDF plot
 #' @param legend TRUE/FALSE (or FUNCTION) plot legend on each plot
 #' @param labels Condition labels c("Compatible", "Incompatible") default
 #' @param cols Condition colours c("green", "red") default
@@ -499,6 +512,7 @@ plot.dmclist <- function(x,
 plot.dmcob <- function(x,
                        figType = "summary",
                        subject = NULL,
+                       xlimCDF = NULL,
                        legend = TRUE,
                        labels = c("Compatible", "Incompatible"),
                        cols = c("black", "green", "red"),
@@ -629,10 +643,15 @@ plot.dmcob <- function(x,
   
   # CDF
   if (showFig[4]) {
+    
+    if (is.null(xlimCDF)) {
+      xlimCDF <- c(min(x$delta$meanComp) - 100, min(x$delta$meanComp) + 100)
+    }
+    
     ndelta <- nrow(x$delta)
-    ypoints <- seq(0, 1, length.out=ndelta+2)[2:(ndelta+1)]
+    ypoints <- seq(0, 1, length.out = ndelta + 2)[2:(ndelta + 1)]
     plot(x$delta$meanComp, ypoints, type = "o",
-         ylim = c(0, 1), xlim = c(200, 1000),
+         ylim = c(0, 1), xlim = xlimCDF,
          ylab = ylabs[4], xlab = xlabs[4],
          col = tail(cols, 2)[1],
          xaxt = xaxts, yaxt = "n", ...)
@@ -1194,7 +1213,7 @@ plot.dmcfit <- function(x,
   # cdf
   if (showFig[4]) {
     ndelta <- nrow(y$delta)
-    ypoints <- seq(0, 1, length.out=ndelta+2)[2:(ndelta+1)]
+    ypoints <- seq(0, 1, length.out = ndelta + 2)[2:(ndelta + 1)]
     plot(y$delta$meanComp, ypoints, type = "p",
          ylim = c(0, 1), xlim = c(200, 1000),
          ylab = ylabs[4], xlab = xlabs[4],
