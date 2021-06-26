@@ -458,14 +458,16 @@ plot.dmclist <- function(x,
                          ncol = 1,
                          ...) {
   
-  # default xlimit
   if (is.null(xlim)) {
-    xlim <- c(0, x[[1]]$prms$tmax)
-  }
-  # default ylimit
+    minx <- min(sapply(x, function(x) min(x$delta$meanBin)))
+    maxx <- max(sapply(x, function(x) max(x$delta$meanBin)))
+    xlim <- c(minx - 100, maxx + 100)
+  } 
   if (is.null(ylim)) {
-    ylim <- c(-50, 100)
-  }
+    miny <- min(sapply(x, function(x) min(x$delta$meanEffect)))
+    maxy <- max(sapply(x, function(x) max(x$delta$meanEffect)))
+    ylim <- c(miny - 10, maxy + 10)
+  } 
   
   # colour range
   cols <- colorRampPalette(col)(length(x))
@@ -583,7 +585,7 @@ plot.dmcob <- function(x,
   }
   
   figType <- tolower(figType)
-  figTypes <- c("summary", "all", "rtCorrect", "errorRate", "rtErrors", "cdf", "caf", "delta")
+  figTypes <- c("summary", "all", "rtcorrect", "errorrate", "rterrors", "cdf", "caf", "delta")
   if (length(figType) > 1 || !figType %in% figTypes) {
     stop("figType must be one of:", paste0(figTypes, collapse = ", "))
   }
@@ -935,15 +937,11 @@ plot.dmcobs <- function(x,
   # rtCorrect
   if (showFig[1]) {
     
-    if (is.null(ylimRt)) {
-      miny <- 0
-      maxy <- Inf
-      for (i in 1:length(x)) {
-        miny <- max(miny, min(x[[i]]$summary$rtCor))
-        maxy <- min(maxy, max(x[[i]]$summary$rtCor))
-      }
-      ylimRt <- c(miny - 100, maxy + 100)
-    } 
+  if (is.null(ylimRt)) {
+    minx <- min(sapply(x, function(x) min(x$summary$rtCor)))
+    maxx <- max(sapply(x, function(x) max(x$summary$rtCor)))
+    ylimRt <- c(minx - 100, maxx + 100)
+  } 
     
     plot(NULL, NULL,
          ylim = ylimRt, xlim = c(0.5, 2.5),
@@ -965,11 +963,9 @@ plot.dmcobs <- function(x,
   if (showFig[2]) {
     
     if (is.null(ylimErr)) {
-      maxy <- Inf
-      for (i in 1:length(x)) {
-        maxy <- min(maxy, max(x[[i]]$summary$perErr))
-      }
-      ylimErr <- c(0, maxy + 5)
+      miny    <- min(sapply(x, function(x) min(x$summary$perErr)))
+      maxy    <- max(sapply(x, function(x) max(x$summary$perErr)))
+      ylimErr <- c(minx - 100, maxx + 100)
     } 
     
     plot(NULL, NULL, 
@@ -992,12 +988,8 @@ plot.dmcobs <- function(x,
   if (showFig[3]) {
     
     if (is.null(ylimRt)) {
-      miny <- 0
-      maxy <- Inf
-      for (i in 1:length(x)) {
-        miny <- max(miny, min(x[[i]]$summary$rtCor))
-        maxy <- min(maxy, max(x[[i]]$summary$rtCor))
-      }
+      miny  <- min(sapply(x, function(x) min(x$summary$rtErr)))
+      maxy  <- max(sapply(x, function(x) max(x$summary$rtErr)))
       ylimRt <- c(miny - 100, maxy + 100)
     } 
     
@@ -1021,12 +1013,8 @@ plot.dmcobs <- function(x,
   if (showFig[4]) {
     
     if (is.null(xlimCDF)) {
-      minx <- 0
-      maxx <- Inf
-      for (i in 1:length(x)) {
-        minx <- max(minx, min(x[[i]]$delta$meanBin))
-        maxx <- min(maxx, max(x[[i]]$delta$meanBin))
-      }
+      minx  <- min(sapply(x, function(x) min(x$summary$meanBin)))
+      maxx  <- max(sapply(x, function(x) max(x$summary$meanBin)))
       xlimCDF <- c(minx - 100, maxx + 100)
     } 
     
@@ -1110,23 +1098,15 @@ plot.dmcobs <- function(x,
   if (showFig[6]) {
     
     if (is.null(xlimDelta)) {
-      minx <- 0
-      maxx <- Inf
-      for (i in 1:length(x)) {
-        minx <- max(minx, min(x[[i]]$delta$meanBin))
-        maxx <- min(maxx, max(x[[i]]$delta$meanBin))
-      }
+      minx  <- min(sapply(x, function(x) min(x$delta$meanBin)))
+      maxx  <- max(sapply(x, function(x) max(x$delta$meanBin)))
       xlimDelta <- c(minx - 100, maxx + 100)
     } 
     
     if (is.null(ylimDelta)) {
-      miny <- 0
-      maxy <- Inf
-      for (i in 1:length(x)) {
-        miny <- max(miny, min(x[[i]]$delta$meanEffect))
-        maxy <- min(maxy, max(x[[i]]$delta$meanEffect))
-      }
-      ylimDelta <- c(miny - 20, maxy + 20)
+      miny  <- min(sapply(x, function(x) min(x$delta$meanEffect)))
+      maxy  <- max(sapply(x, function(x) max(x$delta$meanEffect)))
+      ylimDelta <- c(miny - 100, maxy + 100)
     } 
     
     plot(NULL, NULL,
@@ -1173,6 +1153,7 @@ plot.dmcobs <- function(x,
 #' @param cols Condition colours c("green", "red") default
 #' @param ylimRt ylimit for Rt plots
 #' @param ylimErr ylimit for error rate plots
+#' @param xlimCDF ylimit for CDF plot
 #' @param ylimCAF ylimit for CAF plot
 #' @param cafBinLabels TRUE/FALSE
 #' @param ylimDelta ylimit for delta plot

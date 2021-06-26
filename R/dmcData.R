@@ -1,14 +1,15 @@
 #' A summarised dataset: see raw data file flankerDataRaw and dmcObservedData.R
-#' This is the summarised Flanker Task data from Ulrich et al. (2015)
+#' This is the flanker task data from Ulrich et al. (2015)
 #'
 #' \itemize{
-#'   \item $summary --> Reaction time correct, standard deviation correct, percentage
-#'   error, reaction time incorrect, and standard deviation for incorrect trials
-#'   for both compatible and incompatible trials
+#'   \item $summary --> Reaction time correct, standard deviation correct, standard error correct, 
+#'   percentage error, standard deviation error, standard error error, reaction time incorrect, 
+#'   standard deviation incorrect, and standard error incorrect trials for both compatible 
+#'   and incompatible trials
 #'   \item $caf --> Proportion correct for compatible and incompatible trials across 5 bins
 #'   \item $delta --> Compatible reactions times, incompatible mean reaction times,
-#'   mean reaction times, incompatible - compatible reaction times (delta), and
-#'   standard deviation + standard error of this difference across 10 bins.
+#'   mean reaction times, incompatible - compatible reaction times (effect), and
+#'   standard deviation + standard error of this effect across 19 bins
 #' }
 #'
 #' @docType data
@@ -24,9 +25,9 @@ NULL
 #'
 #' \itemize{
 #'   \item Subject Subject number
-#'   \item Comp comp vs. incomp
-#'   \item RT
-#'   \item Error 0 = correct, 1 = error
+#'   \item Comp Compatibility condition (comp vs. incomp)
+#'   \item RT Reaction Time
+#'   \item Error Error coding (0 = correct, 1 = error)
 #' }
 #'
 #' @docType data
@@ -38,17 +39,18 @@ NULL
 
 
 #' A summarised dataset: see raw data file simonDataRaw and dmcObservedData.R
-#' This is the summarised Simon Task data from Ulrich et al. (2015)
+#' This is the simon task data from Ulrich et al. (2015)
 #'
 #' \itemize{
-#'   \item $summary --> Reaction time correct, standard deviation correct, percentage
-#'   error, reaction time incorrect, and standard deviation for incorrect trials
-#'   for both compatible and incompatible trials
+#'   \item $summary --> Reaction time correct, standard deviation correct, standard error correct, 
+#'   percentage error, standard deviation error, standard error error, reaction time incorrect, 
+#'   standard deviation incorrect, and standard error incorrect trials for both compatible 
+#'   and incompatible trials
 #'   \item $caf --> Proportion correct for compatible and incompatible trials across
 #'   5 bins
 #'   \item $delta --> Compatible reactions times, incompatible mean reaction times,
-#'   mean reaction times, incompatible - compatible reaction times (delta), and
-#'   standard deviation + standard error of this difference across 10 bins.
+#'   mean reaction times, incompatible - compatible reaction times (effect), and
+#'   standard deviation + standard error of this effect across 19 bins
 #' }
 #'
 #' @docType data
@@ -64,9 +66,9 @@ NULL
 #'
 #' \itemize{
 #'   \item Subject Subject number
-#'   \item Comp comp vs. incomp
-#'   \item RT
-#'   \item Error 0 = correct, 1 = error
+#'   \item Comp Compatibility condition (comp vs. incomp)
+#'   \item RT Reaction Time
+#'   \item Error Error coding (0 = correct, 1 = error)
 #' }
 #'
 #' @docType data
@@ -248,8 +250,8 @@ addDataDF <- function(dat, RT=NULL, Error=NULL) {
 #' @title dmcObservedData: Run standard analyses on observed data
 #'
 #' @description Basic example analysis script to create data object required
-#' for observed data. Example raw *.txt files are flankerData.txt and simonData.txt. There
-#' are four critical columns:
+#' for observed data. Example raw *.txt files are flankerData.txt and 
+#' simonData.txt (see also flankerDataRaw and simonDataRaw). There are four critical columns:
 #' A column containing subject number
 #' A column coding for compatible or incompatible
 #' A column with RT (in ms)
@@ -448,7 +450,7 @@ dmcObservedData <- function(dat,
 #' dat <- dmcCombineObservedData(datFlanker, datSimon)  # combine flanker/simon data
 #' plot(dat, figType = "delta", xlimDelta = c(200, 700), 
 #'      cols = c("black", "darkgrey"), pchs = c(1, 2), resetPar = FALSE)  
-#' legend(200, 0, legend = c("Flanker Task", "Simon Task"), 
+#' legend(200, 10, legend = c("Flanker Task", "Simon Task"), 
 #'        col = c("black", "darkgrey"), lty = c(1, 1))
 #'
 #' @export
@@ -682,4 +684,3 @@ rtDist <- function(n=10000, gaussMean=600, gaussSD=50, expRate=200) {
 errDist <- function(n=10000, proportion = 10) {
   return(ifelse(runif(n) <= proportion/100, 1, 0))
 }
-

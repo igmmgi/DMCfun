@@ -46,6 +46,8 @@
 
 \item{ylimErr}{ylimit for error rate plots}
 
+\item{xlimCDF}{ylimit for CDF plot}
+
 \item{ylimCAF}{ylimit for CAF plot}
 
 \item{cafBinLabels}{TRUE/FALSE}

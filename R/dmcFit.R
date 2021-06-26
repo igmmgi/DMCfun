@@ -210,7 +210,7 @@ dmcFit <- function(resOb,
   # fitted parameters  
   dmcfit$prms <- NULL  # TO DO: Would this be useful to keep or is it only redundant?
   dmcfit$par  <- prms  
-  dmcfit$par["RMSE"] <- fit$value
+  dmcfit$par["cost"] <- fit$value
   
   class(dmcfit) <- "dmcfit"
   
@@ -513,7 +513,6 @@ dmcFitSubject <- function(resOb,
 #' @examples
 #' \donttest{
 #' # Example 1: Flanker data from Ulrich et al. (2015)
-#' fit <- dmcFitSubjectDE(flankerData, nTrl = 1000) 
 #' fit <- dmcFitSubjectDE(flankerData, nTrl = 1000, subjects = c(1, 2))
 #' plot(fit, flankerData, subject = 1)
 #' plot(fit, flankerData, subject = 2)
@@ -662,7 +661,7 @@ mean.dmcfit <- function(x, ...) {
                      aaShape = mean(unlist(aaShape)),
                      spShape = mean(unlist(spShape)),
                      sigm = mean(unlist(sigm)),
-                     RMSE = mean(unlist(RMSE)), 
+                     cost = mean(unlist(cost)), 
                      .groups = 'drop')
   
   class(meanfit) <- c("dmcfit")
@@ -700,7 +699,9 @@ minimizeCostValue <- function(x,
                   nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, nCAF = nCAF, varSP = varSP,
                   printInputArgs = printInputArgs, printResults = printResults)
   
-  return(costFunction(resTh, resOb))
+  cost <- costFunction(resTh, resOb)
+  cat(" | cost:", round(cost, 1))
+  return(cost)
   
 }
 
@@ -743,8 +744,6 @@ calculateCostValueRMSE <- function(resTh, resOb) {
     costValue = Inf;
   }
   
-  message("RMSE: ", round(costValue, 3))
-  
   return(costValue)
   
 }
@@ -782,9 +781,7 @@ calculateCostValueSPE <- function(resTh, resOb) {
   if (is.na(costValue)) {
     costValue = Inf;
   }
-  
-  message("SPE: ", round(costValue, 3))
-  
+ 
   return(costValue)
   
 }

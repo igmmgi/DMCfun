@@ -5,7 +5,7 @@
   # adapted from linked-to grattan package from the above webpage
 
   utils::globalVariables(
-    c("Bin", "N", "RMSE", "aaShape", "accPer", "amp", "bin", "binN", "bnds", 
+    c("Bin", "N", "cost", "aaShape", "accPer", "amp", "bin", "binN", "bnds", 
       "comp",  "deltaCI", "drc", "i", "incomp", "meanBin", "meanCI", "meanComp", "mEffect", "meanEffect", 
       "meanIncomp", ".",  "perErr", "resMean", "resSD", "resMax", "rtCor",  "rtErr", "sdEffect", "sdPerErr", 
       "sdRtCor", "sdRtErr", "perSlow", "sigm", "spShape", "tau", "Comp", "Error", "RT", "Subject", 
