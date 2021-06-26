@@ -43,8 +43,8 @@ DataFrame
 }
 \description{
 Basic example analysis script to create data object required
-for observed data. Example raw *.txt files are flankerData.txt and simonData.txt. There
-are four critical columns:
+for observed data. Example raw *.txt files are flankerData.txt and 
+simonData.txt (see also flankerDataRaw and simonDataRaw). There are four critical columns:
 A column containing subject number
 A column coding for compatible or incompatible
 A column with RT (in ms)

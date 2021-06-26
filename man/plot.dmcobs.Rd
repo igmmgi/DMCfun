@@ -15,12 +15,13 @@
   pchs = c(1, 1),
   errorBars = FALSE,
   errorBarType = "sd",
-  ylimRt = c(200, 800),
-  ylimEr = c(0, 20),
-  ylimCAF = c(0, 1),
+  ylimRt = NULL,
+  ylimErr = NULL,
+  xlimCDF = NULL,
+  ylimCAF = NULL,
   cafBinLabels = FALSE,
-  ylimDelta = c(-50, 100),
-  xlimDelta = c(200, 1000),
+  ylimDelta = NULL,
+  xlimDelta = NULL,
   xlabs = TRUE,
   ylabs = TRUE,
   xaxts = TRUE,
@@ -52,7 +53,9 @@
 
 \item{ylimRt}{ylimit for Rt plots}
 
-\item{ylimEr}{ylimit for error rate plots}
+\item{ylimErr}{ylimit for error rate plots}
+
+\item{xlimCDF}{xlimit for CDF plot}
 
 \item{ylimCAF}{ylimit for CAF plot}
 
@@ -85,7 +88,7 @@ of the previous plots.
 datFlanker <- dmcObservedData(flankerDataRaw, nDelta = 9)
 datSimon <- dmcObservedData(simonDataRaw, nDelta = 9)
 dat <- dmcCombineObservedData(datFlanker, datSimon)  # combine flanker/simon data
-plot(dat, figType = "delta", xlimDelta = c(200, 700), 
+plot(dat, figType = "delta", 
      cols = c("black", "darkgrey"), pchs = c(1, 2), resetPar = FALSE)  
 legend(200, 0, legend = c("Flanker Task", "Simon Task"), 
        col = c("black", "darkgrey"), lty = c(1, 1))

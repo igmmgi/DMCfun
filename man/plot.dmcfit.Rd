@@ -12,12 +12,13 @@
   legend = TRUE,
   labels = c("Compatible", "Incompatible", "Observed", "Predicted"),
   cols = c("black", "green", "red"),
-  ylimRt = c(200, 800),
-  ylimEr = c(0, 20),
-  ylimCAF = c(0, 1),
+  ylimRt = NULL,
+  ylimErr = NULL,
+  xlimCDF = NULL,
+  ylimCAF = NULL,
   cafBinLabels = FALSE,
-  ylimDelta = c(-50, 100),
-  xlimDelta = c(200, 1000),
+  ylimDelta = NULL,
+  xlimDelta = NULL,
   xlabs = TRUE,
   ylabs = TRUE,
   xaxts = TRUE,
@@ -43,7 +44,7 @@
 
 \item{ylimRt}{ylimit for Rt plots}
 
-\item{ylimEr}{ylimit for error rate plots}
+\item{ylimErr}{ylimit for error rate plots}
 
 \item{ylimCAF}{ylimit for CAF plot}
 
@@ -79,7 +80,7 @@ that dmcSim is run with fullData = TRUE.
 \donttest{
 # Example 1
 resTh <- dmcFit(flankerData, nTrl = 5000)
-plot(resTh, flankerData)
+plot(resTh, flankerData, figType = "delta")
 
 # Example 2
 resTh <- dmcFit(flankerData, nTrl = 5000)

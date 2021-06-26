@@ -10,9 +10,9 @@ flankerDataRaw
 \description{
 \itemize{
   \item Subject Subject number
-  \item Comp comp vs. incomp
-  \item RT
-  \item Error 0 = correct, 1 = error
+  \item Comp Compatibility condition (comp vs. incomp)
+  \item RT Reaction Time
+  \item Error Error coding (0 = correct, 1 = error)
 }
 }
 \keyword{datasets}
