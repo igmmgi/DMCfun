@@ -11,7 +11,10 @@
 #'
 #' @param x Output from dmcSim
 #' @param figType summary1, summary2, summary3, activation, trials, pdf, cdf, caf, delta, rtCorrect, rtErrors, errorRate, all
+#' @param xlimActivation xlimit for activation plot
+#' @param xlimTrials xlimit for trials plot
 #' @param xlimPDF xlimit for PDF plot
+#' @param ylimPDF ylimit for PDF plot
 #' @param xlimCDF xlimit for CDF plot
 #' @param ylimCAF ylimit for CAF plot
 #' @param cafBinLabels TRUE/FALSE
@@ -55,14 +58,17 @@
 #' @export
 plot.dmcsim <- function(x,
                         figType = "summary1",
+                        xlimActivation = NULL,
+                        xlimTrials = NULL,
                         xlimPDF = NULL,
+                        ylimPDF = NULL,
                         xlimCDF = NULL,
-                        ylimCAF = c(0, 1),
+                        ylimCAF = NULL,
                         cafBinLabels = FALSE,
-                        ylimDelta = c(-50, 150),
+                        ylimDelta = NULL,
                         xlimDelta = NULL,
-                        ylimRt = c(200, 800),
-                        ylimErr = c(0, 20),
+                        ylimRt = NULL,
+                        ylimErr = NULL,
                         legend = TRUE,
                         labels = c("Compatible", "Incompatible"),
                         cols = c("black", "green", "red"),
@@ -80,7 +86,8 @@ plot.dmcsim <- function(x,
     on.exit(par(opar))
   }
   
-  figTypes <- c("summary1", "summary2", "summary3", "all", "activation", "trials", "pdf", "cdf", "caf", "delta", "rtCorrect", "errorRate",  "rtErrors")
+  figType <- tolower(figType)
+  figTypes <- c("summary1", "summary2", "summary3", "all", "activation", "trials", "pdf", "cdf", "caf", "delta", "rtcorrect", "errorrate",  "rterrors")
   if (length(figType) > 1 || !figType %in% figTypes) {
     stop("figType must be one of:", paste0(figTypes, collapse = ", "))
   }
@@ -157,10 +164,15 @@ plot.dmcsim <- function(x,
   
   # activation
   if (showFig[1]) {
+   
+    if (is.null(xlimActivation)){
+      xlimActivation = c(0, x$prms$tmax)
+    }
     
     # automatic
     plot(c(1:x$prms$tmax), x$sim$eq4, type = "l", lty = 2, col = tail(cols, 2)[1],
          ylim = c(-x$prms$bnds - 20, x$prms$bnds + 20),
+         xlim = xlimActivation,
          xlab = xlabs[1], ylab = ylabs[1],
          xaxt = xaxts, yaxt = yaxts, ...)
     if (xaxts == "n") axis(side = 1, labels = FALSE)  # keep tick marks
@@ -193,9 +205,14 @@ plot.dmcsim <- function(x,
   # individual trials
   if (showFig[2]) {
     
+    if (is.null(xlimTrials)){
+      xlimTrials = c(0, x$prms$tmax)
+    }
+    
     # bounds
     plot(c(0, x$prms$tmax), c(x$prms$bnds, x$prms$bnds), type = "l", col = "darkgrey",
          ylim = c(-x$prms$bnds - 20, x$prms$bnds + 20),
+         xlim = xlimTrials,
          xlab = xlabs[2], ylab = ylabs[2],
          xaxt = xaxts, yaxt = yaxts, ...)
     if (xaxts == "n") axis(side = 1, labels = FALSE)  # keep tick marks
@@ -225,9 +242,12 @@ plot.dmcsim <- function(x,
     if (is.null(xlimPDF)) {
       xlimPDF <- c(0, x$prms$tmax)
     }
+    if (is.null(ylimPDF)) {
+      ylimPDF <- c(0, 0.01)
+    }
     
     plot(density(x$sim$rts_comp), col = tail(cols, 2)[1], main = NA, type = "l",
-         ylim = c(0, 0.01), xlim = xlimPDF,
+         ylim = ylimPDF, xlim = xlimPDF,
          ylab = ylabs[3], xlab = xlabs[3], xaxt = xaxts, yaxt = "n", ...)
     
     if (xaxts == "n") axis(side = 1, labels = FALSE)  # keep tick marks
@@ -284,6 +304,10 @@ plot.dmcsim <- function(x,
   # CAF
   if (showFig[5]) {
     
+    if (is.null(ylimCAF)) {
+      ylimCAF <- c(0, 1)
+    }
+    
     plot(x$caf$accPer[x$caf$Comp == "comp"], type = "o",
          ylim = ylimCAF,
          ylab = ylabs[5],  xlab = xlabs[5],
@@ -324,8 +348,11 @@ plot.dmcsim <- function(x,
   # delta
   if (showFig[6]) {
     
-    if (is.null(xlimDelta)) { 
-      xlimDelta <- c(0, x$prms$tmax)
+    if (is.null(xlimDelta)) {
+      xlimDelta <- c(min(x$delta$meanBin) - 50, max(x$delta$meanBin) + 50)
+    }
+    if (is.null(ylimDelta)) {
+      ylimDelta <- c(min(x$delta$meanEffect) - 50, max(x$delta$meanEffect) + 50)
     }
     
     plot(x$delta$meanBin, x$delta$meanEffect, type = "o", col = cols[1],
@@ -338,6 +365,11 @@ plot.dmcsim <- function(x,
   
   # rtCorrect
   if (showFig[7]) {
+    
+    if (is.null(ylimRt)) {
+      ylimRt <- c(min(x$summary$rtCor) - 100, max(x$summary$rtCor) + 100)
+    }
+    
     plot(c(1, 2), x$summary$rtCor, type = "o", col = cols[1],
          ylim = ylimRt, xlim = c(0.5, 2.5),
          ylab = ylabs[7], xlab = "",
@@ -353,6 +385,10 @@ plot.dmcsim <- function(x,
   
   # error rate
   if (showFig[8]) {
+    
+    if (is.null(ylimErr)) {
+      ylimErr <- c(0, max(x$summary$perErr) + 5)
+    }
     plot(c(1, 2), x$summary$perErr, type = "o", col = cols[1],
          ylim = ylimErr, xlim = c(0.5, 2.5),
          ylab = ylabs[8], xlab = "",
@@ -363,6 +399,11 @@ plot.dmcsim <- function(x,
   
   # rtError
   if (showFig[9]) {
+    
+    if (is.null(ylimRt)) {
+      ylimRt <- c(min(x$summary$rtCor) - 100, max(x$summary$rtCor) + 100)
+    }
+    
     plot(c(1, 2), x$summary$rtErr, type = "o", col = cols[1],
          ylim = ylimRt, xlim = c(0.5, 2.5),
          ylab = ylabs[9], xlab = "",
@@ -398,7 +439,7 @@ plot.dmcsim <- function(x,
 #' # Example 1
 #' params <- list(amp = seq(20, 30, 2))
 #' dmc <- dmcSims(params)
-#' plot(dmc, ncol = 2, xlim = c(0, 1300), ylim = c(-100, 200), col = c("red", "green"))
+#' plot(dmc, ncol = 2, col = c("red", "green"))
 #'
 #' # Example 2
 #' params <- list(amp=c(10, 20), tau = seq(20, 80, 40), drc = seq(0.2, 0.6, 0.2), nTrl = 50000)
@@ -409,7 +450,7 @@ plot.dmcsim <- function(x,
 #'
 #' @export
 plot.dmclist <- function(x,
-                         ylim = c(-50, 150),
+                         ylim = NULL,
                          xlim = NULL,
                          col=c("black", "lightgrey"),
                          lineType = "l",
@@ -420,6 +461,10 @@ plot.dmclist <- function(x,
   # default xlimit
   if (is.null(xlim)) {
     xlim <- c(0, x[[1]]$prms$tmax)
+  }
+  # default ylimit
+  if (is.null(ylim)) {
+    ylim <- c(-50, 100)
   }
   
   # colour range
@@ -451,14 +496,14 @@ plot.dmclist <- function(x,
 #' @param x Output from dmcObservedData
 #' @param figType summary, rtCorrect, errorRate, rtErrors, cdf, caf, delta, all
 #' @param subject NULL (aggregated data across all subjects) or integer for subject number
-#' @param xlimCDF xlimit for CDF plot
 #' @param legend TRUE/FALSE (or FUNCTION) plot legend on each plot
 #' @param labels Condition labels c("Compatible", "Incompatible") default
 #' @param cols Condition colours c("green", "red") default
 #' @param errorBars TRUE(default)/FALSE Plot errorbars
 #' @param errorBarType sd(default), or se
 #' @param ylimRt ylimit for Rt plots
-#' @param ylimEr ylimit for error rate plots
+#' @param ylimErr ylimit for error rate plots
+#' @param xlimCDF xlimit for CDF plot
 #' @param ylimCAF ylimit for CAF plot
 #' @param cafBinLabels TRUE/FALSE
 #' @param ylimDelta ylimit for delta plot
@@ -512,18 +557,18 @@ plot.dmclist <- function(x,
 plot.dmcob <- function(x,
                        figType = "summary",
                        subject = NULL,
-                       xlimCDF = NULL,
                        legend = TRUE,
                        labels = c("Compatible", "Incompatible"),
                        cols = c("black", "green", "red"),
                        errorBars = FALSE,
                        errorBarType = "sd",
-                       ylimRt = c(200, 800),
-                       ylimEr = c(0, 20),
-                       ylimCAF = c(0, 1),
+                       ylimRt = NULL,
+                       ylimErr = NULL,
+                       xlimCDF = NULL,
+                       ylimCAF = NULL,
                        cafBinLabels = FALSE,
-                       ylimDelta = c(-50, 100),
-                       xlimDelta = c(200, 1000),
+                       ylimDelta = NULL,
+                       xlimDelta = NULL,
                        xlabs = TRUE,
                        ylabs = TRUE,
                        xaxts = TRUE,
@@ -537,6 +582,7 @@ plot.dmcob <- function(x,
     on.exit(par(opar))
   }
   
+  figType <- tolower(figType)
   figTypes <- c("summary", "all", "rtCorrect", "errorRate", "rtErrors", "cdf", "caf", "delta")
   if (length(figType) > 1 || !figType %in% figTypes) {
     stop("figType must be one of:", paste0(figTypes, collapse = ", "))
@@ -604,6 +650,11 @@ plot.dmcob <- function(x,
   
   # rtCorrect
   if (showFig[1]) {
+    
+    if (is.null(ylimRt)) {
+      ylimRt <- c(min(x$summary$rtCor) - 100, max(x$summary$rtCor) + 100)
+    }
+    
     plot(c(1, 2), x$summary$rtCor, type = "o", col = cols[1],
          ylim = ylimRt, xlim = c(0.5, 2.5),
          ylab = ylabs[1], xlab = "",
@@ -617,8 +668,13 @@ plot.dmcob <- function(x,
   
   # errorRate
   if (showFig[2]) {
+    
+    if (is.null(ylimErr)) {
+      ylimErr <- c(0, max(x$summary$perErr) + 5)
+    }
+    
     plot(c(1, 2), x$summary$perErr, type = "o", col = cols[1],
-         ylim = ylimEr, xlim = c(0.5, 2.5),
+         ylim = ylimErr, xlim = c(0.5, 2.5),
          ylab = ylabs[2], xlab = "",
          xaxt = "n", yaxt = yaxts, ...)
     axis(1, at = c(1, 2), labels = xlabs[1:2])
@@ -645,7 +701,7 @@ plot.dmcob <- function(x,
   if (showFig[4]) {
     
     if (is.null(xlimCDF)) {
-      xlimCDF <- c(min(x$delta$meanComp) - 100, min(x$delta$meanComp) + 100)
+      xlimCDF <- c(min(x$delta$meanBin) - 50, max(x$delta$meanBin) + 50)
     }
     
     ndelta <- nrow(x$delta)
@@ -674,6 +730,11 @@ plot.dmcob <- function(x,
   
   # caf
   if (showFig[5]) {
+    
+    if (is.null(ylimCAF)) {
+      ylimCAF <- c(0, 1)
+    }
+    
     plot(x$caf$accPer[x$caf$Comp == "comp"],  type = "o",
          ylim = ylimCAF,
          ylab = ylabs[5], xlab = xlabs[5],
@@ -710,7 +771,16 @@ plot.dmcob <- function(x,
     
   }
   
+  # delta
   if (showFig[6]) {
+    
+    if (is.null(xlimDelta)) {
+      xlimDelta <- c(min(x$delta$meanBin) - 50, max(x$delta$meanBin) + 50)
+    }
+    if (is.null(ylimDelta)) {
+      ylimDelta <- c(min(x$delta$meanEffect) - 50, max(x$delta$meanEffect) + 50)
+    }
+    
     plot(x$delta$meanBin, x$delta$meanEffect, type = "o", col = cols[1],
          ylim = ylimDelta, xlim = xlimDelta,
          ylab = ylabs[6], xlab = xlabs[6],
@@ -745,7 +815,8 @@ plot.dmcob <- function(x,
 #' @param errorBars TRUE(default)/FALSE Plot errorbars
 #' @param errorBarType sd(default), or se
 #' @param ylimRt ylimit for Rt plots
-#' @param ylimEr ylimit for error rate plots
+#' @param ylimErr ylimit for error rate plots
+#' @param xlimCDF xlimit for CDF plot
 #' @param ylimCAF ylimit for CAF plot
 #' @param cafBinLabels TRUE/FALSE
 #' @param ylimDelta ylimit for delta plot
@@ -765,7 +836,7 @@ plot.dmcob <- function(x,
 #' datFlanker <- dmcObservedData(flankerDataRaw, nDelta = 9)
 #' datSimon <- dmcObservedData(simonDataRaw, nDelta = 9)
 #' dat <- dmcCombineObservedData(datFlanker, datSimon)  # combine flanker/simon data
-#' plot(dat, figType = "delta", xlimDelta = c(200, 700), 
+#' plot(dat, figType = "delta", 
 #'      cols = c("black", "darkgrey"), pchs = c(1, 2), resetPar = FALSE)  
 #' legend(200, 0, legend = c("Flanker Task", "Simon Task"), 
 #'        col = c("black", "darkgrey"), lty = c(1, 1))
@@ -782,12 +853,13 @@ plot.dmcobs <- function(x,
                         pchs = c(1, 1),
                         errorBars = FALSE,
                         errorBarType = "sd",
-                        ylimRt = c(200, 800),
-                        ylimEr = c(0, 20),
-                        ylimCAF = c(0, 1),
+                        ylimRt = NULL,
+                        ylimErr = NULL,
+                        xlimCDF = NULL,
+                        ylimCAF = NULL,
                         cafBinLabels = FALSE,
-                        ylimDelta = c(-50, 100),
-                        xlimDelta = c(200, 1000),
+                        ylimDelta = NULL,
+                        xlimDelta = NULL,
                         xlabs = TRUE,
                         ylabs = TRUE,
                         xaxts = TRUE,
@@ -801,7 +873,8 @@ plot.dmcobs <- function(x,
     on.exit(par(opar))
   }
   
-  figTypes <- c("all", "rtCorrect", "errorRate", "rtErrors", "cdf", "caf", "delta")
+  figType <- tolower(figType)
+  figTypes <- c("all", "rtcorrect", "errorrate", "rterrors", "cdf", "caf", "delta")
   if (length(figType) > 1 || !figType %in% figTypes) {
     stop("figType must be one of:", paste0(figTypes, collapse = ", "))
   }
@@ -862,6 +935,16 @@ plot.dmcobs <- function(x,
   # rtCorrect
   if (showFig[1]) {
     
+    if (is.null(ylimRt)) {
+      miny <- 0
+      maxy <- Inf
+      for (i in 1:length(x)) {
+        miny <- max(miny, min(x[[i]]$summary$rtCor))
+        maxy <- min(maxy, max(x[[i]]$summary$rtCor))
+      }
+      ylimRt <- c(miny - 100, maxy + 100)
+    } 
+    
     plot(NULL, NULL,
          ylim = ylimRt, xlim = c(0.5, 2.5),
          ylab = ylabs[1], xlab = "",
@@ -881,8 +964,16 @@ plot.dmcobs <- function(x,
   # errorRate
   if (showFig[2]) {
     
+    if (is.null(ylimErr)) {
+      maxy <- Inf
+      for (i in 1:length(x)) {
+        maxy <- min(maxy, max(x[[i]]$summary$perErr))
+      }
+      ylimErr <- c(0, maxy + 5)
+    } 
+    
     plot(NULL, NULL, 
-         ylim = ylimEr, xlim = c(0.5, 2.5),
+         ylim = ylimErr, xlim = c(0.5, 2.5),
          ylab = ylabs[2], xlab = "",
          xaxt = "n", yaxt = yaxts, ...)
     axis(1, at = c(1, 2), labels = xlabs[1:2])
@@ -899,6 +990,16 @@ plot.dmcobs <- function(x,
   
   # rtError
   if (showFig[3]) {
+    
+    if (is.null(ylimRt)) {
+      miny <- 0
+      maxy <- Inf
+      for (i in 1:length(x)) {
+        miny <- max(miny, min(x[[i]]$summary$rtCor))
+        maxy <- min(maxy, max(x[[i]]$summary$rtCor))
+      }
+      ylimRt <- c(miny - 100, maxy + 100)
+    } 
     
     plot(NULL, NULL, 
          ylim = ylimRt, xlim = c(0.5, 2.5),
@@ -919,8 +1020,18 @@ plot.dmcobs <- function(x,
   # CDF
   if (showFig[4]) {
     
+    if (is.null(xlimCDF)) {
+      minx <- 0
+      maxx <- Inf
+      for (i in 1:length(x)) {
+        minx <- max(minx, min(x[[i]]$delta$meanBin))
+        maxx <- min(maxx, max(x[[i]]$delta$meanBin))
+      }
+      xlimCDF <- c(minx - 100, maxx + 100)
+    } 
+    
     plot(NULL, NULL, 
-         ylim = c(0, 1), xlim = c(200, 1000),
+         ylim = c(0, 1), xlim = xlimCDF,
          ylab = ylabs[4], xlab = xlabs[4],
          xaxt = xaxts, yaxt = "n", ...)
     if (xaxts == "n") axis(side = 1, labels = FALSE)  # keep tick marks
@@ -953,6 +1064,11 @@ plot.dmcobs <- function(x,
   
   # caf
   if (showFig[5]) {
+    
+    if (is.null(ylimCAF)) {
+      ylimCAF <- c(0, 1)
+    } 
+    
     nCAF <- length(x[[1]]$caf$bin) / 2
     plot(NULL, NULL,
          ylim = ylimCAF,
@@ -992,6 +1108,26 @@ plot.dmcobs <- function(x,
   }
   
   if (showFig[6]) {
+    
+    if (is.null(xlimDelta)) {
+      minx <- 0
+      maxx <- Inf
+      for (i in 1:length(x)) {
+        minx <- max(minx, min(x[[i]]$delta$meanBin))
+        maxx <- min(maxx, max(x[[i]]$delta$meanBin))
+      }
+      xlimDelta <- c(minx - 100, maxx + 100)
+    } 
+    
+    if (is.null(ylimDelta)) {
+      miny <- 0
+      maxy <- Inf
+      for (i in 1:length(x)) {
+        miny <- max(miny, min(x[[i]]$delta$meanEffect))
+        maxy <- min(maxy, max(x[[i]]$delta$meanEffect))
+      }
+      ylimDelta <- c(miny - 20, maxy + 20)
+    } 
     
     plot(NULL, NULL,
          ylim = ylimDelta, xlim = xlimDelta,
@@ -1036,7 +1172,7 @@ plot.dmcobs <- function(x,
 #' @param labels Condition labels c("Compatible", "Incompatible", "Observed", "Predicted") default
 #' @param cols Condition colours c("green", "red") default
 #' @param ylimRt ylimit for Rt plots
-#' @param ylimEr ylimit for error rate plots
+#' @param ylimErr ylimit for error rate plots
 #' @param ylimCAF ylimit for CAF plot
 #' @param cafBinLabels TRUE/FALSE
 #' @param ylimDelta ylimit for delta plot
@@ -1054,7 +1190,7 @@ plot.dmcobs <- function(x,
 #' \donttest{
 #' # Example 1
 #' resTh <- dmcFit(flankerData, nTrl = 5000)
-#' plot(resTh, flankerData)
+#' plot(resTh, flankerData, figType = "delta")
 #'
 #' # Example 2
 #' resTh <- dmcFit(flankerData, nTrl = 5000)
@@ -1074,12 +1210,13 @@ plot.dmcfit <- function(x,
                         legend = TRUE,
                         labels = c("Compatible", "Incompatible", "Observed", "Predicted"),
                         cols = c("black", "green", "red"),
-                        ylimRt = c(200, 800),
-                        ylimEr = c(0, 20),
-                        ylimCAF = c(0, 1),
+                        ylimRt = NULL,
+                        ylimErr = NULL,
+                        xlimCDF = NULL,
+                        ylimCAF = NULL,
                         cafBinLabels = FALSE,
-                        ylimDelta = c(-50, 100),
-                        xlimDelta = c(200, 1000),
+                        ylimDelta = NULL,
+                        xlimDelta = NULL, 
                         xlabs = TRUE,
                         ylabs = TRUE,
                         xaxts = TRUE,
@@ -1093,7 +1230,8 @@ plot.dmcfit <- function(x,
     on.exit(par(opar))
   }
   
-  figTypes <- c("summary", "all", "rtCorrect", "errorRate", "rtErrors", "cdf", "caf", "delta")
+  figType <- tolower(figType)
+  figTypes <- c("summary", "all", "rtcorrect", "errorrate", "rterrors", "cdf", "caf", "delta")
   if (length(figType) > 1 || !figType %in% figTypes) {
     stop("figType must be one of:", paste0(figTypes, collapse = ", "))
   }
@@ -1158,6 +1296,11 @@ plot.dmcfit <- function(x,
   
   # rtCorrect
   if (showFig[1]) {
+    
+    if (is.null(ylimRt)) {
+      ylimRt <- c(min(x$summary$rtCor) - 100, max(x$summary$rtCor) + 100)
+    }
+    
     plot(c(1,2), y$summary$rtCor, type = "o", col = cols[1],
          ylim = ylimRt, xlim = c(0.5, 2.5),
          ylab = ylabs[1], xlab = "",
@@ -1176,8 +1319,13 @@ plot.dmcfit <- function(x,
   
   # errorRate
   if (showFig[2]) {
+    
+    if (is.null(ylimErr)) {
+      ylimErr <- c(0, max(x$summary$perErr) + 5)
+    }
+    
     plot(c(1,2), y$summary$perErr, type = "o", col = cols[1],
-         ylim = ylimEr, xlim = c(0.5, 2.5),
+         ylim = ylimErr, xlim = c(0.5, 2.5),
          ylab = ylabs[2], xlab = "",
          xaxt = "n", yaxt = yaxts, ...)
     lines(x$summary$perErr, type = "b", lty = 2, ...)
@@ -1194,6 +1342,11 @@ plot.dmcfit <- function(x,
   
   # rt Error
   if (showFig[3]) {
+    
+    if (is.null(ylimRt)) {
+      ylimRt <- c(min(x$summary$rtCor) - 100, max(x$summary$rtCor) + 100)
+    }
+    
     plot(c(1,2), y$summary$rtErr, type = "o", col = cols[1],
          ylim = ylimRt, xlim = c(0.5, 2.5),
          ylab = ylabs[3], xlab = "",
@@ -1212,10 +1365,15 @@ plot.dmcfit <- function(x,
   
   # cdf
   if (showFig[4]) {
+    
+    if (is.null(xlimCDF)) {
+      xlimCDF <- c(min(x$delta$meanComp) - 100, max(x$delta$meanComp) + 100)
+    }
+    
     ndelta <- nrow(y$delta)
     ypoints <- seq(0, 1, length.out = ndelta + 2)[2:(ndelta + 1)]
     plot(y$delta$meanComp, ypoints, type = "p",
-         ylim = c(0, 1), xlim = c(200, 1000),
+         ylim = c(0, 1), xlim = xlimCDF,
          ylab = ylabs[4], xlab = xlabs[4],
          yaxt = "n", col = tail(cols, 2)[1],
          xaxt = xaxts, yaxt = "n", ...)
@@ -1245,6 +1403,11 @@ plot.dmcfit <- function(x,
   
   # caf
   if (showFig[5]) {
+    
+    if (is.null(ylimCAF)) {
+      ylimCAF <- c(0, 1)
+    } 
+    
     plot(y$caf$accPer[y$caf$Comp == "comp"], type = "p",
          ylim = ylimCAF,
          ylab = ylabs[5], xlab = xlabs[5],
@@ -1290,6 +1453,14 @@ plot.dmcfit <- function(x,
   
   # delta
   if (showFig[6]) {
+    
+    if (is.null(xlimDelta)) {
+      xlimDelta <- c(min(x$delta$meanBin) - 50, max(x$delta$meanBin) + 50)
+    }
+    if (is.null(ylimDelta)) {
+      ylimDelta <- c(min(x$delta$meanEffect) - 50, max(x$delta$meanEffect) + 50)
+    }
+    
     plot(y$delta$meanBin, y$delta$meanEffect, col = cols[1],
          ylim = ylimDelta, xlim = xlimDelta,
          ylab = ylabs[6], xlab = xlabs[6],
