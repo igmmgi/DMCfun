@@ -10,7 +10,7 @@ test_that("dmcSim1", {
   testthat::expect_equal(105, round(dat$summary$sdRtCor[1]))   # sd correct
   testthat::expect_equal(0.6, round(dat$summary$perErr[1], 1)) # percentage errors
   testthat::expect_equal(459, round(dat$summary$rtCor[2]))     # rt correct
-  testthat::expect_equal(95,  round(dat$summary$sdRtCor[2]))   # sd correct
+  testthat::expect_equal(94,  round(dat$summary$sdRtCor[2]))   # sd correct
   testthat::expect_equal(1.3, round(dat$summary$perErr[2], 1)) # percentage errors
 
 })
@@ -25,8 +25,8 @@ test_that("dmcSim2", {
   testthat::expect_equal(90,  round(dat$summary$sdRtCor[1]))   # sd correct
   testthat::expect_equal(0.2, round(dat$summary$perErr[1], 1)) # percentage errors
   testthat::expect_equal(484, round(dat$summary$rtCor[2]))     # rt correct
-  testthat::expect_equal(103, round(dat$summary$sdRtCor[2]))   # sd correct
-  testthat::expect_equal(2.3, round(dat$summary$perErr[2], 1)) # percentage errors
+  testthat::expect_equal(102, round(dat$summary$sdRtCor[2]))   # sd correct
+  testthat::expect_equal(2.2, round(dat$summary$perErr[2], 1)) # percentage errors
 
 })
 
@@ -51,12 +51,12 @@ test_that("dmcSim4", {
   # amp = 20, tau = 30, mu = 0.5, sigm = 4, bnds = 75, resMean = 300, resSD = 30
   dat <- dmcSim(varSP = TRUE, printInputArgs = FALSE, printResults = FALSE, setSeed = TRUE)
 
-  testthat::expect_equal(435, round(dat$summary$rtCor[1]))     # rt correct
-  testthat::expect_equal(116, round(dat$summary$sdRtCor[1]))   # sd correct
+  testthat::expect_equal(436, round(dat$summary$rtCor[1]))     # rt correct
+  testthat::expect_equal(117, round(dat$summary$sdRtCor[1]))   # sd correct
   testthat::expect_equal(1.9, round(dat$summary$perErr[1], 1)) # percentage errors
   testthat::expect_equal(452, round(dat$summary$rtCor[2]))     # rt correct
   testthat::expect_equal(100, round(dat$summary$sdRtCor[2]))   # sd correct
-  testthat::expect_equal(6.8, round(dat$summary$perErr[2], 1)) # percentage errors
+  testthat::expect_equal(6.9, round(dat$summary$perErr[2], 1)) # percentage errors
 
 })
 
@@ -67,9 +67,9 @@ test_that("dmcSim5", {
   dat <- dmcSim(varDR = TRUE, printInputArgs = FALSE, printResults = FALSE, setSeed = TRUE)
 
   testthat::expect_equal(477, round(dat$summary$rtCor[1]))     # rt correct
-  testthat::expect_equal(145, round(dat$summary$sdRtCor[1]))   # sd correct
+  testthat::expect_equal(146, round(dat$summary$sdRtCor[1]))   # sd correct
   testthat::expect_equal(3.1, round(dat$summary$perErr[1], 1)) # percentage errors
-  testthat::expect_equal(494, round(dat$summary$rtCor[2]))     # rt correct
+  testthat::expect_equal(495, round(dat$summary$rtCor[2]))     # rt correct
   testthat::expect_equal(134, round(dat$summary$sdRtCor[2]))   # sd correct
   testthat::expect_equal(4.1, round(dat$summary$perErr[2], 1)) # percentage errors
 

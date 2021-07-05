@@ -32,7 +32,8 @@ struct Prms {
     std::vector<double> vCAF;
     bool printInputArgs = true;
     bool printResults = true;
-    bool setSeed = false; // if true, use RNGType rng(1) called
+    bool setSeed = false; // if true, use seed set to seed value
+    unsigned int seedValue = 1;
 };
 
 void print_input_args(Prms &p);

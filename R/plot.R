@@ -159,7 +159,7 @@ plot.dmcsim <- function(x,
     par(mar = c(4, 4, 2, 2), mfrow = c(1, 1), ...)
     showFig[4:9] = TRUE
   } else {
-    showFig[figTypes[5:13] %in% figType] = TRUE
+    showFig[figTypes[5:9] %in% figType] = TRUE
   }
   
   # activation

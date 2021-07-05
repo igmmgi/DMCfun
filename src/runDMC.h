@@ -1,8 +1,11 @@
 #ifndef CPP_RUNDMCSIM_HPP
 #define CPP_RUNDMCSIM_HPP
 
-# include <map>
+#include <boost/random.hpp>
+#include <map>
 #include "inDMC.h"
+
+typedef boost::random::mt19937_64 RNG;
 
 void run_dmc_sim(Prms &p, 
                  std::map<std::string, std::vector<double>> &rsum, 
@@ -21,15 +24,13 @@ std::vector<double> calculate_percentile( std::vector<double> vDelta, std::vecto
 
 void calculate_delta(std::map<std::string,  std::vector<double>> &rdelta);
 
-void variable_drift_rate(Prms &p, std::vector<double> &dr, int sign);
+void variable_drift_rate(Prms &p, std::vector<double> &dr, RNG &rng);
 
-void variable_starting_point(Prms &p, std::vector<double> &sp, int sign);
+void variable_starting_point(Prms &p, std::vector<double> &sp, RNG &rng);
 
-void residual_rt(Prms &p, std::vector<double> &residual_distribution);
+void residual_rt(Prms &p, std::vector<double> &residual_distribution, RNG &rng);
 
 std::vector<double> calculate_caf(std::vector<double> &rts, std::vector<double> &errs, int nBins);
-
-// std::vector<double> linspace(int start, int end, int n);
 
 void run_simulation(Prms &p, 
                     std::vector<double> &activation_sum, 
@@ -40,7 +41,7 @@ void run_simulation(Prms &p,
                     std::vector<double> &rts, 
                     std::vector<double> &errs, 
                     std::vector<double> &slows, 
-                    int sign);
+                    RNG rng);
 
 void run_simulation(Prms &p, 
                     std::vector<double> &u_vec, 
@@ -49,6 +50,6 @@ void run_simulation(Prms &p,
                     std::vector<double> &rts, 
                     std::vector<double> &errs, 
                     std::vector<double> &slows, 
-                    int sign);
+                    RNG rng);
 
 #endif //CPP_RUNDMCSIM_HPP

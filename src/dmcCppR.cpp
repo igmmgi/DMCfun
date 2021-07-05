@@ -27,7 +27,7 @@ List dmcCppR(List r_in) {
   if (r_in.containsElementNamed("spShape"))        p.spShape        = as<double>(r_in["spShape"]);
   if (r_in.containsElementNamed("sigm"))           p.sigm           = as<double>(r_in["sigm"]);
   if (r_in.containsElementNamed("nTrl"))           p.nTrl           = as<unsigned long>(r_in["nTrl"]);
-  if (r_in.containsElementNamed("tmax"))           p.tmax           = as<unsigned long>(r_in["tmax"]);
+  if (r_in.containsElementNamed("tmax"))           p.tmax           = as<unsigned int>(r_in["tmax"]);
   if (r_in.containsElementNamed("varSP"))          p.varSP          = as<bool>(r_in["varSP"]);
   if (r_in.containsElementNamed("spLimLow"))       p.spLimLow       = as<double>(r_in["spLimLow"]);
   if (r_in.containsElementNamed("spLimHigh"))      p.spLimHigh      = as<double>(r_in["spLimHigh"]);
@@ -43,6 +43,7 @@ List dmcCppR(List r_in) {
   if (r_in.containsElementNamed("printInputArgs")) p.printInputArgs = as<bool>(r_in["printInputArgs"]);
   if (r_in.containsElementNamed("printResults"))   p.printResults   = as<bool>(r_in["printResults"]);
   if (r_in.containsElementNamed("setSeed"))        p.setSeed        = as<bool>(r_in["setSeed"]);
+  if (r_in.containsElementNamed("seedValue"))      p.seedValue      = as<unsigned int>(r_in["seedValue"]);
   
   // values for delta/CAF
   if (!p.pDelta.empty()) {
