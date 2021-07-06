@@ -29,7 +29,8 @@
 #' @param nCAF Number of CAF bins
 #' @param printInputArgs TRUE/FALSE
 #' @param printResults TRUE/FALSE
-#' @param setSeed TRUE/FALSE
+#' @param setSeed TRUE/FALSE If true, set seed to seed value
+#' @param seedValue 1
 #'
 #' @return dmcsim
 #'
@@ -80,7 +81,7 @@ dmcSim <- function(amp = 20, tau = 30, drc = 0.5, bnds = 75, resDist = 1, resMea
                    fullData = FALSE, nTrlData = 5,
                    nDelta = 9, pDelta = vector(), nCAF = 5,
                    printInputArgs = TRUE, printResults = TRUE,
-                   setSeed = FALSE) {
+                   setSeed = FALSE, seedValue = 1) {
 
   # change nDelta to length of pDelta if pDelta not empty
   if (length(pDelta) != 0) {
@@ -95,7 +96,7 @@ dmcSim <- function(amp = 20, tau = 30, drc = 0.5, bnds = 75, resDist = 1, resMea
                              fullData = fullData, nTrlData = nTrlData,
                              nDelta = nDelta, pDelta = pDelta, nCAF = nCAF,
                              printInputArgs = printInputArgs, printResults = printResults,
-                             setSeed = setSeed))
+                             setSeed = setSeed, seedValue = seedValue))
   
   summary     <- dmc$summary 
   dmc$summary <- NULL

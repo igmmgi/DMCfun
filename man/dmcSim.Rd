@@ -30,7 +30,8 @@ dmcSim(
   nCAF = 5,
   printInputArgs = TRUE,
   printResults = TRUE,
-  setSeed = FALSE
+  setSeed = FALSE,
+  seedValue = 1
 )
 }
 \arguments{
@@ -84,7 +85,9 @@ dmcSim(
 
 \item{printResults}{TRUE/FALSE}
 
-\item{setSeed}{TRUE/FALSE}
+\item{setSeed}{TRUE/FALSE If true, set seed to seed value}
+
+\item{seedValue}{1}
 }
 \value{
 dmcsim
