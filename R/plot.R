@@ -165,7 +165,7 @@ plot.dmcsim <- function(x,
   # activation
   if (showFig[1]) {
    
-    if (is.null(xlimActivation)){
+    if (is.null(xlimActivation)) {
       xlimActivation = c(0, x$prms$tmax)
     }
     
@@ -1013,8 +1013,8 @@ plot.dmcobs <- function(x,
   if (showFig[4]) {
     
     if (is.null(xlimCDF)) {
-      minx  <- min(sapply(x, function(x) min(x$summary$meanBin)))
-      maxx  <- max(sapply(x, function(x) max(x$summary$meanBin)))
+      minx  <- min(sapply(x, function(x) min(x$delta$meanBin)))
+      maxx  <- max(sapply(x, function(x) max(x$delta$meanBin)))
       xlimCDF <- c(minx - 100, maxx + 100)
     } 
     
@@ -1030,7 +1030,7 @@ plot.dmcobs <- function(x,
     }
    
     ndelta <- nrow(x[[1]]$delta) 
-    ypoints <- seq(0, 1, length.out=ndelta+2)[2:(ndelta+1)]
+    ypoints <- seq(0, 1, length.out = ndelta + 2)[2:(ndelta + 1)]
     for (i in 1:length(x)) { 
       lines(x[[i]]$delta$meanComp, ypoints, type = "o",
            ylim = c(0, 1), xlim = c(200, 1000),
