@@ -700,7 +700,7 @@ minimizeCostValue <- function(x,
                   printInputArgs = printInputArgs, printResults = printResults)
   
   cost <- costFunction(resTh, resOb)
-  cat(" | cost:", round(cost, 1))
+  cat(" | cost:", formatC(cost, 3, format="f"))
   return(cost)
   
 }
@@ -740,10 +740,6 @@ calculateCostValueRMSE <- function(resTh, resOb) {
   
   costValue <- (weightCAF * costCAF) + (weightRT * costRT)
   
-  if (is.na(costValue)) {
-    costValue = Inf;
-  }
-  
   return(costValue)
   
 }
@@ -777,10 +773,6 @@ calculateCostValueSPE <- function(resTh, resOb) {
   costRT <- sum(((resOb$delta[,2:3]  - resTh$delta[,2:3]) / resOb$delta[2:3])**2)
   
   costValue <- costRT + costCAF 
-  
-  if (is.na(costValue)) {
-    costValue = Inf;
-  }
  
   return(costValue)
   
