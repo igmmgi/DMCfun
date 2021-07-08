@@ -31,7 +31,7 @@
 #' @param varSP Variable starting point TRUE/FALSE
 #' @param printInputArgs TRUE/FALSE
 #' @param printResults TRUE/FALSE
-#' @param maxit The maximum number of iterations (Default: 500)
+#' @param optimxControl Control parameters passed to optimx
 #'
 #' @return dmcfit
 #'
@@ -117,8 +117,6 @@ dmcFit <- function(resOb,
   # default optimx control parameters 
   defaultOptimxControl <- list(parscale = parScale[!as.logical(fixedFit)], maxit = 500)
   optimxControl        <- modifyList(defaultOptimxControl, optimxControl)
-  
-  print(optimxControl)
   
   # check observed data contains correct number of delta/CAF bins
   if (nrow(resOb$delta) != nDelta) {
@@ -401,7 +399,7 @@ dmcFitDE <- function(resOb,
 #' @param subjects NULL (aggregated data across all subjects) or integer for subject number
 #' @param printInputArgs TRUE/FALSE
 #' @param printResults TRUE/FALSE
-#' @param maxit The maximum number of iterations (Default: 500)
+#' @param optimxControl Control parameters passed to optimx
 #'
 #' @return dmcfit_subject List of dmcfit per subject fitted (see dmcFit)
 #'
@@ -439,7 +437,7 @@ dmcFitSubject <- function(resOb,
                           subjects        = c(),
                           printInputArgs  = TRUE,
                           printResults    = FALSE,
-                          maxit           = 500) {
+                          optimxControl   = list()) {
   
   if (length(subjects) == 0) {
     subjects = unique(resOb$summarySubject$Subject)  # fit all individual subjects in data
@@ -481,7 +479,7 @@ dmcFitSubject <- function(resOb,
                                 rtMax           = rtMax,
                                 printInputArgs  = printInputArgs,
                                 printResults    = printResults, 
-                                maxit           = maxit)
+                                optimxControl   = optimxControl)
     
   }
   
