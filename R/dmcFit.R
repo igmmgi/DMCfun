@@ -93,7 +93,7 @@ dmcFit <- function(resOb,
                    costFunction    = "RMSE",
                    printInputArgs  = TRUE,
                    printResults    = FALSE, 
-                   maxit           = 500) {
+                   optimxControl   = list()) {
   
   # default parameter space
   defaultStartVals <- list(amp = 20, tau = 200, drc = 0.5, bnds =  75, resMean = 300, resSD =  30, aaShape = 2, spShape = 3, sigm =  4)
@@ -113,6 +113,12 @@ dmcFit <- function(resOb,
   
   parScale  <- unlist(startVals) / min(unlist(startVals))
   prms      <- startVals
+  
+  # default optimx control parameters 
+  defaultOptimxControl <- list(parscale = parScale[!as.logical(fixedFit)], maxit = 500)
+  optimxControl        <- modifyList(defaultOptimxControl, optimxControl)
+  
+  print(optimxControl)
   
   # check observed data contains correct number of delta/CAF bins
   if (nrow(resOb$delta) != nDelta) {
@@ -186,8 +192,7 @@ dmcFit <- function(resOb,
                         nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, nCAF = nCAF, varSP = varSP, 
                         rtMax = rtMax, minVals = minVals, maxVals = maxVals,
                         printInputArgs = printInputArgs, printResults = printResults,
-                        method = "Nelder-Mead",
-                        control = list(parscale = parScale[!as.logical(fixedFit)], maxit = maxit))
+                        method = "Nelder-Mead", control = optimxControl)
   
   prms[!as.logical(fixedFit)] <- fit[1:attr(fit, "npar")]
   
@@ -199,7 +204,6 @@ dmcFit <- function(resOb,
   }
   prms <- as.list(prms)
   
-  message(sprintf("%s: %.3f\n", costFunction, fit$value))
   dmcfit <- dmcSim(amp = prms$amp, tau = prms$tau, drc = prms$drc,
                    bnds = prms$bnds, resMean = prms$resMean, resSD = prms$resSD, rtMax = rtMax,
                    aaShape = prms$aaShape, sigm = prms$sigm,
@@ -353,7 +357,7 @@ dmcFitDE <- function(resOb,
   }
   prms <- as.list(prms)
   
-  message(sprintf("%s: %.3f\n", costFunction, fit$optim$bestval))
+  cat("\n")
   dmcfit <- dmcSim(amp = prms$amp, tau = prms$tau, drc = prms$drc,
                    bnds = prms$bnds, resMean = prms$resMean, resSD = prms$resSD, rtMax = rtMax,
                    aaShape = prms$aaShape, sigm = prms$sigm,
@@ -700,7 +704,7 @@ minimizeCostValue <- function(x,
                   printInputArgs = printInputArgs, printResults = printResults)
   
   cost <- costFunction(resTh, resOb)
-  cat(" | cost:", formatC(cost, 3, format="f"))
+  cat(" | cost:", formatC(cost, 3, format = "f"))
   return(cost)
   
 }
