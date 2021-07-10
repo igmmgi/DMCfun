@@ -25,8 +25,8 @@ void run_dmc_sim(Prms &p,
     
     // equation 4
     std::vector<double> eq4(p.tmax);
-    for (unsigned int i = 1; i <= p.tmax; i++)
-        eq4[i - 1] = (p.amp * exp(-(i / p.tau))) * pow(((exp(1.0) * i / (p.aaShape - 1) / p.tau)), (p.aaShape - 1));
+    for (unsigned int i = 0; i < p.tmax; i++)
+        eq4[i] = p.amp * exp(-(i+1.0) / p.tau) * pow((exp(1) * (i+1.0) / (p.aaShape - 1) / p.tau), p.aaShape - 1);
     rsim["eq4"] = eq4;
     
     // run comp and incomp simulation 
@@ -69,7 +69,7 @@ void run_dmc_sim_ci(Prms &p,
 
     std::vector<double> u_vec(p.tmax);
     for (auto i = 0u; i < u_vec.size(); i++)
-        u_vec[i] = sign * rsim.at("eq4")[i] * ((p.aaShape - 1) / (i + 1) - 1 / p.tau);
+        u_vec[i] = sign * rsim.at("eq4")[i] * ((p.aaShape - 1) / (i + 1.0) - 1 / p.tau);
 
     // variable drift rate/starting point?
     std::vector<double> dr(p.nTrl, p.drc);

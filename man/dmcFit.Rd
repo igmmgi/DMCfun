@@ -22,7 +22,7 @@ dmcFit(
   costFunction = "RMSE",
   printInputArgs = TRUE,
   printResults = FALSE,
-  maxit = 500
+  optimxControl = list()
 )
 }
 \arguments{
@@ -70,7 +70,7 @@ resSD = T, aaShape = T, spShape = T, sigm = T))}
 
 \item{printResults}{TRUE/FALSE}
 
-\item{maxit}{The maximum number of iterations (Default: 500)}
+\item{optimxControl}{Control parameters passed to optimx}
 }
 \value{
 dmcfit

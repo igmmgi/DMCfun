@@ -23,7 +23,7 @@ dmcFitSubject(
   subjects = c(),
   printInputArgs = TRUE,
   printResults = FALSE,
-  maxit = 500
+  optimxControl = list()
 )
 }
 \arguments{
@@ -63,7 +63,7 @@ dmcFitSubject(
 
 \item{printResults}{TRUE/FALSE}
 
-\item{maxit}{The maximum number of iterations (Default: 500)}
+\item{optimxControl}{Control parameters passed to optimx}
 }
 \value{
 dmcfit_subject List of dmcfit per subject fitted (see dmcFit)
