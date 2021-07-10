@@ -26,6 +26,7 @@
 #' @param nCAF Number of CAF bins. 
 #' @param nDelta Number of delta bins. 
 #' @param pDelta Alternative to nDelta by directly specifying required percentile values   
+#' @param tDelta Type of delta calculation (1 = percentile, 2 = tile average) 
 #' @param costFunction Cost function to minimise root mean square error ("RMSE": default) or squared percentage error ("SPE") 
 #' @param rtMax limit on simulated RT (decision + non-decisional component)
 #' @param varSP Variable starting point TRUE/FALSE
@@ -88,6 +89,7 @@ dmcFit <- function(resOb,
                    nCAF            = 5,
                    nDelta          = 19,
                    pDelta          = vector(),
+                   tDelta          = 1,
                    varSP           = TRUE,
                    rtMax           = 5000,
                    costFunction    = "RMSE",
@@ -168,7 +170,7 @@ dmcFit <- function(resOb,
                       bnds = startValsGrid$bnds[i], resMean = startValsGrid$resMean[i], resSD = startValsGrid$resSD[i], rtMax = rtMax,
                       aaShape = startValsGrid$aaShape[i], spShape = startValsGrid$spShape[i],
                       sigm = startValsGrid$sigm[i],  spLim = c(-startValsGrid$bnds[i], startValsGrid$bnds[i]),
-                      nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, nCAF = nCAF, varSP = varSP,
+                      nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, nCAF = nCAF, varSP = varSP,
                       printInputArgs = TRUE, printResults = FALSE)
       return(calculateCostValue(resTh, resOb))
     }
@@ -187,7 +189,7 @@ dmcFit <- function(resOb,
   # optimize
   fit <- optimx::optimx(par = as.numeric(startVals[!as.logical(fixedFit)]), fn = minimizeCostValue,
                         costFunction = calculateCostValue, prms = prms, fixedFit = fixedFit, resOb = resOb,
-                        nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, nCAF = nCAF, varSP = varSP, 
+                        nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, nCAF = nCAF, varSP = varSP, 
                         rtMax = rtMax, minVals = minVals, maxVals = maxVals,
                         printInputArgs = printInputArgs, printResults = printResults,
                         method = "Nelder-Mead", control = optimxControl)
@@ -206,7 +208,7 @@ dmcFit <- function(resOb,
                    bnds = prms$bnds, resMean = prms$resMean, resSD = prms$resSD, rtMax = rtMax,
                    aaShape = prms$aaShape, sigm = prms$sigm,
                    spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
-                   nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, nCAF = nCAF, varSP = varSP,
+                   nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, nCAF = nCAF, varSP = varSP,
                    printResults = TRUE)
 
   # fitted parameters  
@@ -242,6 +244,7 @@ dmcFit <- function(resOb,
 #' @param nCAF Number of CAF bins. 
 #' @param nDelta Number of delta bins. 
 #' @param pDelta Alternative to nDelta by directly specifying required percentile values   
+#' @param tDelta Type of delta calculation (1 = percentile, 2 = tile average) 
 #' @param costFunction Cost function to minimise root mean square error ("RMSE": default) or squared percentage error ("SPE") 
 #' @param rtMax limit on simulated RT (decision + non-decisional component)
 #' @param varSP Variable starting point TRUE/FALSE
@@ -279,6 +282,7 @@ dmcFitDE <- function(resOb,
                      nCAF         = 5,
                      nDelta       = 19,
                      pDelta       = vector(), 
+                     tDelta       = 1,
                      costFunction = "RMSE",
                      varSP        = TRUE,
                      rtMax        = 5000, 
@@ -336,6 +340,7 @@ dmcFitDE <- function(resOb,
                          nDelta = nDelta, 
                          nCAF = nCAF, 
                          pDelta = pDelta, 
+                         tDelta = tDelta, 
                          varSP = varSP, 
                          rtMax = rtMax, 
                          printInputArgs = FALSE,  
@@ -360,7 +365,7 @@ dmcFitDE <- function(resOb,
                    bnds = prms$bnds, resMean = prms$resMean, resSD = prms$resSD, rtMax = rtMax,
                    aaShape = prms$aaShape, sigm = prms$sigm,
                    spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
-                   nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, nCAF = nCAF, varSP = varSP,
+                   nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, nCAF = nCAF, varSP = varSP,
                    printResults = TRUE)
  
   # fitted parameters 
@@ -393,6 +398,7 @@ dmcFitDE <- function(resOb,
 #' @param nCAF Number of CAF bins. 
 #' @param nDelta Number of delta bins. 
 #' @param pDelta Alternative to nDelta by directly specifying required percentile values   
+#' @param tDelta Type of delta calculation (1 = percentile, 2 = tile average) 
 #' @param costFunction Cost function to minimise root mean square error ("RMSE": default) or squared percentage error ("SPE") 
 #' @param varSP Variable starting point TRUE/FALSE
 #' @param rtMax limit on simulated RT (decision + non-decisional component)
@@ -431,6 +437,7 @@ dmcFitSubject <- function(resOb,
                           nCAF            = 5,
                           nDelta          = 19,
                           pDelta          = vector(),
+                          tDelta          = 1,
                           costFunction    = "RMSE",
                           varSP           = TRUE,
                           rtMax           = 5000,
@@ -474,6 +481,7 @@ dmcFitSubject <- function(resOb,
                                 nCAF            = nCAF,
                                 nDelta          = nDelta,
                                 pDelta          = pDelta,
+                                tDelta          = tDelta,
                                 costFunction    = costFunction,
                                 varSP           = varSP,
                                 rtMax           = rtMax,
@@ -504,6 +512,7 @@ dmcFitSubject <- function(resOb,
 #' @param nCAF Number of CAF bins. 
 #' @param nDelta Number of delta bins. 
 #' @param pDelta Alternative to nDelta by directly specifying required percentile values   
+#' @param tDelta Type of delta calculation (1 = percentile, 2 = tile average) 
 #' @param costFunction Cost function to minimise root mean square error ("RMSE": default) or squared percentage error ("SPE") 
 #' @param varSP Variable starting point TRUE/FALSE
 #' @param rtMax limit on simulated RT (decision + non-decisional component)
@@ -536,6 +545,7 @@ dmcFitSubjectDE <- function(resOb,
                             nCAF         = 5,
                             nDelta       = 19,
                             pDelta       = vector(),
+                            tDelta       = 1,
                             costFunction = "RMSE",
                             varSP        = TRUE,
                             rtMax        = 5000,
@@ -571,6 +581,7 @@ dmcFitSubjectDE <- function(resOb,
                                   nCAF         = nCAF,
                                   nDelta       = nDelta,
                                   pDelta       = pDelta,
+                                  tDelta       = tDelta,
                                   costFunction = costFunction,
                                   varSP        = varSP,
                                   rtMax        = rtMax,
@@ -648,7 +659,7 @@ mean.dmcfit <- function(x, ...) {
   
   # caf
   meanfit$caf <- mergeLists(x, "caf") %>%
-    dplyr::group_by(Comp, bin) %>%
+    dplyr::group_by(Comp, Bin) %>%
     dplyr::summarise(accPer  = mean(accPer), 
                      .groups = 'drop')
   
@@ -681,6 +692,7 @@ minimizeCostValue <- function(x,
                               nTrl, 
                               nDelta, 
                               pDelta, 
+                              tDelta, 
                               nCAF, 
                               varSP, 
                               rtMax, 
@@ -698,7 +710,7 @@ minimizeCostValue <- function(x,
   resTh <- dmcSim(amp = prms$amp, tau = prms$tau, drc = prms$drc, bnds = prms$bnds,
                   resMean = prms$resMean, resSD = prms$resSD, rtMax = rtMax, aaShape = prms$aaShape,
                   spShape = prms$spShape, sigm = prms$sigm, spLim = c(-prms$bnds, prms$bnds),
-                  nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, nCAF = nCAF, varSP = varSP,
+                  nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, nCAF = nCAF, varSP = varSP,
                   printInputArgs = printInputArgs, printResults = printResults)
   
   cost <- costFunction(resTh, resOb)

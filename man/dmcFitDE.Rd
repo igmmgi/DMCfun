@@ -13,6 +13,7 @@ dmcFitDE(
   nCAF = 5,
   nDelta = 19,
   pDelta = vector(),
+  tDelta = 1,
   costFunction = "RMSE",
   varSP = TRUE,
   rtMax = 5000,
@@ -41,6 +42,8 @@ resSD = F, aaShape = F, spShape = F, sigm = T))}
 \item{nDelta}{Number of delta bins.}
 
 \item{pDelta}{Alternative to nDelta by directly specifying required percentile values}
+
+\item{tDelta}{Type of delta calculation (1 = percentile, 2 = tile average)}
 
 \item{costFunction}{Cost function to minimise root mean square error ("RMSE": default) or squared percentage error ("SPE")}
 

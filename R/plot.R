@@ -745,7 +745,7 @@ plot.dmcob <- function(x,
     if (xaxts == "n") {
       axis(side = 1, labels = FALSE)  # keep tick marks
     } else if (xaxts == "s" | cafBinLabels) {
-      nCAF <- length(x$caf$bin) / 2
+      nCAF <- length(x$caf$Bin) / 2
       if (cafBinLabels) {
         stepCAF <- 100 / nCAF
         cafLabels <- paste0(paste(seq(0, 100 - stepCAF, stepCAF), seq(stepCAF, 100, stepCAF), sep = "-"), "%")

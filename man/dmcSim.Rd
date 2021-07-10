@@ -27,6 +27,7 @@ dmcSim(
   nTrlData = 5,
   nDelta = 9,
   pDelta = vector(),
+  tDelta = 1,
   nCAF = 5,
   printInputArgs = TRUE,
   printResults = TRUE,
@@ -78,6 +79,8 @@ dmcSim(
 \item{nDelta}{Number of delta bins}
 
 \item{pDelta}{Alternative to nDelta by directly specifying required percentile values}
+
+\item{tDelta}{TO DO}
 
 \item{nCAF}{Number of CAF bins}
 

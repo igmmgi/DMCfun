@@ -26,6 +26,7 @@
 #' @param nTrlData Number of trials to plot
 #' @param nDelta Number of delta bins
 #' @param pDelta Alternative to nDelta by directly specifying required percentile values   
+#' @param tDelta TO DO 
 #' @param nCAF Number of CAF bins
 #' @param printInputArgs TRUE/FALSE
 #' @param printResults TRUE/FALSE
@@ -79,7 +80,7 @@ dmcSim <- function(amp = 20, tau = 30, drc = 0.5, bnds = 75, resDist = 1, resMea
                    varDR = FALSE, drShape = 3, drLim = c(0.1, 0.7), 
                    rtMax = 5000, 
                    fullData = FALSE, nTrlData = 5,
-                   nDelta = 9, pDelta = vector(), nCAF = 5,
+                   nDelta = 9, pDelta = vector(), tDelta = 1, nCAF = 5,
                    printInputArgs = TRUE, printResults = TRUE,
                    setSeed = FALSE, seedValue = 1) {
 
@@ -94,7 +95,7 @@ dmcSim <- function(amp = 20, tau = 30, drc = 0.5, bnds = 75, resDist = 1, resMea
                              varDR = varDR, drShape = drShape, drLimLow = drLim[1], drLimHigh = drLim[2], 
                              rtMax = rtMax, 
                              fullData = fullData, nTrlData = nTrlData,
-                             nDelta = nDelta, pDelta = pDelta, nCAF = nCAF,
+                             nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, nCAF = nCAF,
                              printInputArgs = printInputArgs, printResults = printResults,
                              setSeed = setSeed, seedValue = seedValue))
   
@@ -112,6 +113,9 @@ dmcSim <- function(amp = 20, tau = 30, drc = 0.5, bnds = 75, resDist = 1, resMea
                                        accPer =  as.numeric(c(summary$caf_comp, summary$caf_incomp)))))
   
   # delta
+  if (tDelta == 2) {
+    nDelta = nDelta + 1;
+  }
   dmc$delta <- as.data.frame(cbind(Bin        = rep(1:nDelta, each = 1, times = 1),
                                    meanComp   = summary$delta_pct_comp, 
                                    meanIncomp = summary$delta_pct_incomp, 

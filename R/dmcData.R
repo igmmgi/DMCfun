@@ -259,6 +259,7 @@ addDataDF <- function(dat, RT=NULL, Error=NULL) {
 #' @param dat Text file(s) containing the observed data or an R DataFrame (see createDF/addDataDF)
 #' @param nCAF Number of CAF bins. 
 #' @param nDelta Number of delta bins. 
+#' @param tDelta Type of delta calculation (1 = percentile, 2 = percentile bin bounds average) 
 #' @param outlier Outlier limits in ms (e.g., c(200, 1200))
 #' @param columns Name of required columns DEFAULT = c("Subject", "Comp", "RT", "Error")
 #' @param compCoding Coding for compatibility DEFAULT = c("comp", "incomp")
@@ -321,6 +322,7 @@ addDataDF <- function(dat, RT=NULL, Error=NULL) {
 dmcObservedData <- function(dat,
                             nCAF = 5,
                             nDelta = 19,
+                            tDelta = 1,
                             outlier = c(200, 1200),
                             columns = c("Subject", "Comp", "RT", "Error"),
                             compCoding = c("comp", "incomp"),
@@ -391,18 +393,18 @@ dmcObservedData <- function(dat,
     calculateCAF(., nCAF = nCAF)
 
   datAgg_caf <- datSubject_caf %>%
-    dplyr::group_by(Comp, bin) %>%
+    dplyr::group_by(Comp, Bin) %>%
     dplyr::summarize(accPer  = mean(accPer),
                      .groups = 'drop')
 
   # DELTA
   datSubject_dec <- dat %>%
     dplyr::filter(Error == 0, RT >= rtMin, RT <= rtMax) %>%
-    calculateDelta(., nDelta = nDelta, quantileType = quantileType)
+    calculateDelta(., nDelta = nDelta, tDelta = tDelta, quantileType = quantileType)
 
   datAgg_dec <- datSubject_dec %>%
     dplyr::mutate(mEffect = meanEffect) %>%
-    dplyr::group_by(bin, binN) %>%
+    dplyr::group_by(Bin) %>%
     dplyr::summarize(meanComp   = mean(meanComp),
                      meanIncomp = mean(meanIncomp),
                      meanBin    = mean(meanBin),
@@ -422,12 +424,12 @@ dmcObservedData <- function(dat,
 
   # caf
   obj$cafSubject        <- as.data.frame(datSubject_caf)
-  names(obj$cafSubject) <- c("Subject", "Comp", "bin", "accPer")
+  names(obj$cafSubject) <- c("Subject", "Comp", "Bin", "accPer")
   obj$caf               <- as.data.frame(datAgg_caf)
 
   # delta
   obj$deltaSubject        <- as.data.frame(datSubject_dec)
-  names(obj$deltaSubject) <- c("Subject", "binN", "bin", "meanComp", "meanIncomp", "meanBin", "meanEffect")
+  names(obj$deltaSubject) <- c("Subject", "Bin", "meanComp", "meanIncomp", "meanBin", "meanEffect")
   obj$delta               <- as.data.frame(datAgg_dec)
 
   class(obj) <- "dmcob"
@@ -529,12 +531,12 @@ calculateCAF <- function(dat,
   # conditional accuracy functions (CAF)
   dat_caf <- dat %>%
     dplyr::group_by(Subject, Comp) %>%
-    dplyr::mutate(bin = ntile(RT, nCAF)) %>%
-    dplyr::group_by(Subject, Comp, bin) %>%
+    dplyr::mutate(Bin = ntile(RT, nCAF)) %>%
+    dplyr::group_by(Subject, Comp, Bin) %>%
     dplyr::summarize(N       = n(),
                      accPer  = sum(Error == 0)/N,
                      .groups = 'drop')  %>%
-    dplyr::group_by(Subject, Comp, bin) %>%
+    dplyr::group_by(Subject, Comp, Bin) %>%
     dplyr::summarize(accPer  = mean(accPer),
                      .groups = 'drop')
 
@@ -553,6 +555,7 @@ calculateCAF <- function(dat,
 #' @param dat DataFrame with columns containing the participant number, condition
 #' compatibility, and RT data (in ms).
 #' @param nDelta Number of delta bins. 
+#' @param tDelta Type of delta calculation (1 = percentile, 2 = tile average) 
 #' @param columns Name of required columns Default: c("Subject", "Comp", "RT")
 #' @param compCoding Coding for compatibility Default: c("comp", "incomp")
 #' @param quantileType Argument (1-9) from R function quantile specifying the algorithm (?quantile)
@@ -580,57 +583,62 @@ calculateCAF <- function(dat,
 #' @export
 calculateDelta <- function(dat,
                            nDelta = 19,
+                           tDelta = 1,
                            columns = c("Subject", "Comp", "RT"),
                            compCoding = c("comp", "incomp"),
                            quantileType = 5) {
-
+  
   # select required columns
   dat <- dat[columns]
   if (ncol(dat) != 3) {
     stop("dat does not contain required/requested columns!")
   }
-
+  
   # create default column names
   if (any(names(dat) != c("Subject", "Comp", "RT"))) {
     names(dat) = c("Subject", "Comp", "RT")
   }
-
+  
   # create default column values for comp and error coding
   if (any(compCoding != c("comp", "incomp"))) {
     dat$Comp <- ifelse(dat$Comp == compCoding[1], "comp", "incomp")
   }
- 
+  
   deltaSeq <- seq(0, 100, length.out = nDelta + 2) 
   deltaSeq <- deltaSeq[2:(length(deltaSeq) - 1)]
   
-  dat_delta <- dat %>%
-    dplyr::group_by(Subject, Comp) %>%
-    dplyr::summarize(binN    = seq(1, length(deltaSeq)),
-                     bin     = deltaSeq,
-                     rt      = quantile(RT, deltaSeq/100, type = quantileType),
-                     .groups = 'drop')  %>%
-    tidyr::pivot_wider(., id_cols = c("Subject", "binN", "bin"), names_from = "Comp", values_from = "rt") %>%
-    dplyr::mutate(meanComp   = comp,
-                  meanIncomp = incomp,
-                  meanBin    = (comp + incomp)/2,
-                  meanEffect = (incomp - comp)) %>%
-    dplyr::select(-dplyr::one_of("comp", "incomp"))
-   
-  # dat_delta <- dat %>%
-  #   dplyr::group_by(Subject, Comp) %>%
-  #   dplyr::mutate(binN = ntile(RT, nDelta),
-  #                 bin  = binN) %>%
-  #   dplyr::group_by(Subject, Comp, binN, bin) %>%
-  #   dplyr::summarize(rt = mean(RT)) %>%
-  #   tidyr::pivot_wider(., id_cols = c("Subject", "binN", "bin"), names_from = "Comp", values_from = "rt") %>%
-  #   dplyr::mutate(meanComp   = comp,
-  #                 meanIncomp = incomp,
-  #                 meanBin    = (comp + incomp)/2,
-  #                 meanEffect = (incomp - comp)) %>%
-  #   dplyr::select(-dplyr::one_of("comp", "incomp"))
+  if (tDelta == 1) {  
+    dat_delta <- dat %>%
+      dplyr::group_by(Subject, Comp) %>%
+      dplyr::summarize(Bin    = seq(1, length(deltaSeq)),
+                       rt      = quantile(RT, deltaSeq/100, type = quantileType),
+                       .groups = 'drop')  %>%
+      tidyr::pivot_wider(., id_cols = c("Subject", "Bin"), names_from = "Comp", values_from = "rt") %>%
+      dplyr::mutate(meanComp   = comp,
+                    meanIncomp = incomp,
+                    meanBin    = (comp + incomp)/2,
+                    meanEffect = (incomp - comp)) %>%
+      dplyr::select(-dplyr::one_of("comp", "incomp"))
+    
+  } else if (tDelta == 2) {
+    
+    dat_delta <- dat %>%
+      dplyr::group_by(Subject, Comp) %>%
+      dplyr::mutate(Bin = ntile(RT, nDelta+1)) %>%
+      dplyr::group_by(Subject, Comp, Bin) %>%
+      dplyr::summarize(rt = mean(RT),
+                       .groups = 'drop')  %>%
+      tidyr::pivot_wider(., id_cols = c("Subject", "Bin"), names_from = "Comp", values_from = "rt") %>%
+      dplyr::mutate(meanComp   = comp,
+                    meanIncomp = incomp,
+                    meanBin    = (comp + incomp)/2,
+                    meanEffect = (incomp - comp)) %>%
+      dplyr::select(-dplyr::one_of("comp", "incomp"))
+    
+  }
   
   return(dat_delta)
-
+  
 }
 
 

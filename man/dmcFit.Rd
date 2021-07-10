@@ -17,6 +17,7 @@ dmcFit(
   nCAF = 5,
   nDelta = 19,
   pDelta = vector(),
+  tDelta = 1,
   varSP = TRUE,
   rtMax = 5000,
   costFunction = "RMSE",
@@ -59,6 +60,8 @@ resSD = T, aaShape = T, spShape = T, sigm = T))}
 \item{nDelta}{Number of delta bins.}
 
 \item{pDelta}{Alternative to nDelta by directly specifying required percentile values}
+
+\item{tDelta}{Type of delta calculation (1 = percentile, 2 = tile average)}
 
 \item{varSP}{Variable starting point TRUE/FALSE}
 

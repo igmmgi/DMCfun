@@ -9,7 +9,7 @@ test_that("calculateCAF", {
   dat  <- addDataDF(dat)
   caf  <- calculateCAF(dat)
 
-  testthat::expect_equal(length(unique(caf$bin)), 5)
+  testthat::expect_equal(length(unique(caf$Bin)), 5)
   testthat::expect_equal(round(mean(caf$accPer), 1),  0.9)
 
   # test 2 10% errors, 10 bins
@@ -17,7 +17,7 @@ test_that("calculateCAF", {
   dat  <- addDataDF(dat)
   caf  <- calculateCAF(dat, nCAF = 10)
 
-  testthat::expect_equal(length(unique(caf$bin)), 10)
+  testthat::expect_equal(length(unique(caf$Bin)), 10)
   testthat::expect_equal(round(mean(caf$accPer), 1),  0.9)
 
   # test 3: 20% errors, 5 bins
@@ -25,7 +25,7 @@ test_that("calculateCAF", {
   dat  <- addDataDF(dat, Error = 20)
   caf  <- calculateCAF(dat, nCAF = 5)
 
-  testthat::expect_equal(length(unique(caf$bin)), 5)
+  testthat::expect_equal(length(unique(caf$Bin)), 5)
   testthat::expect_equal(round(mean(caf$accPer), 1),  0.8)
 
   # test 4: 30% errors, 4 bins
@@ -33,7 +33,7 @@ test_that("calculateCAF", {
   dat  <- addDataDF(dat, Error = 30)
   caf  <- calculateCAF(dat, nCAF = 4)
 
-  testthat::expect_equal(length(unique(caf$bin)), 4)
+  testthat::expect_equal(length(unique(caf$Bin)), 4)
   testthat::expect_equal(round(mean(caf$accPer), 1),  0.7)
 
 

@@ -8,6 +8,7 @@ dmcObservedData(
   dat,
   nCAF = 5,
   nDelta = 19,
+  tDelta = 1,
   outlier = c(200, 1200),
   columns = c("Subject", "Comp", "RT", "Error"),
   compCoding = c("comp", "incomp"),
@@ -23,6 +24,8 @@ dmcObservedData(
 \item{nCAF}{Number of CAF bins.}
 
 \item{nDelta}{Number of delta bins.}
+
+\item{tDelta}{Type of delta calculation (1 = percentile, 2 = percentile bin bounds average)}
 
 \item{outlier}{Outlier limits in ms (e.g., c(200, 1200))}
 

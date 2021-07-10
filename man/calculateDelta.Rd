@@ -7,6 +7,7 @@
 calculateDelta(
   dat,
   nDelta = 19,
+  tDelta = 1,
   columns = c("Subject", "Comp", "RT"),
   compCoding = c("comp", "incomp"),
   quantileType = 5
@@ -17,6 +18,8 @@ calculateDelta(
 compatibility, and RT data (in ms).}
 
 \item{nDelta}{Number of delta bins.}
+
+\item{tDelta}{Type of delta calculation (1 = percentile, 2 = tile average)}
 
 \item{columns}{Name of required columns Default: c("Subject", "Comp", "RT")}
 
