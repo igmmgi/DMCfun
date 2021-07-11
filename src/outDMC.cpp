@@ -29,36 +29,35 @@ void print_results(Prms &p, std::map<std::string, std::vector<double>> &rsum) {
                 << std::setprecision(1) << rsum["resSum_incomp"][5] << "\n\n";
 
     // results delta distribution
-    int nDelta = (p.tDelta == 1) ? p.nDelta : p.nDelta + 1; 
     Rcpp::Rcout << "Delta Values:\n" << "\t";
     if (p.tDelta == 1) {
-      for (int i = 1; i <= nDelta; i++)
+      for (int i = 1; i <= p.nDelta; i++)
         Rcpp::Rcout << p.vDelta[i] << "%\t";
       Rcpp::Rcout << "\n";
     } else if (p.tDelta == 2) {
-      for (int i = 1; i <= nDelta; i++)
+      for (int i = 1; i <= p.nDelta; i++)
         Rcpp::Rcout << "Bin " << i << "\t";
       Rcpp::Rcout << "\n";
     } 
     
     Rcpp::Rcout << "comp" << "\t" << std::fixed << std::setprecision(1);
-    for (int i = 0; i < nDelta; i++) 
+    for (int i = 0; i < p.nDelta; i++) 
         Rcpp::Rcout << rsum["delta_pct_comp"][i] << "\t";
     Rcpp::Rcout << "\n";
 
     Rcpp::Rcout << "incomp" << "\t" << std::fixed << std::setprecision(1);
-    for (int i = 0; i < nDelta; i++) 
+    for (int i = 0; i < p.nDelta; i++) 
         Rcpp::Rcout << rsum["delta_pct_incomp"][i] << "\t";
     Rcpp::Rcout << "\n";
 
     Rcpp::Rcout << "mean" << "\t" << std::fixed << std::setprecision(1);
-    for (int i = 0; i < nDelta; i++) 
+    for (int i = 0; i < p.nDelta; i++) 
         Rcpp::Rcout << rsum["delta_pct_mean"][i] << "\t";
     Rcpp::Rcout << "\n";
 
     Rcpp::Rcout << "effect" << "\t" << std::fixed << std::setprecision(1);
     std::setw(5);
-    for (int i = 0; i < nDelta; i++) 
+    for (int i = 0; i < p.nDelta; i++) 
         Rcpp::Rcout << rsum["delta_pct_delta"][i] << "\t";
     Rcpp::Rcout << "\n\n";
 

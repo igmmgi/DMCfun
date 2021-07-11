@@ -223,7 +223,6 @@ std::vector<double> calculate_percentile( std::vector<double> vDelta, std::vecto
     
     int nDelta = vDelta.size() - 2;                                             
     std::vector<double> res_p(nDelta, 0);                                         
-    std::vector<double> res_b(nDelta + 1, 0);                                         
     
     double pct_idx;
     std::vector<int> pct_idx_int(nDelta);
@@ -242,6 +241,7 @@ std::vector<double> calculate_percentile( std::vector<double> vDelta, std::vecto
       return res_p;
     }     
   
+    std::vector<double> res_b(nDelta + 1, 0);                                         
     unsigned long idxStart, idxEnd;
     idxStart = 0;
     for (unsigned long i = 0; i < pct_idx_int.size() + 1; i++) {

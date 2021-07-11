@@ -52,7 +52,7 @@ List dmcCppR(List r_in) {
     p.vDelta.insert(p.vDelta.begin(), 0);
     p.vDelta.push_back(100);
   } else {
-    p.vDelta = linspace(0, 100, p.nDelta + 2);
+    p.vDelta = linspace(0, 100, p.nDelta + 2 - (p.tDelta - 1));
   }
   p.vCAF = linspace(0, 100, p.nCAF + 1);
   

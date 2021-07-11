@@ -87,6 +87,9 @@ dmcSim <- function(amp = 20, tau = 30, drc = 0.5, bnds = 75, resDist = 1, resMea
   # change nDelta to length of pDelta if pDelta not empty
   if (length(pDelta) != 0) {
     nDelta = length(pDelta)
+    if (tDelta == 2) {
+      nDelta = nDelta + 1
+    }
   }
   
   dmc <- dmcCppR(r_in = list(amp = amp, tau = tau, drc = drc, bnds = bnds, resDist = resDist, resMean = resMean, resSD = resSD, aaShape = aaShape, spShape = spShape,
@@ -113,9 +116,6 @@ dmcSim <- function(amp = 20, tau = 30, drc = 0.5, bnds = 75, resDist = 1, resMea
                                        accPer =  as.numeric(c(summary$caf_comp, summary$caf_incomp)))))
   
   # delta
-  if (tDelta == 2) {
-    nDelta = nDelta + 1;
-  }
   dmc$delta <- as.data.frame(cbind(Bin        = rep(1:nDelta, each = 1, times = 1),
                                    meanComp   = summary$delta_pct_comp, 
                                    meanIncomp = summary$delta_pct_incomp, 
@@ -196,4 +196,3 @@ dmcSims <- function(params,
   return(dmc)
 
 }
-
