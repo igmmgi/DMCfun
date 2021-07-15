@@ -9,8 +9,9 @@
   figType = "all",
   subject = NULL,
   legend = TRUE,
+  legendLabels = c(),
   labels = c("Compatible", "Incompatible"),
-  cols = c("black", "green", "red"),
+  cols = c("black", "gray"),
   ltys = c(1, 1),
   pchs = c(1, 1),
   errorBars = FALSE,
@@ -78,7 +79,7 @@
 \item{...}{additional plot pars}
 }
 \description{
-Plot results from the output of dmcObservedData. The plot
+Plot delta results from the output of dmcObservedData. The plot
 can be an overall rtCorrect, errorRate, rtErrors, cdf, caf, delta, or all
 of the previous plots.
 }
@@ -88,7 +89,7 @@ of the previous plots.
 datFlanker <- dmcObservedData(flankerDataRaw, nDelta = 9)
 datSimon <- dmcObservedData(simonDataRaw, nDelta = 9)
 dat <- dmcCombineObservedData(datFlanker, datSimon)  # combine flanker/simon data
-plot(dat, figType = "delta", 
+plot(dat, figType = "cdf", 
      cols = c("black", "darkgrey"), pchs = c(1, 2), resetPar = FALSE)  
 legend(200, 0, legend = c("Flanker Task", "Simon Task"), 
        col = c("black", "darkgrey"), lty = c(1, 1))

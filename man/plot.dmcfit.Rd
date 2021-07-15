@@ -82,7 +82,7 @@ that dmcSim is run with fullData = TRUE.
 \donttest{
 # Example 1
 resTh <- dmcFit(flankerData, nTrl = 5000)
-plot(resTh, flankerData, figType = "delta")
+plot(resTh, flankerData, figType = "rtcorrect")
 
 # Example 2
 resTh <- dmcFit(flankerData, nTrl = 5000)

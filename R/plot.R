@@ -10,7 +10,8 @@
 #' that dmcSim is run with fullData = TRUE.
 #'
 #' @param x Output from dmcSim
-#' @param figType summary1, summary2, summary3, activation, trials, pdf, cdf, caf, delta, rtCorrect, rtErrors, errorRate, all
+#' @param figType summary1, summary2, summary3, activation, trials, pdf, cdf, 
+#' caf, delta, rtCorrect, rtErrors, errorRate, all
 #' @param xlimActivation xlimit for activation plot
 #' @param xlimTrials xlimit for trials plot
 #' @param xlimPDF xlimit for PDF plot
@@ -87,7 +88,8 @@ plot.dmcsim <- function(x,
   }
   
   figType <- tolower(figType)
-  figTypes <- c("summary1", "summary2", "summary3", "all", "activation", "trials", "pdf", "cdf", "caf", "delta", "rtcorrect", "errorrate",  "rterrors")
+  figTypes <- c("summary1", "summary2", "summary3", "all", "activation", "trials", 
+                "pdf", "cdf", "caf", "delta", "rtcorrect", "errorrate",  "rterrors")
   if (length(figType) > 1 || !figType %in% figTypes) {
     stop("figType must be one of:", paste0(figTypes, collapse = ", "))
   }
@@ -118,7 +120,8 @@ plot.dmcsim <- function(x,
   
   # y-labels
   if (ylabs) {
-    ylabs <- c("E[X(t)]", "X(t)", "PDF", "CDF", "CAF", expression(Delta), "RT Correct [ms]", "Error Rate [%]", "RT Error [%]")
+    ylabs <- c("E[X(t)]", "X(t)", "PDF", "CDF", "CAF", expression(Delta), 
+               "RT Correct [ms]", "Error Rate [%]", "RT Error [%]")
   } else {
     ylabs <- rep("", 9)
   }
@@ -191,14 +194,10 @@ plot.dmcsim <- function(x,
     lines(c(1:x$prms$tmax), x$sim$activation_incomp, col = tail(cols, 2)[2], ...)
     
     # bounds
-    lines(c(0, x$prms$tmax), c( x$prms$bnds,  x$prms$bnds), type = "l", col = "darkgrey", ...)
-    lines(c(0, x$prms$tmax), c(-x$prms$bnds, -x$prms$bnds), type = "l", col = "darkgrey", ...)
-    
-    if (is.function(legend)) {
-      legend()
-    } else if (!is.list(legend) && legend == TRUE) {
-      legend("bottomright", legend = labels, col = tail(cols, 2), lty = c(1, 1), inset = c(0.05, 0.2))
-    }
+    abline(h = -x$prms$bnds, col = "darkgrey"); 
+    abline(h =  x$prms$bnds, col = "darkgrey")
+   
+    add_legend(legend, labels, tail(cols, 2), c(1, 1), c(1, 1))
     
   }
   
@@ -209,16 +208,13 @@ plot.dmcsim <- function(x,
       xlimTrials = c(0, x$prms$tmax)
     }
     
-    # bounds
-    plot(c(0, x$prms$tmax), c(x$prms$bnds, x$prms$bnds), type = "l", col = "darkgrey",
+    plot(NULL, NULL, 
          ylim = c(-x$prms$bnds - 20, x$prms$bnds + 20),
          xlim = xlimTrials,
          xlab = xlabs[2], ylab = ylabs[2],
          xaxt = xaxts, yaxt = yaxts, ...)
     if (xaxts == "n") axis(side = 1, labels = FALSE)  # keep tick marks
     if (yaxts == "n") axis(side = 2, labels = FALSE)  # keep tick marks
-    
-    lines(c(0, x$prms$tmax), c(-x$prms$bnds, -x$prms$bnds), type = "l", col = "darkgrey", ...)
     
     # individual trials until bounds
     for (trl in c(1:x$prms$nTrlData)) {
@@ -228,11 +224,11 @@ plot.dmcsim <- function(x,
       lines(x$trials$incomp[[trl]][1:idx], type = "l", col = tail(cols, 2)[2], ...)
     }
     
-    if (is.function(legend)) {
-      legend()
-    } else if (!is.list(legend) && legend == TRUE) {
-      legend("bottomright", legend = labels, col = tail(cols, 2), lty = c(1, 1), inset = c(0.05, 0.2))
-    }
+    # bounds
+    abline(h = -x$prms$bnds, col = "darkgrey"); 
+    abline(h =  x$prms$bnds, col = "darkgrey")
+    
+    add_legend(legend, labels, tail(cols, 2), c(1, 1), c(1, 1))
     
   }
   
@@ -247,8 +243,8 @@ plot.dmcsim <- function(x,
     }
     
     plot(density(x$sim$rts_comp), col = tail(cols, 2)[1], main = NA, type = "l",
-         ylim = ylimPDF, xlim = xlimPDF,
-         ylab = ylabs[3], xlab = xlabs[3], xaxt = xaxts, yaxt = "n", ...)
+         ylim = ylimPDF, xlim = xlimPDF, ylab = ylabs[3], xlab = xlabs[3], 
+         xaxt = xaxts, yaxt = "n", ...)
     
     if (xaxts == "n") axis(side = 1, labels = FALSE)  # keep tick marks
     if (yaxts == "n") {
@@ -259,11 +255,7 @@ plot.dmcsim <- function(x,
     
     lines(density(x$sim$rts_incomp), col = tail(cols, 2)[2], type = "l", ...)
     
-    if (is.function(legend)) {
-      legend()
-    } else if (!is.list(legend) && legend == TRUE) {
-      legend("topright", legend = labels, col = tail(cols, 2), lty = c(1, 1), inset = c(0.05, 0.05))
-    }
+    add_legend(legend, labels, tail(cols, 2), c(1, 1), c(1, 1))
     
   }
   
@@ -291,13 +283,11 @@ plot.dmcsim <- function(x,
     }
     
     lines(density_incomp$x, cdf_incomp, type = "l", col = tail(cols, 2)[2])
-    abline(h = 0, lty = 2); abline(h = 1, lty = 2)
     
-    if (is.function(legend)) {
-      legend()
-    } else if (!is.list(legend) && legend == TRUE) {
-      legend("bottomright", legend = labels, col = tail(cols, 2), lty = c(1, 1), inset = c(0.05, 0.05))
-    }
+    abline(h = 0, col = "darkgrey", lty = 2); 
+    abline(h = 1, col = "darkgrey", lty = 2)
+    
+    add_legend(legend, labels, tail(cols, 2), c(1, 1), c(1, 1))
     
   }
   
@@ -337,11 +327,7 @@ plot.dmcsim <- function(x,
     
     lines(x$caf$accPer[x$caf$Comp == "incomp"], col = tail(cols, 2)[2], type = "o", ...)
     
-    if (is.function(legend)) {
-      legend()
-    } else if (!is.list(legend) && legend == TRUE) {
-      legend("bottomright", legend = labels, col = tail(cols, 2), lty = c(1, 1), inset = c(0.05, 0.05))
-    }
+    add_legend(legend, labels, tail(cols, 2), c(1, 1), c(1, 1))
     
   }
   
@@ -722,11 +708,7 @@ plot.dmcob <- function(x,
     
     lines(x$delta$meanIncomp, ypoints, type = "o", col = tail(cols, 2)[2], ...)
     
-    if (is.function(legend)) {
-      legend()
-    } else if (!is.list(legend) && legend == TRUE) {
-      legend("bottomright", inset = c(0.025, 0.05), legend = labels, lty = c(1, 1), col = tail(cols, 2), pch = c(1, 1))
-    }
+    add_legend(legend, labels, tail(cols, 2), c(1, 1), c(1, 1))
     
   }
   
@@ -765,11 +747,7 @@ plot.dmcob <- function(x,
     
     lines(x$caf$accPer[x$caf$Comp == "incomp"],  type = "o", col = tail(cols, 2)[2], ...)
     
-    if (is.function(legend)) {
-      legend()
-    } else if (!is.list(legend) && legend == TRUE) {
-      legend("bottomright", inset = c(0.025, 0.05), legend = labels, lty = c(1, 1), col = tail(cols, 2), pch = c(1, 1))
-    }
+    add_legend(legend, labels, tail(cols, 2), c(1, 1), c(1, 1))
     
   }
   
@@ -802,7 +780,7 @@ plot.dmcob <- function(x,
 
 #' @title plot.dmcobs: Plot combined observed data
 #'
-#' @description Plot results from the output of dmcObservedData. The plot
+#' @description Plot delta results from the output of dmcObservedData. The plot
 #' can be an overall rtCorrect, errorRate, rtErrors, cdf, caf, delta, or all
 #' of the previous plots. 
 #'
@@ -838,7 +816,7 @@ plot.dmcob <- function(x,
 #' datFlanker <- dmcObservedData(flankerDataRaw, nDelta = 9)
 #' datSimon <- dmcObservedData(simonDataRaw, nDelta = 9)
 #' dat <- dmcCombineObservedData(datFlanker, datSimon)  # combine flanker/simon data
-#' plot(dat, figType = "delta", 
+#' plot(dat, figType = "cdf", 
 #'      cols = c("black", "darkgrey"), pchs = c(1, 2), resetPar = FALSE)  
 #' legend(200, 0, legend = c("Flanker Task", "Simon Task"), 
 #'        col = c("black", "darkgrey"), lty = c(1, 1))
@@ -849,8 +827,9 @@ plot.dmcobs <- function(x,
                         figType = "all",
                         subject = NULL,
                         legend = TRUE,
+                        legendLabels = c(),
                         labels = c("Compatible", "Incompatible"),
-                        cols = c("black", "green", "red"),
+                        cols = c("black", "gray"),
                         ltys = c(1, 1),
                         pchs = c(1, 1),
                         errorBars = FALSE,
@@ -897,7 +876,11 @@ plot.dmcobs <- function(x,
     x$caf     <- x$cafSubject[x$cafSubject$Subject == subject, ]
     errorBars <- FALSE
   }
-  
+ 
+  if (length(legendLabels) == 0) {
+    legendLabels <- paste0("Cond ", 1:length(x))
+  } 
+   
   if (errorBars) {
     if ((!is.character(errorBarType)) | (!errorBarType %in% c("sd", "se"))) {
       stop("errorBar must be either \"sd\", or \"se\"!")
@@ -965,7 +948,7 @@ plot.dmcobs <- function(x,
     if (is.null(ylimErr)) {
       miny    <- min(sapply(x, function(x) min(x$summary$perErr)))
       maxy    <- max(sapply(x, function(x) max(x$summary$perErr)))
-      ylimErr <- c(minx - 100, maxx + 100)
+      ylimErr <- c(0, maxy + 10)
     } 
     
     plot(NULL, NULL, 
@@ -1040,13 +1023,7 @@ plot.dmcobs <- function(x,
       lines(x[[i]]$delta$meanIncomp, ypoints, type = "o", col = tail(cols, 2)[2], ...)
     }
     
-    if (is.function(legend)) {
-      legend()
-    } else if (!is.list(legend) && legend == TRUE) {
-      if (length(x) == 1) {  # if length > 1, requires custom legend
-        legend("bottomright", inset = c(0.025, 0.05), legend = labels, lty = c(1, 1), col = tail(cols, 2), pch = pchs)
-      }
-    }
+    add_legend(legend, labels, tail(cols, 2), c(1, 1), c(1, 1))
     
   }
   
@@ -1057,7 +1034,7 @@ plot.dmcobs <- function(x,
       ylimCAF <- c(0, 1)
     } 
     
-    nCAF <- length(x[[1]]$caf$bin) / 2
+    nCAF <- length(x[[1]]$caf$Bin) / 2
     plot(NULL, NULL,
          ylim = ylimCAF,
          ylab = ylabs[5], xlab = xlabs[5], xlim = c(0.5, nCAF + 0.5),
@@ -1087,14 +1064,11 @@ plot.dmcobs <- function(x,
       lines(x[[i]]$caf$accPer[x[[i]]$caf$Comp == "incomp"],  type = "o", col = tail(cols, 2)[2], lty = ltys[i], pch = pchs[i], ...)
     }
     
-    if (is.function(legend)) {
-      legend()
-    } else if (!is.list(legend) && legend == TRUE) {
-      legend("bottomright", inset = c(0.025, 0.05), legend = labels, lty = c(1, 1), col = tail(cols, 2), pch = pchs)
-    }
+    add_legend(legend, labels, tail(cols, 2), c(1, 1), c(1, 1))
     
   }
-  
+ 
+  # delta 
   if (showFig[6]) {
     
     if (is.null(xlimDelta)) {
@@ -1127,8 +1101,19 @@ plot.dmcobs <- function(x,
       }
     }
     
+    add_legend(legend, labels, tail(cols, 2), c(1, 1), c(1, 1))
+    
   }
   
+}
+
+add_legend <- function(legend, labels, cols, ltys, pchs, position = "bottomright", inset=c(0.05, 0.05)) {
+  # custom vs. default legend 
+  if (is.function(legend)) {
+    legend()  
+  } else if (legend == TRUE) {
+    legend(position, legend = labels, col = cols, lty = ltys, pch = pchs, inset = inset)
+  }
 }
 
 
@@ -1171,7 +1156,7 @@ plot.dmcobs <- function(x,
 #' \donttest{
 #' # Example 1
 #' resTh <- dmcFit(flankerData, nTrl = 5000)
-#' plot(resTh, flankerData, figType = "delta")
+#' plot(resTh, flankerData, figType = "rtcorrect")
 #'
 #' # Example 2
 #' resTh <- dmcFit(flankerData, nTrl = 5000)
@@ -1290,11 +1275,7 @@ plot.dmcfit <- function(x,
     axis(1, at = c(1, 2), labels = xlabs[1:2])
     axis(2, labels = FALSE)
     
-    if (is.function(legend)) {
-      legend()
-    } else if (!is.list(legend) && legend == TRUE) {
-      legend("topleft", inset = c(0.025, 0.05), legend = labels[3:4], lty = c(1, 2), pch = c(1, 1))
-    }
+    add_legend(legend, labels[3:4], c(cols[1], cols[1]), c(1, 2), c(1, 1))
     
   }
   
@@ -1313,11 +1294,7 @@ plot.dmcfit <- function(x,
     axis(1, at = c(1, 2), labels = xlabs[1:2])
     axis(2, labels = FALSE)
     
-    if (is.function(legend)) {
-      legend()
-    } else if (!is.list(legend) && legend == TRUE) {
-      legend("topleft", inset = c(0.025, 0.05), legend = labels[3:4], lty = c(1, 2), pch = c(1, 1))
-    }
+    add_legend(legend, labels[3:4], c(cols[1], cols[1]), c(1, 2), c(1, 1))
     
   }
   
@@ -1336,11 +1313,7 @@ plot.dmcfit <- function(x,
     axis(1, at = c(1, 2), labels = xlabs[1:2])
     axis(2, labels = FALSE)
     
-    if (is.function(legend)) {
-      legend()
-    } else if (!is.list(legend) && legend == TRUE) {
-      legend("topleft", inset = c(0.025, 0.05), legend = labels[3:4], lty = c(1, 2), pch = c(1, 1))
-    }
+    add_legend(legend, labels[3:4], c(cols[1], cols[1]), c(1, 2), c(1, 1))
     
   }
   
@@ -1369,16 +1342,11 @@ plot.dmcfit <- function(x,
     lines(x$delta$meanComp,   ypoints, type = "l", col = tail(cols, 2)[1], ...)
     lines(x$delta$meanIncomp, ypoints, type = "l", col = tail(cols, 2)[2], ...)
     
-    if (is.function(legend)) {
-      legend()
-    } else if (!is.list(legend) && legend == TRUE) {
-      legend("bottomright", inset = c(0.025, 0.05),
-             legend = c(paste(labels[1], labels[3], sep = " "),
-                        paste(labels[2], labels[3], sep = " "),
-                        paste(labels[1], labels[4], sep = " "),
-                        paste(labels[2], labels[4], sep = " ")),
-             lty = c(0, 0, 1, 1), col = tail(cols, 2), pch = c(1, 1, NA, NA))
-    }
+    llabels <-c(paste(labels[1], labels[3], sep = " "),
+                paste(labels[2], labels[3], sep = " "),
+                paste(labels[1], labels[4], sep = " "),
+                paste(labels[2], labels[4], sep = " "))
+    add_legend(legend, llabels, tail(cols, 2), c(0, 0, 1, 1), c(1, 1, NA, NA))
     
   }
   
@@ -1419,16 +1387,11 @@ plot.dmcfit <- function(x,
     lines(x$caf$accPer[x$caf$Comp == "comp"],   type = "l", col = tail(cols, 2)[1], ...)
     lines(x$caf$accPer[x$caf$Comp == "incomp"], type = "l", col = tail(cols, 2)[2], ...)
     
-    if (is.function(legend)) {
-      legend()
-    } else if (!is.list(legend) && legend == TRUE) {
-      legend("bottomright", inset = c(0.025, 0.05),
-             legend = c(paste(labels[1], labels[3], sep = " "),
-                        paste(labels[2], labels[3], sep = " "),
-                        paste(labels[1], labels[4], sep = " "),
-                        paste(labels[2], labels[4], sep = " ")),
-             lty = c(0, 0, 1, 1), col = tail(cols, 2), pch = c(1, 1, NA, NA))
-    }
+    llabels <-c(paste(labels[1], labels[3], sep = " "),
+                paste(labels[2], labels[3], sep = " "),
+                paste(labels[1], labels[4], sep = " "),
+                paste(labels[2], labels[4], sep = " "))
+    add_legend(legend, llabels, tail(cols, 2), c(0, 0, 1, 1), c(1, 1, NA, NA))
     
   }
   
@@ -1450,11 +1413,7 @@ plot.dmcfit <- function(x,
     axis(side = 1, labels = FALSE) 
     axis(side = 2, labels = FALSE) 
     
-    if (is.function(legend)) {
-      legend()
-    } else if (!is.list(legend) && legend == TRUE) {
-      legend("bottomright", inset = c(0.025, 0.05), legend = labels[3:4], lty = c(0, 1), pch = c(1, NA))
-    }
+    add_legend(legend, labels[3:4], cols[1], c(0, 1), c(1, NA))
     
   }
   

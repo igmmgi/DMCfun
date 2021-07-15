@@ -259,6 +259,7 @@ addDataDF <- function(dat, RT=NULL, Error=NULL) {
 #' @param dat Text file(s) containing the observed data or an R DataFrame (see createDF/addDataDF)
 #' @param nCAF Number of CAF bins. 
 #' @param nDelta Number of delta bins. 
+#' @param pDelta Alternative to nDelta by directly specifying required percentile values   
 #' @param tDelta Type of delta calculation (1 = percentile, 2 = percentile bin bounds average) 
 #' @param outlier Outlier limits in ms (e.g., c(200, 1200))
 #' @param columns Name of required columns DEFAULT = c("Subject", "Comp", "RT", "Error")
@@ -322,6 +323,7 @@ addDataDF <- function(dat, RT=NULL, Error=NULL) {
 dmcObservedData <- function(dat,
                             nCAF = 5,
                             nDelta = 19,
+                            pDelta = vector(),
                             tDelta = 1,
                             outlier = c(200, 1200),
                             columns = c("Subject", "Comp", "RT", "Error"),
@@ -397,6 +399,11 @@ dmcObservedData <- function(dat,
     dplyr::summarize(accPer  = mean(accPer),
                      .groups = 'drop')
 
+  # change nDelta to length of pDelta if pDelta not empty
+  if (length(pDelta) != 0) {
+    nDelta = length(pDelta)
+  }
+  
   # DELTA
   datSubject_dec <- dat %>%
     dplyr::filter(Error == 0, RT >= rtMin, RT <= rtMax) %>%

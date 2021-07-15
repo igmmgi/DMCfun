@@ -8,6 +8,7 @@ dmcObservedData(
   dat,
   nCAF = 5,
   nDelta = 19,
+  pDelta = vector(),
   tDelta = 1,
   outlier = c(200, 1200),
   columns = c("Subject", "Comp", "RT", "Error"),
@@ -24,6 +25,8 @@ dmcObservedData(
 \item{nCAF}{Number of CAF bins.}
 
 \item{nDelta}{Number of delta bins.}
+
+\item{pDelta}{Alternative to nDelta by directly specifying required percentile values}
 
 \item{tDelta}{Type of delta calculation (1 = percentile, 2 = percentile bin bounds average)}
 
