@@ -190,14 +190,14 @@ addDataDF <- function(dat, RT=NULL, Error=NULL) {
     dat$RT <- rtDist(n = nrow(dat), RT[1], RT[2], RT[3])
   } else if (!is.null(RT) & is.list(RT)) {
 
-    for (i in c(1:length(RT))) {
+    for (i in seq_along(RT)) {
 
       fcts_levls <- unlist(strsplit(names(RT[i]),  split = "_"))
       fcts       <- unlist(strsplit(fcts_levls[1], split = ":"))
       levls      <- unlist(strsplit(fcts_levls[2], split = ":"))
 
       idx <- NULL
-      for (fct in c(1:length(fcts))) {
+      for (fct in seq_along(fcts)) {
         idx <- cbind(idx, dat[fcts[fct]] == levls[fct])
       }
       idx         <- apply(idx, 1, all)
@@ -216,20 +216,20 @@ addDataDF <- function(dat, RT=NULL, Error=NULL) {
     dat$Error <- errDist(n = nrow(dat), Error)
   } else if (!is.null(Error) & is.list(Error)) {
 
-    for (i in c(1:length(Error))) {
+    for (i in seq_along(Error)) {
 
       fcts_levls <- unlist(strsplit(names(Error[i]), split = "_"))
       fcts       <- unlist(strsplit(fcts_levls[1],   split = ":"))
       levls      <- unlist(strsplit(fcts_levls[2],   split = ":"))
 
       idx <- NULL
-      for (fct in c(1:length(fcts))) {
+      for (fct in seq_along(fcts)) {
         idx <- cbind(idx, dat[fcts[fct]] == levls[fct])
       }
       idx <- apply(idx, 1, all)
 
       dat$bins[idx] <- dplyr::ntile(dat$RT[idx], length(Error[[1]]))
-      for (bin in 1:length(Error[[1]])) {
+      for (bin in seq_along(Error[[1]])) {
         idx_bin <- dat$bins == bin & idx
         dat$Error[idx_bin] <- errDist(n = sum(idx_bin), Error[[i]][bin])
       }
@@ -344,7 +344,7 @@ dmcObservedData <- function(dat,
     stop("dat does not contain required/requested columns!")
   }
   if (any(names(dat) != c("Subject", "Comp", "RT", "Error"))) {
-    names(dat) = c("Subject", "Comp", "RT", "Error")
+    names(dat) <- c("Subject", "Comp", "RT", "Error")
   }
 
   # create default column values for comp and error coding
@@ -368,8 +368,8 @@ dmcObservedData <- function(dat,
                      nOut    = sum(outlier),
                      rtCor   = mean(RT[Error == 0 & outlier == 0]),
                      rtErr   = mean(RT[Error == 1 & outlier == 0]),
-                     perErr  = (nErr/(nErr + nCor))*100,
-                     .groups = 'drop')
+                     perErr  = (nErr / (nErr + nCor))*100,
+                     .groups = "drop")
 
   # aggregate data across subjects
   datAgg <- datSubject %>%
@@ -387,7 +387,7 @@ dmcObservedData <- function(dat,
                      perErr   = mean(perE, na.rm = TRUE),
                      sdPerErr = sd(perE, na.rm = TRUE),
                      sePerErr = sdPerErr/sqrt(N),
-                     .groups  = 'drop')
+                     .groups  = "drop")
 
   # conditional accuracy functions (CAF)
   datSubject_caf <- dat %>%
@@ -397,11 +397,11 @@ dmcObservedData <- function(dat,
   datAgg_caf <- datSubject_caf %>%
     dplyr::group_by(Comp, Bin) %>%
     dplyr::summarize(accPer  = mean(accPer),
-                     .groups = 'drop')
+                     .groups = "drop")
 
   # change nDelta to length of pDelta if pDelta not empty
   if (length(pDelta) != 0) {
-    nDelta = length(pDelta)
+    nDelta <- length(pDelta)
   }
   
   # DELTA
@@ -417,15 +417,15 @@ dmcObservedData <- function(dat,
                      meanBin    = mean(meanBin),
                      meanEffect = mean(mEffect),
                      sdEffect   = sd(mEffect),
-                     seEffect   = sdEffect/sqrt(n()),
-                     .groups    = 'drop')
+                     seEffect   = sdEffect / sqrt(n()),
+                     .groups    = "drop")
 
   ##############################################################################
   # save results
   obj <- list()
 
   # summary
-  obj$summarySubject        <- as.data.frame(datSubject[ , c(1, 2, 7, 9, 8)])
+  obj$summarySubject        <- as.data.frame(datSubject[, c(1, 2, 7, 9, 8)])
   names(obj$summarySubject) <- c("Subject", "Comp", "rtCor", "perErr", "rtErr")
   obj$summary               <- as.data.frame(datAgg[ , c(1, 3, 4, 5, 9, 10, 11, 6, 7, 8)])
 
@@ -524,7 +524,7 @@ calculateCAF <- function(dat,
 
   # create default column names
   if (any(names(dat) != c("Subject", "Comp", "RT", "Error"))) {
-    names(dat) = c("Subject", "Comp", "RT", "Error")
+    names(dat) <- c("Subject", "Comp", "RT", "Error")
   }
 
   # create default column values for comp and error coding
@@ -542,10 +542,10 @@ calculateCAF <- function(dat,
     dplyr::group_by(Subject, Comp, Bin) %>%
     dplyr::summarize(N       = n(),
                      accPer  = sum(Error == 0)/N,
-                     .groups = 'drop')  %>%
+                     .groups = "drop")  %>%
     dplyr::group_by(Subject, Comp, Bin) %>%
     dplyr::summarize(accPer  = mean(accPer),
-                     .groups = 'drop')
+                     .groups = "drop")
 
     return(dat_caf)
 
@@ -603,7 +603,7 @@ calculateDelta <- function(dat,
   
   # create default column names
   if (any(names(dat) != c("Subject", "Comp", "RT"))) {
-    names(dat) = c("Subject", "Comp", "RT")
+    names(dat) <- c("Subject", "Comp", "RT")
   }
   
   # create default column values for comp and error coding
@@ -619,11 +619,11 @@ calculateDelta <- function(dat,
       dplyr::group_by(Subject, Comp) %>%
       dplyr::summarize(Bin    = seq(1, length(deltaSeq)),
                        rt      = quantile(RT, deltaSeq/100, type = quantileType),
-                       .groups = 'drop')  %>%
+                       .groups = "drop")  %>%
       tidyr::pivot_wider(., id_cols = c("Subject", "Bin"), names_from = "Comp", values_from = "rt") %>%
       dplyr::mutate(meanComp   = comp,
                     meanIncomp = incomp,
-                    meanBin    = (comp + incomp)/2,
+                    meanBin    = (comp + incomp) / 2,
                     meanEffect = (incomp - comp)) %>%
       dplyr::select(-dplyr::one_of("comp", "incomp"))
     
@@ -631,14 +631,14 @@ calculateDelta <- function(dat,
     
     dat_delta <- dat %>%
       dplyr::group_by(Subject, Comp) %>%
-      dplyr::mutate(Bin = ntile(RT, nDelta+1)) %>%
+      dplyr::mutate(Bin = ntile(RT, nDelta + 1)) %>%
       dplyr::group_by(Subject, Comp, Bin) %>%
       dplyr::summarize(rt = mean(RT),
-                       .groups = 'drop')  %>%
+                       .groups = "drop")  %>%
       tidyr::pivot_wider(., id_cols = c("Subject", "Bin"), names_from = "Comp", values_from = "rt") %>%
       dplyr::mutate(meanComp   = comp,
                     meanIncomp = incomp,
-                    meanBin    = (comp + incomp)/2,
+                    meanBin    = (comp + incomp) / 2,
                     meanEffect = (incomp - comp)) %>%
       dplyr::select(-dplyr::one_of("comp", "incomp"))
     
@@ -675,7 +675,7 @@ calculateDelta <- function(dat,
 #' @export
 rtDist <- function(n=10000, gaussMean=600, gaussSD=50, expRate=200) {
 
-  expDist <- stats::rexp(n, 1/expRate)
+  expDist <- stats::rexp(n, 1 / expRate)
   gaussDist <- stats::rnorm(n, gaussMean, gaussSD)
   return(round(expDist + gaussDist - mean(expDist)))
 
@@ -697,5 +697,5 @@ rtDist <- function(n=10000, gaussMean=600, gaussSD=50, expRate=200) {
 #'
 #' @export
 errDist <- function(n=10000, proportion = 10) {
-  return(ifelse(runif(n) <= proportion/100, 1, 0))
+  return(ifelse(runif(n) <= proportion / 100, 1, 0))
 }

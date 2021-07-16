@@ -6,10 +6,12 @@
 
   utils::globalVariables(
     c("Bin", "N", "cost", "aaShape", "accPer", "amp", "bin", "binN", "bnds", 
-      "comp",  "deltaCI", "drc", "i", "incomp", "meanBin", "meanCI", "meanComp", "mEffect", "meanEffect", 
-      "meanIncomp", ".",  "perErr", "resMean", "resSD", "resMax", "rtCor",  "rtErr", "sdEffect", "sdPerErr", 
-      "sdRtCor", "sdRtErr", "perSlow", "sigm", "spShape", "tau", "Comp", "Error", "RT", "Subject", 
-      "errs", "nCor", "nErr", "nOut", "rtC", "rtE", "perE", "rtCor", "rts") 
+      "comp",  "deltaCI", "drc", "i", "incomp", "meanBin", "meanCI", "meanComp", 
+      "mEffect", "meanEffect",  "meanIncomp", ".",  "perErr", "resMean", 
+      "resSD", "resMax", "rtCor",  "rtErr", "sdEffect", "sdPerErr",  "sdRtCor", 
+      "sdRtErr", "perSlow", "sigm", "spShape", "tau", "Comp", "Error", "RT", 
+      "Subject",  "errs", "nCor", "nErr", "nOut", "rtC", "rtE", "perE", 
+      "rtCor", "rts") 
   )
   invisible()
 }

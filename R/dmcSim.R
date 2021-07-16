@@ -86,9 +86,9 @@ dmcSim <- function(amp = 20, tau = 30, drc = 0.5, bnds = 75, resDist = 1, resMea
 
   # change nDelta to length of pDelta if pDelta not empty
   if (length(pDelta) != 0) {
-    nDelta = length(pDelta)
+    nDelta <- length(pDelta)
     if (tDelta == 2) {
-      nDelta = nDelta + 1
+      nDelta <- nDelta + 1
     }
   }
   
@@ -112,7 +112,7 @@ dmcSim <- function(amp = 20, tau = 30, drc = 0.5, bnds = 75, resDist = 1, resMea
 
   # caf
   dmc$caf <- cbind(Comp = rep(c("comp", "incomp"), each = nCAF), 
-                   as.data.frame(cbind(bin    = as.numeric(rep(1:nCAF, each = 1, times = 2)), 
+                   as.data.frame(cbind(Bin    = as.numeric(rep(1:nCAF, each = 1, times = 2)), 
                                        accPer =  as.numeric(c(summary$caf_comp, summary$caf_incomp)))))
   
   # delta
@@ -179,7 +179,7 @@ dmcSims <- function(params,
   params <- setNames(split(params, seq(nrow(params))), rownames(params))
 
   dmc <- vector("list", length(params))
-  for (i in 1:length(params)) {
+  for (i in seq_along(params)) {
 
     # inputs for each dmcSim call taken from params + add default of not printing individual results
     dmcInputs <- params[[i]]

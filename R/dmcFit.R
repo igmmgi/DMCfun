@@ -144,8 +144,8 @@ dmcFit <- function(resOb,
     
     # which parameters to search within grid
     if (TRUE %in% fixedGrid) {
-      minValsGrid[fixedGrid == T] = startValsGrid[fixedGrid == T]
-      maxValsGrid[fixedGrid == T] = startValsGrid[fixedGrid == T]
+      minValsGrid[fixedGrid == T] <- startValsGrid[fixedGrid == T]
+      maxValsGrid[fixedGrid == T] <- startValsGrid[fixedGrid == T]
     }
     
     startValsGrid <- Map(seq, minValsGrid, maxValsGrid, length.out = fitInitialGridN)
@@ -327,25 +327,25 @@ dmcFitDE <- function(resOb,
   defaultControl <- list(VTR = 0,  strategy = 1, NP = 100, itermax  = 200, trace = 1, cluster = cl )
   control        <- modifyList(defaultControl,  control)
   
-  fit = DEoptim::DEoptim(fn = minimizeCostValue, 
-                         lower = unlist(minVals[!as.logical(fixedFit)]), 
-                         upper = unlist(maxVals[!as.logical(fixedFit)]), 
-                         costFunction = calculateCostValue,
-                         prms = prms, 
-                         fixedFit = fixedFit,  
-                         minVals = minVals, 
-                         maxVals = maxVals, 
-                         resOb = resOb,  
-                         nTrl = nTrl, 
-                         nDelta = nDelta, 
-                         nCAF = nCAF, 
-                         pDelta = pDelta, 
-                         tDelta = tDelta, 
-                         varSP = varSP, 
-                         rtMax = rtMax, 
-                         printInputArgs = FALSE,  
-                         printResults = FALSE, 
-                         control = control)  
+  fit <- DEoptim::DEoptim(fn = minimizeCostValue, 
+                          lower = unlist(minVals[!as.logical(fixedFit)]), 
+                          upper = unlist(maxVals[!as.logical(fixedFit)]), 
+                          costFunction = calculateCostValue,
+                          prms = prms, 
+                          fixedFit = fixedFit,  
+                          minVals = minVals, 
+                          maxVals = maxVals, 
+                          resOb = resOb,  
+                          nTrl = nTrl, 
+                          nDelta = nDelta, 
+                          nCAF = nCAF, 
+                          pDelta = pDelta, 
+                          tDelta = tDelta, 
+                          varSP = varSP, 
+                          rtMax = rtMax, 
+                          printInputArgs = FALSE,  
+                          printResults = FALSE, 
+                          control = control)  
   
   parallel::stopCluster(cl)
 
@@ -447,7 +447,7 @@ dmcFitSubject <- function(resOb,
                           optimxControl   = list()) {
   
   if (length(subjects) == 0) {
-    subjects = unique(resOb$summarySubject$Subject)  # fit all individual subjects in data
+    subjects <- unique(resOb$summarySubject$Subject)  # fit all individual subjects in data
   }
   
   # default parameter space
@@ -553,7 +553,7 @@ dmcFitSubjectDE <- function(resOb,
                             control      = list()) {
   
   if (length(subjects) == 0) {
-    subjects = unique(resOb$summarySubject$Subject)  # fit all individual subjects in data
+    subjects <- unique(resOb$summarySubject$Subject)  # fit all individual subjects in data
   }
   
   # default parameter space
@@ -570,7 +570,7 @@ dmcFitSubjectDE <- function(resOb,
   dmcfit <- vector("list", max(subjects))
   for (subject in subjects) {
     
-    resObSubject <- list(deltaAgg = resOb$deltaSubject[resOb$deltaSubject$Subject == subject,],
+    resObSubject <- list(deltaAgg = resOb$deltaSubject[resOb$deltaSubject$Subject == subject, ],
                          cafAgg = resOb$cafSubject[resOb$cafSubject$Subject == subject,])
     
     dmcfit[[subject]] <- dmcFitDE(resObSubject,
@@ -747,8 +747,8 @@ calculateCostValueRMSE <- function(resTh, resOb) {
   n_rt  <- nrow(resTh$delta) * 2
   n_err <- nrow(resTh$caf)
   
-  costCAF   <- sqrt((1/n_err) * sum((resTh$caf$accPer - resOb$caf$accPer)**2))
-  costRT    <- sqrt((1/n_rt)  * sum((resTh$delta[c("meanComp", "meanIncomp")] - resOb$delta[c("meanComp", "meanIncomp")])**2))
+  costCAF   <- sqrt((1 / n_err) * sum((resTh$caf$accPer - resOb$caf$accPer)**2))
+  costRT    <- sqrt((1 / n_rt)  * sum((resTh$delta[c("meanComp", "meanIncomp")] - resOb$delta[c("meanComp", "meanIncomp")])**2))
   weightRT  <- n_rt / (n_rt + n_err)
   weightCAF <- (1 - weightRT) * 1500
   
@@ -784,7 +784,7 @@ calculateCostValueRMSE <- function(resTh, resOb) {
 calculateCostValueSPE <- function(resTh, resOb) {
  
   costCAF <- sum(((resOb$caf$accPer  - resTh$caf$accPer) / resOb$caf$accPer)**2)
-  costRT <- sum(((resOb$delta[,2:3]  - resTh$delta[,2:3]) / resOb$delta[2:3])**2)
+  costRT <- sum(((resOb$delta[, 2:3]  - resTh$delta[, 2:3]) / resOb$delta[2:3])**2)
   
   costValue <- costRT + costCAF 
  
