@@ -302,7 +302,7 @@ plot.dmcsim <- function(x,
 
   # rtCorrect
   if (showFig[7]) {
-    plot_rt(x$summary$rtCor, ylimRt, 100, xlabs[8:9], ylabs[7], yaxts, cols[1], ...)
+    plot_rt(c(1, 2), x$summary$rtCor, ylimRt, 100, xlabs[8:9], ylabs[7], yaxts, cols[1], ...)
     if (errorBars) {
       addErrorBars(c(1, 2), x$summary$rtCor, x$summary$sdRtCor)
     }
@@ -310,12 +310,12 @@ plot.dmcsim <- function(x,
 
   # error rate
   if (showFig[8]) {
-    plot_er(x$summary$perErr, ylimErr, 5, xlabs[8:9], ylabs[8], yaxts, cols[1], ...)
+    plot_er(c(1, 2), x$summary$perErr, ylimErr, 5, xlabs[8:9], ylabs[8], yaxts, cols[1], ...)
   }
 
   # rtError
   if (showFig[9]) {
-    plot_rt(x$summary$rtErr, ylimRt, 100, xlabs[8:9], ylabs[9], yaxts, cols[1], ...)
+    plot_rt(c(1, 2), x$summary$rtErr, ylimRt, 100, xlabs[8:9], ylabs[9], yaxts, cols[1], ...)
     if (errorBars) {
       addErrorBars(c(1, 2), x$means$rtErr, x$means$sdRtErr)
     }
@@ -333,7 +333,9 @@ plot.dmcsim <- function(x,
 #' @param xlim xlimit for delta plot
 #' @param col # color range start/end color
 #' @param lineType line type ("l", "b", "o") for delta plot
+#' @param legend TRUE/FALSE Show legend
 #' @param legendPos legend position
+#' @param legendLabels Custom legend labels
 #' @param ncol number of legend columns
 #' @param ... pars for legend
 #'
@@ -344,12 +346,12 @@ plot.dmcsim <- function(x,
 #' # Example 1
 #' params <- list(amp = seq(20, 30, 2))
 #' dmc <- dmcSims(params)
-#' plot(dmc, ncol = 2, col = c("red", "green"))
+#' plot(dmc, ncol = 2, col = c("red", "green"), legendPos = "topright")
 #'
 #' # Example 2
 #' params <- list(amp=c(10, 20), tau = seq(20, 80, 40), drc = seq(0.2, 0.6, 0.2), nTrl = 50000)
 #' dmc <- dmcSims(params)
-#' plot(dmc, ncol = 2, col=c("green", "blue"), lineType = "l")
+#' plot(dmc, ncol = 2, col=c("green", "blue"), ylim = c(-10, 120))
 #'
 #' }
 #'
@@ -359,7 +361,9 @@ plot.dmclist <- function(x,
                          xlim = NULL,
                          col=c("black", "lightgrey"),
                          lineType = "l",
+                         legend = TRUE,
                          legendPos = "topleft",
+                         legendLabels = NULL,
                          ncol = 1,
                          ...) {
 
@@ -378,17 +382,18 @@ plot.dmclist <- function(x,
   cols <- colorRampPalette(col)(length(x))
 
   # plot
-  plot(NULL, NULL,
-       ylim = ylim, xlim = xlim,
-       ylab = expression(Delta), xlab = "Time [ms]", ...)
-
-  legendText <- NULL
+  plot(NULL, NULL, ylim = ylim, xlim = xlim, ylab = expression(Delta), xlab = "Time [ms]", ...)
   for (i in seq_along(x)) {
     lines(x[[i]]$delta$meanBin, x[[i]]$delta$meanEffect, col = cols[i], type = lineType)
-    legendText <- c(NULL, legendText, paste0(names(x[[i]]$params), "=", x[[1]]$params[i, ], collapse = ", "))
   }
 
-  legend(legendPos, legend = legendText, col = as.vector(cols), lty = 1, ncol = ncol)
+  # legend
+  if (is.null(legendLabels)) {
+    for (i in seq_along(x)) {
+      legendLabels <- c(NULL, legendLabels, paste0(names(x[[i]]$params), "=", x[[1]]$params[i, ], collapse = ", "))
+    }
+  }
+  add_legend(legend, legendLabels, as.vector(cols), c(1), c(NA), position = legendPos, ncol = ncol)
 
 }
 
@@ -556,7 +561,7 @@ plot.dmcob <- function(x,
 
   # rtCorrect
   if (showFig[1]) {
-    plot_rt(x$summary$rtCor, ylimRt, 100, xlabs[1:2], ylabs[1], yaxts, cols[1], ...)
+    plot_rt(c(1, 2), x$summary$rtCor, ylimRt, 100, xlabs[1:2], ylabs[1], yaxts, cols[1], ...)
     if (errorBars) {
       addErrorBars(c(1, 2), x$summary$rtCor, x$summary[[paste0(errorBarType, "RtCor")]])
     }
@@ -564,7 +569,7 @@ plot.dmcob <- function(x,
 
   # errorRate
   if (showFig[2]) {
-    plot_er(x$summary$perErr, ylimErr, 5, xlabs[1:2], ylabs[2], yaxts, cols[1], ...)
+    plot_er(c(1, 2), x$summary$perErr, ylimErr, 5, xlabs[1:2], ylabs[2], yaxts, cols[1], ...)
     if (errorBars) {
       addErrorBars(c(1, 2), x$summary$perErr, x$summary[[paste0(errorBarType, "PerErr")]])
     }
@@ -572,7 +577,7 @@ plot.dmcob <- function(x,
 
   # rtError
   if (showFig[3]) {
-    plot_rt(x$summary$rtErr, ylimRt, 100, xlabs[1:2], ylabs[3], yaxts, cols[1], ...)
+    plot_rt(c(1, 2), x$summary$rtErr, ylimRt, 100, xlabs[1:2], ylabs[3], yaxts, cols[1], ...)
     if (errorBars) {
       addErrorBars(c(1, 2), x$summary$rtErr, x$summary[[paste0(errorBarType, "RtErr")]])
     }
@@ -665,8 +670,7 @@ plot.dmcob <- function(x,
 #' datFlanker <- dmcObservedData(flankerDataRaw, nDelta = 9)
 #' datSimon <- dmcObservedData(simonDataRaw, nDelta = 9)
 #' dat <- dmcCombineObservedData(datFlanker, datSimon)  # combine flanker/simon data
-#' plot(dat, figType = "all",
-#'      cols = c("black", "darkgrey"), pchs = c(1, 2), resetPar = FALSE)
+#' plot(dat, figType = "rtcorrect",  cols = c("black", "darkgrey"), pchs = c(1, 2), resetPar = FALSE)
 #' legend(200, 0, legend = c("Flanker Task", "Simon Task"),
 #'        col = c("black", "darkgrey"), lty = c(1, 1))
 #'
@@ -769,27 +773,20 @@ plot.dmcobs <- function(x,
   # rtCorrect
   if (showFig[1]) {
 
-  if (is.null(ylimRt)) {
-    minx <- min(sapply(x, function(x) min(x$summary$rtCor)))
-    maxx <- max(sapply(x, function(x) max(x$summary$rtCor)))
-    ylimRt <- c(minx - 100, maxx + 100)
-  }
+    if (is.null(ylimRt)) {
+      minx <- min(sapply(x, function(x) min(x$summary$rtCor)))
+      maxx <- max(sapply(x, function(x) max(x$summary$rtCor)))
+      ylimRt <- c(minx - 100, maxx + 100)
+    }
 
-    plot(NULL, NULL,
-         ylim = ylimRt, xlim = c(0.5, 2.5),
-         ylab = ylabs[1], xlab = "",
-         xaxt = "n", yaxt = yaxts, ...)
-    axis(1, at = c(1, 2), labels = xlabs[1:2])
-    axis(2, labels = FALSE)
-
+    plot_rt(NULL, NULL, ylimRt, 0, xlabs[1:2], ylabs[1], yaxts, cols[1], ...)
     for (i in seq_along(x)) {
       lines(c(1, 2), x[[i]]$summary$rtCor, type = "o", col = cols[i], lty = ltys[i], pch = pchs[i], ...)
       if (errorBars) {
         addErrorBars(c(1, 2), x[[i]]$summary$rtCor, x[[i]]$summary[[paste0(errorBarType, "RtCor")]])
       }
     }
-
-    add_legend(legend, legendLabels, tail(cols, 2), c(1, 1), c(1, 1))
+    add_legend(legend, legendLabels, tail(cols, 2), ltys, pchs)
 
   }
 
@@ -802,21 +799,14 @@ plot.dmcobs <- function(x,
       ylimErr <- c(0, maxy + 10)
     }
 
-    plot(NULL, NULL,
-         ylim = ylimErr, xlim = c(0.5, 2.5),
-         ylab = ylabs[2], xlab = "",
-         xaxt = "n", yaxt = yaxts, ...)
-    axis(1, at = c(1, 2), labels = xlabs[1:2])
-    axis(2, labels = FALSE)
-
+    plot_er(NULL, NULL, ylimErr, 0, xlabs[1:2], ylabs[2], yaxts, cols[1], ...)
     for (i in seq_along(x)) {
       lines(c(1, 2), x[[i]]$summary$perErr, type = "o", col = cols[i], lty = ltys[i], pch = pchs[i], ...)
       if (errorBars) {
         addErrorBars(c(1, 2), x[[i]]$summary$perErr, x[[i]]$summary[[paste0(errorBarType, "PerErr")]])
       }
     }
-
-    add_legend(legend, legendLabels, tail(cols, 2), c(1, 1), c(1, 1))
+    add_legend(legend, legendLabels, tail(cols, 2), ltys, pchs)
 
   }
 
@@ -829,21 +819,14 @@ plot.dmcobs <- function(x,
       ylimRt <- c(miny - 100, maxy + 100)
     }
 
-    plot(NULL, NULL,
-         ylim = ylimRt, xlim = c(0.5, 2.5),
-         ylab = ylabs[3], xlab = "",
-         xaxt = "n", yaxt = yaxts, ...)
-    axis(1, at = c(1, 2), labels = xlabs[1:2])
-    axis(2, labels = FALSE)
-
+    plot_rt(NULL, NULL, ylimRt, 0, xlabs[1:2], ylabs[3], yaxts, cols[1], ...)
     for (i in seq_along(x)) {
       lines(c(1, 2), x[[i]]$summary$rtErr, type = "o", col = cols[i], lty = ltys[i], pch = pchs[i], ...)
       if (errorBars) {
         addErrorBars(c(1, 2), x[[i]]$summary$rtErr, x[[i]]$summary[[paste0(errorBarType, "RtErr")]])
       }
     }
-
-    add_legend(legend, legendLabels, tail(cols, 2), c(1, 1), c(1, 1))
+    add_legend(legend, legendLabels, tail(cols, 2), ltys, pchs)
 
   }
 
@@ -1109,59 +1092,23 @@ plot.dmcfit <- function(x,
 
   # rtCorrect
   if (showFig[1]) {
-
-    if (is.null(ylimRt)) {
-      ylimRt <- c(min(x$summary$rtCor) - 100, max(x$summary$rtCor) + 100)
-    }
-
-    plot(c(1, 2), y$summary$rtCor, type = "o", col = cols[1],
-         ylim = ylimRt, xlim = c(0.5, 2.5),
-         ylab = ylabs[1], xlab = "",
-         xaxt = "n", yaxt = yaxts, ...)
-    lines(c(x$summary$rtCor), type = "o", lty = 2, ...)
-    axis(1, at = c(1, 2), labels = xlabs[1:2])
-    axis(2, labels = FALSE)
-
+    plot_rt(y$summary$rtCor, ylimRt, 100, xlabs[1:2], ylabs[1], yaxts, cols[1], ...)
+    lines(c(1, 2), c(x$summary$rtCor), type = "o", lty = 2, ...)
     add_legend(legend, labels[3:4], c(cols[1], cols[1]), c(1, 2), c(1, 1))
-
   }
 
   # errorRate
   if (showFig[2]) {
-
-    if (is.null(ylimErr)) {
-      ylimErr <- c(0, max(x$summary$perErr) + 5)
-    }
-
-    plot(c(1, 2), y$summary$perErr, type = "o", col = cols[1],
-         ylim = ylimErr, xlim = c(0.5, 2.5),
-         ylab = ylabs[2], xlab = "",
-         xaxt = "n", yaxt = yaxts, ...)
-    lines(x$summary$perErr, type = "b", lty = 2, ...)
-    axis(1, at = c(1, 2), labels = xlabs[1:2])
-    axis(2, labels = FALSE)
-
+    plot_er(y$summary$perErr, ylimErr, 5, xlabs[1:2], ylabs[2], yaxts, cols[1], ...)
+    lines(c(1, 2), x$summary$perErr, type = "b", lty = 2, ...)
     add_legend(legend, labels[3:4], c(cols[1], cols[1]), c(1, 2), c(1, 1))
-
   }
 
   # rt Error
   if (showFig[3]) {
-
-    if (is.null(ylimRt)) {
-      ylimRt <- c(min(x$summary$rtCor) - 100, max(x$summary$rtCor) + 100)
-    }
-
-    plot(c(1, 2), y$summary$rtErr, type = "o", col = cols[1],
-         ylim = ylimRt, xlim = c(0.5, 2.5),
-         ylab = ylabs[3], xlab = "",
-         xaxt = "n", yaxt = yaxts, ...)
-    lines(x$summary$rtErr, type = "b", lty = 2, ...)
-    axis(1, at = c(1, 2), labels = xlabs[1:2])
-    axis(2, labels = FALSE)
-
+    plot_rt(y$summary$rtErr, ylimRt, 100, xlabs[1:2], ylabs[3], yaxts, cols[1], ...)
+    lines(c(1, 2), x$summary$rtErr, type = "b", lty = 2, ...)
     add_legend(legend, labels[3:4], c(cols[1], cols[1]), c(1, 2), c(1, 1))
-
   }
 
   # cdf
@@ -1200,39 +1147,10 @@ plot.dmcfit <- function(x,
   # caf
   if (showFig[5]) {
 
-    if (is.null(ylimCAF)) {
-      ylimCAF <- c(0, 1)
-    }
-
-    plot(y$caf$accPer[y$caf$Comp == "comp"], type = "p",
-         ylim = ylimCAF,
-         ylab = ylabs[5], xlab = xlabs[5],
-         yaxt = "n", xaxt = "n",
-         col = tail(cols, 2)[1], ...)
-    if (xaxts == "n") {
-      axis(side = 1, labels = FALSE)  # keep tick marks
-    } else if (xaxts == "s") {
-      nCAF <- length(x$caf$Bin) / 2
-      if (cafBinLabels) {
-        stepCAF <- 100 / nCAF
-        cafLabels <- paste0(paste(seq(0, 100 - stepCAF, stepCAF), seq(stepCAF, 100, stepCAF), sep = "-"), "%")
-        axis(1, at = seq(1, nCAF, 1), labels = cafLabels)
-      } else {
-        axis(1, at = seq(1, nCAF, 1))
-      }
-    } else {
-      axis(sidei = 1, labels = F)
-    }
-
-    if (yaxts == "n") {
-      axis(side = 2, labels = FALSE)  # keep tick marks
-    } else if (yaxts == "s") {
-      axis(2, at = seq(0, 1, 0.2), labels = as.character(seq(0, 1, 0.2)))
-    }
-
-    lines(y$caf$accPer[y$caf$Comp == "incomp"], type = "p", col = tail(cols, 2)[2], ...)
-    lines(x$caf$accPer[x$caf$Comp == "comp"],   type = "l", col = tail(cols, 2)[1], ...)
+    plot_caf(x, ylimCAF, xlabs[5], ylabs[5], tail(cols, 2)[1], xaxts, yaxts, cafBinLabels, type = "l", ...)
     lines(x$caf$accPer[x$caf$Comp == "incomp"], type = "l", col = tail(cols, 2)[2], ...)
+    lines(y$caf$accPer[y$caf$Comp == "comp"],   type = "p", col = tail(cols, 2)[1], ...)
+    lines(y$caf$accPer[y$caf$Comp == "incomp"], type = "p", col = tail(cols, 2)[2], ...)
 
     llabels <- c(paste(labels[1], labels[3], sep = " "),
                  paste(labels[2], labels[3], sep = " "),
@@ -1244,24 +1162,10 @@ plot.dmcfit <- function(x,
 
   # delta
   if (showFig[6]) {
-
-    if (is.null(xlimDelta)) {
-      xlimDelta <- c(min(x$delta$meanBin) - 50, max(x$delta$meanBin) + 50)
-    }
-    if (is.null(ylimDelta)) {
-      ylimDelta <- c(min(x$delta$meanEffect) - 50, max(x$delta$meanEffect) + 50)
-    }
-
-    plot(y$delta$meanBin, y$delta$meanEffect, col = cols[1],
-         ylim = ylimDelta, xlim = xlimDelta,
-         ylab = ylabs[6], xlab = xlabs[6],
-         xaxt = xaxts, yaxt = yaxts, ...)
-    lines(x$delta$meanBin, x$delta$meanEffect, ...)
-    axis(side = 1, labels = FALSE)
-    axis(side = 2, labels = FALSE)
-
+     plot_delta(x$delta$meanBin, x$delta$meanEffect, xlimDelta, ylimDelta,
+        xlabs[6], ylabs[6], xaxts, yaxts, cols[1], type = "l", ...)
+     lines(y$delta$meanBin, y$delta$meanEffect, type = "p", ...)
     add_legend(legend, labels[3:4], cols[1], c(0, 1), c(1, NA))
-
   }
 
 }
@@ -1297,11 +1201,11 @@ addErrorBars <- function(xpos, ypos, errorSize, arrowSize = 0.1) {
 
 
 #################################### INTERNAL PLOT FUNCTIONS ###########################################################
-plot_rt <- function(y, ylim, ylimOffset, xlabs, ylab, yaxts, col, ...) {
+plot_rt <- function(x, y, ylim, ylimOffset, xlabs, ylab, yaxts, col, ...) {
   if (is.null(ylim)) {
     ylim <- c(min(y) - ylimOffset, max(y) + ylimOffset)
   }
-  plot(c(1, 2), y, type = "o", col = col,
+  plot(x, y, type = "o", col = col,
     ylim = ylim, xlim = c(0.5, 2.5),
     ylab = ylab, xlab = "",
     xaxt = "n",  yaxt = yaxts, ...)
@@ -1309,11 +1213,11 @@ plot_rt <- function(y, ylim, ylimOffset, xlabs, ylab, yaxts, col, ...) {
   axis(2, labels = FALSE)
 }
 
-plot_er <- function(y, ylim, ylimOffset, xlabs, ylab, yaxts, col, ...) {
+plot_er <- function(x, y, ylim, ylimOffset, xlabs, ylab, yaxts, col, ...) {
   if (is.null(ylim)) {
     ylim <- c(0, max(y) + ylimOffset)
   }
-  plot(c(1, 2), y, type = "o", col = col,
+  plot(x, y, type = "o", col = col,
     ylim = ylim, xlim = c(0.5, 2.5),
     ylab = ylab, xlab = "",
     xaxt = "n",  yaxt = yaxts, ...)
@@ -1321,12 +1225,11 @@ plot_er <- function(y, ylim, ylimOffset, xlabs, ylab, yaxts, col, ...) {
   axis(2, labels = FALSE)
 }
 
-plot_caf <- function(x, ylim, xlab, ylab, cols, xaxts, yaxts, cafBinLabels, ...) {
-
+plot_caf <- function(x, ylim, xlab, ylab, cols, xaxts, yaxts, cafBinLabels, type = "o", ...) {
   if (is.null(ylim)) {
     ylim <- c(0, 1)
   }
-  plot(x$caf$accPer[x$caf$Comp == "comp"], type = "o",
+  plot(x$caf$accPer[x$caf$Comp == "comp"], type = type,
     ylim = ylim, ylab = ylab,  xlab = xlab,
     xaxt = "n",  yaxt = "n",
     col = cols[1], ...)
@@ -1356,24 +1259,24 @@ plot_caf <- function(x, ylim, xlab, ylab, cols, xaxts, yaxts, cafBinLabels, ...)
 
 }
 
-plot_delta <- function(x, y, xlim, ylim, xlab, ylab, xaxts, yaxts, col, ...) {
+plot_delta <- function(x, y, xlim, ylim, xlab, ylab, xaxts, yaxts, col, type = "o", ...) {
   if (is.null(xlim)) {
     xlim <- c(min(x) - 50, max(x) + 50)
   }
   if (is.null(ylim)) {
     ylim <- c(min(y) - 50, max(y) + 50)
   }
-  plot(x, y, type = "o", col = col,
+  plot(x, y, type = type, col = col,
     ylim = ylim, xlim = xlim, ylab = ylab,  xlab = xlab,
     xaxt = xaxts, yaxt = yaxts, ...)
   axis(side = 1, labels = FALSE)
   axis(side = 2, labels = FALSE)
 }
 
-add_legend <- function(legend, labels, cols, ltys, pchs, position = "bottomright", inset=c(0.05, 0.05)) {
+add_legend <- function(legend, labels, cols, ltys, pchs, position = "bottomright", inset=c(0.05, 0.05), ...) {
   if (is.function(legend)) {
     legend()
   } else if (legend == TRUE) {
-    legend(position, legend = labels, col = cols, lty = ltys, pch = pchs, inset = inset)
+    legend(position, legend = labels, col = cols, lty = ltys, pch = pchs, inset = inset, ...)
   }
 }

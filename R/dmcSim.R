@@ -106,7 +106,7 @@ dmcSim <- function(amp = 20, tau = 30, drc = 0.5, bnds = 75, resDist = 1, resMea
   # caf
   dmc$caf <- cbind(Comp = rep(c("comp", "incomp"), each = nCAF),
                    as.data.frame(cbind(Bin    = as.numeric(rep(1:nCAF, each = 1, times = 2)),
-                                       accPer =  as.numeric(c(summary$caf_comp, summary$caf_incomp)))))
+                                       accPer = as.numeric(c(summary$caf_comp, summary$caf_incomp)))))
 
   # delta
   dmc$delta <- as.data.frame(cbind(Bin        = rep(1:nDelta, each = 1, times = 1),
