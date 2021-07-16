@@ -13,9 +13,9 @@ flankerData
 }
 \description{
 \itemize{
-  \item $summary --> Reaction time correct, standard deviation correct, standard error correct, 
-  percentage error, standard deviation error, standard error error, reaction time incorrect, 
-  standard deviation incorrect, and standard error incorrect trials for both compatible 
+  \item $summary --> Reaction time correct, standard deviation correct, standard error correct,
+  percentage error, standard deviation error, standard error error, reaction time incorrect,
+  standard deviation incorrect, and standard error incorrect trials for both compatible
   and incompatible trials
   \item $caf --> Proportion correct for compatible and incompatible trials across 5 bins
   \item $delta --> Compatible reactions times, incompatible mean reaction times,

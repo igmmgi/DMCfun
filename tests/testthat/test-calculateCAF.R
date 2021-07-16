@@ -3,7 +3,7 @@ context("calculateCAF")
 test_that("calculateCAF", {
 
   set.seed(1)
-  
+
   # test 1: 10% errors, 5 bins
   dat  <- createDF(nSubjects = 20, nTrl = 50, design = list("Comp" = c("comp", "incomp")))
   dat  <- addDataDF(dat)

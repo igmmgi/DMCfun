@@ -7,7 +7,7 @@ test_that("plot.dmcsim", {
 
   # should give error
   testthat::expect_error(plot(dmc, figType = "xxx"))
-  
+
   # just check code does not error
   testthat::expect_error(plot(dmc, figType = "summary1"), NA)
   testthat::expect_error(plot(dmc, figType = "summary2"), NA)
@@ -25,11 +25,11 @@ test_that("plot.dmcsim", {
 
   # test 2
   dmc <- dmcSim(fullData = FALSE, printInputArgs = FALSE, printResults = FALSE)
-  
+
   # should give error
   testthat::expect_error(plot(dmc, figType = "activation"))
   testthat::expect_error(plot(dmc, labels = c("a", "b", "c")))
-  
+
   # just check code does not error
   testthat::expect_error(plot(dmc, figType = "summary1"), NA)
   testthat::expect_error(plot(dmc, figType = "summary2"), NA)

@@ -13,7 +13,7 @@
 #' # Example 1
 #' dmc <- dmcSim()
 #' summary(dmc)
-#' 
+#'
 #' # Example 2
 #' dmc <- dmcSim(tau = 90)
 #' summary(dmc)
@@ -22,7 +22,7 @@
 #'
 #' @export
 summary.dmcsim <- function(object, digits = 1, ...) {
-  df <- as.data.frame(object$summary) 
+  df <- as.data.frame(object$summary)
   df[, c(2:6)] <- round(df[, c(2:6)], digits)
   return(df)
 }
@@ -37,13 +37,13 @@ summary.dmcsim <- function(object, digits = 1, ...) {
 #' @param digits Number of digits in the output
 #' @param ... pars
 #'
-#' @return DataFrame 
+#' @return DataFrame
 #'
 #' @examples
 #' \donttest{
 #' # Example 1
 #' fitAgg <- dmcFit(flankerData, nTrl = 1000)
-#' summary(fitAgg)  
+#' summary(fitAgg)
 #' }
 #'
 #' @export
@@ -59,8 +59,8 @@ summary.dmcfit <- function(object, digits = 2, ...) {
     outSubject <- round(outSubject, digits)
     outAvg     <- round(as.data.frame(t(colMeans(data.matrix(outSubject[, 2:11])))), digits)
     out        <- list(outSubject, outAvg)
-    
-    return(out) 
+
+    return(out)
   }
-  
+
 }

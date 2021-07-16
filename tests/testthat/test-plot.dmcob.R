@@ -21,7 +21,7 @@ test_that("plot.dmcob", {
   testthat::expect_error(plot(DMCfun::flankerData, subject = 1), NA)
   testthat::expect_error(plot(DMCfun::flankerData, subject = 999))
   testthat::expect_error(plot(DMCfun::flankerData, xlabs = FALSE, ylabs = FALSE, xaxts = FALSE, yaxts = FALSE), NA)
-  testthat::expect_error(plot(DMCfun::flankerData, legend = function(){}), NA)
+  testthat::expect_error(plot(DMCfun::flankerData, legend = function() {}), NA)
   testthat::expect_error(plot(DMCfun::flankerData, cafBinLabels = TRUE), NA)
   testthat::expect_error(plot(DMCfun::simonData), NA)
   testthat::expect_error(plot(DMCfun::simonData, errorBars = TRUE), NA)
@@ -41,9 +41,9 @@ test_that("plot.dmcob", {
   testthat::expect_error(plot(DMCfun::simonData, subject = 1), NA)
   testthat::expect_error(plot(DMCfun::simonData, subject = 999))
   testthat::expect_error(plot(DMCfun::simonData, xlabs = FALSE, ylabs = FALSE, xaxts = FALSE, yaxts = FALSE), NA)
-  testthat::expect_error(plot(DMCfun::simonData, legend = function(){}), NA)
+  testthat::expect_error(plot(DMCfun::simonData, legend = function() {}), NA)
   testthat::expect_error(plot(DMCfun::simonData, cafBinLabels = TRUE), NA)
-  
+
   # simulated datasets
   dat <- createDF(nSubjects = 50, nTrl = 50,
                   design = list("Comp" = c("comp", "incomp")))

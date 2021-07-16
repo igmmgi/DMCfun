@@ -1,4 +1,4 @@
-#' @title dmcSim: Run dmc simulation 
+#' @title dmcSim: Run dmc simulation
 #'
 #' @description DMC model simulation detailed in  Ulrich, R., Schroeter, H., Leuthold, H., & Birngruber, T. (2015).
 #' Automatic and controlled stimulus processing in conflict tasks: Superimposed diffusion processes and delta functions.
@@ -25,8 +25,8 @@
 #' @param fullData TRUE/FALSE (Default: FALSE)
 #' @param nTrlData Number of trials to plot
 #' @param nDelta Number of delta bins
-#' @param pDelta Alternative to nDelta by directly specifying required percentile values   
-#' @param tDelta TO DO 
+#' @param pDelta Alternative to nDelta by directly specifying required percentile values
+#' @param tDelta TO DO
 #' @param nCAF Number of CAF bins
 #' @param printInputArgs TRUE/FALSE
 #' @param printResults TRUE/FALSE
@@ -74,14 +74,10 @@
 #' }
 #'
 #' @export
-dmcSim <- function(amp = 20, tau = 30, drc = 0.5, bnds = 75, resDist = 1, resMean = 300, resSD = 30, aaShape = 2, spShape = 3,
-                   sigm = 4,  nTrl = 100000, tmax = 1000,
-                   varSP = FALSE, spLim = c(-75, 75),
-                   varDR = FALSE, drShape = 3, drLim = c(0.1, 0.7), 
-                   rtMax = 5000, 
-                   fullData = FALSE, nTrlData = 5,
-                   nDelta = 9, pDelta = vector(), tDelta = 1, nCAF = 5,
-                   printInputArgs = TRUE, printResults = TRUE,
+dmcSim <- function(amp = 20, tau = 30, drc = 0.5, bnds = 75, resDist = 1, resMean = 300, resSD = 30, aaShape = 2,
+                   spShape = 3, sigm = 4,  nTrl = 100000, tmax = 1000, varSP = FALSE, spLim = c(-75, 75),
+                   varDR = FALSE, drShape = 3, drLim = c(0.1, 0.7), rtMax = 5000, fullData = FALSE, nTrlData = 5,
+                   nDelta = 9, pDelta = vector(), tDelta = 1, nCAF = 5, printInputArgs = TRUE, printResults = TRUE,
                    setSeed = FALSE, seedValue = 1) {
 
   # change nDelta to length of pDelta if pDelta not empty
@@ -91,47 +87,44 @@ dmcSim <- function(amp = 20, tau = 30, drc = 0.5, bnds = 75, resDist = 1, resMea
       nDelta <- nDelta + 1
     }
   }
-  
-  dmc <- dmcCppR(r_in = list(amp = amp, tau = tau, drc = drc, bnds = bnds, resDist = resDist, resMean = resMean, resSD = resSD, aaShape = aaShape, spShape = spShape,
-                             sigm = sigm,  nTrl = nTrl, tmax = tmax,
-                             varSP = varSP, spLimLow = spLim[1], spLimHigh = spLim[2],
-                             varDR = varDR, drShape = drShape, drLimLow = drLim[1], drLimHigh = drLim[2], 
-                             rtMax = rtMax, 
-                             fullData = fullData, nTrlData = nTrlData,
-                             nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, nCAF = nCAF,
-                             printInputArgs = printInputArgs, printResults = printResults,
-                             setSeed = setSeed, seedValue = seedValue))
-  
-  summary     <- dmc$summary 
+
+  dmc <- dmcCppR(r_in = list(amp = amp, tau = tau, drc = drc, bnds = bnds, resDist = resDist, resMean = resMean,
+                 resSD = resSD, aaShape = aaShape, spShape = spShape, sigm = sigm,  nTrl = nTrl, tmax = tmax,
+                 varSP = varSP, spLimLow = spLim[1], spLimHigh = spLim[2], varDR = varDR, drShape = drShape,
+                 drLimLow = drLim[1], drLimHigh = drLim[2], rtMax = rtMax, fullData = fullData, nTrlData = nTrlData,
+                 nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, nCAF = nCAF, printInputArgs = printInputArgs,
+                 printResults = printResults, setSeed = setSeed, seedValue = seedValue))
+
+  summary     <- dmc$summary
   dmc$summary <- NULL
-  
+
   # means
-  dmc$summary        <- as.data.frame(rbind(summary$resSum_comp, summary$resSum_incomp)) 
+  dmc$summary        <- as.data.frame(rbind(summary$resSum_comp, summary$resSum_incomp))
   names(dmc$summary) <- c("rtCor", "sdRtCor", "perErr", "rtErr", "sdRtErr", "perSlow")
   dmc$summary        <- cbind(Comp = c("comp", "incomp"), dmc$summary)
 
   # caf
-  dmc$caf <- cbind(Comp = rep(c("comp", "incomp"), each = nCAF), 
-                   as.data.frame(cbind(Bin    = as.numeric(rep(1:nCAF, each = 1, times = 2)), 
+  dmc$caf <- cbind(Comp = rep(c("comp", "incomp"), each = nCAF),
+                   as.data.frame(cbind(Bin    = as.numeric(rep(1:nCAF, each = 1, times = 2)),
                                        accPer =  as.numeric(c(summary$caf_comp, summary$caf_incomp)))))
-  
+
   # delta
   dmc$delta <- as.data.frame(cbind(Bin        = rep(1:nDelta, each = 1, times = 1),
-                                   meanComp   = summary$delta_pct_comp, 
-                                   meanIncomp = summary$delta_pct_incomp, 
+                                   meanComp   = summary$delta_pct_comp,
+                                   meanIncomp = summary$delta_pct_incomp,
                                    meanBin    = summary$delta_pct_mean,
                                    meanEffect = summary$delta_pct_delta))
-    
+
   # store parameters used to call function
-  dmc$prms <- data.frame(amp = amp, tau = tau, drc = drc, bnds = bnds, 
-                         resDist = resDist, resMean = resMean, resSD = resSD, 
+  dmc$prms <- data.frame(amp = amp, tau = tau, drc = drc, bnds = bnds,
+                         resDist = resDist, resMean = resMean, resSD = resSD,
                          aaShape = aaShape, spShape = spShape, sigm = sigm,
                          nTrl = nTrl, nTrlData = nTrlData, tmax = tmax,
                          spLim1 = spLim[1], spLim2 = spLim[2], varDR = varDR,
                          drShape = drShape, drLim1 = drLim[1], drLim2 = drLim[2])
-  
+
   class(dmc) <- "dmcsim"
-  
+
   return(dmc)
 
 }

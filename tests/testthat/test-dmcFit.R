@@ -1,57 +1,59 @@
-context("dmcFitAgg")
+context("dmcFit")
 
-test_that("dmcFitAgg", {
-  
+test_that("dmcFit", {
+
   # dmcFit
   fit <- dmcFit(DMCfun::flankerData, nTrl = 1000, printInputArgs = FALSE, printResults = FALSE)
   testthat::expect_type(fit, "list")
   testthat::expect_s3_class(fit, "dmcfit")
-  
+
   fit <- dmcFit(DMCfun::simonData, nTrl = 1000, printInputArgs = FALSE, printResults = FALSE, fitInitialGrid = FALSE)
   testthat::expect_type(fit, "list")
   testthat::expect_s3_class(fit, "dmcfit")
-  
+
   fit <- dmcFit(DMCfun::flankerData,  nTrl = 1000, printInputArgs = FALSE, printResults = FALSE,
     costFunction = "SPE", startVals = list(drc = 0.6, aaShape = 2.5),  fixedFit = list(drc = T, aaShape = T))
-  testthat::expect_equal(fit$par$drc, 0.6) 
-  testthat::expect_equal(fit$par$aaShape, 2.5) 
-  
-  testthat::expect_error(dmcFit(DMCfun::flankerData, nDelta = 99)) 
-  testthat::expect_error(dmcFit(DMCfun::flankerData, nCAF = 99)) 
-  
+  testthat::expect_equal(fit$par$drc, 0.6)
+  testthat::expect_equal(fit$par$aaShape, 2.5)
+
+  testthat::expect_error(dmcFit(DMCfun::flankerData, nDelta = 99))
+  testthat::expect_error(dmcFit(DMCfun::flankerData, nCAF = 99))
+
   # dmcFitSubject
-  fit <- dmcFitSubject(DMCfun::flankerData, nTrl = 1000, printInputArgs = FALSE, printResults = FALSE, subjects = c(1, 2))
+  fit <- dmcFitSubject(DMCfun::flankerData, nTrl = 1000, subjects = c(1, 2),
+    printInputArgs = FALSE, printResults = FALSE)
   testthat::expect_type(fit, "list")
   testthat::expect_s3_class(fit, "dmcfit")
   testthat::expect_type(mean(fit), "list")
-  
-  fit <- dmcFitSubject(DMCfun::flankerData,  nTrl = 1000, printInputArgs = FALSE, printResults = FALSE,
+
+  fit <- dmcFitSubject(DMCfun::flankerData,  nTrl = 1000, subjects = c(1, 2),
+    printInputArgs = FALSE, printResults = FALSE,
     costFunction = "SPE", startVals = list(drc = 0.6, aaShape = 2.5),  fixedFit = list(drc = T, aaShape = T))
-  testthat::expect_equal(fit$par$drc, 0.6) 
-  testthat::expect_equal(fit$par$aaShape, 2.5) 
-  
-  testthat::expect_error(dmcFitSubject(DMCfun::flankerData, nDelta = 99, subjects = c(1, 2))) 
+  testthat::expect_equal(fit[[1]]$par$drc, 0.6)
+  testthat::expect_equal(fit[[1]]$par$aaShape, 2.5)
+
+  testthat::expect_error(dmcFitSubject(DMCfun::flankerData, nDelta = 99, subjects = c(1, 2)))
   testthat::expect_error(dmcFitSubject(DMCfun::flankerData, nCAF = 99, subjects = c(1, 2)))
-  
-  # dmcFitDE 
+
+  # dmcFitDE
   fit <- dmcFitDE(DMCfun::flankerData, nTrl = 1000)
   testthat::expect_type(fit, "list")
   testthat::expect_s3_class(fit, "dmcfit")
-  
+
   fit <- dmcFitDE(DMCfun::simonData, nTrl = 1000, costFunction = "SPE")
   testthat::expect_type(fit, "list")
   testthat::expect_s3_class(fit, "dmcfit")
-  
-  testthat::expect_error(dmcFitDE(DMCfun::flankerData, nDelta = 99)) 
-  testthat::expect_error(dmcFitDE(DMCfun::flankerData, nCAF = 99)) 
-  
-  # dmcFitSubjectDE 
+
+  testthat::expect_error(dmcFitDE(DMCfun::flankerData, nDelta = 99))
+  testthat::expect_error(dmcFitDE(DMCfun::flankerData, nCAF = 99))
+
+  # dmcFitSubjectDE
   fit <- dmcFitSubjectDE(DMCfun::flankerData, nTrl = 1000, subjects = c(1, 2))
   testthat::expect_type(fit, "list")
   testthat::expect_s3_class(fit, "dmcfit")
-  
-  # should error 
-  testthat::expect_error(dmcFitSubjectDE(DMCfun::flankerData, nDelta = 99)) 
-  testthat::expect_error(dmcFitSubjectDE(DMCfun::flankerData, nCAF = 99)) 
-  
+
+  # should error
+  testthat::expect_error(dmcFitSubjectDE(DMCfun::flankerData, nDelta = 99))
+  testthat::expect_error(dmcFitSubjectDE(DMCfun::flankerData, nCAF = 99))
+
 })

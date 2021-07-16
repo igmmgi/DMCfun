@@ -3,7 +3,7 @@ context("rtDist")
 test_that("rtDist", {
 
   set.seed(1)
-  
+
   # test 1
   x <- DMCfun:::rtDist()
   testthat::expect_equal(length(x), 10000)

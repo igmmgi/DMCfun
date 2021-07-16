@@ -25,17 +25,17 @@ dmcFitDE(
 
 \item{nTrl}{Number of trials to use within dmcSim.}
 
-\item{minVals}{Minimum values for the to-be estimated parameters. This is a list with values specified individually for
-amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., minVals = list(amp = 10, tau = 5, drc = 0.1, bnds = 20, resMean = 200,
-resSD = 5, aaShape = 1, spShape = 2, sigm = 1)).}
+\item{minVals}{Minimum values for the to-be estimated parameters. This is a list with values specified individually
+for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., minVals = list(amp = 10, tau = 5, drc = 0.1,
+bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, sigm = 1)).}
 
-\item{maxVals}{Maximum values for the to-be estimated parameters. This is a list with values specified individually for
-amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., maxVals = list(amp = 40, tau = 300, drc = 1.0, bnds = 150, resMean = 800,
-resSD = 100, aaShape = 3, spShape = 4, sigm = 10))}
+\item{maxVals}{Maximum values for the to-be estimated parameters. This is a list with values specified individually
+for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., maxVals = list(amp = 40, tau = 300, drc = 1.0,
+bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, sigm = 10))}
 
 \item{fixedFit}{Fix parameter to starting value. This is a list with bool values specified individually for
-amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedFit = list(amp = F,  tau = F, drc = F, bnds = F, resMean = F,
-resSD = F, aaShape = F, spShape = F, sigm = T))}
+amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedFit = list(amp = F,  tau = F, drc = F,
+bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, sigm = T))}
 
 \item{nCAF}{Number of CAF bins.}
 
@@ -45,7 +45,8 @@ resSD = F, aaShape = F, spShape = F, sigm = T))}
 
 \item{tDelta}{Type of delta calculation (1 = percentile, 2 = tile average)}
 
-\item{costFunction}{Cost function to minimise root mean square error ("RMSE": default) or squared percentage error ("SPE")}
+\item{costFunction}{Cost function to minimise root mean square error ("RMSE": default) or
+squared percentage error ("SPE")}
 
 \item{varSP}{Variable starting point TRUE/FALSE}
 
@@ -72,12 +73,12 @@ of the CAF and CDF functions using the R-package DEoptim.
 \examples{
 \donttest{
 # Example 1: Flanker data from Ulrich et al. (2015)
-fit <- dmcFitDE(flankerData)  
+fit <- dmcFitDE(flankerData)
 plot(fit, flankerData)
 summary(fit)
 
 # Example 2: Simon data from Ulrich et al. (2015)
-fit <- dmcFitDE(simonData, nTrl = 20000)    
+fit <- dmcFitDE(simonData, nTrl = 20000)
 plot(fit, simonData)
 summary(fit)
 }

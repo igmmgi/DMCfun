@@ -40,7 +40,8 @@ dmcFitSubjectDE(
 
 \item{tDelta}{Type of delta calculation (1 = percentile, 2 = tile average)}
 
-\item{costFunction}{Cost function to minimise root mean square error ("RMSE": default) or squared percentage error ("SPE")}
+\item{costFunction}{Cost function to minimise root mean square error ("RMSE": default) or
+squared percentage error ("SPE")}
 
 \item{varSP}{Variable starting point TRUE/FALSE}
 

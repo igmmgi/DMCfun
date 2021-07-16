@@ -1,0 +1,9 @@
+linters: with_defaults(
+  line_length_linter(120), 
+  commented_code_linter = NULL
+)
+exclusions: list("inst/doc/creating_linters.R" = 1, "inst/example/bad.R", "tests/testthat/exclusions-test")
+exclude: "# Exclude Linting"
+exclude_start: "# Begin Exclude Linting"
+exclude_end: "# End Exclude Linting"
+encoding: "ISO-8859-1"

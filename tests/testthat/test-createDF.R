@@ -11,14 +11,14 @@ test_that("createDF", {
   # 1 factor, 2 levels
   dat <- createDF(nSubjects = 20, nTrl = 50,
                   design = list("Comp" = c("comp", "incomp")))
-  testthat::expect_equal(nrow(dat), 20*50*2)
+  testthat::expect_equal(nrow(dat), 20 * 50 * 2)
   testthat::expect_equal(ncol(dat), 2)
   testthat::expect_equal(names(dat), c("Subject", "Comp"))
 
   # 1 factor, 3 levels
   dat <- createDF(nSubjects = 15, nTrl = 25,
                   design = list("Comp" = c("neutral", "comp", "incomp")))
-  testthat::expect_equal(nrow(dat), 15*25*3)
+  testthat::expect_equal(nrow(dat), 15 * 25 * 3)
   testthat::expect_equal(ncol(dat), 2)
   testthat::expect_equal(names(dat), c("Subject", "Comp"))
 
@@ -26,7 +26,7 @@ test_that("createDF", {
   dat <- createDF(nSubjects = 10, nTrl = 25,
                   design = list("Comp" = c("comp", "incomp"),
                                 "Side" = c("left", "right")))
-  testthat::expect_equal(nrow(dat), 10*25*2*2)
+  testthat::expect_equal(nrow(dat), 10 * 25 * 2 * 2)
   testthat::expect_equal(ncol(dat), 3)
   testthat::expect_equal(names(dat), c("Subject", "Comp", "Side"))
 

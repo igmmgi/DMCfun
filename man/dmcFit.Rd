@@ -31,29 +31,29 @@ dmcFit(
 
 \item{nTrl}{Number of trials to use within dmcSim.}
 
-\item{startVals}{Starting values for to-be estimated parameters. This is a list with values specified individually for
-amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., startVals = list(amp = 20, tau = 200, drc = 0.5, bnds = 75, resMean = 300,
-resSD = 30, aaShape = 2, spShape = 3, sigm = 4)).}
+\item{startVals}{Starting values for to-be estimated parameters. This is a list with values specified individually
+for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., startVals = list(amp = 20, tau = 200,
+drc = 0.5, bnds = 75, resMean = 300, resSD = 30, aaShape = 2, spShape = 3, sigm = 4)).}
 
-\item{minVals}{Minimum values for the to-be estimated parameters. This is a list with values specified individually for
-amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., minVals = list(amp = 10, tau = 5, drc = 0.1, bnds = 20, resMean = 200,
-resSD = 5, aaShape = 1, spShape = 2, sigm = 1)).}
+\item{minVals}{Minimum values for the to-be estimated parameters. This is a list with values specified individually
+for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., minVals = list(amp = 10, tau = 5, drc = 0.1,
+bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, sigm = 1)).}
 
-\item{maxVals}{Maximum values for the to-be estimated parameters. This is a list with values specified individually for
-amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., maxVals = list(amp = 40, tau = 300, drc = 1.0, bnds = 150, resMean = 800,
-resSD = 100, aaShape = 3, spShape = 4, sigm = 10))}
+\item{maxVals}{Maximum values for the to-be estimated parameters. This is a list with values specified individually
+for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., maxVals = list(amp = 40, tau = 300, drc = 1.0,
+bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, sigm = 10))}
 
 \item{fixedFit}{Fix parameter to starting value. This is a list with bool values specified individually for
-amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedFit = list(amp = F, tau = F, drc = F, bnds = F, resMean = F,
-resSD = F, aaShape = F, spShape = F, sigm = T))}
+amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedFit = list(amp = F, tau = F, drc = F,
+bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, sigm = T))}
 
 \item{fitInitialGrid}{TRUE/FALSE}
 
 \item{fitInitialGridN}{10 reduce if searching more than 1 initial parameter}
 
 \item{fixedGrid}{Fix parameter for initial grid search.  This is a list with bool values specified individually for
-amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedGrid = list(amp = T, tau = F, drc = T, bnds = T, resMean = T,
-resSD = T, aaShape = T, spShape = T, sigm = T))}
+amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedGrid = list(amp = T, tau = F, drc = T,
+bnds = T, resMean = T, resSD = T, aaShape = T, spShape = T, sigm = T))}
 
 \item{nCAF}{Number of CAF bins.}
 
@@ -67,7 +67,8 @@ resSD = T, aaShape = T, spShape = T, sigm = T))}
 
 \item{rtMax}{limit on simulated RT (decision + non-decisional component)}
 
-\item{costFunction}{Cost function to minimise root mean square error ("RMSE": default) or squared percentage error ("SPE")}
+\item{costFunction}{Cost function to minimise root mean square error ("RMSE": default) or
+squared percentage error ("SPE")}
 
 \item{printInputArgs}{TRUE/FALSE}
 
