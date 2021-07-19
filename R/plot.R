@@ -1092,21 +1092,21 @@ plot.dmcfit <- function(x,
 
   # rtCorrect
   if (showFig[1]) {
-    plot_rt(y$summary$rtCor, ylimRt, 100, xlabs[1:2], ylabs[1], yaxts, cols[1], ...)
+    plot_rt(c(1, 2), y$summary$rtCor, ylimRt, 100, xlabs[1:2], ylabs[1], yaxts, cols[1], ...)
     lines(c(1, 2), c(x$summary$rtCor), type = "o", lty = 2, ...)
     add_legend(legend, labels[3:4], c(cols[1], cols[1]), c(1, 2), c(1, 1))
   }
 
   # errorRate
   if (showFig[2]) {
-    plot_er(y$summary$perErr, ylimErr, 5, xlabs[1:2], ylabs[2], yaxts, cols[1], ...)
+    plot_er(c(1, 2), y$summary$perErr, ylimErr, 5, xlabs[1:2], ylabs[2], yaxts, cols[1], ...)
     lines(c(1, 2), x$summary$perErr, type = "b", lty = 2, ...)
     add_legend(legend, labels[3:4], c(cols[1], cols[1]), c(1, 2), c(1, 1))
   }
 
   # rt Error
   if (showFig[3]) {
-    plot_rt(y$summary$rtErr, ylimRt, 100, xlabs[1:2], ylabs[3], yaxts, cols[1], ...)
+    plot_rt(c(1, 2), y$summary$rtErr, ylimRt, 100, xlabs[1:2], ylabs[3], yaxts, cols[1], ...)
     lines(c(1, 2), x$summary$rtErr, type = "b", lty = 2, ...)
     add_legend(legend, labels[3:4], c(cols[1], cols[1]), c(1, 2), c(1, 1))
   }

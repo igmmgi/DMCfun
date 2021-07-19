@@ -91,8 +91,7 @@ of the previous plots.
 datFlanker <- dmcObservedData(flankerDataRaw, nDelta = 9)
 datSimon <- dmcObservedData(simonDataRaw, nDelta = 9)
 dat <- dmcCombineObservedData(datFlanker, datSimon)  # combine flanker/simon data
-plot(dat, figType = "all",
-     cols = c("black", "darkgrey"), pchs = c(1, 2), resetPar = FALSE)
+plot(dat, figType = "rtcorrect",  cols = c("black", "darkgrey"), pchs = c(1, 2), resetPar = FALSE)
 legend(200, 0, legend = c("Flanker Task", "Simon Task"),
        col = c("black", "darkgrey"), lty = c(1, 1))
 
