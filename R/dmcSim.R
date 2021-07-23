@@ -99,7 +99,7 @@ dmcSim <- function(amp = 20, tau = 30, drc = 0.5, bnds = 75, resDist = 1, resMea
   dmc$summary <- NULL
 
   # means
-  dmc$summary        <- as.data.frame(rbind(summary$resSum_comp, summary$resSum_incomp))
+  dmc$summary        <- as.data.frame(rbind(summary$comp, summary$incomp))
   names(dmc$summary) <- c("rtCor", "sdRtCor", "perErr", "rtErr", "sdRtErr", "perSlow")
   dmc$summary        <- cbind(Comp = c("comp", "incomp"), dmc$summary)
 
@@ -110,10 +110,10 @@ dmcSim <- function(amp = 20, tau = 30, drc = 0.5, bnds = 75, resDist = 1, resMea
 
   # delta
   dmc$delta <- as.data.frame(cbind(Bin        = rep(1:nDelta, each = 1, times = 1),
-                                   meanComp   = summary$delta_pct_comp,
-                                   meanIncomp = summary$delta_pct_incomp,
-                                   meanBin    = summary$delta_pct_mean,
-                                   meanEffect = summary$delta_pct_delta))
+                                   meanComp   = summary$delta_correct_comp,
+                                   meanIncomp = summary$delta_correct_incomp,
+                                   meanBin    = summary$delta_correct_mean,
+                                   meanEffect = summary$delta_correct_delta))
 
   # store parameters used to call function
   dmc$prms <- data.frame(amp = amp, tau = tau, drc = drc, bnds = bnds,

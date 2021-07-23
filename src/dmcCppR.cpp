@@ -13,7 +13,7 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 
 List dmcCppR(List r_in) {
-  
+
   Prms p; // default parameters
   if (r_in.containsElementNamed("amp"))            p.amp            = as<double>(r_in["amp"]);
   if (r_in.containsElementNamed("tau"))            p.tau            = as<double>(r_in["tau"]);
@@ -45,7 +45,7 @@ List dmcCppR(List r_in) {
   if (r_in.containsElementNamed("printResults"))   p.printResults   = as<bool>(r_in["printResults"]);
   if (r_in.containsElementNamed("setSeed"))        p.setSeed        = as<bool>(r_in["setSeed"]);
   if (r_in.containsElementNamed("seedValue"))      p.seedValue      = as<unsigned int>(r_in["seedValue"]);
-  
+
   // values for delta/CAF
   if (!p.pDelta.empty()) {
     p.vDelta = p.pDelta; // take specific values
@@ -55,16 +55,16 @@ List dmcCppR(List r_in) {
     p.vDelta = linspace(0, 100, p.nDelta + 2 - (p.tDelta - 1));
   }
   p.vCAF = linspace(0, 100, p.nCAF + 1);
-  
+
   if (p.printInputArgs) print_input_args(p);
-  
+
   std::map<std::string, std::vector<double>> rsum;                 // results summary
   std::map<std::string, std::vector<double>> rsim;                 // results simulation
   std::map<std::string, std::vector<std::vector<double>>> trials;  // individual trials
-  
+
   run_dmc_sim(p, rsum, rsim, trials);
   if (p.printResults) print_results(p, rsum);
-  
+
   List dmc;
   if (p.fullData) {
     dmc["summary"] = rsum;
