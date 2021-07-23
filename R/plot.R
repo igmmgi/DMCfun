@@ -155,10 +155,10 @@ plot.dmcsim <- function(x,
   } else if (figType == "summary3") {
     par(mar = c(4, 4, 2, 2), mfrow = c(3, 1), ...)
     showFig[7:9] <- TRUE
-  } else if (figType == "all" & length(x) == 6) {
+  } else if (figType == "all" & length(x) == 7) {
     par(mar = c(4, 4, 2, 2), mfrow = c(1, 1), ...)
     showFig[1:9] <- TRUE
-  } else if (figType == "all" & length(x) == 5) {
+  } else if (figType == "all" & length(x) == 6) {
     par(mar = c(4, 4, 2, 2), mfrow = c(1, 1), ...)
     showFig[4:9] <- TRUE
   } else {
@@ -253,7 +253,7 @@ plot.dmcsim <- function(x,
 
     lines(density(x$sim$rts_incomp), col = tail(cols, 2)[2], type = "l", ...)
 
-    add_legend(legend, labels, tail(cols, 2), c(1, 1), c(1, 1))
+    add_legend(legend, labels, tail(cols, 2), c(1, 1), c(1, 1), position = "topright")
 
   }
 

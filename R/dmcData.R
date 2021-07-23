@@ -409,6 +409,10 @@ dmcObservedData <- function(dat,
     dplyr::filter(Error == 0, RT >= rtMin, RT <= rtMax) %>%
     calculateDelta(., nDelta = nDelta, tDelta = tDelta, quantileType = quantileType)
 
+  datSubject_dec_errors <- dat %>%
+    dplyr::filter(Error == 1, RT >= rtMin, RT <= rtMax) %>%
+    calculateDelta(., nDelta = nDelta, tDelta = tDelta, quantileType = quantileType)
+
   datAgg_dec <- datSubject_dec %>%
     dplyr::mutate(mEffect = meanEffect) %>%
     dplyr::group_by(Bin) %>%
@@ -417,6 +421,17 @@ dmcObservedData <- function(dat,
                      meanBin    = mean(meanBin),
                      meanEffect = mean(mEffect),
                      sdEffect   = sd(mEffect),
+                     seEffect   = sdEffect / sqrt(n()),
+                     .groups    = "drop")
+
+  datAgg_dec_errors <- datSubject_dec_errors %>%
+    dplyr::mutate(mEffect = meanEffect) %>%
+    dplyr::group_by(Bin) %>%
+    dplyr::summarize(meanComp   = mean(meanComp, na.rm = TRUE),
+                     meanIncomp = mean(meanIncomp, na.rm = TRUE),
+                     meanBin    = mean(meanBin, na.rm = TRUE),
+                     meanEffect = mean(mEffect, na.rm = TRUE),
+                     sdEffect   = sd(mEffect, na.rm = TRUE),
                      seEffect   = sdEffect / sqrt(n()),
                      .groups    = "drop")
 
@@ -438,6 +453,12 @@ dmcObservedData <- function(dat,
   obj$deltaSubject        <- as.data.frame(datSubject_dec)
   names(obj$deltaSubject) <- c("Subject", "Bin", "meanComp", "meanIncomp", "meanBin", "meanEffect")
   obj$delta               <- as.data.frame(datAgg_dec)
+
+  obj$deltaErrorsSubject        <- as.data.frame(datSubject_dec_errors)
+  names(obj$deltaErrorsSubject) <- c("Subject", "Bin", "meanComp", "meanIncomp", "meanBin", "meanEffect")
+  obj$deltaErrors               <- as.data.frame(datAgg_dec_errors)
+
+
 
   class(obj) <- "dmcob"
 
