@@ -130,10 +130,14 @@ dmcFit <- function(resOb,
   }
 
   # which cost function?
-  if (costFunction == "RMSE") {
-    calculateCostValue <- calculateCostValueRMSE
-  } else if (costFunction == "SPE") {
-    calculateCostValue <- calculateCostValueSPE
+  if (is.character(costFunction)) {
+    if (costFunction == "RMSE") {
+      calculateCostValue <- calculateCostValueRMSE
+    } else if (costFunction == "SPE") {
+      calculateCostValue <- calculateCostValueSPE
+    }
+  } else if (is.function(costFunction)) {
+    calculateCostValue <- costFunction
   }
 
   ############################# FIT PROCEDURE ##################################
@@ -669,16 +673,16 @@ mean.dmcfit <- function(x, ...) {
 
   # par
   meanfit$par <- as.data.frame(mergeLists(x, "par")) %>%
-    dplyr::summarise(amp = mean(unlist(amp)),
-                     tau = mean(unlist(tau)),
-                     drc = mean(unlist(drc)),
-                     bnds = mean(unlist(bnds)),
+    dplyr::summarise(amp     = mean(unlist(amp)),
+                     tau     = mean(unlist(tau)),
+                     drc     = mean(unlist(drc)),
+                     bnds    = mean(unlist(bnds)),
                      resMean = mean(unlist(resMean)),
-                     resSD = mean(unlist(resSD)),
+                     resSD   = mean(unlist(resSD)),
                      aaShape = mean(unlist(aaShape)),
                      spShape = mean(unlist(spShape)),
-                     sigm = mean(unlist(sigm)),
-                     cost = mean(unlist(cost)),
+                     sigm    = mean(unlist(sigm)),
+                     cost    = mean(unlist(cost)),
                      .groups = "drop")
 
   class(meanfit) <- c("dmcfit")

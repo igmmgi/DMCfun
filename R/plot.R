@@ -720,13 +720,15 @@ plot.dmcobs <- function(x,
   }
 
   if (!is.null(subject)) {
-    # select individual dataset
-    if (!subject %in% x$summarySubject$Subject) {
-      stop("datOb does not contain requested subject number!")
+    # select individual subject dataset
+    for (i in 1:length(x)) {
+      if (!subject %in% x[[i]]$summarySubject$Subject) {
+        stop("datOb does not contain requested subject number!")
+      }
+      x[[i]]$summary <- x[[i]]$summarySubject[x[[i]]$summarySubject$Subject == subject, ]
+      x[[i]]$delta   <- x[[i]]$deltaSubject[x[[i]]$deltaSubject$Subject == subject, ]
+      x[[i]]$caf     <- x[[i]]$cafSubject[x[[i]]$cafSubject$Subject == subject, ]
     }
-    x$summary <- x$summarySubject[x$summarySubject$Subject == subject, ]
-    x$delta   <- x$deltaSubject[x$deltaSubject$Subject == subject, ]
-    x$caf     <- x$cafSubject[x$cafSubject$Subject == subject, ]
     errorBars <- FALSE
   }
 

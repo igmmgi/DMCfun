@@ -94,3 +94,29 @@ test_that("dmcSim6", {
   testthat::expect_equal(dmc$prms$drc, 0.5)
 
 })
+
+test_that("dmcSim7", {
+
+  dmc <- dmcSim(pDelta = c(10, 30, 50, 70, 90))
+  testthat::expect_equal(nrow(dmc$delta), 5)
+  
+  dmc <- dmcSim(pDelta = seq(10, 90, 10), tDelta = 2)
+  testthat::expect_equal(nrow(dmc$delta), 10)
+
+})
+
+test_that("dmcSim8", {
+  
+  params <- list(amp = seq(10, 20, 10))
+  dmc    <- dmcSims(params)
+  testthat::expect_equal(length(dmc), 2)
+  
+  params <- list(amp = seq(10, 20, 5), tau = c(50, 100, 150), nTrl = 10000)
+  dmc    <- dmcSims(params)
+  testthat::expect_equal(length(dmc), 9)
+  
+})
+
+
+
+
