@@ -33,7 +33,7 @@
 #' @param varSP Variable starting point TRUE/FALSE
 #' @param printInputArgs TRUE/FALSE
 #' @param printResults TRUE/FALSE
-#' @param optimxControl Control parameters passed to optimx
+#' @param optimxControl Control parameters passed to optimx (see optimx Details section)
 #'
 #' @return dmcfit
 #'
@@ -254,7 +254,7 @@ dmcFit <- function(resOb,
 #' squared percentage error ("SPE")
 #' @param rtMax limit on simulated RT (decision + non-decisional component)
 #' @param varSP Variable starting point TRUE/FALSE
-#' @param control Additional control parameters passes to DEoptim
+#' @param deControl Additional control parameters passes to DEoptim (see DEoptim.control)
 #'
 #' @return dmcfit
 #'
@@ -292,7 +292,7 @@ dmcFitDE <- function(resOb,
                      costFunction = "RMSE",
                      varSP        = TRUE,
                      rtMax        = 5000,
-                     control      = list()) {
+                     deControl    = list()) {
 
   # default parameter space
   defaultMinVals  <- list(amp = 10, tau =   5, drc = 0.1, bnds =  20, resMean = 200, resSD =  5,  aaShape = 1, spShape = 2, sigm = 4)
@@ -331,7 +331,7 @@ dmcFitDE <- function(resOb,
   invisible(parallel::clusterExport(cl = cl, varlist = c("dmcSim", "calculateCostValue"), envir = environment()))
 
   defaultControl <- list(VTR = 0,  strategy = 1, NP = 100, itermax  = 200, trace = 1, cluster = cl)
-  control        <- modifyList(defaultControl,  control)
+  deControl      <- modifyList(defaultControl,  deControl)
 
   fit <- DEoptim::DEoptim(fn = minimizeCostValue,
                           lower = unlist(minVals[!as.logical(fixedFit)]),
@@ -351,7 +351,7 @@ dmcFitDE <- function(resOb,
                           rtMax = rtMax,
                           printInputArgs = FALSE,
                           printResults = FALSE,
-                          control = control)
+                          control = deControl)
 
   parallel::stopCluster(cl)
 
@@ -412,7 +412,7 @@ dmcFitDE <- function(resOb,
 #' @param subjects NULL (aggregated data across all subjects) or integer for subject number
 #' @param printInputArgs TRUE/FALSE
 #' @param printResults TRUE/FALSE
-#' @param optimxControl Control parameters passed to optimx
+#' @param optimxControl Control parameters passed to optimx (see optimx Details section)
 #'
 #' @return dmcfit_subject List of dmcfit per subject fitted (see dmcFit)
 #'
@@ -456,19 +456,6 @@ dmcFitSubject <- function(resOb,
   if (length(subjects) == 0) {
     subjects <- unique(resOb$summarySubject$Subject)  # fit all individual subjects in data
   }
-
-  # default parameter space
-  defaultStartVals <- list(amp = 20, tau = 200, drc = 0.5, bnds =  75, resMean = 300, resSD =  30, aaShape = 2, spShape = 3, sigm =  4)
-  defaultMinVals   <- list(amp = 10, tau =   5, drc = 0.1, bnds =  20, resMean = 200, resSD =  5,  aaShape = 1, spShape = 2, sigm =  1)
-  defaultMaxVals   <- list(amp = 40, tau = 300, drc = 1.0, bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, sigm = 10)
-  defaultFixedFit  <- list(amp = F,  tau = F,   drc = F,   bnds = F,   resMean = F,   resSD = F,   aaShape = F, spShape = F, sigm = T)
-  defaultFixedGrid <- list(amp = T,  tau = F,   drc = T,   bnds = T,   resMean = T,   resSD = T,   aaShape = T, spShape = T, sigm = T)
-
-  startVals <- modifyList(defaultStartVals, startVals)
-  minVals   <- modifyList(defaultMinVals,   minVals)
-  maxVals   <- modifyList(defaultMaxVals,   maxVals)
-  fixedFit  <- modifyList(defaultFixedFit,  fixedFit)
-  fixedGrid <- modifyList(defaultFixedGrid, fixedGrid)
 
   dmcfit <- vector("list", max(subjects))
   for (subject in subjects) {
@@ -525,7 +512,7 @@ dmcFitSubject <- function(resOb,
 #' @param varSP Variable starting point TRUE/FALSE
 #' @param rtMax limit on simulated RT (decision + non-decisional component)
 #' @param subjects NULL (aggregated data across all subjects) or integer for subject number
-#' @param control Additional control parameters passes to DEoptim
+#' @param deControl Additional control parameters passes to DEoptim (see DEoptim.control)
 #'
 #' @return dmcfit_subject List of dmcfit per subject fitted (see dmcFitDM)
 #'
@@ -558,22 +545,11 @@ dmcFitSubjectDE <- function(resOb,
                             varSP        = TRUE,
                             rtMax        = 5000,
                             subjects     = c(),
-                            control      = list()) {
+                            deControl    = list()) {
 
   if (length(subjects) == 0) {
     subjects <- unique(resOb$summarySubject$Subject)  # fit all individual subjects in data
   }
-
-  # default parameter space
-  defaultMinVals  <- list(amp = 10, tau =   5, drc = 0.1, bnds =  20, resMean = 200, resSD =  5,  aaShape = 1, spShape = 2, sigm = 4)
-  defaultMaxVals  <- list(amp = 40, tau = 300, drc = 1.0, bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, sigm = 4)
-  defaultFixedFit <- list(amp = F,  tau = F,   drc = F,   bnds = F,   resMean = F,   resSD = F,   aaShape = F, spShape = F, sigm = T)
-  defaultControl  <- list(VTR = 1,  strategy = 1, NP = 100, itermax  = 200, trace = 1)
-
-  minVals  <- modifyList(defaultMinVals,  minVals)
-  maxVals  <- modifyList(defaultMaxVals,  maxVals)
-  fixedFit <- modifyList(defaultFixedFit, fixedFit)
-  control  <- modifyList(defaultControl,  control)
 
   dmcfit <- vector("list", max(subjects))
   for (subject in subjects) {
@@ -593,7 +569,7 @@ dmcFitSubjectDE <- function(resOb,
                                   costFunction = costFunction,
                                   varSP        = varSP,
                                   rtMax        = rtMax,
-                                  control      = control)
+                                  deControl    = deControl)
 
   }
 
