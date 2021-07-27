@@ -18,8 +18,10 @@ dmcSim(
   nTrl = 1e+05,
   tmax = 1000,
   varSP = FALSE,
+  spDist = 1,
   spLim = c(-75, 75),
   varDR = FALSE,
+  drDist = 1,
   drShape = 3,
   drLim = c(0.1, 0.7),
   rtMax = 5000,
@@ -62,9 +64,13 @@ dmcSim(
 
 \item{varSP}{true/false variable starting point}
 
+\item{spDist}{starting point distribution (1 = beta, 2 = uniform)}
+
 \item{spLim}{limit range of distribution of starting point}
 
 \item{varDR}{true/false variable drift rate NB. In DMC, drift rate across trials is always constant.}
+
+\item{drDist}{drift rate distribution (1 = beta, 2 = uniform)}
 
 \item{drShape}{shape parameter of drift rate}
 

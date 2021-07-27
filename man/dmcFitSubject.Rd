@@ -67,7 +67,7 @@ squared percentage error ("SPE")}
 
 \item{printResults}{TRUE/FALSE}
 
-\item{optimxControl}{Control parameters passed to optimx}
+\item{optimxControl}{Control parameters passed to optimx (see optimx Details section)}
 }
 \value{
 dmcfit_subject List of dmcfit per subject fitted (see dmcFit)

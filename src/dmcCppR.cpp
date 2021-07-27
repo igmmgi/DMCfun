@@ -29,9 +29,11 @@ List dmcCppR(List r_in) {
   if (r_in.containsElementNamed("nTrl"))           p.nTrl           = as<unsigned long>(r_in["nTrl"]);
   if (r_in.containsElementNamed("tmax"))           p.tmax           = as<unsigned int>(r_in["tmax"]);
   if (r_in.containsElementNamed("varSP"))          p.varSP          = as<bool>(r_in["varSP"]);
+  if (r_in.containsElementNamed("spDist"))         p.spDist         = as<unsigned int>(r_in["spDist"]);
   if (r_in.containsElementNamed("spLimLow"))       p.spLimLow       = as<double>(r_in["spLimLow"]);
   if (r_in.containsElementNamed("spLimHigh"))      p.spLimHigh      = as<double>(r_in["spLimHigh"]);
   if (r_in.containsElementNamed("varDR"))          p.varDR          = as<bool>(r_in["varDR"]);
+  if (r_in.containsElementNamed("varDR"))          p.drDist         = as<unsigned int>(r_in["drDist"]);
   if (r_in.containsElementNamed("drShape"))        p.drShape        = as<double>(r_in["drShape"]);
   if (r_in.containsElementNamed("drLimLow"))       p.drLimLow       = as<double>(r_in["drLimLow"]);
   if (r_in.containsElementNamed("drLimHigh"))      p.drLimHigh      = as<double>(r_in["drLimHigh"]);

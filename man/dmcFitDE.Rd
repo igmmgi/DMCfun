@@ -17,7 +17,7 @@ dmcFitDE(
   costFunction = "RMSE",
   varSP = TRUE,
   rtMax = 5000,
-  control = list()
+  deControl = list()
 )
 }
 \arguments{
@@ -52,7 +52,7 @@ squared percentage error ("SPE")}
 
 \item{rtMax}{limit on simulated RT (decision + non-decisional component)}
 
-\item{control}{Additional control parameters passes to DEoptim}
+\item{deControl}{Additional control parameters passes to DEoptim (see DEoptim.control)}
 }
 \value{
 dmcfit

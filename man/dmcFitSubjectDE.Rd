@@ -18,7 +18,7 @@ dmcFitSubjectDE(
   varSP = TRUE,
   rtMax = 5000,
   subjects = c(),
-  control = list()
+  deControl = list()
 )
 }
 \arguments{
@@ -49,7 +49,7 @@ squared percentage error ("SPE")}
 
 \item{subjects}{NULL (aggregated data across all subjects) or integer for subject number}
 
-\item{control}{Additional control parameters passes to DEoptim}
+\item{deControl}{Additional control parameters passes to DEoptim (see DEoptim.control)}
 }
 \value{
 dmcfit_subject List of dmcfit per subject fitted (see dmcFitDM)

@@ -100,13 +100,23 @@ void run_dmc_sim_ci(Prms &p,
 }
 
 void variable_drift_rate(Prms &p, std::vector<double> &dr, RNG &rng) {
+  if (p.drDist == 1) {
     boost::random::beta_distribution<double> bdDR(p.drShape, p.drShape);
     for (auto &i : dr) i = bdDR(rng) * (p.drLimHigh - p.drLimLow) + p.drLimLow;
+  } else if (p.drDist == 2) {
+    boost::random::beta_distribution<double> unDR(p.drLimLow, p.drLimHigh);
+    for (auto &i : dr) i = unDR(rng);
+  }
 }
 
 void variable_starting_point(Prms &p, std::vector<double> &sp, RNG &rng) {
+  if (p.spDist == 1) {
     boost::random::beta_distribution<double> bdSP(p.spShape, p.spShape);
     for (auto &i : sp) i = bdSP(rng) * (p.spLimHigh - p.spLimLow) + p.spLimLow;
+  } else if (p.spDist == 2) {
+    boost::random::uniform_real_distribution<double> unSP(p.spLimLow, p.spLimHigh);
+    for (auto &i : sp) i = unSP(rng);
+  }
 }
 
 void residual_rt(Prms &p, std::vector<double> &residual_distribution, RNG &rng) {
