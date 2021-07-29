@@ -112,10 +112,10 @@ void variable_drift_rate(Prms &p, std::vector<double> &dr, RNG &rng) {
 void variable_starting_point(Prms &p, std::vector<double> &sp, RNG &rng) {
   if (p.spDist == 1) {
     boost::random::beta_distribution<double> bdSP(p.spShape, p.spShape);
-    for (auto &i : sp) i = bdSP(rng) * (p.spLimHigh - p.spLimLow) + p.spLimLow;
+    for (auto &i : sp) i = (bdSP(rng) * (p.spLimHigh - p.spLimLow) + p.spLimLow) + p.spBias;
   } else if (p.spDist == 2) {
     boost::random::uniform_real_distribution<double> unSP(p.spLimLow, p.spLimHigh);
-    for (auto &i : sp) i = unSP(rng);
+    for (auto &i : sp) i = unSP(rng) + p.spBias;
   }
 }
 
