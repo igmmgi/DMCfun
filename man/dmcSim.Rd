@@ -19,6 +19,7 @@ dmcSim(
   tmax = 1000,
   spDist = 0,
   spLim = c(-75, 75),
+  spBias = 0,
   drDist = 0,
   drShape = 3,
   drLim = c(0.1, 0.7),
@@ -63,6 +64,8 @@ dmcSim(
 \item{spDist}{starting point distribution (0 = constant, 1 = beta, 2 = uniform)}
 
 \item{spLim}{limit range of distribution of starting point}
+
+\item{spBias}{Starting point bias}
 
 \item{drDist}{drift rate distribution (0 = constant, 1 = beta, 2 = uniform)}
 

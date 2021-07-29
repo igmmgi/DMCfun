@@ -74,7 +74,7 @@ void run_dmc_sim_ci(Prms &p,
     // variable drift rate/starting point?
     std::vector<double> dr(p.nTrl, p.drc);
     if (p.drDist != 0) variable_drift_rate(p, dr, rng);
-    std::vector<double> sp(p.nTrl);
+    std::vector<double> sp(p.nTrl, p.spBias);
     if (p.spDist != 0) variable_starting_point(p, sp, rng);
 
     // run simulation and store rts for correct/incorrect trials

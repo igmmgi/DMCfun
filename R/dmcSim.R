@@ -19,6 +19,7 @@
 #' @param spDist starting point distribution (0 = constant, 1 = beta, 2 = uniform)
 #' @param spShape shape parameter of starting point
 #' @param spLim limit range of distribution of starting point
+#' @param spBias Starting point bias
 #' @param drDist drift rate distribution (0 = constant, 1 = beta, 2 = uniform)
 #' @param drShape shape parameter of drift rate
 #' @param drLim limit range of distribution of drift rate
@@ -75,7 +76,7 @@
 #'
 #' @export
 dmcSim <- function(amp = 20, tau = 30, drc = 0.5, bnds = 75, resDist = 1, resMean = 300, resSD = 30, aaShape = 2,
-  spShape = 3, sigm = 4,  nTrl = 100000, tmax = 1000, spDist = 0, spLim = c(-75, 75),
+  spShape = 3, sigm = 4,  nTrl = 100000, tmax = 1000, spDist = 0, spLim = c(-75, 75), spBias = 0,
   drDist = 0, drShape = 3, drLim = c(0.1, 0.7), rtMax = 5000, fullData = FALSE, nTrlData = 5,
   nDelta = 9, pDelta = vector(), tDelta = 1, nCAF = 5, printInputArgs = TRUE, printResults = TRUE,
   setSeed = FALSE, seedValue = 1) {
@@ -90,8 +91,8 @@ dmcSim <- function(amp = 20, tau = 30, drc = 0.5, bnds = 75, resDist = 1, resMea
 
   dmc <- dmcCppR(r_in = list(amp = amp, tau = tau, drc = drc, bnds = bnds, resDist = resDist, resMean = resMean,
     resSD = resSD, aaShape = aaShape, spShape = spShape, sigm = sigm,  nTrl = nTrl, tmax = tmax,
-    spDist = spDist, spLimLow = spLim[1], spLimHigh = spLim[2], drDist = drDist,
-    drShape = drShape, drLimLow = drLim[1], drLimHigh = drLim[2], rtMax = rtMax,
+    spDist = spDist, spLimLow = spLim[1], spLimHigh = spLim[2], spBias = spBias,
+    drDist = drDist, drShape = drShape, drLimLow = drLim[1], drLimHigh = drLim[2], rtMax = rtMax,
     fullData = fullData, nTrlData = nTrlData, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta,
     nCAF = nCAF, printInputArgs = printInputArgs, printResults = printResults, setSeed = setSeed, seedValue = seedValue))
 

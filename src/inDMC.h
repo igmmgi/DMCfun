@@ -19,6 +19,7 @@ struct Prms {
     double spShape = 3;
     double spLimLow = -75;
     double spLimHigh = 75;
+    double spBias = 0;
     int drDist = 0;
     double drShape = 3;
     double drLimLow = 0.1;

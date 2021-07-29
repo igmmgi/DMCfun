@@ -31,6 +31,7 @@ List dmcCppR(List r_in) {
   if (r_in.containsElementNamed("spDist"))         p.spDist         = as<unsigned int>(r_in["spDist"]);
   if (r_in.containsElementNamed("spLimLow"))       p.spLimLow       = as<double>(r_in["spLimLow"]);
   if (r_in.containsElementNamed("spLimHigh"))      p.spLimHigh      = as<double>(r_in["spLimHigh"]);
+  if (r_in.containsElementNamed("spBias"))         p.spBias         = as<double>(r_in["spBias"]);
   if (r_in.containsElementNamed("drDist"))         p.drDist         = as<unsigned int>(r_in["drDist"]);
   if (r_in.containsElementNamed("drShape"))        p.drShape        = as<double>(r_in["drShape"]);
   if (r_in.containsElementNamed("drLimLow"))       p.drLimLow       = as<double>(r_in["drLimLow"]);
