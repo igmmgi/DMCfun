@@ -15,7 +15,7 @@ dmcFitSubjectDE(
   pDelta = vector(),
   tDelta = 1,
   costFunction = "RMSE",
-  varSP = TRUE,
+  spDist = 1,
   rtMax = 5000,
   subjects = c(),
   deControl = list()
@@ -43,7 +43,7 @@ dmcFitSubjectDE(
 \item{costFunction}{Cost function to minimise root mean square error ("RMSE": default) or
 squared percentage error ("SPE")}
 
-\item{varSP}{Variable starting point TRUE/FALSE}
+\item{spDist}{starting point distribution (0 = constant, 1 = beta, 2 = uniform)}
 
 \item{rtMax}{limit on simulated RT (decision + non-decisional component)}
 

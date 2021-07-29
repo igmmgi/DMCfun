@@ -17,11 +17,9 @@ dmcSim(
   sigm = 4,
   nTrl = 1e+05,
   tmax = 1000,
-  varSP = FALSE,
-  spDist = 1,
+  spDist = 0,
   spLim = c(-75, 75),
-  varDR = FALSE,
-  drDist = 1,
+  drDist = 0,
   drShape = 3,
   drLim = c(0.1, 0.7),
   rtMax = 5000,
@@ -62,15 +60,11 @@ dmcSim(
 
 \item{tmax}{number of time points per trial}
 
-\item{varSP}{true/false variable starting point}
-
-\item{spDist}{starting point distribution (1 = beta, 2 = uniform)}
+\item{spDist}{starting point distribution (0 = constant, 1 = beta, 2 = uniform)}
 
 \item{spLim}{limit range of distribution of starting point}
 
-\item{varDR}{true/false variable drift rate NB. In DMC, drift rate across trials is always constant.}
-
-\item{drDist}{drift rate distribution (1 = beta, 2 = uniform)}
+\item{drDist}{drift rate distribution (0 = constant, 1 = beta, 2 = uniform)}
 
 \item{drShape}{shape parameter of drift rate}
 
@@ -132,11 +126,11 @@ dmc <- dmcSim(tau = 90)
 plot(dmc)
 
 # Example 4
-dmc <- dmcSim(varSP = TRUE)
+dmc <- dmcSim(spDist = 1)
 plot(dmc, "delta")
 
 # Example 5
-dmc <- dmcSim(tau = 130, varDR = TRUE)
+dmc <- dmcSim(tau = 130, drDist = 1)
 plot(dmc, "caf")
 
 # Example 6

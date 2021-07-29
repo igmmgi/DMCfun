@@ -18,7 +18,7 @@ dmcFit(
   nDelta = 19,
   pDelta = vector(),
   tDelta = 1,
-  varSP = TRUE,
+  spDist = 1,
   rtMax = 5000,
   costFunction = "RMSE",
   printInputArgs = TRUE,
@@ -63,7 +63,7 @@ bnds = T, resMean = T, resSD = T, aaShape = T, spShape = T, sigm = T))}
 
 \item{tDelta}{Type of delta calculation (1 = percentile, 2 = tile average)}
 
-\item{varSP}{Variable starting point TRUE/FALSE}
+\item{spDist}{starting point distribution (0 = constant, 1 = beta, 2 = uniform)}
 
 \item{rtMax}{limit on simulated RT (decision + non-decisional component)}
 

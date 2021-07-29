@@ -184,7 +184,7 @@ plot.dmcsim <- function(x,
     lines(c(1:x$prms$tmax), -x$sim$eq4, type = "l", lty = 2, col = tail(cols, 2)[2], ...)
 
     # controlled
-    dr <- ifelse(x$prms$varDR, mean(c(x$prms$drLim1, x$prms$drmLim2)), x$prms$drc)
+    dr <- ifelse(x$prms$drDist != 0, mean(c(x$prms$drLim1, x$prms$drmLim2)), x$prms$drc)
     dr <- cumsum(rep(dr, x$prms$tmax))
     dr <- dr + mean(c(x$prms$spLim1, x$prms$spLim2))
     lines(c(1:x$prms$tmax), dr, ...)
