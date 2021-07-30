@@ -26,11 +26,11 @@ dmcFitSubjectDE(
 
 \item{nTrl}{Number of trials to use within dmcSim}
 
-\item{minVals}{Minimum values for the to-be estimated parameters}
+\item{minVals}{Minimum values for the to-be estimated parameters (see dmcFitDE)}
 
-\item{maxVals}{Maximum values for the to-be estimated parameters}
+\item{maxVals}{Maximum values for the to-be estimated parameters (see dmcFitDE)}
 
-\item{fixedFit}{Fix parameter to starting value}
+\item{fixedFit}{Fix parameter to starting value (see dmcFitDE)}
 
 \item{nCAF}{Number of CAF bins.}
 

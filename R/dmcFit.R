@@ -8,21 +8,21 @@
 #' @param nTrl Number of trials to use within dmcSim.
 #' @param startVals Starting values for to-be estimated parameters. This is a list with values specified individually
 #' for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., startVals = list(amp = 20, tau = 200,
-#' drc = 0.5, bnds = 75, resMean = 300, resSD = 30, aaShape = 2, spShape = 3, sigm = 4)).
+#' drc = 0.5, bnds = 75, resMean = 300, resSD = 30, aaShape = 2, spShape = 3, spBias = 0, sigm = 4)).
 #' @param minVals Minimum values for the to-be estimated parameters. This is a list with values specified individually
 #' for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., minVals = list(amp = 10, tau = 5, drc = 0.1,
-#' bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, sigm = 1)).
+#' bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, spBias = -20, sigm = 1)).
 #' @param maxVals Maximum values for the to-be estimated parameters. This is a list with values specified individually
 #' for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., maxVals = list(amp = 40, tau = 300, drc = 1.0,
-#' bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, sigm = 10))
+#' bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 20, sigm = 10))
 #' @param fixedFit Fix parameter to starting value. This is a list with bool values specified individually for
 #' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedFit = list(amp = F, tau = F, drc = F,
-#' bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, sigm = T))
+#' bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T))
 #' @param fitInitialGrid TRUE/FALSE
 #' @param fitInitialGridN 10 reduce if searching more than 1 initial parameter
 #' @param fixedGrid Fix parameter for initial grid search.  This is a list with bool values specified individually for
 #' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedGrid = list(amp = T, tau = F, drc = T,
-#' bnds = T, resMean = T, resSD = T, aaShape = T, spShape = T, sigm = T))
+#' bnds = T, resMean = T, resSD = T, aaShape = T, spShape = T, spBias = T, sigm = T))
 #' @param nCAF Number of CAF bins.
 #' @param nDelta Number of delta bins.
 #' @param pDelta Alternative to nDelta by directly specifying required percentile values
@@ -99,13 +99,15 @@ dmcFit <- function(resOb,
                    optimxControl   = list()) {
 
   # default parameter space
-  defaultStartVals <- list(amp = 20, tau = 200, drc = 0.5, bnds =  75, resMean = 300, resSD =  30, aaShape = 2, spShape = 3, sigm =  4)
-  defaultMinVals   <- list(amp =  0, tau =   5, drc = 0.1, bnds =  20, resMean = 200, resSD =  5,  aaShape = 1, spShape = 2, sigm =  1)
-  defaultMaxVals   <- list(amp = 40, tau = 300, drc = 1.0, bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, sigm = 10)
-  defaultFixedFit  <- list(amp = F,  tau = F,   drc = F,   bnds = F,   resMean = F,   resSD = F,   aaShape = F, spShape = F, sigm = T)
-  defaultFixedGrid <- list(amp = T,  tau = F,   drc = T,   bnds = T,   resMean = T,   resSD = T,   aaShape = T, spShape = T, sigm = T)
+  defaultStartVals <- list(amp = 20, tau = 200, drc = 0.5, bnds =  75, resMean = 300, resSD =  30, aaShape = 2, spShape = 3, spBias =   0, sigm =  4)
+  defaultMinVals   <- list(amp =  0, tau =   5, drc = 0.1, bnds =  20, resMean = 200, resSD =  5,  aaShape = 1, spShape = 2, spBias = -20, sigm =  1)
+  defaultMaxVals   <- list(amp = 40, tau = 300, drc = 1.0, bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias =  20, sigm = 10)
+  defaultFixedFit  <- list(amp = F,  tau = F,   drc = F,   bnds = F,   resMean = F,   resSD = F,   aaShape = F, spShape = F, spBias = T,   sigm = T)
+  defaultFixedGrid <- list(amp = T,  tau = F,   drc = T,   bnds = T,   resMean = T,   resSD = T,   aaShape = T, spShape = T, spBias = T,   sigm = T)
+
 
   startVals <- modifyList(defaultStartVals, startVals)
+  startVals <- lapply(startVals, function(x) ifelse(x == 0, .Machine$double.xmin, x))
   if (!fitInitialGrid) {
     startVals <- unlist(startVals)
   }
@@ -114,7 +116,7 @@ dmcFit <- function(resOb,
   fixedFit  <- modifyList(defaultFixedFit,  fixedFit)
   fixedGrid <- modifyList(defaultFixedGrid, fixedGrid)
 
-  parScale  <- unlist(startVals) / min(unlist(startVals))
+  parScale  <- unlist(startVals) / min(unlist(startVals) + 1)
   prms      <- startVals
 
   # default optimx control parameters
@@ -172,11 +174,11 @@ dmcFit <- function(resOb,
 
     pCostValue <- function(i) {
       resTh <- dmcSim(amp = startValsGrid$amp[i], tau = startValsGrid$tau[i], drc = startValsGrid$drc[i],
-                      bnds = startValsGrid$bnds[i], resMean = startValsGrid$resMean[i], resSD = startValsGrid$resSD[i],
-                      rtMax = rtMax, aaShape = startValsGrid$aaShape[i], spShape = startValsGrid$spShape[i],
-                      sigm = startValsGrid$sigm[i],  spLim = c(-startValsGrid$bnds[i], startValsGrid$bnds[i]),
-                      nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, nCAF = nCAF, spDist = spDist,
-                      printInputArgs = TRUE, printResults = FALSE)
+        bnds = startValsGrid$bnds[i], resMean = startValsGrid$resMean[i], resSD = startValsGrid$resSD[i],
+        rtMax = rtMax, aaShape = startValsGrid$aaShape[i], spShape = startValsGrid$spShape[i],
+        spBias = startValsGrid$spBias[i], sigm = startValsGrid$sigm[i], spLim = c(-startValsGrid$bnds[i], startValsGrid$bnds[i]),
+        nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, nCAF = nCAF, spDist = spDist,
+        printInputArgs = TRUE, printResults = FALSE)
       return(calculateCostValue(resTh, resOb))
     }
 
@@ -194,8 +196,8 @@ dmcFit <- function(resOb,
   # optimize
   fit <- optimx::optimx(par = as.numeric(startVals[!as.logical(fixedFit)]), fn = minimizeCostValue,
                         costFunction = calculateCostValue, prms = prms, fixedFit = fixedFit, resOb = resOb,
-                        nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, nCAF = nCAF, spDist = spDist,
-                        rtMax = rtMax, minVals = minVals, maxVals = maxVals,
+                        nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, nCAF = nCAF,
+                        spDist = spDist, rtMax = rtMax, minVals = minVals, maxVals = maxVals,
                         printInputArgs = printInputArgs, printResults = printResults,
                         method = "Nelder-Mead", control = optimxControl)
 
@@ -212,7 +214,7 @@ dmcFit <- function(resOb,
   dmcfit <- dmcSim(amp = prms$amp, tau = prms$tau, drc = prms$drc,
                    bnds = prms$bnds, resMean = prms$resMean, resSD = prms$resSD, rtMax = rtMax,
                    aaShape = prms$aaShape, sigm = prms$sigm,
-                   spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
+                   spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds), spBias = prms$spBias,
                    nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, nCAF = nCAF, spDist = spDist,
                    printResults = TRUE)
 
@@ -239,13 +241,13 @@ dmcFit <- function(resOb,
 #' @param nTrl Number of trials to use within dmcSim.
 #' @param minVals Minimum values for the to-be estimated parameters. This is a list with values specified individually
 #' for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., minVals = list(amp = 10, tau = 5, drc = 0.1,
-#' bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, sigm = 1)).
+#' bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, spBias = -20, sigm = 1)).
 #' @param maxVals Maximum values for the to-be estimated parameters. This is a list with values specified individually
 #' for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., maxVals = list(amp = 40, tau = 300, drc = 1.0,
-#' bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, sigm = 10))
+#' bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 20, sigm = 10))
 #' @param fixedFit Fix parameter to starting value. This is a list with bool values specified individually for
 #' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedFit = list(amp = F,  tau = F, drc = F,
-#' bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, sigm = T))
+#' bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T))
 #' @param nCAF Number of CAF bins.
 #' @param nDelta Number of delta bins.
 #' @param pDelta Alternative to nDelta by directly specifying required percentile values
@@ -295,9 +297,9 @@ dmcFitDE <- function(resOb,
                      deControl    = list()) {
 
   # default parameter space
-  defaultMinVals  <- list(amp = 10, tau =   5, drc = 0.1, bnds =  20, resMean = 200, resSD =  5,  aaShape = 1, spShape = 2, sigm = 4)
-  defaultMaxVals  <- list(amp = 40, tau = 300, drc = 1.0, bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, sigm = 4)
-  defaultFixedFit <- list(amp = F,  tau = F,   drc = F,   bnds = F,   resMean = F,   resSD = F,   aaShape = F, spShape = F, sigm = T)
+  defaultMinVals  <- list(amp = 10, tau =   5, drc = 0.1, bnds =  20, resMean = 200, resSD =  5,  aaShape = 1, spShape = 2, spBias = 0, sigm = 4)
+  defaultMaxVals  <- list(amp = 40, tau = 300, drc = 1.0, bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 0, sigm = 4)
+  defaultFixedFit <- list(amp = F,  tau = F,   drc = F,   bnds = F,   resMean = F,   resSD = F,   aaShape = F, spShape = F, spBias = T, sigm = T)
 
   minVals  <- modifyList(defaultMinVals,  minVals)
   maxVals  <- modifyList(defaultMaxVals,  maxVals)
@@ -313,11 +315,15 @@ dmcFitDE <- function(resOb,
     stop("Number of CAF bins in observed data and nCAF bins are not equal!")
   }
 
-  # cost function
-  if (costFunction == "RMSE") {
-    calculateCostValue <- calculateCostValueRMSE
-  } else if (costFunction == "SPE") {
-    calculateCostValue <- calculateCostValueSPE
+  # which cost function?
+  if (is.character(costFunction)) {
+    if (costFunction == "RMSE") {
+      calculateCostValue <- calculateCostValueRMSE
+    } else if (costFunction == "SPE") {
+      calculateCostValue <- calculateCostValueSPE
+    }
+  } else if (is.function(costFunction)) {
+    calculateCostValue <- costFunction
   }
 
   # R check limits number of cores to 2 (https://stackoverflow.com/questions/50571325/r-cran-check-fail-when-using-parallel-functions)
@@ -369,7 +375,7 @@ dmcFitDE <- function(resOb,
   cat("\n")
   dmcfit <- dmcSim(amp = prms$amp, tau = prms$tau, drc = prms$drc,
                    bnds = prms$bnds, resMean = prms$resMean, resSD = prms$resSD, rtMax = rtMax,
-                   aaShape = prms$aaShape, sigm = prms$sigm,
+                   aaShape = prms$aaShape, spBias = prms$spBias, sigm = prms$sigm,
                    spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
                    nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, nCAF = nCAF, spDist = spDist,
                    printResults = TRUE)
@@ -394,11 +400,11 @@ dmcFitDE <- function(resOb,
 #'
 #' @param resOb Observed data (see flankerData, simonData for data format)
 #' @param nTrl Number of trials to use within dmcSim
-#' @param startVals Starting values for to-be estimated parameters
-#' @param minVals Minimum values for the to-be estimated parameters
-#' @param maxVals Maximum values for the to-be estimated parameters
-#' @param fixedFit Fix parameter to starting value
-#' @param fitInitialGrid TRUE/FALSE (NB. overrides fitInitialTau)
+#' @param startVals Starting values for to-be estimated parameters (see dmcFit)
+#' @param minVals Minimum values for the to-be estimated parameters (see dmcFit)
+#' @param maxVals Maximum values for the to-be estimated parameters (see dmcFit)
+#' @param fixedFit Fix parameter to starting value (see dmcFit)
+#' @param fitInitialGrid TRUE/FALSE
 #' @param fitInitialGridN 10
 #' @param fixedGrid Fix parameter for initial grid search
 #' @param nCAF Number of CAF bins.
@@ -500,9 +506,9 @@ dmcFitSubject <- function(resOb,
 #'
 #' @param resOb Observed data (see flankerData, simonData for data format)
 #' @param nTrl Number of trials to use within dmcSim
-#' @param minVals Minimum values for the to-be estimated parameters
-#' @param maxVals Maximum values for the to-be estimated parameters
-#' @param fixedFit Fix parameter to starting value
+#' @param minVals Minimum values for the to-be estimated parameters (see dmcFitDE)
+#' @param maxVals Maximum values for the to-be estimated parameters (see dmcFitDE)
+#' @param fixedFit Fix parameter to starting value (see dmcFitDE)
 #' @param nCAF Number of CAF bins.
 #' @param nDelta Number of delta bins.
 #' @param pDelta Alternative to nDelta by directly specifying required percentile values
@@ -693,7 +699,7 @@ minimizeCostValue <- function(x,
 
   resTh <- dmcSim(amp = prms$amp, tau = prms$tau, drc = prms$drc, bnds = prms$bnds,
                   resMean = prms$resMean, resSD = prms$resSD, rtMax = rtMax, aaShape = prms$aaShape,
-                  spShape = prms$spShape, sigm = prms$sigm, spLim = c(-prms$bnds, prms$bnds),
+                  spShape = prms$spShape, sigm = prms$sigm, spBias = prms$spBias, spLim = c(-prms$bnds, prms$bnds),
                   nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, nCAF = nCAF, spDist = spDist,
                   printInputArgs = printInputArgs, printResults = printResults)
 

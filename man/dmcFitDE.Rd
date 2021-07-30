@@ -27,15 +27,15 @@ dmcFitDE(
 
 \item{minVals}{Minimum values for the to-be estimated parameters. This is a list with values specified individually
 for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., minVals = list(amp = 10, tau = 5, drc = 0.1,
-bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, sigm = 1)).}
+bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, spBias = -20, sigm = 1)).}
 
 \item{maxVals}{Maximum values for the to-be estimated parameters. This is a list with values specified individually
 for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., maxVals = list(amp = 40, tau = 300, drc = 1.0,
-bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, sigm = 10))}
+bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 20, sigm = 10))}
 
 \item{fixedFit}{Fix parameter to starting value. This is a list with bool values specified individually for
 amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedFit = list(amp = F,  tau = F, drc = F,
-bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, sigm = T))}
+bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T))}
 
 \item{nCAF}{Number of CAF bins.}
 

@@ -32,15 +32,15 @@ dmcFitSubject(
 
 \item{nTrl}{Number of trials to use within dmcSim}
 
-\item{startVals}{Starting values for to-be estimated parameters}
+\item{startVals}{Starting values for to-be estimated parameters (see dmcFit)}
 
-\item{minVals}{Minimum values for the to-be estimated parameters}
+\item{minVals}{Minimum values for the to-be estimated parameters (see dmcFit)}
 
-\item{maxVals}{Maximum values for the to-be estimated parameters}
+\item{maxVals}{Maximum values for the to-be estimated parameters (see dmcFit)}
 
-\item{fixedFit}{Fix parameter to starting value}
+\item{fixedFit}{Fix parameter to starting value (see dmcFit)}
 
-\item{fitInitialGrid}{TRUE/FALSE (NB. overrides fitInitialTau)}
+\item{fitInitialGrid}{TRUE/FALSE}
 
 \item{fitInitialGridN}{10}
 

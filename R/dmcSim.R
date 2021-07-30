@@ -124,9 +124,9 @@ dmcSim <- function(amp = 20, tau = 30, drc = 0.5, bnds = 75, resDist = 1, resMea
 
   # store parameters used to call function
   dmc$prms <- data.frame(amp = amp, tau = tau, drc = drc, bnds = bnds,
-    resDist = resDist, resMean = resMean, resSD = resSD,
-    aaShape = aaShape, spShape = spShape, sigm = sigm,
-    nTrl = nTrl, nTrlData = nTrlData, tmax = tmax,
+    resMean = resMean, resSD = resSD,
+    aaShape = aaShape, spShape = spShape, spBias = spBias, sigm = sigm,
+    nTrl = nTrl, nTrlData = nTrlData, tmax = tmax, resDist = resDist,
     spDist = spDist, spLim1 = spLim[1], spLim2 = spLim[2],
     drDist = drDist, drShape = drShape, drLim1 = drLim[1], drLim2 = drLim[2])
 
