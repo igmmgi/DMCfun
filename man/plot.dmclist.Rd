@@ -8,6 +8,8 @@
   x,
   ylim = NULL,
   xlim = NULL,
+  figType = "delta",
+  xlab = "Time [ms]",
   col = c("black", "lightgrey"),
   lineType = "l",
   legend = TRUE,
@@ -23,6 +25,10 @@
 \item{ylim}{ylimit for delta plot}
 
 \item{xlim}{xlimit for delta plot}
+
+\item{figType}{delta (default), deltaErrors}
+
+\item{xlab}{x-label}
 
 \item{col}{# color range start/end color}
 

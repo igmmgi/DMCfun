@@ -127,7 +127,7 @@ dmcFit <- function(resOb,
   if (nrow(resOb$delta) != nDelta) {
     stop("Number of delta bins in observed data and nDelta bins are not equal!")
   }
-  if ((nrow(resOb$caf) / 2) != nCAF) {
+  if ((nrow(resOb$caf)) != nCAF) {
     stop("Number of CAF bins in observed data and nCAF bins are not equal!")
   }
 
@@ -311,7 +311,7 @@ dmcFitDE <- function(resOb,
   if (nrow(resOb$delta) != nDelta) {
     stop("Number of delta bins in observed data and nDelta bins are not equal!")
   }
-  if ((nrow(resOb$caf) / 2) != nCAF) {
+  if ((nrow(resOb$caf)) != nCAF) {
     stop("Number of CAF bins in observed data and nCAF bins are not equal!")
   }
 
@@ -649,8 +649,10 @@ mean.dmcfit <- function(x, ...) {
 
   # caf
   meanfit$caf <- mergeLists(x, "caf") %>%
-    dplyr::group_by(Comp, Bin) %>%
-    dplyr::summarise(accPer  = mean(accPer),
+    dplyr::group_by(Bin) %>%
+    dplyr::summarise(accPerComp   = mean(accPerComp),
+                     accPerIncomp = mean(accPerIncomp),
+                     meanEffect   = mean(meanEffect),
                      .groups = "drop")
 
   # par
@@ -735,9 +737,9 @@ minimizeCostValue <- function(x,
 calculateCostValueRMSE <- function(resTh, resOb) {
 
   n_rt  <- nrow(resTh$delta) * 2
-  n_err <- nrow(resTh$caf)
+  n_err <- nrow(resTh$caf) * 2
 
-  costCAF   <- sqrt((1 / n_err) * sum((resTh$caf$accPer - resOb$caf$accPer)**2))
+  costCAF   <- sqrt((1 / n_err) * sum((resTh$caf[c("accPerComp", "accPerIncomp")] - resOb$caf[c("accPerComp", "accPerIncomp")])**2))
   costRT    <- sqrt((1 / n_rt)  * sum((resTh$delta[c("meanComp", "meanIncomp")] - resOb$delta[c("meanComp", "meanIncomp")])**2))
   weightRT  <- n_rt / (n_rt + n_err)
   weightCAF <- (1 - weightRT) * 1500
@@ -773,8 +775,8 @@ calculateCostValueRMSE <- function(resTh, resOb) {
 #' @export
 calculateCostValueSPE <- function(resTh, resOb) {
 
-  costCAF <- sum(((resOb$caf$accPer  - resTh$caf$accPer) / resOb$caf$accPer)**2)
-  costRT <- sum(((resOb$delta[, 2:3]  - resTh$delta[, 2:3]) / resOb$delta[2:3])**2)
+  costCAF <- sum(((resOb$caf[, 2:3]  - resTh$caf[2:3]) / resOb$caf[,2:3])**2)
+  costRT <- sum(((resOb$delta[, 2:3]  - resTh$delta[, 2:3]) / resOb$delta[,2:3])**2)
 
   costValue <- costRT + costCAF
 

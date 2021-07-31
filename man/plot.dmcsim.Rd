@@ -16,6 +16,7 @@
   cafBinLabels = FALSE,
   ylimDelta = NULL,
   xlimDelta = NULL,
+  ylimDeltaErrors = NULL,
   ylimRt = NULL,
   ylimErr = NULL,
   legend = TRUE,
@@ -53,6 +54,8 @@ caf, delta, rtCorrect, rtErrors, errorRate, all}
 \item{ylimDelta}{ylimit for delta plot}
 
 \item{xlimDelta}{xlimit for delta plot (Default is 0 to tmax)}
+
+\item{ylimDeltaErrors}{ylimit for delta plot of errors}
 
 \item{ylimRt}{ylimit for rt plot}
 

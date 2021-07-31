@@ -20,6 +20,7 @@
   cafBinLabels = FALSE,
   ylimDelta = NULL,
   xlimDelta = NULL,
+  ylimDeltaErrors = NULL,
   xlabs = TRUE,
   ylabs = TRUE,
   xaxts = TRUE,
@@ -31,7 +32,7 @@
 \arguments{
 \item{x}{Output from dmcObservedData}
 
-\item{figType}{summary, rtCorrect, errorRate, rtErrors, cdf, caf, delta, all}
+\item{figType}{summary, rtCorrect, errorRate, rtErrors, cdf, caf, delta, deltaErrors, all}
 
 \item{subject}{NULL (aggregated data across all subjects) or integer for subject number}
 
@@ -59,6 +60,8 @@
 
 \item{xlimDelta}{xlimit for delta plot}
 
+\item{ylimDeltaErrors}{ylimit for delta plot errors}
+
 \item{xlabs}{TRUE/FALSE}
 
 \item{ylabs}{TRUE/FALSE}
@@ -74,7 +77,7 @@
 \description{
 Plot results from the output of dmcObservedData. The plot
 can be an overall summary, or individual plots (rtCorrect, errorRate,
-rtErrors, cdf, caf, delta, all).
+rtErrors, cdf, caf, delta, deltaErrors, all).
 }
 \examples{
 \donttest{

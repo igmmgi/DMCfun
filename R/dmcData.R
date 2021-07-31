@@ -395,9 +395,13 @@ dmcObservedData <- function(dat,
     calculateCAF(., nCAF = nCAF)
 
   datAgg_caf <- datSubject_caf %>%
-    dplyr::group_by(Comp, Bin) %>%
-    dplyr::summarize(accPer  = mean(accPer),
-                     .groups = "drop")
+    dplyr::group_by(Bin) %>%
+    dplyr::summarize(accPerComp   = mean(comp),
+                     accPerIncomp = mean(incomp),
+                     meanEffect   = mean(effect),
+                     sdEffect     = sd(effect),
+                     seEffect     = sdEffect/sqrt(n()),
+                     .groups      = "drop")
 
   # change nDelta to length of pDelta if pDelta not empty
   if (length(pDelta) != 0) {
@@ -414,24 +418,22 @@ dmcObservedData <- function(dat,
     calculateDelta(., nDelta = nDelta, tDelta = tDelta, quantileType = quantileType)
 
   datAgg_dec <- datSubject_dec %>%
-    dplyr::mutate(mEffect = meanEffect) %>%
     dplyr::group_by(Bin) %>%
-    dplyr::summarize(meanComp   = mean(meanComp),
-                     meanIncomp = mean(meanIncomp),
+    dplyr::summarize(meanComp   = mean(comp),
+                     meanIncomp = mean(incomp),
                      meanBin    = mean(meanBin),
-                     meanEffect = mean(mEffect),
-                     sdEffect   = sd(mEffect),
+                     meanEffect = mean(Effect),
+                     sdEffect   = sd(Effect),
                      seEffect   = sdEffect / sqrt(n()),
                      .groups    = "drop")
 
   datAgg_dec_errors <- datSubject_dec_errors %>%
-    dplyr::mutate(mEffect = meanEffect) %>%
     dplyr::group_by(Bin) %>%
-    dplyr::summarize(meanComp   = mean(meanComp, na.rm = TRUE),
-                     meanIncomp = mean(meanIncomp, na.rm = TRUE),
-                     meanBin    = mean(meanBin, na.rm = TRUE),
-                     meanEffect = mean(mEffect, na.rm = TRUE),
-                     sdEffect   = sd(mEffect, na.rm = TRUE),
+    dplyr::summarize(meanComp   = mean(comp, na.rm = TRUE),
+                     meanIncomp = mean(incomp, na.rm = TRUE),
+                     meanBin    = mean(Bin, na.rm = TRUE),
+                     meanEffect = mean(Effect, na.rm = TRUE),
+                     sdEffect   = sd(Effect, na.rm = TRUE),
                      seEffect   = sdEffect / sqrt(n()),
                      .groups    = "drop")
 
@@ -440,13 +442,12 @@ dmcObservedData <- function(dat,
   obj <- list()
 
   # summary
-  obj$summarySubject        <- as.data.frame(datSubject[, c(1, 2, 7, 9, 8)])
-  names(obj$summarySubject) <- c("Subject", "Comp", "rtCor", "perErr", "rtErr")
-  obj$summary               <- as.data.frame(datAgg[, c(1, 3, 4, 5, 9, 10, 11, 6, 7, 8)])
+  obj$summarySubject <- as.data.frame(datSubject[, c(1, 2, 7, 9, 8)])
+  obj$summary        <- as.data.frame(datAgg[, c(1, 3, 4, 5, 9, 10, 11, 6, 7, 8)])
 
   # caf
   obj$cafSubject        <- as.data.frame(datSubject_caf)
-  names(obj$cafSubject) <- c("Subject", "Comp", "Bin", "accPer")
+  names(obj$cafSubject) <- c("Subject", "Bin", "accPerComp", "accPerIncomp", "meanEffect")
   obj$caf               <- as.data.frame(datAgg_caf)
 
   # delta
@@ -457,8 +458,6 @@ dmcObservedData <- function(dat,
   obj$deltaErrorsSubject        <- as.data.frame(datSubject_dec_errors)
   names(obj$deltaErrorsSubject) <- c("Subject", "Bin", "meanComp", "meanIncomp", "meanBin", "meanEffect")
   obj$deltaErrors               <- as.data.frame(datAgg_dec_errors)
-
-
 
   class(obj) <- "dmcob"
 
@@ -561,17 +560,17 @@ calculateCAF <- function(dat,
     dplyr::group_by(Subject, Comp) %>%
     dplyr::mutate(Bin = ntile(RT, nCAF)) %>%
     dplyr::group_by(Subject, Comp, Bin) %>%
-    dplyr::summarize(N       = n(),
-                     accPer  = sum(Error == 0) / N,
+    dplyr::summarize(accPer  = sum(Error == 0) / n(),
                      .groups = "drop")  %>%
     dplyr::group_by(Subject, Comp, Bin) %>%
     dplyr::summarize(accPer  = mean(accPer),
-                     .groups = "drop")
+                     .groups = "drop") %>%
+    tidyr::pivot_wider(., id_cols = c("Subject", "Bin"), names_from = "Comp", values_from = "accPer") %>%
+    dplyr::mutate(effect = ((100 - incomp) - (100 - comp)) * 100)
 
-    return(dat_caf)
+  return(dat_caf)
 
 }
-
 
 
 #' @title calculateDelta: Calculate delta function
@@ -642,11 +641,8 @@ calculateDelta <- function(dat,
                        rt      = quantile(RT, deltaSeq / 100, type = quantileType),
                        .groups = "drop")  %>%
       tidyr::pivot_wider(., id_cols = c("Subject", "Bin"), names_from = "Comp", values_from = "rt") %>%
-      dplyr::mutate(meanComp   = comp,
-                    meanIncomp = incomp,
-                    meanBin    = (comp + incomp) / 2,
-                    meanEffect = (incomp - comp)) %>%
-      dplyr::select(-dplyr::one_of("comp", "incomp"))
+      dplyr::mutate(meanBin = (comp + incomp) / 2,
+                    Effect  = (incomp - comp))
 
   } else if (tDelta == 2) {
 
@@ -657,11 +653,8 @@ calculateDelta <- function(dat,
       dplyr::summarize(rt = mean(RT),
                        .groups = "drop")  %>%
       tidyr::pivot_wider(., id_cols = c("Subject", "Bin"), names_from = "Comp", values_from = "rt") %>%
-      dplyr::mutate(meanComp   = comp,
-                    meanIncomp = incomp,
-                    meanBin    = (comp + incomp) / 2,
-                    meanEffect = (incomp - comp)) %>%
-      dplyr::select(-dplyr::one_of("comp", "incomp"))
+      dplyr::mutate(meanBin = (comp + incomp) / 2,
+                    Effect  = (incomp - comp))
 
   }
 
