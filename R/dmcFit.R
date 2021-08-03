@@ -4,33 +4,37 @@
 #' minimizing the root-mean-square error (RMSE) between a weighted combination
 #' of the CAF and CDF functions using the R-package optimx (Nelder-Mead).
 #'
-#' @param resOb Observed data (see flankerData and simonTask for data format)
+#' @param resOb Observed data (see flankerData and simonTask for data format) and the function dmcObservedData to create
+#' the required input from either an R data frame or external *.txt/*.csv files
 #' @param nTrl Number of trials to use within dmcSim.
 #' @param startVals Starting values for to-be estimated parameters. This is a list with values specified individually
-#' for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., startVals = list(amp = 20, tau = 200,
+#' for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., startVals = list(amp = 20, tau = 200,
 #' drc = 0.5, bnds = 75, resMean = 300, resSD = 30, aaShape = 2, spShape = 3, spBias = 0, sigm = 4)).
 #' @param minVals Minimum values for the to-be estimated parameters. This is a list with values specified individually
-#' for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., minVals = list(amp = 10, tau = 5, drc = 0.1,
+#' for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., minVals = list(amp = 10, tau = 5, drc = 0.1,
 #' bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, spBias = -20, sigm = 1)).
 #' @param maxVals Maximum values for the to-be estimated parameters. This is a list with values specified individually
-#' for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., maxVals = list(amp = 40, tau = 300, drc = 1.0,
+#' for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., maxVals = list(amp = 40, tau = 300, drc = 1.0,
 #' bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 20, sigm = 10))
 #' @param fixedFit Fix parameter to starting value. This is a list with bool values specified individually for
-#' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedFit = list(amp = F, tau = F, drc = F,
+#' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., fixedFit = list(amp = F, tau = F, drc = F,
 #' bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T))
 #' @param fitInitialGrid TRUE/FALSE
-#' @param fitInitialGridN 10 reduce if searching more than 1 initial parameter
-#' @param fixedGrid Fix parameter for initial grid search.  This is a list with bool values specified individually for
-#' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedGrid = list(amp = T, tau = F, drc = T,
+#' @param fitInitialGridN 10 reduce if searching more than ~2/3 initial parameters
+#' @param fixedGrid Fix parameter for initial grid search. This is a list with bool values specified individually for
+#' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., fixedGrid = list(amp = T, tau = F, drc = T,
 #' bnds = T, resMean = T, resSD = T, aaShape = T, spShape = T, spBias = T, sigm = T))
 #' @param nCAF Number of CAF bins.
 #' @param nDelta Number of delta bins.
-#' @param pDelta Alternative to nDelta by directly specifying required percentile values
-#' @param tDelta Type of delta calculation (1 = percentile, 2 = tile average)
+#' @param pDelta alternative to nDelta by directly specifying required percentile values
+#' @param tDelta type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)
 #' @param costFunction Cost function to minimise root mean square error ("RMSE": default) or
 #' squared percentage error ("SPE")
 #' @param rtMax limit on simulated RT (decision + non-decisional component)
-#' @param spDist starting point distribution (0 = constant, 1 = beta, 2 = uniform)
+#' @param spDist starting point (sp) distribution (0 = constant, 1 = beta, 2 = uniform)
+#' @param drDist drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)
+#' @param drShape drift rate (dr) shape parameter
+#' @param drLim drift rate (dr) range
 #' @param printInputArgs TRUE/FALSE
 #' @param printResults TRUE/FALSE
 #' @param optimxControl Control parameters passed to optimx (see optimx Details section)
@@ -92,6 +96,9 @@ dmcFit <- function(resOb,
                    pDelta          = vector(),
                    tDelta          = 1,
                    spDist          = 1,
+                   drDist          = 0,
+                   drShape         = 3,
+                   drLim           = c(0.1, 0.7),
                    rtMax           = 5000,
                    costFunction    = "RMSE",
                    printInputArgs  = TRUE,
@@ -173,12 +180,15 @@ dmcFit <- function(resOb,
     # https://stackoverflow.com/questions/58473626/r-doparallel-progress-bar-to-monitor-finished-jobs
 
     pCostValue <- function(i) {
-      resTh <- dmcSim(amp = startValsGrid$amp[i], tau = startValsGrid$tau[i], drc = startValsGrid$drc[i],
-        bnds = startValsGrid$bnds[i], resMean = startValsGrid$resMean[i], resSD = startValsGrid$resSD[i],
-        rtMax = rtMax, aaShape = startValsGrid$aaShape[i], spShape = startValsGrid$spShape[i],
-        spBias = startValsGrid$spBias[i], sigm = startValsGrid$sigm[i], spLim = c(-startValsGrid$bnds[i], startValsGrid$bnds[i]),
-        nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, nCAF = nCAF, spDist = spDist,
-        printInputArgs = TRUE, printResults = FALSE)
+      resTh <- dmcSim(
+        amp = startValsGrid$amp[i], tau = startValsGrid$tau[i], drc = startValsGrid$drc[i], bnds = startValsGrid$bnds[i],
+        resMean = startValsGrid$resMean[i], resSD = startValsGrid$resSD[i], aaShape = startValsGrid$aaShape[i],
+        spShape = startValsGrid$spShape[i], spBias = startValsGrid$spBias[i], sigm = startValsGrid$sigm[i],
+        spLim = c(-startValsGrid$bnds[i], startValsGrid$bnds[i]), spDist = spDist,
+        drDist = drDist, drShape = drShape, drLim = drLim,
+        rtMax = rtMax, nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, nCAF = nCAF,
+        printInputArgs = TRUE, printResults = FALSE
+      )
       return(calculateCostValue(resTh, resOb))
     }
 
@@ -197,7 +207,8 @@ dmcFit <- function(resOb,
   fit <- optimx::optimx(par = as.numeric(startVals[!as.logical(fixedFit)]), fn = minimizeCostValue,
                         costFunction = calculateCostValue, prms = prms, fixedFit = fixedFit, resOb = resOb,
                         nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, nCAF = nCAF,
-                        spDist = spDist, rtMax = rtMax, minVals = minVals, maxVals = maxVals,
+                        spDist = spDist, drDist = drDist, drShape = drShape, drLim = drLim,
+                        rtMax = rtMax, minVals = minVals, maxVals = maxVals,
                         printInputArgs = printInputArgs, printResults = printResults,
                         method = "Nelder-Mead", control = optimxControl)
 
@@ -211,11 +222,11 @@ dmcFit <- function(resOb,
   }
   prms <- as.list(prms)
 
-  dmcfit <- dmcSim(amp = prms$amp, tau = prms$tau, drc = prms$drc,
-                   bnds = prms$bnds, resMean = prms$resMean, resSD = prms$resSD, rtMax = rtMax,
-                   aaShape = prms$aaShape, sigm = prms$sigm,
-                   spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds), spBias = prms$spBias,
-                   nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, nCAF = nCAF, spDist = spDist,
+  dmcfit <- dmcSim(amp = prms$amp, tau = prms$tau, drc = prms$drc, bnds = prms$bnds,
+                   resMean = prms$resMean, resSD = prms$resSD, aaShape = prms$aaShape,
+                   spDist = spDist, spBias = prms$spBias, spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
+                   sigm = prms$sigm, drDist = drDist, drShape = drShape, drLim = drLim,
+                   rtMax = rtMax, nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, nCAF = nCAF,
                    printResults = TRUE)
 
   # fitted parameters
@@ -256,6 +267,9 @@ dmcFit <- function(resOb,
 #' squared percentage error ("SPE")
 #' @param rtMax limit on simulated RT (decision + non-decisional component)
 #' @param spDist starting point distribution (0 = constant, 1 = beta, 2 = uniform)
+#' @param drDist drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)
+#' @param drShape drift rate (dr) shape parameter
+#' @param drLim drift rate (dr) range
 #' @param deControl Additional control parameters passes to DEoptim (see DEoptim.control)
 #'
 #' @return dmcfit
@@ -293,6 +307,9 @@ dmcFitDE <- function(resOb,
                      tDelta       = 1,
                      costFunction = "RMSE",
                      spDist       = 1,
+                     drDist       = 0,
+                     drShape      = 3,
+                     drLim        = c(0.1, 0.7),
                      rtMax        = 5000,
                      deControl    = list()) {
 
@@ -354,6 +371,9 @@ dmcFitDE <- function(resOb,
                           pDelta = pDelta,
                           tDelta = tDelta,
                           spDist = spDist,
+                          drDist = drDist,
+                          drShape = drShape,
+                          drLim = drLim,
                           rtMax = rtMax,
                           printInputArgs = FALSE,
                           printResults = FALSE,
@@ -373,11 +393,12 @@ dmcFitDE <- function(resOb,
   prms <- as.list(prms)
 
   cat("\n")
-  dmcfit <- dmcSim(amp = prms$amp, tau = prms$tau, drc = prms$drc,
-                   bnds = prms$bnds, resMean = prms$resMean, resSD = prms$resSD, rtMax = rtMax,
-                   aaShape = prms$aaShape, spBias = prms$spBias, sigm = prms$sigm,
-                   spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
-                   nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, nCAF = nCAF, spDist = spDist,
+
+  dmcfit <- dmcSim(amp = prms$amp, tau = prms$tau, drc = prms$drc, bnds = prms$bnds,
+                   resMean = prms$resMean, resSD = prms$resSD, aaShape = prms$aaShape,
+                   spDist = spDist, spBias = prms$spBias, spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
+                   sigm = prms$sigm, drDist = drDist, drShape = drShape, drLim = drLim,
+                   rtMax = rtMax, nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, nCAF = nCAF,
                    printResults = TRUE)
 
   # fitted parameters
@@ -414,6 +435,9 @@ dmcFitDE <- function(resOb,
 #' @param costFunction Cost function to minimise root mean square error ("RMSE": default) or
 #' squared percentage error ("SPE")
 #' @param spDist starting point distribution (0 = constant, 1 = beta, 2 = uniform)
+#' @param drDist drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)
+#' @param drShape drift rate (dr) shape parameter
+#' @param drLim drift rate (dr) range
 #' @param rtMax limit on simulated RT (decision + non-decisional component)
 #' @param subjects NULL (aggregated data across all subjects) or integer for subject number
 #' @param printInputArgs TRUE/FALSE
@@ -453,6 +477,9 @@ dmcFitSubject <- function(resOb,
                           tDelta          = 1,
                           costFunction    = "RMSE",
                           spDist          = 1,
+                          drDist          = 0,
+                          drShape         = 3,
+                          drLim           = c(0.1, 0.7),
                           rtMax           = 5000,
                           subjects        = c(),
                           printInputArgs  = TRUE,
@@ -484,6 +511,9 @@ dmcFitSubject <- function(resOb,
                                 tDelta          = tDelta,
                                 costFunction    = costFunction,
                                 spDist          = spDist,
+                                drDist          = drDist,
+                                drShape         = drShape,
+                                drLim           = drLim,
                                 rtMax           = rtMax,
                                 printInputArgs  = printInputArgs,
                                 printResults    = printResults,
@@ -516,6 +546,9 @@ dmcFitSubject <- function(resOb,
 #' @param costFunction Cost function to minimise root mean square error ("RMSE": default) or
 #' squared percentage error ("SPE")
 #' @param spDist starting point distribution (0 = constant, 1 = beta, 2 = uniform)
+#' @param drDist drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)
+#' @param drShape drift rate (dr) shape parameter
+#' @param drLim drift rate (dr) range
 #' @param rtMax limit on simulated RT (decision + non-decisional component)
 #' @param subjects NULL (aggregated data across all subjects) or integer for subject number
 #' @param deControl Additional control parameters passes to DEoptim (see DEoptim.control)
@@ -549,6 +582,9 @@ dmcFitSubjectDE <- function(resOb,
                             tDelta       = 1,
                             costFunction = "RMSE",
                             spDist       = 1,
+                            drDist       = 0,
+                            drShape      = 3,
+                            drLim        = c(0.1, 0.7),
                             rtMax        = 5000,
                             subjects     = c(),
                             deControl    = list()) {
@@ -665,6 +701,7 @@ mean.dmcfit <- function(x, ...) {
                      resSD   = mean(unlist(resSD)),
                      aaShape = mean(unlist(aaShape)),
                      spShape = mean(unlist(spShape)),
+                     spBias  = mean(unlist(spBias)),
                      sigm    = mean(unlist(sigm)),
                      cost    = mean(unlist(cost)),
                      .groups = "drop")
@@ -687,6 +724,9 @@ minimizeCostValue <- function(x,
                               tDelta,
                               nCAF,
                               spDist,
+                              drDist,
+                              drShape,
+                              drLim,
                               rtMax,
                               minVals,
                               maxVals,
@@ -700,9 +740,10 @@ minimizeCostValue <- function(x,
   prms <- as.list(pmin(unlist(prms), unlist(maxVals)))
 
   resTh <- dmcSim(amp = prms$amp, tau = prms$tau, drc = prms$drc, bnds = prms$bnds,
-                  resMean = prms$resMean, resSD = prms$resSD, rtMax = rtMax, aaShape = prms$aaShape,
-                  spShape = prms$spShape, sigm = prms$sigm, spBias = prms$spBias, spLim = c(-prms$bnds, prms$bnds),
-                  nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, nCAF = nCAF, spDist = spDist,
+                  resMean = prms$resMean, resSD = prms$resSD, aaShape = prms$aaShape,
+                  spDist = spDist, spShape = prms$spShape, spBias = prms$spBias, sigm = prms$sigm, spLim = c(-prms$bnds, prms$bnds),
+                  drDist = drDist, drShape = drShape, drLim = drLim,
+                  rtMax = rtMax,  nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, nCAF = nCAF,
                   printInputArgs = printInputArgs, printResults = printResults)
 
   cost <- costFunction(resTh, resOb)

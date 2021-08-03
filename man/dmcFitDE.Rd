@@ -16,6 +16,9 @@ dmcFitDE(
   tDelta = 1,
   costFunction = "RMSE",
   spDist = 1,
+  drDist = 0,
+  drShape = 3,
+  drLim = c(0.1, 0.7),
   rtMax = 5000,
   deControl = list()
 )
@@ -49,6 +52,12 @@ bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T
 squared percentage error ("SPE")}
 
 \item{spDist}{starting point distribution (0 = constant, 1 = beta, 2 = uniform)}
+
+\item{drDist}{drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)}
+
+\item{drShape}{drift rate (dr) shape parameter}
+
+\item{drLim}{drift rate (dr) range}
 
 \item{rtMax}{limit on simulated RT (decision + non-decisional component)}
 

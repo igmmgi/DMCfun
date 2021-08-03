@@ -8,26 +8,27 @@
 #' @param tau time to peak automatic activation
 #' @param drc drift rate of controlled processes
 #' @param bnds +- response criterion
-#' @param resDist 1=normal, 2=uniform
-#' @param resMean mean of non-decisional component
-#' @param resSD standard deviation of non-decisional component
+#' @param resDist residual distribution type (1=normal, 2=uniform)
+#' @param resMean residual distribution mean
+#' @param resSD residual distribution standard deviation
 #' @param rtMax limit on simulated RT (decision + non-decisional component)
 #' @param sigm diffusion constant
 #' @param aaShape shape parameter of automatic activation
 #' @param nTrl number of trials
 #' @param tmax number of time points per trial
-#' @param spDist starting point distribution (0 = constant, 1 = beta, 2 = uniform)
-#' @param spShape shape parameter of starting point
-#' @param spLim limit range of distribution of starting point
-#' @param spBias Starting point bias
-#' @param drDist drift rate distribution (0 = constant, 1 = beta, 2 = uniform)
-#' @param drShape shape parameter of drift rate
-#' @param drLim limit range of distribution of drift rate
-#' @param fullData TRUE/FALSE (Default: FALSE)
+#' @param spDist starting point (sp) distribution (0 = constant, 1 = beta, 2 = uniform)
+#' @param spShape starting point (sp) shape parameter
+#' @param spLim starting point (sp) range
+#' @param spBias starting point (sp) bias
+#' @param drDist drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)
+#' @param drShape drift rate (dr) shape parameter
+#' @param drLim drift rate (dr) range
+#' @param fullData TRUE/FALSE (Default: FALSE) NB. only required when plotting activation
+#' function and/or individual trials
 #' @param nTrlData Number of trials to plot
-#' @param nDelta Number of delta bins
-#' @param pDelta Alternative to nDelta by directly specifying required percentile values
-#' @param tDelta TO DO
+#' @param nDelta number of delta bins
+#' @param pDelta alternative to nDelta by directly specifying required percentile values
+#' @param tDelta type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)
 #' @param nCAF Number of CAF bins
 #' @param printInputArgs TRUE/FALSE
 #' @param printResults TRUE/FALSE
@@ -48,9 +49,9 @@
 #' @examples
 #' \donttest{
 #' # Example 1
-#' dmc <- dmcSim(fullData = TRUE)  # full data only required for activation plot (top left)
+#' dmc <- dmcSim(fullData = TRUE)  # full data only required for activation plot (top left) or individual trials (bottom left)
 #' plot(dmc)
-#' dmc <- dmcSim() # faster
+#' dmc <- dmcSim() # faster!
 #' plot(dmc)
 #'
 #' # Example 2
@@ -75,11 +76,35 @@
 #' }
 #'
 #' @export
-dmcSim <- function(amp = 20, tau = 30, drc = 0.5, bnds = 75, resDist = 1, resMean = 300, resSD = 30, aaShape = 2,
-  spShape = 3, sigm = 4,  nTrl = 100000, tmax = 1000, spDist = 0, spLim = c(-75, 75), spBias = 0,
-  drDist = 0, drShape = 3, drLim = c(0.1, 0.7), rtMax = 5000, fullData = FALSE, nTrlData = 5,
-  nDelta = 9, pDelta = vector(), tDelta = 1, nCAF = 5, printInputArgs = TRUE, printResults = TRUE,
-  setSeed = FALSE, seedValue = 1) {
+dmcSim <- function(amp            = 20,
+                   tau            = 30,
+                   drc            = 0.5,
+                   bnds           = 75,
+                   resDist        = 1,
+                   resMean        = 300,
+                   resSD          = 30,
+                   aaShape        = 2,
+                   spShape        = 3,
+                   sigm           = 4,
+                   nTrl           = 100000,
+                   tmax           = 1000,
+                   spDist         = 0,
+                   spLim          = c(-75, 75),
+                   spBias         = 0,
+                   drDist         = 0,
+                   drShape        = 3,
+                   drLim          = c(0.1, 0.7),
+                   rtMax          = 5000,
+                   fullData       = FALSE,
+                   nTrlData       = 5,
+                   nDelta         = 9,
+                   pDelta         = vector(),
+                   tDelta         = 1,
+                   nCAF           = 5,
+                   printInputArgs = TRUE,
+                   printResults   = TRUE,
+                   setSeed        = FALSE,
+                   seedValue      = 1) {
 
   # change nDelta to length of pDelta if pDelta not empty
   if (length(pDelta) != 0) {
@@ -89,12 +114,15 @@ dmcSim <- function(amp = 20, tau = 30, drc = 0.5, bnds = 75, resDist = 1, resMea
     }
   }
 
-  dmc <- dmcCppR(r_in = list(amp = amp, tau = tau, drc = drc, bnds = bnds, resDist = resDist, resMean = resMean,
-    resSD = resSD, aaShape = aaShape, spShape = spShape, sigm = sigm,  nTrl = nTrl, tmax = tmax,
-    spDist = spDist, spLimLow = spLim[1], spLimHigh = spLim[2], spBias = spBias,
-    drDist = drDist, drShape = drShape, drLimLow = drLim[1], drLimHigh = drLim[2], rtMax = rtMax,
-    fullData = fullData, nTrlData = nTrlData, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta,
-    nCAF = nCAF, printInputArgs = printInputArgs, printResults = printResults, setSeed = setSeed, seedValue = seedValue))
+  dmc <- dmcCppR(
+    r_in = list(amp = amp, tau = tau, drc = drc, bnds = bnds, resDist = resDist, resMean = resMean,
+      resSD = resSD, aaShape = aaShape, spShape = spShape, spBias = spBias, sigm = sigm,
+      nTrl = nTrl, tmax = tmax, rtMax = rtMax, fullData = fullData, nTrlData = nTrlData,
+      nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, nCAF = nCAF,
+      spDist = spDist, spLimLow = spLim[1], spLimHigh = spLim[2],
+      drDist = drDist, drShape = drShape, drLimLow = drLim[1], drLimHigh = drLim[2],
+      printInputArgs = printInputArgs, printResults = printResults, setSeed = setSeed, seedValue = seedValue)
+  )
 
   summary     <- dmc$summary
   dmc$summary <- NULL
@@ -105,10 +133,6 @@ dmcSim <- function(amp = 20, tau = 30, drc = 0.5, bnds = 75, resDist = 1, resMea
   dmc$summary        <- cbind(Comp = c("comp", "incomp"), dmc$summary)
 
   # caf
-  # dmc$caf <- cbind(Comp = rep(c("comp", "incomp"), each = nCAF),
-  #   as.data.frame(cbind(Bin    = as.numeric(rep(1:nCAF, each = 1, times = 2)),
-  #     accPer = as.numeric(c(summary$caf_comp, summary$caf_incomp)))))
-
   dmc$caf <- as.data.frame(cbind(Bin = rep(1:nCAF, each = 1, times = 1),
     accPerComp   = summary$caf_comp,
     accPerIncomp = summary$caf_incomp,
@@ -128,19 +152,19 @@ dmcSim <- function(amp = 20, tau = 30, drc = 0.5, bnds = 75, resDist = 1, resMea
     meanEffect = summary$delta_errors_delta))
 
   # store parameters used to call function
-  dmc$prms <- data.frame(amp = amp, tau = tau, drc = drc, bnds = bnds,
-    resMean = resMean, resSD = resSD,
+  dmc$prms <- data.frame(
+    amp = amp, tau = tau, drc = drc, bnds = bnds, resMean = resMean, resSD = resSD,
     aaShape = aaShape, spShape = spShape, spBias = spBias, sigm = sigm,
     nTrl = nTrl, nTrlData = nTrlData, tmax = tmax, resDist = resDist,
     spDist = spDist, spLim1 = spLim[1], spLim2 = spLim[2],
-    drDist = drDist, drShape = drShape, drLim1 = drLim[1], drLim2 = drLim[2])
+    drDist = drDist, drShape = drShape, drLim1 = drLim[1], drLim2 = drLim[2]
+    )
 
   class(dmc) <- "dmcsim"
 
   return(dmc)
 
 }
-
 
 
 #' @title dmcSims: Run multiple dmc simulations
@@ -171,9 +195,7 @@ dmcSim <- function(amp = 20, tau = 30, drc = 0.5, bnds = 75, resDist = 1, resMea
 #' }
 #'
 #' @export
-dmcSims <- function(params,
-  printInputArgs = FALSE,
-  printResults = FALSE) {
+dmcSims <- function(params, printInputArgs = FALSE, printResults = FALSE) {
 
   params  <- expand.grid(params)
   if (ncol(params) > 1) {

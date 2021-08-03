@@ -256,6 +256,7 @@ plot.dmcsim <- function(x,
 
     lines(density(x$sim$rts_incomp), col = tail(cols, 2)[2], type = "l", ...)
 
+    abline(h = 0, col = "darkgrey", lty = 2);
     add_legend(legend, labels, tail(cols, 2), c(1, 1), c(1, 1), position = "topright")
 
   }

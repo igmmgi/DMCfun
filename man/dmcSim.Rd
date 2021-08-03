@@ -45,15 +45,15 @@ dmcSim(
 
 \item{bnds}{+- response criterion}
 
-\item{resDist}{1=normal, 2=uniform}
+\item{resDist}{residual distribution type (1=normal, 2=uniform)}
 
-\item{resMean}{mean of non-decisional component}
+\item{resMean}{residual distribution mean}
 
-\item{resSD}{standard deviation of non-decisional component}
+\item{resSD}{residual distribution standard deviation}
 
 \item{aaShape}{shape parameter of automatic activation}
 
-\item{spShape}{shape parameter of starting point}
+\item{spShape}{starting point (sp) shape parameter}
 
 \item{sigm}{diffusion constant}
 
@@ -61,29 +61,30 @@ dmcSim(
 
 \item{tmax}{number of time points per trial}
 
-\item{spDist}{starting point distribution (0 = constant, 1 = beta, 2 = uniform)}
+\item{spDist}{starting point (sp) distribution (0 = constant, 1 = beta, 2 = uniform)}
 
-\item{spLim}{limit range of distribution of starting point}
+\item{spLim}{starting point (sp) range}
 
-\item{spBias}{Starting point bias}
+\item{spBias}{starting point (sp) bias}
 
-\item{drDist}{drift rate distribution (0 = constant, 1 = beta, 2 = uniform)}
+\item{drDist}{drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)}
 
-\item{drShape}{shape parameter of drift rate}
+\item{drShape}{drift rate (dr) shape parameter}
 
-\item{drLim}{limit range of distribution of drift rate}
+\item{drLim}{drift rate (dr) range}
 
 \item{rtMax}{limit on simulated RT (decision + non-decisional component)}
 
-\item{fullData}{TRUE/FALSE (Default: FALSE)}
+\item{fullData}{TRUE/FALSE (Default: FALSE) NB. only required when plotting activation
+function and/or individual trials}
 
 \item{nTrlData}{Number of trials to plot}
 
-\item{nDelta}{Number of delta bins}
+\item{nDelta}{number of delta bins}
 
-\item{pDelta}{Alternative to nDelta by directly specifying required percentile values}
+\item{pDelta}{alternative to nDelta by directly specifying required percentile values}
 
-\item{tDelta}{TO DO}
+\item{tDelta}{type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)}
 
 \item{nCAF}{Number of CAF bins}
 
@@ -115,9 +116,9 @@ Cognitive Psychology, 78, 148-174. This function is essentially a wrapper around
 \examples{
 \donttest{
 # Example 1
-dmc <- dmcSim(fullData = TRUE)  # full data only required for activation plot (top left)
+dmc <- dmcSim(fullData = TRUE)  # full data only required for activation plot (top left) or individual trials (bottom left)
 plot(dmc)
-dmc <- dmcSim() # faster
+dmc <- dmcSim() # faster!
 plot(dmc)
 
 # Example 2
