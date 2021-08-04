@@ -5,7 +5,7 @@
   # adapted from linked-to grattan package from the above webpage
 
   utils::globalVariables(
-    c(names(DMCfun::flankerDataRaw),
+    c(names(DMCfun::flankerData$data),
       names(DMCfun::flankerData$summary),
       names(DMCfun::flankerData$delta),
       names(DMCfun::flankerData$caf),

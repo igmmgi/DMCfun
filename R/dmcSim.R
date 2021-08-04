@@ -27,7 +27,7 @@
 #' function and/or individual trials
 #' @param nTrlData Number of trials to plot
 #' @param nDelta number of delta bins
-#' @param pDelta alternative to nDelta by directly specifying required percentile values
+#' @param pDelta alternative to nDelta by directly specifying required percentile values (0-100)
 #' @param tDelta type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)
 #' @param nCAF Number of CAF bins
 #' @param printInputArgs TRUE/FALSE
@@ -49,7 +49,7 @@
 #' @examples
 #' \donttest{
 #' # Example 1
-#' dmc <- dmcSim(fullData = TRUE)  # full data only required for activation plot (top left) or individual trials (bottom left)
+#' dmc <- dmcSim(fullData = TRUE)  # fullData only required for activation/trials (top/bottom left)
 #' plot(dmc)
 #' dmc <- dmcSim() # faster!
 #' plot(dmc)

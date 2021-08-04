@@ -15,6 +15,7 @@ dmcObservedData(
   compCoding = c("comp", "incomp"),
   errorCoding = c(0, 1),
   quantileType = 5,
+  keepRaw = FALSE,
   delim = "\\t",
   skip = 0
 )
@@ -39,6 +40,8 @@ dmcObservedData(
 \item{errorCoding}{Coding for errors DEFAULT = c(0, 1))}
 
 \item{quantileType}{Argument (1-9) from R function quantile specifying the algorithm (?quantile)}
+
+\item{keepRaw}{TRUE/FALSE}
 
 \item{delim}{Single character used to separate fields within a record if reading from external text file.}
 

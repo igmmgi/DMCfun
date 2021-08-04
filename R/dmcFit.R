@@ -144,6 +144,10 @@ dmcFit <- function(resOb,
       calculateCostValue <- calculateCostValueRMSE
     } else if (costFunction == "SPE") {
       calculateCostValue <- calculateCostValueSPE
+    } else if (costFunction == "CS") {
+      calculateCostValue <- calculateCostValueCS
+    } else if (costFunction == "GS") {
+      calculateCostValue <- calculateCostValueGS
     }
   } else if (is.function(costFunction)) {
     calculateCostValue <- costFunction
@@ -493,8 +497,17 @@ dmcFitSubject <- function(resOb,
   dmcfit <- vector("list", max(subjects))
   for (subject in subjects) {
 
-    resObSubject <- list(deltaAgg = resOb$deltaSubject[resOb$deltaSubject$Subject == subject, ],
-                         cafAgg = resOb$cafSubject[resOb$cafSubject$Subject == subject, ])
+    if (is.null(resOb$data)) {
+      resObSubject <- list(
+        deltaAgg = resOb$deltaSubject[resOb$deltaSubject$Subject == subject, ],
+        cafAgg = resOb$cafSubject[resOb$cafSubject$Subject == subject, ]
+      )
+    } else {
+      resObSubject <- list(
+        data = resOb$data[resOb$data$Subject == subject, ],
+        deltaAgg = resOb$deltaSubject[resOb$deltaSubject$Subject == subject, ],
+        cafAgg = resOb$cafSubject[resOb$cafSubject$Subject == subject, ])
+    }
 
     dmcfit[[subject]] <- dmcFit(resObSubject,
                                 nTrl            = nTrl,
@@ -822,5 +835,85 @@ calculateCostValueSPE <- function(resTh, resOb) {
   costValue <- costRT + costCAF
 
   return(costValue)
+
+}
+
+calculateCostValueCS <- function(resTh, resOb, probs = c(10, 30, 50, 70, 90)) {
+
+  probs <- c(0, probs, 100) / 100
+  pPred <- diff(probs)
+
+  # quantile values
+  qValuesThCompCorrect   <- quantile(resTh$sim$rts_comp,    probs)
+  qValuesThIncompCorrect <- quantile(resTh$sim$rts_incomp,  probs)
+  qValuesThCompError     <- quantile(resTh$sim$errs_comp,   probs)
+  qValuesThIncompError   <- quantile(resTh$sim$errs_incomp, probs)
+
+  # Correct RTs for compatible trials
+  nCompCorrect <- table(cut(resOb$data$RT[resOb$data$Comp == "comp" & resOb$data$Error == 0], qValuesThCompCorrect))
+  pCompCorrect <- nCompCorrect / sum(nCompCorrect)
+  pCompCorrect <- ((pCompCorrect - pPred)**2) / pPred
+
+  # Error RTs for compatible trials
+  nCompError <- table(cut(resOb$data$RT[resOb$data$Comp == "comp" & resOb$data$Error == 1], qValuesThCompError))
+  pCompError <- nCompError / sum(nCompError)
+  pCompError <- ((pCompError - pPred)**2) / pPred
+
+  comp <- (sum(nCompCorrect) + sum(nCompError)) * sum(pCompCorrect + pCompError)
+
+  # Correct RTs for incompatible trials
+  nIncompCorrect <- table(cut(resOb$data$RT[resOb$data$Comp == "incomp" & resOb$data$Error == 0], qValuesThIncompCorrect))
+  pIncompCorrect <- nIncompCorrect / sum(nIncompCorrect)
+  pIncompCorrect <- ((pIncompCorrect - pPred)**2) / pPred
+
+  # Error RTs for incompatible trials
+  nIncompError <- table(cut(resOb$data$RT[resOb$data$Comp == "incomp" & resOb$data$Error == 1], qValuesThIncompError))
+  pIncompError <- nIncompError / sum(nIncompError)
+  pIncompError <- ((pIncompError - pPred)**2) / pPred
+
+  incomp <- (sum(nIncompCorrect) + sum(nIncompError)) * sum(pIncompCorrect + pIncompError)
+
+  return(comp + incomp)
+
+}
+
+calculateCostValueGS <- function(resTh, resOb, probs = c(10, 30, 50, 70, 90)) {
+
+  probs <- c(0, probs, 100) / 100
+  pPred <- diff(probs)
+
+  # quantile values
+  qValuesThCompCorrect   <- quantile(resTh$sim$rts_comp,    probs)
+  qValuesThIncompCorrect <- quantile(resTh$sim$rts_incomp,  probs)
+  qValuesThCompError     <- quantile(resTh$sim$errs_comp,   probs)
+  qValuesThIncompError   <- quantile(resTh$sim$errs_incomp, probs)
+
+  # Correct RTs for compatible trials
+  nCompCorrect <- table(cut(resOb$data$RT[resOb$data$Comp == "comp" & resOb$data$Error == 0], qValuesThCompCorrect))
+  pCompCorrect <- nCompCorrect / sum(nCompCorrect)
+  pCompCorrect <- pCompCorrect * log(pCompCorrect/pPred)
+
+  # Error RTs for compatible trials
+  nCompError <- table(cut(resOb$data$RT[resOb$data$Comp == "comp" & resOb$data$Error == 1], qValuesThCompError))
+  pCompError <- nCompError / sum(nCompError)
+  pCompError <- pCompError * log(pCompError/pPred)
+
+  comp <- (sum(nCompCorrect) + sum(nCompError)) * sum(pCompCorrect + pCompError)
+
+  # Correct RTs for incompatible trials
+  nIncompCorrect <- table(cut(resOb$data$RT[resOb$data$Comp == "incomp" & resOb$data$Error == 0], qValuesThIncompCorrect))
+  pIncompCorrect <- nIncompCorrect / sum(nIncompCorrect)
+  pIncompCorrect <- pIncompCorrect * log(pIncompCorrect/pPred)
+
+  # Error RTs for incompatible trials
+  nIncompError <- table(cut(resOb$data$RT[resOb$data$Comp == "incomp" & resOb$data$Error == 1], qValuesThIncompError))
+  pIncompError <- nIncompError / sum(nIncompError)
+  pIncompError <- pIncompError * log(pIncompError/pPred)
+
+  incomp <- (sum(nIncompCorrect) + sum(nIncompError)) * sum(pIncompCorrect + pIncompError)
+
+  gs = 2*(comp + incomp)
+
+  return(gs)
 
 }

@@ -20,24 +20,6 @@
 NULL
 
 
-
-#' Raw flanker data from Ulrich et al. (2015)
-#'
-#' \itemize{
-#'   \item Subject Subject number
-#'   \item Comp Compatibility condition (comp vs. incomp)
-#'   \item RT Reaction Time
-#'   \item Error Error coding (0 = correct, 1 = error)
-#' }
-#'
-#' @docType data
-#' @keywords datasets
-#' @name flankerDataRaw
-#' @usage flankerDataRaw
-NULL
-
-
-
 #' A summarised dataset: see raw data file simonDataRaw and dmcObservedData.R
 #' This is the simon task data from Ulrich et al. (2015)
 #'
@@ -58,23 +40,6 @@ NULL
 #' @name simonData
 #' @usage simonData
 #' @format dmcob
-NULL
-
-
-
-#' Raw simon data from Ulrich et al. (2015)
-#'
-#' \itemize{
-#'   \item Subject Subject number
-#'   \item Comp Compatibility condition (comp vs. incomp)
-#'   \item RT Reaction Time
-#'   \item Error Error coding (0 = correct, 1 = error)
-#' }
-#'
-#' @docType data
-#' @keywords datasets
-#' @name simonDataRaw
-#' @usage simonDataRaw
 NULL
 
 
@@ -266,6 +231,7 @@ addDataDF <- function(dat, RT=NULL, Error=NULL) {
 #' @param compCoding Coding for compatibility DEFAULT = c("comp", "incomp")
 #' @param errorCoding Coding for errors DEFAULT = c(0, 1))
 #' @param quantileType Argument (1-9) from R function quantile specifying the algorithm (?quantile)
+#' @param keepRaw TRUE/FALSE
 #' @param delim Single character used to separate fields within a record if reading from external text file.
 #' @param skip Number of lines to skip before reading data if reading from external text file.
 #'
@@ -330,6 +296,7 @@ dmcObservedData <- function(dat,
                             compCoding = c("comp", "incomp"),
                             errorCoding = c(0, 1),
                             quantileType = 5,
+                            keepRaw = FALSE,
                             delim = "\t",
                             skip = 0) {
 
@@ -355,12 +322,11 @@ dmcObservedData <- function(dat,
     dat$Error <- ifelse(dat$Error == errorCoding[1], 0, 1)
   }
 
-  rtMin  <- outlier[1]
-  rtMax  <- outlier[2]
+  # add column for outliers
+  dat$outlier <- ifelse(dat$RT <= outlier[1] | dat$RT >= outlier[2], 1, 0)
 
   # aggregate data across trials within subjects
   datSubject <- dat %>%
-    dplyr::mutate(outlier = RT <= rtMin | RT >= rtMax) %>%
     dplyr::group_by(Subject, Comp) %>%
     dplyr::summarize(N       = n(),
                      nCor    = sum(Error == 0),
@@ -391,7 +357,7 @@ dmcObservedData <- function(dat,
 
   # conditional accuracy functions (CAF)
   datSubject_caf <- dat %>%
-    dplyr::filter(RT >= rtMin, RT <= rtMax) %>%
+    dplyr::filter(outlier == 0) %>%
     calculateCAF(., nCAF = nCAF)
 
   datAgg_caf <- datSubject_caf %>%
@@ -410,11 +376,11 @@ dmcObservedData <- function(dat,
 
   # DELTA
   datSubject_dec <- dat %>%
-    dplyr::filter(Error == 0, RT >= rtMin, RT <= rtMax) %>%
+    dplyr::filter(Error == 0, outlier == 0) %>%
     calculateDelta(., nDelta = nDelta, tDelta = tDelta, quantileType = quantileType)
 
   datSubject_dec_errors <- dat %>%
-    dplyr::filter(Error == 1, RT >= rtMin, RT <= rtMax) %>%
+    dplyr::filter(Error == 1, outlier == 0) %>%
     calculateDelta(., nDelta = nDelta, tDelta = tDelta, quantileType = quantileType)
 
   datAgg_dec <- datSubject_dec %>%
@@ -440,6 +406,10 @@ dmcObservedData <- function(dat,
   ##############################################################################
   # save results
   obj <- list()
+
+  if (keepRaw) {
+    obj$data <- dat
+  }
 
   # summary
   obj$summarySubject <- as.data.frame(datSubject[, c(1, 2, 7, 9, 8)])
@@ -713,3 +683,6 @@ rtDist <- function(n=10000, gaussMean=600, gaussSD=50, expRate=200) {
 errDist <- function(n=10000, proportion = 10) {
   return(ifelse(runif(n) <= proportion / 100, 1, 0))
 }
+
+
+

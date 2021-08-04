@@ -82,7 +82,7 @@ function and/or individual trials}
 
 \item{nDelta}{number of delta bins}
 
-\item{pDelta}{alternative to nDelta by directly specifying required percentile values}
+\item{pDelta}{alternative to nDelta by directly specifying required percentile values (0-100)}
 
 \item{tDelta}{type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)}
 
@@ -116,7 +116,7 @@ Cognitive Psychology, 78, 148-174. This function is essentially a wrapper around
 \examples{
 \donttest{
 # Example 1
-dmc <- dmcSim(fullData = TRUE)  # full data only required for activation plot (top left) or individual trials (bottom left)
+dmc <- dmcSim(fullData = TRUE)  # fullData only required for activation/trials (top/bottom left)
 plot(dmc)
 dmc <- dmcSim() # faster!
 plot(dmc)
