@@ -28,8 +28,8 @@
 #' @param nDelta Number of delta bins.
 #' @param pDelta alternative to nDelta by directly specifying required percentile values
 #' @param tDelta type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)
-#' @param costFunction Cost function to minimise root mean square error ("RMSE": default) or
-#' squared percentage error ("SPE")
+#' @param costFunction Cost function to minimise root mean square error ("RMSE": default),
+#' squared percentage error ("SPE"), or likelihood-ratio chi-square statistic (GS)
 #' @param rtMax limit on simulated RT (decision + non-decisional component)
 #' @param spDist starting point (sp) distribution (0 = constant, 1 = beta, 2 = uniform)
 #' @param drDist drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)
@@ -144,8 +144,6 @@ dmcFit <- function(resOb,
       calculateCostValue <- calculateCostValueRMSE
     } else if (costFunction == "SPE") {
       calculateCostValue <- calculateCostValueSPE
-    } else if (costFunction == "CS") {
-      calculateCostValue <- calculateCostValueCS
     } else if (costFunction == "GS") {
       calculateCostValue <- calculateCostValueGS
     }
@@ -238,9 +236,6 @@ dmcFit <- function(resOb,
   dmcfit$par  <- prms
   dmcfit$par["cost"] <- fit$value
 
-  if (costFunction == "CS") {
-    dmcfit$par["BIC"] = fit$value + (sum(unlist(fixedFit) == FALSE))*log(sum(resOb$data$outlier == 0))
-  }
   if (costFunction == "GS") {
     dmcfit$par["BIC"] = fit$value + (sum(unlist(fixedFit) == FALSE))*log(sum(resOb$data$outlier == 0))
   }
@@ -849,7 +844,7 @@ calculateCostValueSPE <- function(resTh, resOb) {
 }
 
 
-#' @title calculateCostValueGS: Calculate liklihood-ratio chi-square statistic (GS) statistic from reaction times
+#' @title calculateCostValueGS: Calculate likelihood-ratio chi-square statistic (GS) statistic from reaction times
 #' for both correct and incorrect trials
 #'
 #' @description Calculate cost value (fit) from correct and incorrect RT data.
