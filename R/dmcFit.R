@@ -849,64 +849,6 @@ calculateCostValueSPE <- function(resTh, resOb) {
 }
 
 
-#' @title calculateCostValueCS: Calculate chi-square (CS) statistic from reaction times for both correct and
-#' incorrect trials
-#'
-#' @description Calculate cost value (fit) from correct and incorrect RT data.
-#'
-#' @param resTh list containing simulation $sim values (output from dmcSim) for rts_comp, rts_incomp,
-#' errs_comp, errs_incomp
-#' @param resOb list containing raw observed data (see dmcObservedData with keepRaw = TRUE
-#'
-#' @return cost value (CS)
-#'
-#' @examples
-#' # Example 1:
-#' resTh <- dmcSim()
-#' resOb <- flankerData
-#' cost  <- calculateCostValueCS(resTh, flankerData)
-#'
-#' @export
-calculateCostValueCS <- function(resTh, resOb, probs=c(0.1, 0.3, 0.5, 0.7, 0.9)) {
-
-  nComp           <- nrow(resOb$data[resOb$data$Comp == "comp", ])
-  csCompCorrect   <- cs(resTh$sim$rts_comp,    resOb$data$RT[resOb$data$Comp == "comp"   & resOb$data$Error == 0], nComp,   probs = probs)
-  csCompError     <- cs(resTh$sim$errs_comp,   resOb$data$RT[resOb$data$Comp == "comp"   & resOb$data$Error == 1], nComp,   probs = probs)
-  nIncomp         <- nrow(resOb$data[resOb$data$Comp == "incomp", ])
-  csIncompCorrect <- cs(resTh$sim$rts_incomp,  resOb$data$RT[resOb$data$Comp == "incomp" & resOb$data$Error == 0], nIncomp, probs = probs)
-  csIncompError   <- cs(resTh$sim$errs_incomp, resOb$data$RT[resOb$data$Comp == "incomp" & resOb$data$Error == 1], nIncomp, probs = probs)
-
-  return(csCompCorrect + csCompError + csIncompCorrect + csIncompError)
-
-}
-
-cs <- function(th, ob, n, probs=c(0.1, 0.3, 0.5, 0.7, 0.9)) {
-
-  probs   <- c(0, probs, 1)
-  pPred   <- diff(probs)
-  qValues <- quantile(th, probs)
-  nBin    <- table(.bincode(ob, qValues))
-  pBin    <- nBin / sum(nBin)  # sum(pBin) = 1
-
-  if (length(pBin) == length(pPred)) {
-    csValue <- sum((n*((pBin - pPred)**2)) / pPred)
-  } else { # just use median if too few errors
-    probs   <- c(0, 0.5, 1)
-    pPred   <- diff(probs)
-    qValues <- quantile(th, probs)
-    nBin    <- table(.bincode(ob, qValues))
-    pBin    <- nBin / sum(nBin)  # sum(pBin) = 1
-    if (length(pBin) == length(pPred)) {
-      csValue <- sum((n*((pBin - pPred)**2)) / pPred)
-    } else {
-      csValue <- 0
-    }
-  }
-  return(csValue)
-
-}
-
-
 #' @title calculateCostValueGS: Calculate liklihood-ratio chi-square statistic (GS) statistic from reaction times
 #' for both correct and incorrect trials
 #'
