@@ -112,7 +112,6 @@ dmcFit <- function(resOb,
   defaultFixedFit  <- list(amp = F,  tau = F,   drc = F,   bnds = F,   resMean = F,   resSD = F,   aaShape = F, spShape = F, spBias = T,   sigm = T)
   defaultFixedGrid <- list(amp = T,  tau = F,   drc = T,   bnds = T,   resMean = T,   resSD = T,   aaShape = T, spShape = T, spBias = T,   sigm = T)
 
-
   startVals <- modifyList(defaultStartVals, startVals)
   startVals <- lapply(startVals, function(x) ifelse(x == 0, .Machine$double.xmin, x))
   if (!fitInitialGrid) {
@@ -236,8 +235,10 @@ dmcFit <- function(resOb,
   dmcfit$par  <- prms
   dmcfit$par["cost"] <- fit$value
 
-  if (costFunction == "GS") {
-    dmcfit$par["BIC"] = fit$value + (sum(unlist(fixedFit) == FALSE))*log(sum(resOb$data$outlier == 0))
+  if (!is.function(costFunction)) {
+    if (costFunction == "GS") {
+      dmcfit$par["BIC"] = fit$optim$bestval + (sum(unlist(fixedFit) == FALSE))*log(sum(resOb$data$outlier == 0))
+    }
   }
 
   class(dmcfit) <- "dmcfit"
@@ -344,6 +345,8 @@ dmcFitDE <- function(resOb,
       calculateCostValue <- calculateCostValueRMSE
     } else if (costFunction == "SPE") {
       calculateCostValue <- calculateCostValueSPE
+    } else if (costFunction == "GS") {
+      calculateCostValue <- calculateCostValueGS
     }
   } else if (is.function(costFunction)) {
     calculateCostValue <- costFunction
@@ -410,7 +413,13 @@ dmcFitDE <- function(resOb,
   # fitted parameters
   dmcfit$prms <- NULL  # TO DO: Would this be useful to keep or is it only redundant?
   dmcfit$par  <- prms
-  dmcfit$par["RMSE"] <- fit$optim$bestval
+  dmcfit$par["cost"] <- fit$optim$bestval
+
+  if (!is.function(costFunction)) {
+    if (costFunction == "GS") {
+      dmcfit$par["BIC"] = fit$optim$bestval + (sum(unlist(fixedFit) == FALSE))*log(sum(resOb$data$outlier == 0))
+    }
+  }
 
   class(dmcfit) <- "dmcfit"
 
@@ -844,6 +853,7 @@ calculateCostValueSPE <- function(resTh, resOb) {
 }
 
 
+
 #' @title calculateCostValueGS: Calculate likelihood-ratio chi-square statistic (GS) statistic from reaction times
 #' for both correct and incorrect trials
 #'
@@ -862,42 +872,41 @@ calculateCostValueSPE <- function(resTh, resOb) {
 #' cost  <- calculateCostValueGS(resTh, flankerData)
 #'
 #' @export
-calculateCostValueGS <- function(resTh, resOb, probs=c(0.1, 0.3, 0.5, 0.7, 0.9)) {
+calculateCostValueGS <- function(resTh, resOb) {
 
-  nComp         <- nrow(resOb$data[resOb$data$Comp == "comp", ])
-  gsCompCorrect <- gs(resTh$sim$rts_comp,  resOb$data$RT[resOb$data$Comp == "comp" & resOb$data$Error == 0], probs = probs)
-  gsCompError   <- gs(resTh$sim$errs_comp, resOb$data$RT[resOb$data$Comp == "comp" & resOb$data$Error == 1], probs = probs)
-  gsComp        <- nComp * (sum(gsCompCorrect) + sum(gsCompError))
-
-  nIncomp         <- nrow(resOb$data[resOb$data$Comp == "incomp", ])
-  gsIncompCorrect <- gs(resTh$sim$rts_incomp,  resOb$data$RT[resOb$data$Comp == "incomp" & resOb$data$Error == 0], probs = probs)
-  gsIncompError   <- gs(resTh$sim$errs_incomp, resOb$data$RT[resOb$data$Comp == "incomp" & resOb$data$Error == 1], probs = probs)
-  gsIncomp        <- nIncomp * (sum(gsIncompCorrect) + sum(gsIncompError))
-
-  return(2*(gsComp + gsIncomp))
-
-}
-
-gs <- function(th, ob, probs=c(0.1, 0.3, 0.5, 0.7, 0.9)) {
-  probs   <- c(0, probs, 1)
-  pPred   <- diff(probs)
-  qValues <- quantile(th, probs)
-  nBin    <- table(.bincode(ob, qValues))
-  pBin    <- nBin / sum(nBin)  # sum(pBin) = 1
-  if (length(pBin) == length(pPred)) {
-    out <- pBin * log(pBin/pPred)
-  } else { # just use median if too few errors
-    probs   <- c(0, 0.5, 1)
+  gs <- function(th, ob) {
+    probs   <- c(0, 0.1, 0.3, 0.5, 0.7, 0.9, 1)
     pPred   <- diff(probs)
     qValues <- quantile(th, probs)
     nBin    <- table(.bincode(ob, qValues))
     pBin    <- nBin / sum(nBin)  # sum(pBin) = 1
     if (length(pBin) == length(pPred)) {
       out <- pBin * log(pBin/pPred)
-    } else {
-      out <- 0
+    } else { # just use median if too few errors
+      probs   <- c(0, 0.5, 1)
+      pPred   <- diff(probs)
+      qValues <- quantile(th, probs)
+      nBin    <- table(.bincode(ob, qValues))
+      pBin    <- nBin / sum(nBin)  # sum(pBin) = 1
+      if (length(pBin) == length(pPred)) {
+        out <- pBin * log(pBin/pPred)
+      } else {
+        out <- 0
+      }
     }
+    return(out)
   }
-  return(out)
-}
 
+  nComp         <- nrow(resOb$data[resOb$data$Comp == "comp", ])
+  gsCompCorrect <- gs(resTh$sim$rts_comp,  resOb$data$RT[resOb$data$Comp == "comp" & resOb$data$Error == 0 & resOb$data$Outlier == 0])
+  gsCompError   <- gs(resTh$sim$errs_comp, resOb$data$RT[resOb$data$Comp == "comp" & resOb$data$Error == 1 & resOb$data$Outlier == 0])
+  gsComp        <- nComp * (sum(gsCompCorrect) + sum(gsCompError))
+
+  nIncomp         <- nrow(resOb$data[resOb$data$Comp == "incomp", ])
+  gsIncompCorrect <- gs(resTh$sim$rts_incomp,  resOb$data$RT[resOb$data$Comp == "incomp" & resOb$data$Error == 0 & resOb$data$outlier == 0])
+  gsIncompError   <- gs(resTh$sim$errs_incomp, resOb$data$RT[resOb$data$Comp == "incomp" & resOb$data$Error == 1 & resOb$data$outlier == 0])
+  gsIncomp        <- nIncomp * (sum(gsIncompCorrect) + sum(gsIncompError))
+
+  return(2*(gsComp + gsIncomp))
+
+}

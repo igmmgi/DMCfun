@@ -77,8 +77,8 @@ bnds = T, resMean = T, resSD = T, aaShape = T, spShape = T, spBias = T, sigm = T
 
 \item{rtMax}{limit on simulated RT (decision + non-decisional component)}
 
-\item{costFunction}{Cost function to minimise root mean square error ("RMSE": default) or
-squared percentage error ("SPE")}
+\item{costFunction}{Cost function to minimise root mean square error ("RMSE": default),
+squared percentage error ("SPE"), or likelihood-ratio chi-square statistic (GS)}
 
 \item{printInputArgs}{TRUE/FALSE}
 

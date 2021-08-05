@@ -7,11 +7,11 @@
 calculateCostValueRMSE(resTh, resOb)
 }
 \arguments{
-\item{resTh}{list containing caf values for comp/incomp conditions (nbins*2*3) and
-delta values for comp/incomp conditions (nbins*5). See output from dmcSim (.$caf).}
+\item{resTh}{list containing caf values for comp/incomp conditions (nbins * 4 columns) and
+delta values for comp/incomp conditions (nbins * 5 columns). See output from dmcSim (.$caf).}
 
-\item{resOb}{list containing caf values for comp/incomp conditions (n*2*3) and
-delta values for comp/incomp conditions (nbins*5). See output from dmcSim ($delta).}
+\item{resOb}{list containing caf values for comp/incomp conditions (n * 4 columns) and
+delta values for comp/incomp conditions (nbins * 5 columns). See output from dmcSim (.$delta).}
 }
 \value{
 cost value (RMSE)
