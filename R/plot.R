@@ -1094,10 +1094,13 @@ plot.dmcfit <- function(x,
   if (!is.null(subject)) {
     subjects <- which(!unlist(lapply(x, is.null)))
     if (!subject %in% subjects) {
-      stop("datFit does not contain requested subject number!")
+      stop("datOb (y) does not contain requested subject number!")
     }
 
     x <- x[[subject]]
+    if (is.null(x)) {
+      stop("datTh (x) does not contain individual fits!")
+    }
 
     y$summary <- y$summarySubject[y$summarySubject$Subject == subject, ]
     y$delta   <- y$deltaSubject[y$deltaSubject$Subject == subject, ]

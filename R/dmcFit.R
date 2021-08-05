@@ -238,6 +238,13 @@ dmcFit <- function(resOb,
   dmcfit$par  <- prms
   dmcfit$par["cost"] <- fit$value
 
+  if (costFunction == "CS") {
+    dmcfit$par["BIC"] = fit$value + (sum(unlist(fixedFit) == FALSE))*log(sum(resOb$data$outlier == 0))
+  }
+  if (costFunction == "GS") {
+    dmcfit$par["BIC"] = fit$value + (sum(unlist(fixedFit) == FALSE))*log(sum(resOb$data$outlier == 0))
+  }
+
   class(dmcfit) <- "dmcfit"
 
   return(dmcfit)
@@ -769,10 +776,10 @@ minimizeCostValue <- function(x,
 #'
 #' @description Calculate cost value (fit) from combination of RT and error rate.
 #'
-#' @param resTh list containing caf values for comp/incomp conditions (nbins*2*3) and
-#' delta values for comp/incomp conditions (nbins*5). See output from dmcSim (.$caf).
-#' @param resOb list containing caf values for comp/incomp conditions (n*2*3) and
-#' delta values for comp/incomp conditions (nbins*5). See output from dmcSim ($delta).
+#' @param resTh list containing caf values for comp/incomp conditions (nbins * 4 columns) and
+#' delta values for comp/incomp conditions (nbins * 5 columns). See output from dmcSim (.$caf).
+#' @param resOb list containing caf values for comp/incomp conditions (n * 4 columns) and
+#' delta values for comp/incomp conditions (nbins * 5 columns). See output from dmcSim (.$delta).
 #'
 #' @return cost value (RMSE)
 #'
@@ -808,10 +815,10 @@ calculateCostValueRMSE <- function(resTh, resOb) {
 #'
 #' @description Calculate cost value (fit) from combination of RT and error rate.
 #'
-#' @param resTh list containing caf values for comp/incomp conditions (nbins*2*3) and
-#' delta values for comp/incomp conditions (nbins*5). See output from dmcSim (.$caf).
-#' @param resOb list containing caf values for comp/incomp conditions (n*2*3) and
-#' delta values for comp/incomp conditions (nbins*5). See output from dmcSim ($delta).
+#' @param resTh list containing caf values for comp/incomp conditions (nbins * 4 columns) and
+#' delta values for comp/incomp conditions (nbins * 5 columns). See output from dmcSim (.$caf).
+#' @param resOb list containing caf values for comp/incomp conditions (n * 4 columns) and
+#' delta values for comp/incomp conditions (nbins * 5 columns). See output from dmcSim (.$delta).
 #'
 #' @return cost value (SPE)
 #'
@@ -829,8 +836,11 @@ calculateCostValueRMSE <- function(resTh, resOb) {
 #' @export
 calculateCostValueSPE <- function(resTh, resOb) {
 
-  costCAF <- sum(((resOb$caf[, 2:3]  - resTh$caf[2:3]) / resOb$caf[,2:3])**2)
-  costRT <- sum(((resOb$delta[, 2:3]  - resTh$delta[, 2:3]) / resOb$delta[,2:3])**2)
+  costCAF <- sum(((resOb$caf[, c("accPerComp", "accPerIncomp")]  -
+      resTh$caf[, c("accPerComp", "accPerIncomp")]) / resOb$caf[, c("accPerComp", "accPerIncomp")])**2)
+
+  costRT <- sum(((resOb$delta[, c("meanComp", "meanIncomp", "meanBin")] -
+      resTh$delta[,  c("meanComp", "meanIncomp", "meanBin")]) / resOb$delta[, c("meanComp", "meanIncomp", "meanBin")])**2)
 
   costValue <- costRT + costCAF
 
@@ -838,82 +848,119 @@ calculateCostValueSPE <- function(resTh, resOb) {
 
 }
 
-calculateCostValueCS <- function(resTh, resOb, probs = c(10, 30, 50, 70, 90)) {
 
-  probs <- c(0, probs, 100) / 100
-  pPred <- diff(probs)
+#' @title calculateCostValueCS: Calculate chi-square (CS) statistic from reaction times for both correct and
+#' incorrect trials
+#'
+#' @description Calculate cost value (fit) from correct and incorrect RT data.
+#'
+#' @param resTh list containing simulation $sim values (output from dmcSim) for rts_comp, rts_incomp,
+#' errs_comp, errs_incomp
+#' @param resOb list containing raw observed data (see dmcObservedData with keepRaw = TRUE
+#'
+#' @return cost value (CS)
+#'
+#' @examples
+#' # Example 1:
+#' resTh <- dmcSim()
+#' resOb <- flankerData
+#' cost  <- calculateCostValueCS(resTh, flankerData)
+#'
+#' @export
+calculateCostValueCS <- function(resTh, resOb, probs=c(0.1, 0.3, 0.5, 0.7, 0.9)) {
 
-  # quantile values
-  qValuesThCompCorrect   <- quantile(resTh$sim$rts_comp,    probs)
-  qValuesThIncompCorrect <- quantile(resTh$sim$rts_incomp,  probs)
-  qValuesThCompError     <- quantile(resTh$sim$errs_comp,   probs)
-  qValuesThIncompError   <- quantile(resTh$sim$errs_incomp, probs)
+  nComp           <- nrow(resOb$data[resOb$data$Comp == "comp", ])
+  csCompCorrect   <- cs(resTh$sim$rts_comp,    resOb$data$RT[resOb$data$Comp == "comp"   & resOb$data$Error == 0], nComp,   probs = probs)
+  csCompError     <- cs(resTh$sim$errs_comp,   resOb$data$RT[resOb$data$Comp == "comp"   & resOb$data$Error == 1], nComp,   probs = probs)
+  nIncomp         <- nrow(resOb$data[resOb$data$Comp == "incomp", ])
+  csIncompCorrect <- cs(resTh$sim$rts_incomp,  resOb$data$RT[resOb$data$Comp == "incomp" & resOb$data$Error == 0], nIncomp, probs = probs)
+  csIncompError   <- cs(resTh$sim$errs_incomp, resOb$data$RT[resOb$data$Comp == "incomp" & resOb$data$Error == 1], nIncomp, probs = probs)
 
-  # Correct RTs for compatible trials
-  nCompCorrect <- table(cut(resOb$data$RT[resOb$data$Comp == "comp" & resOb$data$Error == 0], qValuesThCompCorrect))
-  pCompCorrect <- nCompCorrect / sum(nCompCorrect)
-  pCompCorrect <- ((pCompCorrect - pPred)**2) / pPred
-
-  # Error RTs for compatible trials
-  nCompError <- table(cut(resOb$data$RT[resOb$data$Comp == "comp" & resOb$data$Error == 1], qValuesThCompError))
-  pCompError <- nCompError / sum(nCompError)
-  pCompError <- ((pCompError - pPred)**2) / pPred
-
-  comp <- (sum(nCompCorrect) + sum(nCompError)) * sum(pCompCorrect + pCompError)
-
-  # Correct RTs for incompatible trials
-  nIncompCorrect <- table(cut(resOb$data$RT[resOb$data$Comp == "incomp" & resOb$data$Error == 0], qValuesThIncompCorrect))
-  pIncompCorrect <- nIncompCorrect / sum(nIncompCorrect)
-  pIncompCorrect <- ((pIncompCorrect - pPred)**2) / pPred
-
-  # Error RTs for incompatible trials
-  nIncompError <- table(cut(resOb$data$RT[resOb$data$Comp == "incomp" & resOb$data$Error == 1], qValuesThIncompError))
-  pIncompError <- nIncompError / sum(nIncompError)
-  pIncompError <- ((pIncompError - pPred)**2) / pPred
-
-  incomp <- (sum(nIncompCorrect) + sum(nIncompError)) * sum(pIncompCorrect + pIncompError)
-
-  return(comp + incomp)
+  return(csCompCorrect + csCompError + csIncompCorrect + csIncompError)
 
 }
 
-calculateCostValueGS <- function(resTh, resOb, probs = c(10, 30, 50, 70, 90)) {
+cs <- function(th, ob, n, probs=c(0.1, 0.3, 0.5, 0.7, 0.9)) {
 
-  probs <- c(0, probs, 100) / 100
-  pPred <- diff(probs)
+  probs   <- c(0, probs, 1)
+  pPred   <- diff(probs)
+  qValues <- quantile(th, probs)
+  nBin    <- table(.bincode(ob, qValues))
+  pBin    <- nBin / sum(nBin)  # sum(pBin) = 1
 
-  # quantile values
-  qValuesThCompCorrect   <- quantile(resTh$sim$rts_comp,    probs)
-  qValuesThIncompCorrect <- quantile(resTh$sim$rts_incomp,  probs)
-  qValuesThCompError     <- quantile(resTh$sim$errs_comp,   probs)
-  qValuesThIncompError   <- quantile(resTh$sim$errs_incomp, probs)
-
-  # Correct RTs for compatible trials
-  nCompCorrect <- table(cut(resOb$data$RT[resOb$data$Comp == "comp" & resOb$data$Error == 0], qValuesThCompCorrect))
-  pCompCorrect <- nCompCorrect / sum(nCompCorrect)
-  pCompCorrect <- pCompCorrect * log(pCompCorrect/pPred)
-
-  # Error RTs for compatible trials
-  nCompError <- table(cut(resOb$data$RT[resOb$data$Comp == "comp" & resOb$data$Error == 1], qValuesThCompError))
-  pCompError <- nCompError / sum(nCompError)
-  pCompError <- pCompError * log(pCompError/pPred)
-
-  comp <- (sum(nCompCorrect) + sum(nCompError)) * sum(pCompCorrect + pCompError)
-
-  # Correct RTs for incompatible trials
-  nIncompCorrect <- table(cut(resOb$data$RT[resOb$data$Comp == "incomp" & resOb$data$Error == 0], qValuesThIncompCorrect))
-  pIncompCorrect <- nIncompCorrect / sum(nIncompCorrect)
-  pIncompCorrect <- pIncompCorrect * log(pIncompCorrect/pPred)
-
-  # Error RTs for incompatible trials
-  nIncompError <- table(cut(resOb$data$RT[resOb$data$Comp == "incomp" & resOb$data$Error == 1], qValuesThIncompError))
-  pIncompError <- nIncompError / sum(nIncompError)
-  pIncompError <- pIncompError * log(pIncompError/pPred)
-
-  incomp <- (sum(nIncompCorrect) + sum(nIncompError)) * sum(pIncompCorrect + pIncompError)
-
-  gs = 2*(comp + incomp)
-
-  return(gs)
+  if (length(pBin) == length(pPred)) {
+    csValue <- sum((n*((pBin - pPred)**2)) / pPred)
+  } else { # just use median if too few errors
+    probs   <- c(0, 0.5, 1)
+    pPred   <- diff(probs)
+    qValues <- quantile(th, probs)
+    nBin    <- table(.bincode(ob, qValues))
+    pBin    <- nBin / sum(nBin)  # sum(pBin) = 1
+    if (length(pBin) == length(pPred)) {
+      csValue <- sum((n*((pBin - pPred)**2)) / pPred)
+    } else {
+      csValue <- 0
+    }
+  }
+  return(csValue)
 
 }
+
+
+#' @title calculateCostValueGS: Calculate liklihood-ratio chi-square statistic (GS) statistic from reaction times
+#' for both correct and incorrect trials
+#'
+#' @description Calculate cost value (fit) from correct and incorrect RT data.
+#'
+#' @param resTh list containing simulation $sim values (output from dmcSim) for rts_comp, rts_incomp,
+#' errs_comp, errs_incomp
+#' @param resOb list containing raw observed data (see dmcObservedData with keepRaw = TRUE
+#'
+#' @return cost value (GS)
+#'
+#' @examples
+#' # Example 1:
+#' resTh <- dmcSim()
+#' resOb <- flankerData
+#' cost  <- calculateCostValueGS(resTh, flankerData)
+#'
+#' @export
+calculateCostValueGS <- function(resTh, resOb, probs=c(0.1, 0.3, 0.5, 0.7, 0.9)) {
+
+  nComp         <- nrow(resOb$data[resOb$data$Comp == "comp", ])
+  gsCompCorrect <- gs(resTh$sim$rts_comp,  resOb$data$RT[resOb$data$Comp == "comp" & resOb$data$Error == 0], probs = probs)
+  gsCompError   <- gs(resTh$sim$errs_comp, resOb$data$RT[resOb$data$Comp == "comp" & resOb$data$Error == 1], probs = probs)
+  gsComp        <- nComp * (sum(gsCompCorrect) + sum(gsCompError))
+
+  nIncomp         <- nrow(resOb$data[resOb$data$Comp == "incomp", ])
+  gsIncompCorrect <- gs(resTh$sim$rts_incomp,  resOb$data$RT[resOb$data$Comp == "incomp" & resOb$data$Error == 0], probs = probs)
+  gsIncompError   <- gs(resTh$sim$errs_incomp, resOb$data$RT[resOb$data$Comp == "incomp" & resOb$data$Error == 1], probs = probs)
+  gsIncomp        <- nIncomp * (sum(gsIncompCorrect) + sum(gsIncompError))
+
+  return(2*(gsComp + gsIncomp))
+
+}
+
+gs <- function(th, ob, probs=c(0.1, 0.3, 0.5, 0.7, 0.9)) {
+  probs   <- c(0, probs, 1)
+  pPred   <- diff(probs)
+  qValues <- quantile(th, probs)
+  nBin    <- table(.bincode(ob, qValues))
+  pBin    <- nBin / sum(nBin)  # sum(pBin) = 1
+  if (length(pBin) == length(pPred)) {
+    out <- pBin * log(pBin/pPred)
+  } else { # just use median if too few errors
+    probs   <- c(0, 0.5, 1)
+    pPred   <- diff(probs)
+    qValues <- quantile(th, probs)
+    nBin    <- table(.bincode(ob, qValues))
+    pBin    <- nBin / sum(nBin)  # sum(pBin) = 1
+    if (length(pBin) == length(pPred)) {
+      out <- pBin * log(pBin/pPred)
+    } else {
+      out <- 0
+    }
+  }
+  return(out)
+}
+
