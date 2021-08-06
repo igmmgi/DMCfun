@@ -26,7 +26,6 @@ Imports:
   DEoptim,
   Rcpp (>= 0.12.16),
   dplyr (>= 1.0.0),
-  optimx,
   parallel,
   pbapply,
   tidyr

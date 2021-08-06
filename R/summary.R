@@ -57,7 +57,7 @@ summary.dmcfit <- function(object, digits = 2, ...) {
       outSubject <- rbind(outSubject, cbind(subject, as.data.frame(object[[subject]]$par)))
     }
     outSubject <- round(outSubject, digits)
-    outAvg     <- round(as.data.frame(t(colMeans(data.matrix(outSubject[, 2:11])))), digits)
+    outAvg     <- round(as.data.frame(t(colMeans(data.matrix(outSubject[, 2:(length(outSubject))])))), digits)
     out        <- list(outSubject, outAvg)
 
     return(out)

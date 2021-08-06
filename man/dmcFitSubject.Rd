@@ -2,7 +2,7 @@
 % Please edit documentation in R/dmcFit.R
 \name{dmcFitSubject}
 \alias{dmcFitSubject}
-\title{dmcFitSubject: Fit DMC to aggregated data using R-package optimx (Nelder-Mead)}
+\title{dmcFitSubject: Fit DMC to aggregated data using optim (Nelder-Mead)}
 \usage{
 dmcFitSubject(
   resOb,
@@ -27,7 +27,7 @@ dmcFitSubject(
   subjects = c(),
   printInputArgs = TRUE,
   printResults = FALSE,
-  optimxControl = list()
+  optimControl = list()
 )
 }
 \arguments{
@@ -76,7 +76,7 @@ squared percentage error ("SPE")}
 
 \item{printResults}{TRUE/FALSE}
 
-\item{optimxControl}{Control parameters passed to optimx (see optimx Details section)}
+\item{optimControl}{Control parameters passed to optim (see optim Details section)}
 }
 \value{
 dmcfit_subject List of dmcfit per subject fitted (see dmcFit)

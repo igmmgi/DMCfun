@@ -89,7 +89,8 @@ of the previous plots.
 \donttest{
 # Example 1
 dat <- dmcCombineObservedData(flankerData, simonData)  # combine flanker/simon data
-plot(dat, figType = "rtcorrect",  cols = c("black", "darkgrey"), pchs = c(1, 2), legend = FALSE, resetPar = FALSE)
+plot(dat, figType = "rtcorrect",  cols = c("black", "darkgrey"), pchs = c(1, 2), 
+legend = FALSE, resetPar = FALSE)
 legend(0.5, 520, legend = c("Flanker Task", "Simon Task"),
        col = c("black", "darkgrey"), lty = c(1, 1))
 

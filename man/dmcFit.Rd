@@ -2,7 +2,7 @@
 % Please edit documentation in R/dmcFit.R
 \name{dmcFit}
 \alias{dmcFit}
-\title{dmcFit: Fit DMC to aggregated data using R-package optimx (Nelder-Mead)}
+\title{dmcFit: Fit DMC to aggregated data using optim (Nelder-Mead)}
 \usage{
 dmcFit(
   resOb,
@@ -26,7 +26,7 @@ dmcFit(
   costFunction = "RMSE",
   printInputArgs = TRUE,
   printResults = FALSE,
-  optimxControl = list()
+  optimControl = list()
 )
 }
 \arguments{
@@ -84,7 +84,7 @@ squared percentage error ("SPE"), or likelihood-ratio chi-square statistic (GS)}
 
 \item{printResults}{TRUE/FALSE}
 
-\item{optimxControl}{Control parameters passed to optimx (see optimx Details section)}
+\item{optimControl}{Control parameters passed to optim (see optim Details section)}
 }
 \value{
 dmcfit
@@ -100,7 +100,7 @@ is accessed with obj$name with the the following:
 \description{
 Fit theoretical data generated from dmcSim to observed data by
 minimizing the root-mean-square error (RMSE) between a weighted combination
-of the CAF and CDF functions using the R-package optimx (Nelder-Mead).
+of the CAF and CDF functions using optim (Nelder-Mead).
 }
 \examples{
 \donttest{

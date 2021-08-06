@@ -1,8 +1,8 @@
-#' @title dmcFit: Fit DMC to aggregated data using R-package optimx (Nelder-Mead)
+#' @title dmcFit: Fit DMC to aggregated data using optim (Nelder-Mead)
 #'
 #' @description Fit theoretical data generated from dmcSim to observed data by
 #' minimizing the root-mean-square error (RMSE) between a weighted combination
-#' of the CAF and CDF functions using the R-package optimx (Nelder-Mead).
+#' of the CAF and CDF functions using optim (Nelder-Mead).
 #'
 #' @param resOb Observed data (see flankerData and simonTask for data format) and the function dmcObservedData to create
 #' the required input from either an R data frame or external *.txt/*.csv files
@@ -37,7 +37,7 @@
 #' @param drLim drift rate (dr) range
 #' @param printInputArgs TRUE/FALSE
 #' @param printResults TRUE/FALSE
-#' @param optimxControl Control parameters passed to optimx (see optimx Details section)
+#' @param optimControl Control parameters passed to optim (see optim Details section)
 #'
 #' @return dmcfit
 #'
@@ -103,7 +103,7 @@ dmcFit <- function(resOb,
                    costFunction    = "RMSE",
                    printInputArgs  = TRUE,
                    printResults    = FALSE,
-                   optimxControl   = list()) {
+                   optimControl    = list()) {
 
   # default parameter space
   defaultStartVals <- list(amp = 20, tau = 200, drc = 0.5, bnds =  75, resMean = 300, resSD =  30, aaShape = 2, spShape = 3, spBias =   0, sigm =  4)
@@ -125,9 +125,9 @@ dmcFit <- function(resOb,
   parScale  <- unlist(startVals) / min(unlist(startVals) + 1)
   prms      <- startVals
 
-  # default optimx control parameters
-  defaultOptimxControl <- list(parscale = parScale[!as.logical(fixedFit)], maxit = 500)
-  optimxControl        <- modifyList(defaultOptimxControl, optimxControl)
+  # default optim control parameters
+  defaultOptimControl <- list(parscale = parScale[!as.logical(fixedFit)], maxit = 500)
+  optimControl        <- modifyList(defaultOptimControl, optimControl)
 
   # check observed data contains correct number of delta/CAF bins
   if (nrow(resOb$delta) != nDelta) {
@@ -138,17 +138,7 @@ dmcFit <- function(resOb,
   }
 
   # which cost function?
-  if (is.character(costFunction)) {
-    if (costFunction == "RMSE") {
-      calculateCostValue <- calculateCostValueRMSE
-    } else if (costFunction == "SPE") {
-      calculateCostValue <- calculateCostValueSPE
-    } else if (costFunction == "GS") {
-      calculateCostValue <- calculateCostValueGS
-    }
-  } else if (is.function(costFunction)) {
-    calculateCostValue <- costFunction
-  }
+  calculateCostValue <- costValueFunction(costFunction)
 
   ############################# FIT PROCEDURE ##################################
   if (fitInitialGrid) {
@@ -205,15 +195,15 @@ dmcFit <- function(resOb,
   }
 
   # optimize
-  fit <- optimx::optimx(par = as.numeric(startVals[!as.logical(fixedFit)]), fn = minimizeCostValue,
+  fit <- optim(par = as.numeric(startVals[!as.logical(fixedFit)]), fn = minimizeCostValue,
                         costFunction = calculateCostValue, prms = prms, fixedFit = fixedFit, resOb = resOb,
                         nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, nCAF = nCAF,
                         spDist = spDist, drDist = drDist, drShape = drShape, drLim = drLim,
                         rtMax = rtMax, minVals = minVals, maxVals = maxVals,
                         printInputArgs = printInputArgs, printResults = printResults,
-                        method = "Nelder-Mead", control = optimxControl)
+                        method = "Nelder-Mead", control = optimControl)
 
-  prms[!as.logical(fixedFit)] <- fit[1:attr(fit, "npar")]
+  prms[!as.logical(fixedFit)] <- fit$par
 
   # bounds check
   prms <- pmax(unlist(prms), unlist(minVals))
@@ -340,17 +330,7 @@ dmcFitDE <- function(resOb,
   }
 
   # which cost function?
-  if (is.character(costFunction)) {
-    if (costFunction == "RMSE") {
-      calculateCostValue <- calculateCostValueRMSE
-    } else if (costFunction == "SPE") {
-      calculateCostValue <- calculateCostValueSPE
-    } else if (costFunction == "GS") {
-      calculateCostValue <- calculateCostValueGS
-    }
-  } else if (is.function(costFunction)) {
-    calculateCostValue <- costFunction
-  }
+  calculateCostValue <- costValueFunction(costFunction)
 
   # R check limits number of cores to 2 (https://stackoverflow.com/questions/50571325/r-cran-check-fail-when-using-parallel-functions)
   chk <- tolower(Sys.getenv("_R_CHECK_LIMIT_CORES_", ""))
@@ -428,7 +408,7 @@ dmcFitDE <- function(resOb,
 }
 
 
-#' @title dmcFitSubject: Fit DMC to aggregated data using R-package optimx (Nelder-Mead)
+#' @title dmcFitSubject: Fit DMC to aggregated data using optim (Nelder-Mead)
 #'
 #' @description Fit theoretical data generated from dmcSim to observed data by
 #' minimizing the root-mean-square error (RMSE) between a weighted combination
@@ -457,7 +437,7 @@ dmcFitDE <- function(resOb,
 #' @param subjects NULL (aggregated data across all subjects) or integer for subject number
 #' @param printInputArgs TRUE/FALSE
 #' @param printResults TRUE/FALSE
-#' @param optimxControl Control parameters passed to optimx (see optimx Details section)
+#' @param optimControl Control parameters passed to optim (see optim Details section)
 #'
 #' @return dmcfit_subject List of dmcfit per subject fitted (see dmcFit)
 #'
@@ -499,7 +479,7 @@ dmcFitSubject <- function(resOb,
                           subjects        = c(),
                           printInputArgs  = TRUE,
                           printResults    = FALSE,
-                          optimxControl   = list()) {
+                          optimControl    = list()) {
 
   if (length(subjects) == 0) {
     subjects <- unique(resOb$summarySubject$Subject)  # fit all individual subjects in data
@@ -541,7 +521,7 @@ dmcFitSubject <- function(resOb,
                                 rtMax           = rtMax,
                                 printInputArgs  = printInputArgs,
                                 printResults    = printResults,
-                                optimxControl   = optimxControl)
+                                optimControl    = optimControl)
 
   }
 
@@ -620,8 +600,17 @@ dmcFitSubjectDE <- function(resOb,
   dmcfit <- vector("list", max(subjects))
   for (subject in subjects) {
 
-    resObSubject <- list(deltaAgg = resOb$deltaSubject[resOb$deltaSubject$Subject == subject, ],
-                         cafAgg = resOb$cafSubject[resOb$cafSubject$Subject == subject, ])
+    if (is.null(resOb$data)) {
+      resObSubject <- list(
+        deltaAgg = resOb$deltaSubject[resOb$deltaSubject$Subject == subject, ],
+        cafAgg = resOb$cafSubject[resOb$cafSubject$Subject == subject, ]
+      )
+    } else {
+      resObSubject <- list(
+        data = resOb$data[resOb$data$Subject == subject, ],
+        deltaAgg = resOb$deltaSubject[resOb$deltaSubject$Subject == subject, ],
+        cafAgg = resOb$cafSubject[resOb$cafSubject$Subject == subject, ])
+    }
 
     dmcfit[[subject]] <- dmcFitDE(resObSubject,
                                   nTrl         = nTrl,
@@ -877,32 +866,64 @@ calculateCostValueGS <- function(resTh, resOb) {
   nComp         <- nrow(resOb$data[resOb$data$Comp == "comp", ])
   gsCompCorrect <- gs(resTh$sim$rts_comp,  resOb$data$RT[resOb$data$Comp == "comp" & resOb$data$Error == 0 & resOb$data$outlier == 0])
   gsCompError   <- gs(resTh$sim$errs_comp, resOb$data$RT[resOb$data$Comp == "comp" & resOb$data$Error == 1 & resOb$data$outlier == 0])
-  gsComp        <- nComp * (sum(gsCompCorrect) + sum(gsCompError))
+  gsComp        <- nComp * (sum(gsCompCorrect, na.rm = TRUE) + sum(gsCompError, na.rm = TRUE))
 
   nIncomp         <- nrow(resOb$data[resOb$data$Comp == "incomp", ])
   gsIncompCorrect <- gs(resTh$sim$rts_incomp,  resOb$data$RT[resOb$data$Comp == "incomp" & resOb$data$Error == 0 & resOb$data$outlier == 0])
   gsIncompError   <- gs(resTh$sim$errs_incomp, resOb$data$RT[resOb$data$Comp == "incomp" & resOb$data$Error == 1 & resOb$data$outlier == 0])
-  gsIncomp        <- nIncomp * (sum(gsIncompCorrect) + sum(gsIncompError))
+  gsIncomp        <- nIncomp * (sum(gsIncompCorrect, na.rm = TRUE) + sum(gsIncompError, na.rm = TRUE))
 
-  return(2*(gsComp + gsIncomp))
+  cost <- 2*(gsComp + gsIncomp)
+  if (is.na(cost)) {
+    cost = Inf
+  }
+  return(cost)
 
 }
 
 gs <- function(th, ob) {
-  probs   <- c(0, 0.1, 0.3, 0.5, 0.7, 0.9, 1)
-  pPred   <- diff(probs)
-  qValues <- quantile(th, probs)
-  nBin    <- table(.bincode(ob, qValues))
-  pBin    <- nBin / sum(nBin)  # sum(pBin) = 1
-  if (length(pBin) == length(pPred)) {
-    out <- pBin * log(pBin/pPred)
-  } else { # just use median if too few errors?
-    probs   <- c(0, 0.5, 1)
-    pPred   <- diff(probs)
+  # no predicted or observed trials
+  if (length(th) == 0 & length(ob) == 0) {
+    return(0)
+  } else if (length(th) <= 6 | length(ob) <= 6) {
+    probs   <- c(0.5) # just use median
+    pPred   <- diff(c(0, probs, 1))
     qValues <- quantile(th, probs)
-    nBin    <- table(.bincode(ob, qValues))
+    nBin <- table(factor(dplyr::case_when(
+      ob < qValues[1] ~ 1,
+      TRUE ~ 2
+    ), levels = 1:2))
     pBin    <- nBin / sum(nBin)  # sum(pBin) = 1
+    return(pBin * log(pBin/pPred))
+  } else {
+    probs   <- c(0.1, 0.3, 0.5, 0.7, 0.9)
+    pPred   <- diff(c(0, probs, 1))
+    qValues <- quantile(th, probs)
+    nBin <- table(factor(dplyr::case_when(
+      ob < qValues[1] ~ 1,
+      ob < qValues[2] ~ 2,
+      ob < qValues[3] ~ 3,
+      ob < qValues[4] ~ 4,
+      ob < qValues[5] ~ 5,
+      TRUE ~ 6
+    ), levels = 1:6))
+    pBin    <- nBin / sum(nBin)  # sum(pBin) = 1
+    return(pBin * log(pBin/pPred))
   }
-  return(out)
 }
 
+costValueFunction <- function(costFunction) {
+  if (is.character(costFunction)) {
+    if (tolower(costFunction) == "rmse") {
+      return(calculateCostValueRMSE)
+    } else if (tolower(costFunction) == "spe") {
+      return(calculateCostValueSPE)
+    } else if (tolower(costFunction) == "gs") {
+      return(calculateCostValueGS)
+    } else {
+      stop("costFunction must be one of 'rmse', 'spe', 'gs', or custom function")
+    }
+  } else if (is.function(costFunction)) {
+    return(costFunction)
+  }
+}
