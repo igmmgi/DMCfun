@@ -237,7 +237,7 @@ dmcFit <- function(resOb,
 
   if (!is.function(costFunction)) {
     if (costFunction == "GS") {
-      dmcfit$par["BIC"] = fit$optim$bestval + (sum(unlist(fixedFit) == FALSE))*log(sum(resOb$data$outlier == 0))
+      dmcfit$par["BIC"] = fit$value + (sum(unlist(fixedFit) == FALSE))*log(sum(resOb$data$outlier == 0))
     }
   }
 
@@ -874,32 +874,9 @@ calculateCostValueSPE <- function(resTh, resOb) {
 #' @export
 calculateCostValueGS <- function(resTh, resOb) {
 
-  gs <- function(th, ob) {
-    probs   <- c(0, 0.1, 0.3, 0.5, 0.7, 0.9, 1)
-    pPred   <- diff(probs)
-    qValues <- quantile(th, probs)
-    nBin    <- table(.bincode(ob, qValues))
-    pBin    <- nBin / sum(nBin)  # sum(pBin) = 1
-    if (length(pBin) == length(pPred)) {
-      out <- pBin * log(pBin/pPred)
-    } else { # just use median if too few errors
-      probs   <- c(0, 0.5, 1)
-      pPred   <- diff(probs)
-      qValues <- quantile(th, probs)
-      nBin    <- table(.bincode(ob, qValues))
-      pBin    <- nBin / sum(nBin)  # sum(pBin) = 1
-      if (length(pBin) == length(pPred)) {
-        out <- pBin * log(pBin/pPred)
-      } else {
-        out <- 0
-      }
-    }
-    return(out)
-  }
-
   nComp         <- nrow(resOb$data[resOb$data$Comp == "comp", ])
-  gsCompCorrect <- gs(resTh$sim$rts_comp,  resOb$data$RT[resOb$data$Comp == "comp" & resOb$data$Error == 0 & resOb$data$Outlier == 0])
-  gsCompError   <- gs(resTh$sim$errs_comp, resOb$data$RT[resOb$data$Comp == "comp" & resOb$data$Error == 1 & resOb$data$Outlier == 0])
+  gsCompCorrect <- gs(resTh$sim$rts_comp,  resOb$data$RT[resOb$data$Comp == "comp" & resOb$data$Error == 0 & resOb$data$outlier == 0])
+  gsCompError   <- gs(resTh$sim$errs_comp, resOb$data$RT[resOb$data$Comp == "comp" & resOb$data$Error == 1 & resOb$data$outlier == 0])
   gsComp        <- nComp * (sum(gsCompCorrect) + sum(gsCompError))
 
   nIncomp         <- nrow(resOb$data[resOb$data$Comp == "incomp", ])
@@ -910,3 +887,22 @@ calculateCostValueGS <- function(resTh, resOb) {
   return(2*(gsComp + gsIncomp))
 
 }
+
+gs <- function(th, ob) {
+  probs   <- c(0, 0.1, 0.3, 0.5, 0.7, 0.9, 1)
+  pPred   <- diff(probs)
+  qValues <- quantile(th, probs)
+  nBin    <- table(.bincode(ob, qValues))
+  pBin    <- nBin / sum(nBin)  # sum(pBin) = 1
+  if (length(pBin) == length(pPred)) {
+    out <- pBin * log(pBin/pPred)
+  } else { # just use median if too few errors?
+    probs   <- c(0, 0.5, 1)
+    pPred   <- diff(probs)
+    qValues <- quantile(th, probs)
+    nBin    <- table(.bincode(ob, qValues))
+    pBin    <- nBin / sum(nBin)  # sum(pBin) = 1
+  }
+  return(out)
+}
+
