@@ -28,6 +28,7 @@ Imports:
   dplyr (>= 1.0.0),
   parallel,
   pbapply,
+  shiny,
   tidyr
 Suggests:
   testthat
