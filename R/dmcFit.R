@@ -237,15 +237,12 @@ dmcFit <- function(resOb,
   dmcfit$par["cost"] <- fit$value
 
   if (!is.function(costFunction)) {
-
-    if (costFunction == tolower("CS") | costFunction == tolower("GS")) {
+    if (tolower(costFunction) %in% c("CS", "GS")) {
       dmcfit$par["df"] = 2 * (12 - 1) - (sum(unlist(fixedFit) == FALSE)) # 2 conditions with 6 bins - N fitted parameters
-    }
-
+   }
     if (costFunction == "GS") {
       dmcfit$par["BIC"] = fit$value + (sum(unlist(fixedFit) == FALSE))*log(sum(resOb$data$outlier == 0))
     }
-
   }
 
   class(dmcfit) <- "dmcfit"
@@ -418,8 +415,11 @@ dmcFitDE <- function(resOb,
   dmcfit$par["cost"] <- fit$optim$bestval
 
   if (!is.function(costFunction)) {
+    if (tolower(costFunction) %in% c("CS", "GS")) {
+      dmcfit$par["df"] = 2 * (12 - 1) - (sum(unlist(fixedFit) == FALSE)) # 2 conditions with 6 bins - N fitted parameters
+   }
     if (costFunction == "GS") {
-      dmcfit$par["BIC"] = fit$optim$bestval + (sum(unlist(fixedFit) == FALSE))*log(sum(resOb$data$outlier == 0))
+      dmcfit$par["BIC"] = fit$value + (sum(unlist(fixedFit) == FALSE))*log(sum(resOb$data$outlier == 0))
     }
   }
 
