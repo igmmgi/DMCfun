@@ -718,9 +718,9 @@ plot.dmcob <- function(x,
 #' \donttest{
 #' # Example 1
 #' dat <- dmcCombineObservedData(flankerData, simonData)  # combine flanker/simon data
-#' plot(dat, figType = "rtcorrect",  cols = c("black", "darkgrey"), pchs = c(1, 2), 
-#' legend = FALSE, resetPar = FALSE)
-#' legend(0.5, 520, legend = c("Flanker Task", "Simon Task"),
+#' plot(dat, figType = "delta", xlimDelta = c(200, 700), ylimDelta = c(-20, 80),
+#'      cols = c("black", "darkgrey"), pchs = c(1, 2), legend = FALSE, resetPar = FALSE)
+#' legend(200, 80, legend = c("Flanker Task", "Simon Task"),
 #'        col = c("black", "darkgrey"), lty = c(1, 1))
 #'
 #' }
@@ -1243,7 +1243,7 @@ plot.dmcfit <- function(x,
 #'
 #' # Example 2
 #' plot(c(1, 2), c(450, 500), xlim = c(0.5, 2.5), ylim = c(400, 600), type = "o")
-#' addErrorBars(c(1, 2), c(450, 500), errorSize = c(20, 40), arrowSize = 0.2)
+#' addErrorBars(c(1, 2), c(450, 500), errorSize = c(20, 40), arrowSize = 0.1)
 #'
 #' @export
 addErrorBars <- function(xpos, ypos, errorSize, arrowSize = 0.1) {

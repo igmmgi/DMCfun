@@ -1,5 +1,4 @@
-#' A summarised dataset: see raw data file flankerDataRaw and dmcObservedData.R
-#' This is the flanker task data from Ulrich et al. (2015)
+#' A summarised dataset: This is the flanker task data from Ulrich et al. (2015)
 #'
 #' \itemize{
 #'   \item $summary --> Reaction time correct, standard deviation correct, standard error correct,
@@ -10,6 +9,7 @@
 #'   \item $delta --> Compatible reactions times, incompatible mean reaction times,
 #'   mean reaction times, incompatible - compatible reaction times (effect), and
 #'   standard deviation + standard error of this effect across 19 bins
+#'   \item $data --> Raw data from flankerData.txt + additional outlier column
 #' }
 #'
 #' @docType data
@@ -20,8 +20,7 @@
 NULL
 
 
-#' A summarised dataset: see raw data file simonDataRaw and dmcObservedData.R
-#' This is the simon task data from Ulrich et al. (2015)
+#' A summarised dataset: This is the simon task data from Ulrich et al. (2015)
 #'
 #' \itemize{
 #'   \item $summary --> Reaction time correct, standard deviation correct, standard error correct,
@@ -33,6 +32,7 @@ NULL
 #'   \item $delta --> Compatible reactions times, incompatible mean reaction times,
 #'   mean reaction times, incompatible - compatible reaction times (effect), and
 #'   standard deviation + standard error of this effect across 19 bins
+#'   \item $data --> Raw data from simonData.txt + additional outlier column
 #' }
 #'
 #' @docType data
@@ -41,7 +41,6 @@ NULL
 #' @usage simonData
 #' @format dmcob
 NULL
-
 
 
 #' @title createDF: Create a simulated dataframe
@@ -212,20 +211,19 @@ addDataDF <- function(dat, RT=NULL, Error=NULL) {
 
 
 
-#' @title dmcObservedData: Run standard analyses on observed data
+#' @title dmcObservedData: Run standard analyses on observed raw data
 #'
-#' @description Basic example analysis script to create data object required
-#' for observed data. Example raw *.txt files are flankerData.txt and
-#' simonData.txt (see also flankerDataRaw and simonDataRaw). There are four critical columns:
+#' @description Basic analysis to create data object required for observed data.
+#' Example raw *.txt files are flankerData.txt and simonData.txt. There are four critical columns:
 #' A column containing subject number
 #' A column coding for compatible or incompatible
 #' A column with RT (in ms)
 #' A column indicating of the response was correct
-#' @param dat Text file(s) containing the observed data or an R DataFrame (see createDF/addDataDF)
-#' @param nCAF Number of CAF bins.
-#' @param nDelta Number of delta bins.
-#' @param pDelta Alternative to nDelta by directly specifying required percentile values
-#' @param tDelta Type of delta calculation (1 = percentile, 2 = percentile bin bounds average)
+#' @param dat A text file(s) containing the observed data or an R DataFrame (see createDF/addDataDF)
+#' @param nCAF The number of CAF bins.
+#' @param nDelta The number of delta bins.
+#' @param pDelta An alternative option to nDelta by directly specifying required percentile values (vector of values 0-100)
+#' @param tDelta The type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)
 #' @param outlier Outlier limits in ms (e.g., c(200, 1200))
 #' @param columns Name of required columns DEFAULT = c("Subject", "Comp", "RT", "Error")
 #' @param compCoding Coding for compatibility DEFAULT = c("comp", "incomp")
@@ -233,18 +231,16 @@ addDataDF <- function(dat, RT=NULL, Error=NULL) {
 #' @param quantileType Argument (1-9) from R function quantile specifying the algorithm (?quantile)
 #' @param keepRaw TRUE/FALSE
 #' @param delim Single character used to separate fields within a record if reading from external text file.
-#' @param skip Number of lines to skip before reading data if reading from external text file.
+#' @param skip The number of lines to skip before reading data if reading from external text file.
 #'
 #' @return DataFrame
 #'
 #' @examples
 #' # Example 1
 #' plot(flankerData)  # flanker data from Ulrich et al. (2015)
-#'
-#' # Example 2
 #' plot(simonData)    # simon data from Ulrich et al. (2015)
 #'
-#' # Example 3 (Basic behavioural analysis from Ulrich et al. 2015)
+#' # Example 2 (Basic behavioural analysis from Ulrich et al. 2015)
 #' flankerDat <- cbind(Task = "flanker", flankerData$summarySubject)
 #' simonDat   <- cbind(Task = "simon",   simonData$summarySubject)
 #' datAgg     <- rbind(flankerDat, simonDat)
@@ -261,7 +257,7 @@ addDataDF <- function(dat, RT=NULL, Error=NULL) {
 #' summary(aovRt)
 #' model.tables(aovRt, type = "mean")
 #'
-#' # Example 4
+#' # Example 3
 #' dat <- createDF(nSubjects = 50, nTrl = 500, design = list("Comp" = c("comp", "incomp")))
 #' dat <- addDataDF(dat,
 #'                  RT = list("Comp_comp"    = c(500, 75, 120),
@@ -272,7 +268,7 @@ addDataDF <- function(dat, RT=NULL, Error=NULL) {
 #' plot(datOb)
 #' plot(datOb, subject = 1)
 #'
-#' # Example 5
+#' # Example 4
 #' dat <- createDF(nSubjects = 50, nTrl = 500, design = list("Congruency" = c("cong", "incong")))
 #' dat <- addDataDF(dat,
 #'                  RT = list("Congruency_cong"   = c(500, 75, 100),
@@ -287,18 +283,18 @@ addDataDF <- function(dat, RT=NULL, Error=NULL) {
 #'
 #' @export
 dmcObservedData <- function(dat,
-                            nCAF = 5,
-                            nDelta = 19,
-                            pDelta = vector(),
-                            tDelta = 1,
-                            outlier = c(200, 1200),
-                            columns = c("Subject", "Comp", "RT", "Error"),
-                            compCoding = c("comp", "incomp"),
-                            errorCoding = c(0, 1),
+                            nCAF         = 5,
+                            nDelta       = 19,
+                            pDelta       = vector(),
+                            tDelta       = 1,
+                            outlier      = c(200, 1200),
+                            columns      = c("Subject", "Comp", "RT", "Error"),
+                            compCoding   = c("comp", "incomp"),
+                            errorCoding  = c(0, 1),
                             quantileType = 5,
-                            keepRaw = FALSE,
-                            delim = "\t",
-                            skip = 0) {
+                            keepRaw      = FALSE,
+                            delim        = "\t",
+                            skip         = 0) {
 
   # if dat external file(s)
   if (is.character(dat)) {
@@ -445,9 +441,9 @@ dmcObservedData <- function(dat,
 #' @examples
 #' # Example 1
 #' dat <- dmcCombineObservedData(flankerData, simonData)  # combine flanker/simon data
-#' plot(dat, figType = "delta", xlimDelta = c(200, 700),
+#' plot(dat, figType = "delta", xlimDelta = c(200, 700), ylimDelta = c(-20, 80),
 #'      cols = c("black", "darkgrey"), pchs = c(1, 2), legend = FALSE, resetPar = FALSE)
-#' legend(200, 150, legend = c("Flanker Task", "Simon Task"),
+#' legend(200, 80, legend = c("Flanker Task", "Simon Task"),
 #'        col = c("black", "darkgrey"), lty = c(1, 1))
 #'
 #' @export
@@ -477,20 +473,20 @@ dmcCombineObservedData <- function(...) {
 #'
 #' @examples
 #' # Example 1
-#' dat <- createDF(nSubjects = 1, nTrl = 100, design = list("Comp" = c("comp", "incomp")))
+#' dat <- createDF(nSubjects = 1, nTrl = 10000, design = list("Comp" = c("comp", "incomp")))
 #' dat <- addDataDF(dat,
 #'                  RT = list("Comp_comp"   = c(500, 80, 100),
 #'                            "Comp_incomp" = c(600, 80, 140)),
-#'                  Error = list("Comp_comp"   = c(5, 4,3,2,1),
+#'                  Error = list("Comp_comp"   = c( 5, 4, 3, 2, 1),
 #'                               "Comp_incomp" = c(20, 8, 6, 4, 2)))
 #' caf <- calculateCAF(dat)
 #'
 #' # Example 2
-#' dat <- createDF(nSubjects = 1, nTrl = 100, design = list("Congruency" = c("cong", "incong")))
+#' dat <- createDF(nSubjects = 1, nTrl = 10000, design = list("Congruency" = c("cong", "incong")))
 #' dat <- addDataDF(dat,
 #'                  RT = list("Congruency_cong"   = c(500, 80, 100),
 #'                            "Congruency_incong" = c(600, 80, 140)),
-#'                  Error = list("Congruency_cong"   = c(5, 4,3,2,1),
+#'                  Error = list("Congruency_cong"   = c( 5, 4, 3, 2, 1),
 #'                               "Congruency_incong" = c(20, 8, 6, 4, 2)))
 #' head(dat)
 #' caf <- calculateCAF(dat, columns = c("Subject", "Congruency", "RT", "Error"),
@@ -549,8 +545,8 @@ calculateCAF <- function(dat,
 #'
 #' @param dat DataFrame with columns containing the participant number, condition
 #' compatibility, and RT data (in ms).
-#' @param nDelta Number of delta bins.
-#' @param tDelta Type of delta calculation (1 = percentile, 2 = tile average)
+#' @param nDelta The number of delta bins.
+#' @param tDelta type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)
 #' @param columns Name of required columns Default: c("Subject", "Comp", "RT")
 #' @param compCoding Coding for compatibility Default: c("comp", "incomp")
 #' @param quantileType Argument (1-9) from R function quantile specifying the algorithm (?quantile)
@@ -559,19 +555,19 @@ calculateCAF <- function(dat,
 #'
 #' @examples
 #' # Example 1
-#' dat <- createDF(nSubjects = 50, nTrl = 100, design = list("Comp" = c("comp", "incomp")))
+#' dat <- createDF(nSubjects = 1, nTrl = 10000, design = list("Comp" = c("comp", "incomp")))
 #' dat <- addDataDF(dat,
 #'                  RT = list("Comp_comp"   = c(500, 80, 100),
 #'                            "Comp_incomp" = c(600, 80, 140)))
 #' delta <- calculateDelta(dat)
 #'
 #' # Example 2
-#' dat <- createDF(nSubject = 50, nTrl = 100, design = list("Congruency" = c("cong", "incong")))
+#' dat <- createDF(nSubject = 1, nTrl = 10000, design = list("Congruency" = c("cong", "incong")))
 #' dat <- addDataDF(dat,
 #'                  RT = list("Congruency_cong"   = c(500, 80, 100),
 #'                            "Congruency_incong" = c(600, 80, 140)))
 #' head(dat)
-#' delta <- calculateDelta(dat, columns = c("Subject", "Congruency", "RT"),
+#' delta <- calculateDelta(dat, nDelta = 9, columns = c("Subject", "Congruency", "RT"),
 #'                         compCoding = c("cong", "incong"))
 #'
 #'
@@ -648,11 +644,11 @@ calculateDelta <- function(dat,
 #' @examples
 #' # Example 1
 #' x <- rtDist()
-#' hist(x, 100)
+#' hist(x, 100, xlab = "RT [ms]")
 #'
 #' # Example 2
 #' x <- rtDist(n=20000, gaussMean=800, gaussSD=50, expRate=100)
-#' hist(x, 100)
+#' hist(x, 100, xlab = "RT [ms]")
 #'
 #' @export
 rtDist <- function(n=10000, gaussMean=600, gaussSD=50, expRate=200) {
@@ -681,6 +677,4 @@ rtDist <- function(n=10000, gaussMean=600, gaussSD=50, expRate=200) {
 errDist <- function(n=10000, proportion = 10) {
   return(ifelse(runif(n) <= proportion / 100, 1, 0))
 }
-
-
 

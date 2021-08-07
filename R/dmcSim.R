@@ -114,6 +114,7 @@ dmcSim <- function(amp            = 20,
     }
   }
 
+  # call to cpp function for the simulation
   dmc <- dmcCppR(
     r_in = list(amp = amp, tau = tau, drc = drc, bnds = bnds, resDist = resDist, resMean = resMean,
       resSD = resSD, aaShape = aaShape, spShape = spShape, spBias = spBias, sigm = sigm,
