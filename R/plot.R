@@ -145,7 +145,7 @@ plot.dmcsim <- function(x,
       nrow = 6, ncol = 4, byrow = TRUE))
     showFig[1:6] <- TRUE
   } else if (figType == "summary2") {
-    par(mar = c(4, 4, 1, 1))
+    par(mar = c(4, 4, 1, 1), ...)
     layout(matrix(
       c(1, 2,
         1, 2,
