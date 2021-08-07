@@ -26,10 +26,10 @@ an exponentially modified Gaussian (EMG) distribution or ex-gaussian distributio
 \examples{
 # Example 1
 x <- rtDist()
-hist(x, 100)
+hist(x, 100, xlab = "RT [ms]")
 
 # Example 2
 x <- rtDist(n=20000, gaussMean=800, gaussSD=50, expRate=100)
-hist(x, 100)
+hist(x, 100, xlab = "RT [ms]")
 
 }

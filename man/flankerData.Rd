@@ -3,8 +3,7 @@
 \docType{data}
 \name{flankerData}
 \alias{flankerData}
-\title{A summarised dataset: see raw data file flankerDataRaw and dmcObservedData.R
-This is the flanker task data from Ulrich et al. (2015)}
+\title{A summarised dataset: This is the flanker task data from Ulrich et al. (2015)}
 \format{
 dmcob
 }
@@ -21,6 +20,7 @@ flankerData
   \item $delta --> Compatible reactions times, incompatible mean reaction times,
   mean reaction times, incompatible - compatible reaction times (effect), and
   standard deviation + standard error of this effect across 19 bins
+  \item $data --> Raw data from flankerData.txt + additional outlier column
 }
 }
 \keyword{datasets}

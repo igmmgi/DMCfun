@@ -7,14 +7,14 @@
 \method{mean}{dmcfit}(x, ...)
 }
 \arguments{
-\item{x}{Output from dmcFitSubject}
+\item{x}{Output from dmcFitSubject/dmcFitSubjectDE}
 
 \item{...}{pars}
 }
 \value{
 dmcfit
 
-The function returns a list with the relevant aggregated results dmcFitSubject. The list
+The function returns a list with the relevant aggregated results from dmcFitSubject/dmcFitSubjectDE. The list
 is accessed with obj$name and so on with the the following:
 \item{obj$means}{means}
 \item{obj$delta}{delta}
@@ -22,7 +22,7 @@ is accessed with obj$name and so on with the the following:
 \item{obj$prms}{par}
 }
 \description{
-Aggregated simulation results from dmcFitSubject.
+Aggregate simulation results from dmcFitSubject/dmcFitSubjectDE.
 }
 \examples{
 \donttest{

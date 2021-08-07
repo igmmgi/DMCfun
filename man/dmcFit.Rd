@@ -53,38 +53,39 @@ bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T
 
 \item{fitInitialGrid}{TRUE/FALSE}
 
-\item{fitInitialGridN}{10 reduce if searching more than ~2/3 initial parameters}
+\item{fitInitialGridN}{10 linear steps between parameters min/max values (reduce if searching more than ~2/3 initial parameters)}
 
 \item{fixedGrid}{Fix parameter for initial grid search. This is a list with bool values specified individually for
 amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., fixedGrid = list(amp = T, tau = F, drc = T,
-bnds = T, resMean = T, resSD = T, aaShape = T, spShape = T, spBias = T, sigm = T))}
+bnds = T, resMean = T, resSD = T, aaShape = T, spShape = T, spBias = T, sigm = T)). As a default, the initial gridsearch
+only searches the tau space.}
 
-\item{nCAF}{Number of CAF bins.}
+\item{nCAF}{The number of CAF bins.}
 
-\item{nDelta}{Number of delta bins.}
+\item{nDelta}{The number of delta bins.}
 
-\item{pDelta}{alternative to nDelta by directly specifying required percentile values}
+\item{pDelta}{An alternative option to nDelta by directly specifying required percentile values (vector of values 0-100)}
 
-\item{tDelta}{type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)}
+\item{tDelta}{The type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)}
 
-\item{spDist}{starting point (sp) distribution (0 = constant, 1 = beta, 2 = uniform)}
+\item{spDist}{The starting point (sp) distribution (0 = constant, 1 = beta, 2 = uniform)}
 
-\item{drDist}{drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)}
+\item{drDist}{The drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)}
 
-\item{drShape}{drift rate (dr) shape parameter}
+\item{drShape}{The drift rate (dr) shape parameter}
 
-\item{drLim}{drift rate (dr) range}
+\item{drLim}{The drift rate (dr) range}
 
-\item{rtMax}{limit on simulated RT (decision + non-decisional component)}
+\item{rtMax}{The limit on simulated RT (decision + non-decisional components)}
 
-\item{costFunction}{Cost function to minimise root mean square error ("RMSE": default),
-squared percentage error ("SPE"), or likelihood-ratio chi-square statistic (GS)}
+\item{costFunction}{The cost function to minimise: root mean square error ("RMSE": default),
+squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")}
 
-\item{printInputArgs}{TRUE/FALSE}
+\item{printInputArgs}{TRUE (default) /FALSE}
 
-\item{printResults}{TRUE/FALSE}
+\item{printResults}{TRUE/FALSE (default)}
 
-\item{optimControl}{Control parameters passed to optim (see optim Details section)}
+\item{optimControl}{Additional control parameters passed to optim (see optim details section)}
 }
 \value{
 dmcfit
@@ -94,13 +95,15 @@ is accessed with obj$name with the the following:
 \item{obj$means}{Condition means for reaction time and error rate}
 \item{obj$caf}{Accuracy per bin for compatible and incompatible trials}
 \item{obj$delta}{Mean RT and compatibility effect per bin}
-\item{obj$sim}{Individual trial data points (reaction times/error) and activation vectors from simulation}
-\item{obj$par}{The fitted model parameters + final RMSE of the fit}
+\item{obj$sim}{Individual trial data points (RTs for all trial types e.g., correct/error trials) and activation
+vectors from the simulation}
+\item{obj$par}{The fitted model parameters + final cost value of the fit}
 }
 \description{
 Fit theoretical data generated from dmcSim to observed data by
-minimizing the root-mean-square error (RMSE) between a weighted combination
-of the CAF and CDF functions using optim (Nelder-Mead).
+minimizing the root-mean-square error ("RMSE") between a weighted combination
+of the CAF and CDF functions using optim (Nelder-Mead). Alternative cost functions
+include squared percentage error ("SPE"), and g-squared statistic ("GS").
 }
 \examples{
 \donttest{

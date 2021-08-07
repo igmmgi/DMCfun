@@ -28,6 +28,6 @@ addErrorBars(c(1, 2), c(450, 500), errorSize = c(20, 20))
 
 # Example 2
 plot(c(1, 2), c(450, 500), xlim = c(0.5, 2.5), ylim = c(400, 600), type = "o")
-addErrorBars(c(1, 2), c(450, 500), errorSize = c(20, 40), arrowSize = 0.2)
+addErrorBars(c(1, 2), c(450, 500), errorSize = c(20, 40), arrowSize = 0.1)
 
 }

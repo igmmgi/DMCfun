@@ -2,7 +2,7 @@
 % Please edit documentation in R/dmcData.R
 \name{dmcObservedData}
 \alias{dmcObservedData}
-\title{dmcObservedData: Run standard analyses on observed data}
+\title{dmcObservedData: Run standard analyses on observed raw data}
 \usage{
 dmcObservedData(
   dat,
@@ -21,15 +21,15 @@ dmcObservedData(
 )
 }
 \arguments{
-\item{dat}{Text file(s) containing the observed data or an R DataFrame (see createDF/addDataDF)}
+\item{dat}{A text file(s) containing the observed data or an R DataFrame (see createDF/addDataDF)}
 
-\item{nCAF}{Number of CAF bins.}
+\item{nCAF}{The number of CAF bins.}
 
-\item{nDelta}{Number of delta bins.}
+\item{nDelta}{The number of delta bins.}
 
-\item{pDelta}{Alternative to nDelta by directly specifying required percentile values}
+\item{pDelta}{An alternative option to nDelta by directly specifying required percentile values (vector of values 0-100)}
 
-\item{tDelta}{Type of delta calculation (1 = percentile, 2 = percentile bin bounds average)}
+\item{tDelta}{The type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)}
 
 \item{outlier}{Outlier limits in ms (e.g., c(200, 1200))}
 
@@ -45,15 +45,14 @@ dmcObservedData(
 
 \item{delim}{Single character used to separate fields within a record if reading from external text file.}
 
-\item{skip}{Number of lines to skip before reading data if reading from external text file.}
+\item{skip}{The number of lines to skip before reading data if reading from external text file.}
 }
 \value{
 DataFrame
 }
 \description{
-Basic example analysis script to create data object required
-for observed data. Example raw *.txt files are flankerData.txt and
-simonData.txt (see also flankerDataRaw and simonDataRaw). There are four critical columns:
+Basic analysis to create data object required for observed data.
+Example raw *.txt files are flankerData.txt and simonData.txt. There are four critical columns:
 A column containing subject number
 A column coding for compatible or incompatible
 A column with RT (in ms)
@@ -62,11 +61,9 @@ A column indicating of the response was correct
 \examples{
 # Example 1
 plot(flankerData)  # flanker data from Ulrich et al. (2015)
-
-# Example 2
 plot(simonData)    # simon data from Ulrich et al. (2015)
 
-# Example 3 (Basic behavioural analysis from Ulrich et al. 2015)
+# Example 2 (Basic behavioural analysis from Ulrich et al. 2015)
 flankerDat <- cbind(Task = "flanker", flankerData$summarySubject)
 simonDat   <- cbind(Task = "simon",   simonData$summarySubject)
 datAgg     <- rbind(flankerDat, simonDat)
@@ -83,7 +80,7 @@ aovRt <- aov(rtCor ~ Comp*Task + Error(Subject/(Comp*Task)), datAgg)
 summary(aovRt)
 model.tables(aovRt, type = "mean")
 
-# Example 4
+# Example 3
 dat <- createDF(nSubjects = 50, nTrl = 500, design = list("Comp" = c("comp", "incomp")))
 dat <- addDataDF(dat,
                  RT = list("Comp_comp"    = c(500, 75, 120),
@@ -94,7 +91,7 @@ datOb <- dmcObservedData(dat)
 plot(datOb)
 plot(datOb, subject = 1)
 
-# Example 5
+# Example 4
 dat <- createDF(nSubjects = 50, nTrl = 500, design = list("Congruency" = c("cong", "incong")))
 dat <- addDataDF(dat,
                  RT = list("Congruency_cong"   = c(500, 75, 100),

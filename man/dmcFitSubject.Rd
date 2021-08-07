@@ -2,7 +2,7 @@
 % Please edit documentation in R/dmcFit.R
 \name{dmcFitSubject}
 \alias{dmcFitSubject}
-\title{dmcFitSubject: Fit DMC to aggregated data using optim (Nelder-Mead)}
+\title{dmcFitSubject: Fit DMC to individual participant data using optim (Nelder-Mead)}
 \usage{
 dmcFitSubject(
   resOb,
@@ -31,60 +31,73 @@ dmcFitSubject(
 )
 }
 \arguments{
-\item{resOb}{Observed data (see flankerData, simonData for data format)}
+\item{resOb}{Observed data (see flankerData and simonTask for data format) and the function dmcObservedData to create
+the required input from either an R data frame or external *.txt/*.csv files}
 
-\item{nTrl}{Number of trials to use within dmcSim}
+\item{nTrl}{Number of trials to use within dmcSim.}
 
-\item{startVals}{Starting values for to-be estimated parameters (see dmcFit)}
+\item{startVals}{Starting values for to-be estimated parameters. This is a list with values specified individually
+for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., startVals = list(amp = 20, tau = 200,
+drc = 0.5, bnds = 75, resMean = 300, resSD = 30, aaShape = 2, spShape = 3, spBias = 0, sigm = 4)).}
 
-\item{minVals}{Minimum values for the to-be estimated parameters (see dmcFit)}
+\item{minVals}{Minimum values for the to-be estimated parameters. This is a list with values specified individually
+for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., minVals = list(amp = 10, tau = 5, drc = 0.1,
+bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, spBias = -20, sigm = 1)).}
 
-\item{maxVals}{Maximum values for the to-be estimated parameters (see dmcFit)}
+\item{maxVals}{Maximum values for the to-be estimated parameters. This is a list with values specified individually
+for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., maxVals = list(amp = 40, tau = 300, drc = 1.0,
+bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 20, sigm = 10))}
 
-\item{fixedFit}{Fix parameter to starting value (see dmcFit)}
+\item{fixedFit}{Fix parameter to starting value. This is a list with bool values specified individually for
+amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., fixedFit = list(amp = F, tau = F, drc = F,
+bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T))}
 
 \item{fitInitialGrid}{TRUE/FALSE}
 
-\item{fitInitialGridN}{10}
+\item{fitInitialGridN}{10 linear steps between parameters min/max values (reduce if searching more than ~2/3 initial parameters)}
 
-\item{fixedGrid}{Fix parameter for initial grid search}
+\item{fixedGrid}{Fix parameter for initial grid search. This is a list with bool values specified individually for
+amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., fixedGrid = list(amp = T, tau = F, drc = T,
+bnds = T, resMean = T, resSD = T, aaShape = T, spShape = T, spBias = T, sigm = T)). As a default, the initial gridsearch
+only searches the tau space.}
 
 \item{nCAF}{Number of CAF bins.}
 
 \item{nDelta}{Number of delta bins.}
 
-\item{pDelta}{Alternative to nDelta by directly specifying required percentile values}
+\item{pDelta}{An alternative option to nDelta by directly specifying required percentile values (vector of values 0-100)}
 
-\item{tDelta}{Type of delta calculation (1 = percentile, 2 = tile average)}
+\item{tDelta}{The type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)}
 
-\item{costFunction}{Cost function to minimise root mean square error ("RMSE": default) or
-squared percentage error ("SPE")}
+\item{costFunction}{The cost function to minimise: root mean square error ("RMSE": default),
+squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")}
 
-\item{spDist}{starting point distribution (0 = constant, 1 = beta, 2 = uniform)}
+\item{spDist}{The starting point (sp) distribution (0 = constant, 1 = beta, 2 = uniform)}
 
-\item{drDist}{drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)}
+\item{drDist}{The drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)}
 
-\item{drShape}{drift rate (dr) shape parameter}
+\item{drShape}{The drift rate (dr) shape parameter}
 
-\item{drLim}{drift rate (dr) range}
+\item{drLim}{The drift rate (dr) range}
 
-\item{rtMax}{limit on simulated RT (decision + non-decisional component)}
+\item{rtMax}{The limit on simulated RT (decision + non-decisional components)}
 
 \item{subjects}{NULL (aggregated data across all subjects) or integer for subject number}
 
-\item{printInputArgs}{TRUE/FALSE}
+\item{printInputArgs}{TRUE (default) /FALSE}
 
-\item{printResults}{TRUE/FALSE}
+\item{printResults}{TRUE/FALSE (default)}
 
-\item{optimControl}{Control parameters passed to optim (see optim Details section)}
+\item{optimControl}{Additional control parameters passed to optim (see optim details section)}
 }
 \value{
 dmcfit_subject List of dmcfit per subject fitted (see dmcFit)
 }
 \description{
 Fit theoretical data generated from dmcSim to observed data by
-minimizing the root-mean-square error (RMSE) between a weighted combination
-of the CAF and CDF functions.
+minimizing the root-mean-square error ("RMSE") between a weighted combination
+of the CAF and CDF functions using optim (Nelder-Mead). Alternative cost functions
+include squared percentage error ("SPE"), and g-squared statistic ("GS").
 }
 \examples{
 \donttest{

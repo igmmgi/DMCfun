@@ -2,7 +2,7 @@
 % Please edit documentation in R/dmcFit.R
 \name{dmcFitSubjectDE}
 \alias{dmcFitSubjectDE}
-\title{dmcFitSubjectDE: Fit DMC to aggregated data using R-package DEoptim.}
+\title{dmcFitSubjectDE: Fit DMC to individual participant data using R-package DEoptim.}
 \usage{
 dmcFitSubjectDE(
   resOb,
@@ -25,40 +25,46 @@ dmcFitSubjectDE(
 )
 }
 \arguments{
-\item{resOb}{Observed data (see flankerData, simonData for data format)}
+\item{resOb}{Observed data (see flankerData and simonTask for data format)}
 
-\item{nTrl}{Number of trials to use within dmcSim}
+\item{nTrl}{The number of trials to use within dmcSim.}
 
-\item{minVals}{Minimum values for the to-be estimated parameters (see dmcFitDE)}
+\item{minVals}{Minimum values for the to-be estimated parameters. This is a list with values specified individually
+for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., minVals = list(amp = 10, tau = 5, drc = 0.1,
+bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, spBias = -20, sigm = 1)).}
 
-\item{maxVals}{Maximum values for the to-be estimated parameters (see dmcFitDE)}
+\item{maxVals}{Maximum values for the to-be estimated parameters. This is a list with values specified individually
+for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., maxVals = list(amp = 40, tau = 300, drc = 1.0,
+bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 20, sigm = 10))}
 
-\item{fixedFit}{Fix parameter to starting value (see dmcFitDE)}
+\item{fixedFit}{Fix parameter to starting value. This is a list with bool values specified individually for
+amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedFit = list(amp = F,  tau = F, drc = F,
+bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T))}
 
-\item{nCAF}{Number of CAF bins.}
+\item{nCAF}{The number of CAF bins.}
 
-\item{nDelta}{Number of delta bins.}
+\item{nDelta}{The number of delta bins.}
 
-\item{pDelta}{Alternative to nDelta by directly specifying required percentile values}
+\item{pDelta}{An alternative option to nDelta by directly specifying required percentile values (vector of values 0-100)}
 
-\item{tDelta}{Type of delta calculation (1 = percentile, 2 = tile average)}
+\item{tDelta}{The type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)}
 
-\item{costFunction}{Cost function to minimise root mean square error ("RMSE": default) or
-squared percentage error ("SPE")}
+\item{costFunction}{The cost function to minimise: root mean square error ("RMSE": default),
+squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")}
 
-\item{spDist}{starting point distribution (0 = constant, 1 = beta, 2 = uniform)}
+\item{spDist}{The starting point distribution (0 = constant, 1 = beta, 2 = uniform)}
 
-\item{drDist}{drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)}
+\item{drDist}{The drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)}
 
-\item{drShape}{drift rate (dr) shape parameter}
+\item{drShape}{The drift rate (dr) shape parameter}
 
-\item{drLim}{drift rate (dr) range}
+\item{drLim}{The drift rate (dr) range}
 
-\item{rtMax}{limit on simulated RT (decision + non-decisional component)}
+\item{rtMax}{The limit on simulated RT (decision + non-decisional components)}
 
 \item{subjects}{NULL (aggregated data across all subjects) or integer for subject number}
 
-\item{deControl}{Additional control parameters passes to DEoptim (see DEoptim.control)}
+\item{deControl}{Additional control parameters passed to DEoptim (see DEoptim.control)}
 }
 \value{
 dmcfit_subject List of dmcfit per subject fitted (see dmcFitDM)
@@ -66,7 +72,8 @@ dmcfit_subject List of dmcfit per subject fitted (see dmcFitDM)
 \description{
 Fit theoretical data generated from dmcSim to observed data by
 minimizing the root-mean-square error (RMSE) between a weighted combination
-of the CAF and CDF functions.
+of the CAF and CDF functions using the R-package DEoptim. Alternative cost functions
+include squared percentage error ("SPE"), and g-squared statistic ("GS").
 }
 \examples{
 \donttest{

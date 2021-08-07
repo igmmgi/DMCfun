@@ -17,9 +17,9 @@ calculateDelta(
 \item{dat}{DataFrame with columns containing the participant number, condition
 compatibility, and RT data (in ms).}
 
-\item{nDelta}{Number of delta bins.}
+\item{nDelta}{The number of delta bins.}
 
-\item{tDelta}{Type of delta calculation (1 = percentile, 2 = tile average)}
+\item{tDelta}{type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)}
 
 \item{columns}{Name of required columns Default: c("Subject", "Comp", "RT")}
 
@@ -37,19 +37,19 @@ subtracted (incompatible - compatible) to give a compatibility effect (delta) at
 }
 \examples{
 # Example 1
-dat <- createDF(nSubjects = 50, nTrl = 100, design = list("Comp" = c("comp", "incomp")))
+dat <- createDF(nSubjects = 1, nTrl = 10000, design = list("Comp" = c("comp", "incomp")))
 dat <- addDataDF(dat,
                  RT = list("Comp_comp"   = c(500, 80, 100),
                            "Comp_incomp" = c(600, 80, 140)))
 delta <- calculateDelta(dat)
 
 # Example 2
-dat <- createDF(nSubject = 50, nTrl = 100, design = list("Congruency" = c("cong", "incong")))
+dat <- createDF(nSubject = 1, nTrl = 10000, design = list("Congruency" = c("cong", "incong")))
 dat <- addDataDF(dat,
                  RT = list("Congruency_cong"   = c(500, 80, 100),
                            "Congruency_incong" = c(600, 80, 140)))
 head(dat)
-delta <- calculateDelta(dat, columns = c("Subject", "Congruency", "RT"),
+delta <- calculateDelta(dat, nDelta = 9, columns = c("Subject", "Congruency", "RT"),
                         compCoding = c("cong", "incong"))
 
 

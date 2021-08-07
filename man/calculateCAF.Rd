@@ -36,20 +36,20 @@ define if the trial was an error or not (Default: c(0, 1) ).
 }
 \examples{
 # Example 1
-dat <- createDF(nSubjects = 1, nTrl = 100, design = list("Comp" = c("comp", "incomp")))
+dat <- createDF(nSubjects = 1, nTrl = 10000, design = list("Comp" = c("comp", "incomp")))
 dat <- addDataDF(dat,
                  RT = list("Comp_comp"   = c(500, 80, 100),
                            "Comp_incomp" = c(600, 80, 140)),
-                 Error = list("Comp_comp"   = c(5, 4,3,2,1),
+                 Error = list("Comp_comp"   = c( 5, 4, 3, 2, 1),
                               "Comp_incomp" = c(20, 8, 6, 4, 2)))
 caf <- calculateCAF(dat)
 
 # Example 2
-dat <- createDF(nSubjects = 1, nTrl = 100, design = list("Congruency" = c("cong", "incong")))
+dat <- createDF(nSubjects = 1, nTrl = 10000, design = list("Congruency" = c("cong", "incong")))
 dat <- addDataDF(dat,
                  RT = list("Congruency_cong"   = c(500, 80, 100),
                            "Congruency_incong" = c(600, 80, 140)),
-                 Error = list("Congruency_cong"   = c(5, 4,3,2,1),
+                 Error = list("Congruency_cong"   = c( 5, 4, 3, 2, 1),
                               "Congruency_incong" = c(20, 8, 6, 4, 2)))
 head(dat)
 caf <- calculateCAF(dat, columns = c("Subject", "Congruency", "RT", "Error"),

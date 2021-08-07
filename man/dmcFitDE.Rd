@@ -2,7 +2,7 @@
 % Please edit documentation in R/dmcFit.R
 \name{dmcFitDE}
 \alias{dmcFitDE}
-\title{dmcFitDE: Fit DMC to aggregated data using R-package DEoptim}
+\title{dmcFitDE: Fit DMC to aggregated data using R-package DEoptim (Differential Evolution)}
 \usage{
 dmcFitDE(
   resOb,
@@ -26,7 +26,7 @@ dmcFitDE(
 \arguments{
 \item{resOb}{Observed data (see flankerData and simonTask for data format)}
 
-\item{nTrl}{Number of trials to use within dmcSim.}
+\item{nTrl}{The number of trials to use within dmcSim.}
 
 \item{minVals}{Minimum values for the to-be estimated parameters. This is a list with values specified individually
 for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., minVals = list(amp = 10, tau = 5, drc = 0.1,
@@ -40,44 +40,37 @@ bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 20, s
 amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedFit = list(amp = F,  tau = F, drc = F,
 bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T))}
 
-\item{nCAF}{Number of CAF bins.}
+\item{nCAF}{The number of CAF bins.}
 
-\item{nDelta}{Number of delta bins.}
+\item{nDelta}{The number of delta bins.}
 
-\item{pDelta}{Alternative to nDelta by directly specifying required percentile values}
+\item{pDelta}{An alternative option to nDelta by directly specifying required percentile values (vector of values 0-100)}
 
-\item{tDelta}{Type of delta calculation (1 = percentile, 2 = tile average)}
+\item{tDelta}{The type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)}
 
-\item{costFunction}{Cost function to minimise root mean square error ("RMSE": default) or
-squared percentage error ("SPE")}
+\item{costFunction}{The cost function to minimise: root mean square error ("RMSE": default),
+squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")}
 
-\item{spDist}{starting point distribution (0 = constant, 1 = beta, 2 = uniform)}
+\item{spDist}{The starting point distribution (0 = constant, 1 = beta, 2 = uniform)}
 
-\item{drDist}{drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)}
+\item{drDist}{The drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)}
 
-\item{drShape}{drift rate (dr) shape parameter}
+\item{drShape}{The drift rate (dr) shape parameter}
 
-\item{drLim}{drift rate (dr) range}
+\item{drLim}{The drift rate (dr) range}
 
-\item{rtMax}{limit on simulated RT (decision + non-decisional component)}
+\item{rtMax}{The limit on simulated RT (decision + non-decisional components)}
 
-\item{deControl}{Additional control parameters passes to DEoptim (see DEoptim.control)}
+\item{deControl}{Additional control parameters passed to DEoptim (see DEoptim.control)}
 }
 \value{
-dmcfit
 
-The function returns a list with the relevant results from the fitting procedure. The list
-is accessed with obj$name with the the following:
-\item{obj$means}{Condition means for reaction time and error rate}
-\item{obj$caf}{Accuracy per bin for compatible and incompatible trials}
-\item{obj$delta}{Mean RT and compatibility effect per bin}
-\item{obj$sim}{Individual trial data points (reaction times/error) and activation vectors from simulation}
-\item{obj$par}{The fitted model parameters + final RMSE of the fit}
 }
 \description{
 Fit theoretical data generated from dmcSim to observed data by
 minimizing the root-mean-square error (RMSE) between a weighted combination
-of the CAF and CDF functions using the R-package DEoptim.
+of the CAF and CDF functions using the R-package DEoptim. Alternative cost functions
+include squared percentage error ("SPE"), and g-squared statistic ("GS").
 }
 \examples{
 \donttest{
@@ -91,5 +84,4 @@ fit <- dmcFitDE(simonData, nTrl = 20000)
 plot(fit, simonData)
 summary(fit)
 }
-
 }
