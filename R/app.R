@@ -1,3 +1,8 @@
+#' A shiny app allowing interactive exploration of DMC parameters
+dmcSimApp <- function() {
+  shiny::runApp('R/app.R')
+}
+
 ui <- shiny::fluidPage(
   shiny::titlePanel("DMC Simulation"),
   shiny::mainPanel()
