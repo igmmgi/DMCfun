@@ -1,8 +1,3 @@
-#' A shiny app allowing interactive exploration of DMC parameters
-dmcSimApp <- function() {
-  shiny::runApp('R/app.R')
-}
-
 ui <- shiny::fluidPage(
   shiny::titlePanel("DMC Simulation"),
   shiny::mainPanel()
@@ -52,7 +47,7 @@ shiny::shinyApp(
       dmc <- dmcSim(amp = input$amp, tau = input$tau, drc = input$drc, bnds = input$bnds,
         resMean = input$resMean, resSD = input$resSD, aaShape = input$aaShape, spShape = input$spShape,
         sigm = input$sigm, nTrl = input$nTrl, fullData = fullData, nTrlData = input$nTrlData, spDist = input$spDist,
-        drDist = input$drDist, printInputArgs = FALSE, printResults = TRUE)
+        drDist = input$drDist, printInputArgs = FALSE, printResults = FALSE)
       if (input$plottype == 1) {
         plot(dmc, figType = "summary1", cex = 2, cex.lab = 2.5, cex.axis = 2.5, mar = c(6,6,2,2), legend = FALSE, lwd = 3,
           xlimDelta = xlimDelta, ylimDelta = ylimDelta)
