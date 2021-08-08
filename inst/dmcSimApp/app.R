@@ -20,12 +20,13 @@ shiny::shinyApp(
         shiny::sliderInput(inputId = "nTrl",     label = "nTrl",     min =  5000,    max = 100000,  value =  20000,   ticks = FALSE, step = 1000, width = 250),
         shiny::sliderInput(inputId = "nTrlData", label = "nTrlData", min =     1,    max = 100,     value =      5,   ticks = FALSE, step =    1, width = 250),
 
-        shiny::radioButtons("plottype", "Plot Type", choiceNames = c("summary1", "summary2", "summary3"), choiceValues = c(1, 2, 3)),
+        shiny::radioButtons("plottype", "Plot Type", choiceNames = c("Summary1", "Summary2", "Summary3", "RT Distribution"), choiceValues = c(1, 2, 3, 4)),
         shiny::sliderInput(inputId = "spDist", label = "Starting Point Distribution", min = 0, max = 2, value = 0, ticks = FALSE, step = 1, width = 250),
         shiny::sliderInput(inputId = "drDist", label = "Drift Rate Distribution", min = 0, max = 2, value = 0, ticks = FALSE, step = 1, width = 250),
         shiny::checkboxInput("autoaxis", "Auto Axis", FALSE),  shiny::verbatimTextOutput("autoaxis")
 
       ),
+
       shiny::mainPanel(width = 10, position = "right", fluid = FALSE, style = "margin-top:10px",
         shiny::plotOutput("dmcSim", width = "100%", height = "1000px")
       )
@@ -59,6 +60,51 @@ shiny::shinyApp(
       } else if (input$plottype == 3) {
         plot(dmc, figType = "summary3", cex = 1.5, mar = c(2,6,2,2), lwd = 3,
           ylimRt = ylimRt, ylimErr = ylimErr)
+      } else if (input$plottype == 4) {
+
+        # histogram of RT distributions
+        par(mfrow = (c(2, 1)))
+        par(mar = c(0, 4, 2, 2))
+
+        # Correct RTs
+        comp   <- dmc$sim$rts_comp
+        y      <- length(comp) / 10
+        hist(comp,
+          xlim = c(0, 1000), ylim = c(0, y),
+          xaxt = "n", col = scales::alpha('green', .5), border = FALSE,
+          breaks = 100, main = "", yaxt = "n", xlab = "", ylab = "")
+        abline(v = mean(comp), col = "darkgreen")
+        legend("topright", c("Compatible", "Incompatible"), fill = c(scales::alpha('green', .5), scales::alpha('red', .5)),
+          bty = "n", cex = 2)
+
+        incomp <- dmc$sim$rts_incomp
+        hist(incomp,  add = TRUE,
+          xlim = c(0, 1000), ylim = c(0, y),
+          xaxt = "n", col = scales::alpha('red', .5),
+          border = FALSE, breaks = 100, main = "", xlab = "", ylab = "")
+        abline(v = mean(incomp), col = "darkred")
+
+        # Error RTs
+        par(mar = c(5, 4, 0, 2))
+        comp   <- dmc$sim$errs_comp
+
+        if (length(comp) > 0) {
+          hist(comp,
+            xlim = c(0, 1000), ylim = c(y, 0),
+            col = scales::alpha('green', .5), border = FALSE,
+            breaks = 100, main = "", yaxt = "n", xlab = "Time [ms]", ylab = "", cex.axis = 1.5, cex.lab = 2)
+          abline(v = mean(comp), col = "darkgreen")
+        }
+
+        incomp <- dmc$sim$errs_incomp
+        if (length(incomp) > 0) {
+          hist(incomp, add = TRUE,
+            xlim = c(0, 1000), ylim = c(y, 0),
+            col = scales::alpha('red', .5),
+            border = FALSE, breaks = 100, main = "", ylab = "")
+          abline(v = mean(incomp), col = "darkred")
+        }
+
       }
     })
   }
