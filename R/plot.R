@@ -187,7 +187,11 @@ plot.dmcsim <- function(x,
     lines(c(1:x$prms$tmax), -x$sim$eq4, type = "l", lty = 2, col = tail(cols, 2)[2], ...)
 
     # controlled
-    dr <- ifelse(x$prms$drDist != 0, mean(c(x$prms$drLim1, x$prms$drmLim2)), x$prms$drc)
+    if (x$prms$drDist != 0) {
+      dr <- mean(c(x$prms$drLim1, x$prms$drLim2))
+    } else {
+      dr <- x$prms$drc
+    }
     dr <- cumsum(rep(dr, x$prms$tmax))
     dr <- dr + mean(c(x$prms$spLim1, x$prms$spLim2))
     lines(c(1:x$prms$tmax), dr, ...)
@@ -220,10 +224,16 @@ plot.dmcsim <- function(x,
 
     # individual trials until bounds
     for (trl in c(1:x$prms$nTrlData)) {
-      idx <- which(abs(x$trials$comp[[trl]]) >= x$prms$bnds)[1]
-      lines(x$trials$comp[[trl]][1:idx], type = "l", col = tail(cols, 2)[1], ...)
-      idx <- which(abs(x$trials$incomp[[trl]]) >= x$prms$bnds)[1]
-      lines(x$trials$incomp[[trl]][1:idx], type = "l", col = tail(cols, 2)[2], ...)
+      boundsHit <- abs(x$trials$comp[[trl]]) >= x$prms$bnds
+      if (any(boundsHit)) {
+        idx <- which(boundsHit)[1]
+        lines(x$trials$comp[[trl]][1:idx], type = "l", col = tail(cols, 2)[1], ...)
+      }
+      boundsHit <- abs(x$trials$incomp[[trl]]) >= x$prms$bnds
+      if (any(boundsHit)) {
+        idx <- which(boundsHit)[1]
+        lines(x$trials$incomp[[trl]][1:idx], type = "l", col = tail(cols, 2)[2], ...)
+      }
     }
 
     # bounds
