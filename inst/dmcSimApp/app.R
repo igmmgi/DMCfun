@@ -73,8 +73,8 @@ shiny::shinyApp(
           xlim = c(0, 1000), ylim = c(0, y),
           xaxt = "n", col = scales::alpha('green', .5), border = FALSE,
           breaks = 100, main = "", yaxt = "n", xlab = "", ylab = "")
-        abline(v = mean(comp), col = "darkgreen")
-        legend("topright", c("Compatible", "Incompatible"), fill = c(scales::alpha('green', .5), scales::alpha('red', .5)),
+        abline(v = mean(comp), col = "green", lwd = 2)
+        legend("topright", c("Compatible", "Incompatible"), fill = c("green", "red"),
           bty = "n", cex = 2)
 
         incomp <- dmc$sim$rts_incomp
@@ -82,7 +82,7 @@ shiny::shinyApp(
           xlim = c(0, 1000), ylim = c(0, y),
           xaxt = "n", col = scales::alpha('red', .5),
           border = FALSE, breaks = 100, main = "", xlab = "", ylab = "")
-        abline(v = mean(incomp), col = "darkred")
+        abline(v = mean(incomp), col = "red", lwd = 2)
 
         # Error RTs
         par(mar = c(5, 4, 0, 2))
@@ -93,7 +93,7 @@ shiny::shinyApp(
             xlim = c(0, 1000), ylim = c(y, 0),
             col = scales::alpha('green', .5), border = FALSE,
             breaks = 100, main = "", yaxt = "n", xlab = "Time [ms]", ylab = "", cex.axis = 1.5, cex.lab = 2)
-          abline(v = mean(comp), col = "darkgreen")
+          abline(v = mean(comp), col = "green", lwd = 2)
         }
 
         incomp <- dmc$sim$errs_incomp
@@ -102,7 +102,7 @@ shiny::shinyApp(
             xlim = c(0, 1000), ylim = c(y, 0),
             col = scales::alpha('red', .5),
             border = FALSE, breaks = 100, main = "", ylab = "")
-          abline(v = mean(incomp), col = "darkred")
+          abline(v = mean(incomp), col = "red", lwd = 2)
         }
 
       }
