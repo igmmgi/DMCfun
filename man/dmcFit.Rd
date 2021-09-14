@@ -108,28 +108,34 @@ include squared percentage error ("SPE"), and g-squared statistic ("GS").
 \examples{
 \donttest{
 # Example 1: Flanker data from Ulrich et al. (2015)
-fit <- dmcFit(flankerData)  # only initial search tau
+fit <- dmcFit(flankerData) # only initial search tau
 plot(fit, flankerData)
 summary(fit)
 
 # Example 2: Simon data from Ulrich et al. (2015)
-fit <- dmcFit(simonData)    # only initial search tau
+fit <- dmcFit(simonData) # only initial search tau
 plot(fit, simonData)
 summary(fit)
 
 # Example 3: Flanker data from Ulrich et al. (2015) with non-default
 # start vals and some fixed values
 fit <- dmcFit(flankerData,
-              startVals = list(drc = 0.6, aaShape = 2.5),
-              fixedFit = list(drc = TRUE, aaShape = TRUE))
+  startVals = list(drc = 0.6, aaShape = 2.5),
+  fixedFit = list(drc = TRUE, aaShape = TRUE)
+)
 
 # Example 4: Simulated Data (+ve going delta function)
 dat <- createDF(nSubjects = 20, nTrl = 500, design = list("Comp" = c("comp", "incomp")))
 dat <- addDataDF(dat,
-                 RT = list("Comp_comp"   = c(510, 100, 100),
-                           "Comp_incomp" = c(540, 130, 85)),
-                 Error = list("Comp_comp"   = c(4, 3, 2, 1, 1),
-                              "Comp_incomp" = c(20, 4, 3, 1, 1)))
+  RT = list(
+    "Comp_comp" = c(510, 100, 100),
+    "Comp_incomp" = c(540, 130, 85)
+  ),
+  Error = list(
+    "Comp_comp" = c(4, 3, 2, 1, 1),
+    "Comp_incomp" = c(20, 4, 3, 1, 1)
+  )
+)
 datOb <- dmcObservedData(dat, columns = c("Subject", "Comp", "RT", "Error"))
 plot(datOb)
 fit <- dmcFit(datOb, nTrl = 5000)

@@ -23,6 +23,6 @@ Calculate cost value (fit) from correct and incorrect RT data.
 # Example 1:
 resTh <- dmcSim()
 resOb <- flankerData
-cost  <- calculateCostValueGS(resTh, flankerData)
-
+resOb <- calculateBinProbabilities(resOb)
+cost <- calculateCostValueGS(resTh, resOb)
 }

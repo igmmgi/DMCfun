@@ -23,11 +23,10 @@ Calculate cost value (fit) from combination of RT and error rate.
 # Example 1:
 resTh <- dmcSim()
 resOb <- dmcSim()
-cost  <- calculateCostValueSPE(resTh, resOb)
+cost <- calculateCostValueSPE(resTh, resOb)
 
 # Example 2:
 resTh <- dmcSim()
 resOb <- dmcSim(tau = 150)
-cost  <- calculateCostValueSPE(resTh, resOb)
-
+cost <- calculateCostValueSPE(resTh, resOb)
 }
