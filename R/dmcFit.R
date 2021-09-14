@@ -295,7 +295,7 @@ dmcFit <- function(resOb,
 #' \item{obj$means}{Condition means for reaction time and error rate}
 #' \item{obj$caf}{Accuracy per bin for compatible and incompatible trials}
 #' \item{obj$delta}{Mean RT and compatibility effect per bin}
-#' \item{obj$sim}{Individual trial data points (RTs for all trial types e.g., correct/error trials) and activation
+#' \item{obj$sim}{Individual trial data points (RTs for all trial types e.g., correct/error trials) and activation}
 #' \item{obj$par}{The fitted model parameters + final cost value of the fit}
 #'
 #' @examples

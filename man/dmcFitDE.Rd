@@ -64,7 +64,13 @@ squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS"
 \item{deControl}{Additional control parameters passed to DEoptim (see DEoptim.control)}
 }
 \value{
+dmcfit
 
+\item{obj$means}{Condition means for reaction time and error rate}
+\item{obj$caf}{Accuracy per bin for compatible and incompatible trials}
+\item{obj$delta}{Mean RT and compatibility effect per bin}
+\item{obj$sim}{Individual trial data points (RTs for all trial types e.g., correct/error trials) and activation}
+\item{obj$par}{The fitted model parameters + final cost value of the fit}
 }
 \description{
 Fit theoretical data generated from dmcSim to observed data by
