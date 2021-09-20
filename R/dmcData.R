@@ -595,10 +595,12 @@ calculateDelta <- function(dat,
     dat$Comp <- ifelse(dat$Comp == compCoding[1], "comp", "incomp")
   }
 
-  deltaSeq <- seq(0, 100, length.out = nDelta + 2)
-  deltaSeq <- deltaSeq[2:(length(deltaSeq) - 1)]
 
   if (tDelta == 1) {
+
+    deltaSeq <- seq(0, 100, length.out = nDelta + 2)
+    deltaSeq <- deltaSeq[2:(length(deltaSeq) - 1)]
+
     dat_delta <- dat %>%
       dplyr::group_by(Subject, Comp) %>%
       dplyr::summarize(Bin    = seq(1, length(deltaSeq)),

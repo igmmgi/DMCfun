@@ -134,19 +134,19 @@ dmcSim <- function(amp            = 20,
   dmc$summary        <- cbind(Comp = c("comp", "incomp"), dmc$summary)
 
   # caf
-  dmc$caf <- as.data.frame(cbind(Bin = rep(1:nCAF, each = 1, times = 1),
+  dmc$caf <- as.data.frame(cbind(Bin = 1:nCAF,
     accPerComp   = summary$caf_comp,
     accPerIncomp = summary$caf_incomp,
     meanEffect   = ((100 - summary$caf_incomp) - (100 - summary$caf_comp)) * 100))
 
   # delta
-  dmc$delta <- as.data.frame(cbind(Bin = rep(1:nDelta, each = 1, times = 1),
+  dmc$delta <- as.data.frame(cbind(Bin = 1:nDelta,
     meanComp   = summary$delta_correct_comp,
     meanIncomp = summary$delta_correct_incomp,
     meanBin    = summary$delta_correct_mean,
     meanEffect = summary$delta_correct_delta))
 
-  dmc$delta_errs <- as.data.frame(cbind(Bin = rep(1:nDelta, each = 1, times = 1),
+  dmc$delta_errs <- as.data.frame(cbind(Bin = 1:nDelta,
     meanComp   = summary$delta_errors_comp,
     meanIncomp = summary$delta_errors_incomp,
     meanBin    = summary$delta_errors_mean,

@@ -12,7 +12,7 @@
       ".", "Effect", "aaShape", "accPer", "amp", "bnds", "comp",
       "cost", "drc", "effect", "incomp", "N", "nCor", "nErr", "per", "perSlow",
       "perE", "resMean", "resSD", "rtC", "rtE", "sigm", "spBias", "spShape", "tau",
-      "nTrials", "prob", "boundary")
+      "nTrials", "prob", "boundary", "outlier", "Subject", "Error", "RT")
   )
 
 }
