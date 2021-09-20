@@ -3,16 +3,16 @@ context("dmcFit")
 test_that("dmcFit", {
 
   # dmcFit
-  fit <- dmcFit(DMCfun::flankerData, nTrl = 1000, printInputArgs = FALSE, printResults = FALSE)
+  fit <- dmcFit(DMCfun::flankerData, nTrl = 1000, printInputArgs = FALSE, printResults = FALSE, optimControl = list(maxit = 20))
   testthat::expect_type(fit, "list")
   testthat::expect_s3_class(fit, "dmcfit")
 
-  fit <- dmcFit(DMCfun::simonData, nTrl = 1000, printInputArgs = FALSE, printResults = FALSE, fitInitialGrid = FALSE)
+  fit <- dmcFit(DMCfun::simonData, nTrl = 1000, printInputArgs = FALSE, printResults = FALSE, fitInitialGrid = FALSE, optimControl = list(maxit = 20))
   testthat::expect_type(fit, "list")
   testthat::expect_s3_class(fit, "dmcfit")
 
   fit <- dmcFit(DMCfun::flankerData,  nTrl = 1000, printInputArgs = FALSE, printResults = FALSE,
-    costFunction = "SPE", startVals = list(drc = 0.6, aaShape = 2.5),  fixedFit = list(drc = T, aaShape = T))
+    costFunction = "SPE", startVals = list(drc = 0.6, aaShape = 2.5),  fixedFit = list(drc = T, aaShape = T), optimControl = list(maxit = 20))
   testthat::expect_equal(fit$par$drc, 0.6)
   testthat::expect_equal(fit$par$aaShape, 2.5)
 
@@ -21,14 +21,14 @@ test_that("dmcFit", {
 
   # dmcFitSubject
   fit <- dmcFitSubject(DMCfun::flankerData, nTrl = 1000, subjects = c(1, 2),
-    printInputArgs = FALSE, printResults = FALSE)
+    printInputArgs = FALSE, printResults = FALSE, optimControl = list(maxit = 20))
   testthat::expect_type(fit, "list")
   testthat::expect_s3_class(fit, "dmcfit")
   testthat::expect_type(mean(fit), "list")
 
   fit <- dmcFitSubject(DMCfun::flankerData,  nTrl = 1000, subjects = c(1, 2),
     printInputArgs = FALSE, printResults = FALSE,
-    costFunction = "SPE", startVals = list(drc = 0.6, aaShape = 2.5),  fixedFit = list(drc = T, aaShape = T))
+    costFunction = "SPE", startVals = list(drc = 0.6, aaShape = 2.5),  fixedFit = list(drc = T, aaShape = T), optimControl = list(maxit = 20))
   testthat::expect_equal(fit[[1]]$par$drc, 0.6)
   testthat::expect_equal(fit[[1]]$par$aaShape, 2.5)
 
@@ -36,11 +36,11 @@ test_that("dmcFit", {
   testthat::expect_error(dmcFitSubject(DMCfun::flankerData, nCAF = 99, subjects = c(1, 2)))
 
   # dmcFitDE
-  fit <- dmcFitDE(DMCfun::flankerData, nTrl = 1000)
+  fit <- dmcFitDE(DMCfun::flankerData, nTrl = 1000, deControl = list(itermax = 20))
   testthat::expect_type(fit, "list")
   testthat::expect_s3_class(fit, "dmcfit")
 
-  fit <- dmcFitDE(DMCfun::simonData, nTrl = 1000, costFunction = "SPE")
+  fit <- dmcFitDE(DMCfun::simonData, nTrl = 1000, costFunction = "SPE", deControl = list(itermax = 20))
   testthat::expect_type(fit, "list")
   testthat::expect_s3_class(fit, "dmcfit")
 
@@ -48,7 +48,7 @@ test_that("dmcFit", {
   testthat::expect_error(dmcFitDE(DMCfun::flankerData, nCAF = 99))
 
   # dmcFitSubjectDE
-  fit <- dmcFitSubjectDE(DMCfun::flankerData, nTrl = 1000, subjects = c(1, 2))
+  fit <- dmcFitSubjectDE(DMCfun::flankerData, nTrl = 1000, subjects = c(1, 2), deControl = list(itermax = 20))
   testthat::expect_type(fit, "list")
   testthat::expect_s3_class(fit, "dmcfit")
 
