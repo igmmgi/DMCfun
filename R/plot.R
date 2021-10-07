@@ -766,6 +766,13 @@ plot.dmcobs <- function(x,
     on.exit(par(opar))
   }
 
+  # cycle
+  if (length(x) > 2) {
+    cols <- rep(cols, ceiling(length(x)/length(cols)))
+    ltys <- rep(ltys, ceiling(length(x)/length(ltys)))
+    pchs <- rep(ltys, ceiling(length(x)/length(pchs)))
+  }
+
   figType <- tolower(figType)
   figTypes <- c("all", "rtcorrect", "errorrate", "rterrors", "cdf", "caf", "delta")
   if (length(figType) > 1 || !figType %in% figTypes) {
@@ -847,7 +854,7 @@ plot.dmcobs <- function(x,
         addErrorBars(c(1, 2), x[[i]]$summary$rtCor, x[[i]]$summary[[paste0(errorBarType, "RtCor")]])
       }
     }
-    add_legend(legend, legendLabels, tail(cols, 2), ltys, pchs)
+    add_legend(legend, legendLabels, cols, ltys, pchs)
 
   }
 
@@ -867,7 +874,7 @@ plot.dmcobs <- function(x,
         addErrorBars(c(1, 2), x[[i]]$summary$perErr, x[[i]]$summary[[paste0(errorBarType, "PerErr")]])
       }
     }
-    add_legend(legend, legendLabels, tail(cols, 2), ltys, pchs)
+    add_legend(legend, legendLabels, cols, ltys, pchs)
 
   }
 
@@ -887,7 +894,7 @@ plot.dmcobs <- function(x,
         addErrorBars(c(1, 2), x[[i]]$summary$rtErr, x[[i]]$summary[[paste0(errorBarType, "RtErr")]])
       }
     }
-    add_legend(legend, legendLabels, tail(cols, 2), ltys, pchs)
+    add_legend(legend, legendLabels, cols, ltys, pchs)
 
   }
 
@@ -922,7 +929,7 @@ plot.dmcobs <- function(x,
       lines(x[[i]]$delta$meanIncomp, ypoints, type = "o", col = tail(cols, 2)[2], ...)
     }
 
-    add_legend(legend, legendLabels, tail(cols, 2), c(1, 1), c(1, 1))
+    add_legend(legend, legendLabels, cols, ltys, pchs)
 
   }
 
@@ -933,7 +940,7 @@ plot.dmcobs <- function(x,
       ylimCAF <- c(0, 1)
     }
 
-    nCAF <- length(x[[1]]$caf$Bin) / 2
+    nCAF <- length(x[[1]]$caf$Bin)
     plot(NULL, NULL,
          ylim = ylimCAF,
          ylab = ylabs[5], xlab = xlabs[5], xlim = c(0.5, nCAF + 0.5),
@@ -959,13 +966,11 @@ plot.dmcobs <- function(x,
     }
 
     for (i in seq_along(x)) {
-      lines(x[[i]]$caf$accPer[x[[i]]$caf$Comp == "comp"],
-        type = "o", col = tail(cols, 2)[1], lty = ltys[i], pch = pchs[i], ...)
-      lines(x[[i]]$caf$accPer[x[[i]]$caf$Comp == "incomp"],
-        type = "o", col = tail(cols, 2)[2], lty = ltys[i], pch = pchs[i], ...)
+      lines(x[[i]]$caf$accPerComp,   type = "o", col = tail(cols, 2)[1], lty = ltys[i], pch = pchs[i], ...)
+      lines(x[[i]]$caf$accPerIncomp, type = "o", col = tail(cols, 2)[2], lty = ltys[i], pch = pchs[i], ...)
     }
 
-    add_legend(legend, legendLabels, tail(cols, 2), c(1, 1), c(1, 1))
+    add_legend(legend, legendLabels, cols, ltys, pchs)
 
   }
 
@@ -1002,7 +1007,7 @@ plot.dmcobs <- function(x,
       }
     }
 
-    add_legend(legend, legendLabels, tail(cols, 2), c(1, 1), c(1, 1))
+    add_legend(legend, legendLabels, cols, ltys, pchs)
 
   }
 
