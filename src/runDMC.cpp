@@ -26,7 +26,7 @@ void run_dmc_sim(Prms &p,
     // equation 4
     std::vector<double> eq4(p.tmax);
     for (unsigned int i = 0; i < p.tmax; i++)
-      eq4[i] = p.amp * exp(-(i+1.0) / p.tau) * pow((exp(1) * (i+1.0) / (p.aaShape - 1) / p.tau), p.aaShape - 1);
+      eq4[i] = p.amp * exp(-(i+1.0) / p.tau) * pow((exp(1.0) * (i+1.0) / (p.aaShape - 1) / p.tau), p.aaShape - 1);
     rsim["eq4"] = eq4;
 
     // run comp and incomp simulation
