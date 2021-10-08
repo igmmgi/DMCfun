@@ -232,16 +232,16 @@ std::vector<double> calculate_summary(
 
 std::vector<double> calculate_percentile( std::vector<double> vDelta, std::vector<double> rts, int type ) {
 
-    int nDelta = vDelta.size() - 2;
+    unsigned int nDelta = vDelta.size() - 2;
     std::vector<double> res_p(nDelta, 0);
 
     double pct_idx;
     std::vector<int> pct_idx_int(nDelta);
     double pct_idx_dec;
 
-    if (rts.size() != 0) {
+    if (rts.size() >= nDelta) {
         std::sort(rts.begin(), rts.end());
-        for (int i = 0; i < nDelta; i++) {
+        for (unsigned int i = 0; i < nDelta; i++) {
           pct_idx = (vDelta[i+1] / 100.0) * (rts.size() - 1);
           pct_idx_int[i] = int(pct_idx);
           pct_idx_dec = pct_idx - static_cast<double>(pct_idx_int[i]);
@@ -303,4 +303,3 @@ std::vector<double> calculate_caf(std::vector<double> &rts, std::vector<double> 
     return res;
 
 }
-
