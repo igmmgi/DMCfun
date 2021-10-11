@@ -54,6 +54,7 @@
 #'
 #' @examples
 #' \donttest{
+#' # Code below can exceed CRAN check time limit with <= 2 cores, hence donttest
 #' # Example 1: Flanker data from Ulrich et al. (2015)
 #' fit <- dmcFit(flankerData) # only initial search tau
 #' plot(fit, flankerData)
@@ -300,6 +301,7 @@ dmcFit <- function(resOb,
 #'
 #' @examples
 #' \donttest{
+#' # Code below can exceed CRAN check time limit with <= 2 cores, hence donttest
 #' # Example 1: Flanker data from Ulrich et al. (2015)
 #' fit <- dmcFitDE(flankerData)
 #' plot(fit, flankerData)
@@ -488,6 +490,7 @@ dmcFitDE <- function(resOb,
 #'
 #' @examples
 #' \donttest{
+#' # Code below can exceed CRAN check time limit with <= 2 cores, hence donttest
 #' # Example 1: Flanker data from Ulrich et al. (2015)
 #' fit <- dmcFitSubject(flankerData, nTrl = 1000, subjects = c(1, 2))
 #' plot(fit, flankerData, subject = 1)
@@ -613,6 +616,7 @@ dmcFitSubject <- function(resOb,
 #'
 #' @examples
 #' \donttest{
+#' # Code below can exceed CRAN check time limit with <= 2 cores, hence donttest
 #' # Example 1: Flanker data from Ulrich et al. (2015)
 #' fit <- dmcFitSubjectDE(flankerData, nTrl = 1000, subjects = c(1, 2))
 #' plot(fit, flankerData, subject = 1)
@@ -703,6 +707,7 @@ dmcFitSubjectDE <- function(resOb,
 #'
 #' @examples
 #' \donttest{
+#' # Code below can exceed CRAN check time limit with <= 2 cores, hence donttest
 #' # Example 1: Fit individual data then aggregate
 #' fitSubjects <- dmcFitSubject(flankerData, nTrl = 1000, subjects = c(1, 2))
 #' plot(fitSubjects, flankerData, subject = 1)
