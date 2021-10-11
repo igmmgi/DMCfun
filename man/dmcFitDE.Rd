@@ -80,6 +80,7 @@ include squared percentage error ("SPE"), and g-squared statistic ("GS").
 }
 \examples{
 \donttest{
+# Code below can exceed CRAN check time limit with <= 2 cores, hence donttest
 # Example 1: Flanker data from Ulrich et al. (2015)
 fit <- dmcFitDE(flankerData)
 plot(fit, flankerData)
