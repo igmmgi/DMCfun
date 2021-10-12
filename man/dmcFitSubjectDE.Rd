@@ -21,7 +21,8 @@ dmcFitSubjectDE(
   drLim = c(0.1, 0.7),
   rtMax = 5000,
   subjects = c(),
-  deControl = list()
+  deControl = list(),
+  numCores = 2
 )
 }
 \arguments{
@@ -65,6 +66,8 @@ squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS"
 \item{subjects}{NULL (aggregated data across all subjects) or integer for subject number}
 
 \item{deControl}{Additional control parameters passed to DEoptim (see DEoptim.control)}
+
+\item{numCores}{Number of cores to use}
 }
 \value{
 dmcfit_subject List of dmcfit per subject fitted (see dmcFitDM)
@@ -80,6 +83,7 @@ include squared percentage error ("SPE"), and g-squared statistic ("GS").
 # Code below can exceed CRAN check time limit with <= 2 cores, hence donttest
 # Example 1: Flanker data from Ulrich et al. (2015)
 fit <- dmcFitSubjectDE(flankerData, nTrl = 1000, subjects = c(1, 2))
+# fit <- dmcFitSubjectDE(flankerData, nTrl = 1000, subjects = c(1, 2), numCores = 8)
 plot(fit, flankerData, subject = 1)
 plot(fit, flankerData, subject = 2)
 summary(fit)

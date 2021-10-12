@@ -27,7 +27,8 @@ dmcFitSubject(
   subjects = c(),
   printInputArgs = TRUE,
   printResults = FALSE,
-  optimControl = list()
+  optimControl = list(),
+  numCores = 2
 )
 }
 \arguments{
@@ -89,6 +90,8 @@ squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS"
 \item{printResults}{TRUE/FALSE (default)}
 
 \item{optimControl}{Additional control parameters passed to optim (see optim details section)}
+
+\item{numCores}{Number of cores to use}
 }
 \value{
 dmcfit_subject List of dmcfit per subject fitted (see dmcFit)

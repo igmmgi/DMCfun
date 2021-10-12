@@ -40,6 +40,7 @@
 #' @param printInputArgs TRUE (default) /FALSE
 #' @param printResults TRUE/FALSE (default)
 #' @param optimControl Additional control parameters passed to optim (see optim details section)
+#' @param numCores Number of cores to use
 #'
 #' @return dmcfit
 #'
@@ -113,7 +114,8 @@ dmcFit <- function(resOb,
                    costFunction = "RMSE",
                    printInputArgs = TRUE,
                    printResults = FALSE,
-                   optimControl = list()) {
+                   optimControl = list(),
+                   numCores = 2) {
 
   # default parameter space
   defaultStartVals <- list(amp = 20, tau = 200, drc = 0.5, bnds = 75, resMean = 300, resSD = 30, aaShape = 2, spShape = 3, spBias = 0, sigm = 4)
@@ -174,13 +176,15 @@ dmcFit <- function(resOb,
     startValsGrid <- dplyr::distinct(expand.grid(Map(unique, startValsGrid)))
     message("Searching initial parameter gridspace: N = ", nrow(startValsGrid), ", with ", nTrl, " trials per simulation.")
 
+    # CRAN maintainer personal communication: THIS IS NOT THE WAY TO DO IT!
+    # CRAN submissions can only use maximum of two cores unless user requests more!
     # R check limits number of cores to 2 (https://stackoverflow.com/questions/50571325/r-cran-check-fail-when-using-parallel-functions)
-    chk <- tolower(Sys.getenv("_R_CHECK_LIMIT_CORES_", ""))
-    if (nzchar(chk) && (chk == "true")) {
-      num_cores <- 2L
-    } else {
-      num_cores <- parallel::detectCores() / 2
-    }
+    # chk <- tolower(Sys.getenv("_R_CHECK_LIMIT_CORES_", ""))
+    # if (nzchar(chk) && (chk == "true")) {
+    #   num_cores <- 2L
+    # } else {
+    #   num_cores <- parallel::detectCores() / 2
+    # }
 
     # Older code (pre June 2020) used doSNOW progress bar
     # R CMD check --as-cran -->  doSNOW warning “superseded packages”
@@ -200,7 +204,7 @@ dmcFit <- function(resOb,
       return(calculateCostValue(resTh, resOb))
     }
 
-    cl <- parallel::makeCluster(num_cores)
+    cl <- parallel::makeCluster(numCores)
     invisible(parallel::clusterExport(cl = cl, varlist = c("dmcSim", "calculateCostValue"), envir = environment()))
 
     # calculate initial cost values across grid starting values and find min
@@ -290,6 +294,7 @@ dmcFit <- function(resOb,
 #' @param drShape The drift rate (dr) shape parameter
 #' @param drLim The drift rate (dr) range
 #' @param deControl Additional control parameters passed to DEoptim (see DEoptim.control)
+#' @param numCores Number of cores to use
 #'
 #' @return dmcfit
 #'
@@ -304,6 +309,7 @@ dmcFit <- function(resOb,
 #' # Code below can exceed CRAN check time limit with <= 2 cores, hence donttest
 #' # Example 1: Flanker data from Ulrich et al. (2015)
 #' fit <- dmcFitDE(flankerData)
+#' # fit <- dmcFitDE(flankerData, numCores = 8)  # increase number of cores used for faster fit
 #' plot(fit, flankerData)
 #' summary(fit)
 #'
@@ -328,7 +334,8 @@ dmcFitDE <- function(resOb,
                      drShape = 3,
                      drLim = c(0.1, 0.7),
                      rtMax = 5000,
-                     deControl = list()) {
+                     deControl = list(),
+                     numCores = 2) {
 
   # default parameter space
   defaultMinVals <- list(amp = 10, tau = 5, drc = 0.1, bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, spBias = 0, sigm = 4)
@@ -359,14 +366,17 @@ dmcFitDE <- function(resOb,
     }
   }
 
+  # CRAN maintainer personal communication: THIS IS NOT THE WAY TO DO IT!
+  # CRAN submissions can only use maximum of two cores unless user requests more!
   # R check limits number of cores to 2 (https://stackoverflow.com/questions/50571325/r-cran-check-fail-when-using-parallel-functions)
-  chk <- tolower(Sys.getenv("_R_CHECK_LIMIT_CORES_", ""))
-  if (nzchar(chk) && (chk == "true")) {
-    num_cores <- 2L
-  } else {
-    num_cores <- parallel::detectCores() / 2
-  }
-  cl <- parallel::makeCluster(num_cores)
+  # chk <- tolower(Sys.getenv("_R_CHECK_LIMIT_CORES_", ""))
+  # if (nzchar(chk) && (chk == "true")) {
+  #   num_cores <- 2L
+  # } else {
+  #   num_cores <- parallel::detectCores() / 2
+  # }
+
+  cl <- parallel::makeCluster(numCores)
   invisible(parallel::clusterExport(cl = cl, varlist = c("dmcSim", "calculateCostValue"), envir = environment()))
 
   defaultControl <- list(VTR = 0, strategy = 1, NP = 100, itermax = 200, trace = 1, cluster = cl)
@@ -485,6 +495,7 @@ dmcFitDE <- function(resOb,
 #' @param printInputArgs TRUE (default) /FALSE
 #' @param printResults TRUE/FALSE (default)
 #' @param optimControl Additional control parameters passed to optim (see optim details section)
+#' @param numCores Number of cores to use
 #'
 #' @return dmcfit_subject List of dmcfit per subject fitted (see dmcFit)
 #'
@@ -527,7 +538,9 @@ dmcFitSubject <- function(resOb,
                           subjects = c(),
                           printInputArgs = TRUE,
                           printResults = FALSE,
-                          optimControl = list()) {
+                          optimControl = list(),
+                          numCores = 2) {
+
   if (length(subjects) == 0) {
     subjects <- unique(resOb$summarySubject$Subject) # fit all individual subjects in data
   }
@@ -611,6 +624,7 @@ dmcFitSubject <- function(resOb,
 #' @param drLim The drift rate (dr) range
 #' @param subjects NULL (aggregated data across all subjects) or integer for subject number
 #' @param deControl Additional control parameters passed to DEoptim (see DEoptim.control)
+#' @param numCores Number of cores to use
 #'
 #' @return dmcfit_subject List of dmcfit per subject fitted (see dmcFitDM)
 #'
@@ -619,6 +633,7 @@ dmcFitSubject <- function(resOb,
 #' # Code below can exceed CRAN check time limit with <= 2 cores, hence donttest
 #' # Example 1: Flanker data from Ulrich et al. (2015)
 #' fit <- dmcFitSubjectDE(flankerData, nTrl = 1000, subjects = c(1, 2))
+#' # fit <- dmcFitSubjectDE(flankerData, nTrl = 1000, subjects = c(1, 2), numCores = 8)
 #' plot(fit, flankerData, subject = 1)
 #' plot(fit, flankerData, subject = 2)
 #' summary(fit)
@@ -647,7 +662,9 @@ dmcFitSubjectDE <- function(resOb,
                             drLim = c(0.1, 0.7),
                             rtMax = 5000,
                             subjects = c(),
-                            deControl = list()) {
+                            deControl = list(),
+                            numCores = 2) {
+
   if (length(subjects) == 0) {
     subjects <- unique(resOb$summarySubject$Subject) # fit all individual subjects in data
   }

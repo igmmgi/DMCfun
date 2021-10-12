@@ -20,7 +20,8 @@ dmcFitDE(
   drShape = 3,
   drLim = c(0.1, 0.7),
   rtMax = 5000,
-  deControl = list()
+  deControl = list(),
+  numCores = 2
 )
 }
 \arguments{
@@ -62,6 +63,8 @@ squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS"
 \item{rtMax}{The limit on simulated RT (decision + non-decisional components)}
 
 \item{deControl}{Additional control parameters passed to DEoptim (see DEoptim.control)}
+
+\item{numCores}{Number of cores to use}
 }
 \value{
 dmcfit
@@ -83,6 +86,7 @@ include squared percentage error ("SPE"), and g-squared statistic ("GS").
 # Code below can exceed CRAN check time limit with <= 2 cores, hence donttest
 # Example 1: Flanker data from Ulrich et al. (2015)
 fit <- dmcFitDE(flankerData)
+# fit <- dmcFitDE(flankerData, numCores = 8)  # increase number of cores used for faster fit
 plot(fit, flankerData)
 summary(fit)
 
