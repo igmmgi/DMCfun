@@ -35,7 +35,7 @@
 #' @param resetPar TRUE/FALSE Reset graphical parameters
 #' @param ... additional plot pars
 #'
-#' @return NULL
+#' @return Plot
 #'
 #' @examples
 #' \donttest{
@@ -360,7 +360,7 @@ plot.dmcsim <- function(x,
 #' @param ncol number of legend columns
 #' @param ... pars for legend
 #'
-#' @return NULL
+#' @return Plot
 #'
 #' @examples
 #' \donttest{
@@ -471,7 +471,7 @@ plot.dmclist <- function(x,
 #' @param resetPar TRUE/FALSE Reset graphical parameters
 #' @param ... additional plot pars
 #'
-#' @return NULL
+#' @return Plot
 #'
 #' @examples
 #' \donttest{
@@ -722,7 +722,7 @@ plot.dmcob <- function(x,
 #' @param resetPar TRUE/FALSE Reset graphical parameters
 #' @param ... additional plot pars
 #'
-#' @return NULL
+#' @return Plot
 #'
 #' @examples
 #' \donttest{
@@ -1046,7 +1046,7 @@ plot.dmcobs <- function(x,
 #' @param resetPar TRUE/FALSE Reset graphical parameters
 #' @param ... additional plot pars
 #'
-#' @return NULL
+#' @return Plot
 #'
 #' @examples
 #' \donttest{

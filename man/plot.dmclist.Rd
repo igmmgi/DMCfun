@@ -44,6 +44,9 @@
 
 \item{...}{pars for legend}
 }
+\value{
+Plot
+}
 \description{
 Plot delta function from multiple dmc simulations (i.e., dmcSims).
 }

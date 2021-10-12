@@ -83,7 +83,6 @@ include squared percentage error ("SPE"), and g-squared statistic ("GS").
 # Code below can exceed CRAN check time limit with <= 2 cores, hence donttest
 # Example 1: Flanker data from Ulrich et al. (2015)
 fit <- dmcFitSubjectDE(flankerData, nTrl = 1000, subjects = c(1, 2))
-# fit <- dmcFitSubjectDE(flankerData, nTrl = 1000, subjects = c(1, 2), numCores = 8)
 plot(fit, flankerData, subject = 1)
 plot(fit, flankerData, subject = 2)
 summary(fit)

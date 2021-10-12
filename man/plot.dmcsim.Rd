@@ -81,6 +81,9 @@ caf, delta, rtCorrect, rtErrors, errorRate, all}
 
 \item{...}{additional plot pars}
 }
+\value{
+Plot
+}
 \description{
 Plot the simulation results from the output of dmcSim. The plot
 can be an overall summary, or individual plots (activation, trials, pdf, cdf,

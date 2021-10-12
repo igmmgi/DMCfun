@@ -74,6 +74,9 @@
 
 \item{...}{additional plot pars}
 }
+\value{
+Plot
+}
 \description{
 Plot results from the output of dmcObservedData. The plot
 can be an overall summary, or individual plots (rtCorrect, errorRate,
