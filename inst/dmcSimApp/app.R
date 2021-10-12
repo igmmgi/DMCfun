@@ -33,6 +33,11 @@ shiny::shinyApp(
     )
   ),
   server = function(input, output) {
+
+    # reset to original options on exit
+    opar <- par(no.readonly = TRUE)
+    on.exit(par(opar))
+
     output$dmcSim <- shiny::renderPlot({
       fullData <- ifelse(input$plottype == 1, TRUE, FALSE)
       xlimDelta <- NULL
