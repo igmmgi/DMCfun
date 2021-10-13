@@ -75,7 +75,7 @@
 \item{...}{additional plot pars}
 }
 \value{
-Plot
+Plot (no return value)
 }
 \description{
 Plot results from the output of dmcObservedData. The plot

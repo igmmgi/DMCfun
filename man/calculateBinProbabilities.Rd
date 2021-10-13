@@ -2,7 +2,7 @@
 % Please edit documentation in R/dmcFit.R
 \name{calculateBinProbabilities}
 \alias{calculateBinProbabilities}
-\title{calculateBinProbabilities: Calculate bin probabilities in observed data}
+\title{calculateBinProbabilities}
 \usage{
 calculateBinProbabilities(resOb)
 }

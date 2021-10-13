@@ -16,7 +16,7 @@ addErrorBars(xpos, ypos, errorSize, arrowSize = 0.1)
 \item{arrowSize}{Width of the errorbar arrow}
 }
 \value{
-Plot
+Plot (no return value)
 }
 \description{
 Add error bars to current plot (uses base arrows function).

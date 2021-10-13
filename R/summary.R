@@ -6,7 +6,7 @@
 #' @param digits Number of digits in the output
 #' @param ... pars
 #'
-#' @return list
+#' @return DataFrame
 #'
 #' @examples
 #' \donttest{

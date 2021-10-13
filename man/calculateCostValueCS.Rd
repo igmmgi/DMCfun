@@ -2,8 +2,7 @@
 % Please edit documentation in R/dmcFit.R
 \name{calculateCostValueCS}
 \alias{calculateCostValueCS}
-\title{calculateCostValueCS: Calculate chi-square (CS) statistic from reaction times for both correct and
-incorrect trials}
+\title{calculateCostValueCS}
 \usage{
 calculateCostValueCS(resTh, resOb)
 }
@@ -11,13 +10,13 @@ calculateCostValueCS(resTh, resOb)
 \item{resTh}{list containing simulation $sim values (output from dmcSim) for rts_comp, rts_incomp,
 errs_comp, errs_incomp}
 
-\item{resOb}{list containing raw observed data (see dmcObservedData with keepRaw = TRUE}
+\item{resOb}{list containing raw observed data (see dmcObservedData with keepRaw = TRUE)}
 }
 \value{
 cost value (CS)
 }
 \description{
-Calculate cost value (fit) from correct and incorrect RT data.
+Calculate cost value (fit) using chi-square (CS) from correct and incorrect RT data.
 }
 \examples{
 # Example 1:

@@ -2,7 +2,7 @@
 % Please edit documentation in R/dmcData.R
 \name{calculateDelta}
 \alias{calculateDelta}
-\title{calculateDelta: Calculate delta function}
+\title{calculateDelta}
 \usage{
 calculateDelta(
   dat,
@@ -28,7 +28,7 @@ compatibility, and RT data (in ms).}
 \item{quantileType}{Argument (1-9) from R function quantile specifying the algorithm (?quantile)}
 }
 \value{
-DataFrame
+calculateDelta returns a DataFrame with distributional delta analysis data (Bin, comp, incomp, meanBin, Effect)
 }
 \description{
 Calculate delta plot. Here RTs are split into n bins (Default: 5) for compatible and

@@ -35,7 +35,7 @@
 #' @param resetPar TRUE/FALSE Reset graphical parameters
 #' @param ... additional plot pars
 #'
-#' @return Plot
+#' @return Plot (no return value)
 #'
 #' @examples
 #' \donttest{
@@ -352,7 +352,7 @@ plot.dmcsim <- function(x,
 #' @param xlim xlimit for delta plot
 #' @param figType delta (default), deltaErrors
 #' @param xlab x-label
-#' @param col # color range start/end color
+#' @param col color range start/end color
 #' @param lineType line type ("l", "b", "o") for delta plot
 #' @param legend TRUE/FALSE Show legend
 #' @param legendPos legend position
@@ -360,7 +360,7 @@ plot.dmcsim <- function(x,
 #' @param ncol number of legend columns
 #' @param ... pars for legend
 #'
-#' @return Plot
+#' @return Plot (no return value)
 #'
 #' @examples
 #' \donttest{
@@ -471,7 +471,7 @@ plot.dmclist <- function(x,
 #' @param resetPar TRUE/FALSE Reset graphical parameters
 #' @param ... additional plot pars
 #'
-#' @return Plot
+#' @return Plot (no return value)
 #'
 #' @examples
 #' \donttest{
@@ -722,7 +722,7 @@ plot.dmcob <- function(x,
 #' @param resetPar TRUE/FALSE Reset graphical parameters
 #' @param ... additional plot pars
 #'
-#' @return Plot
+#' @return Plot (no return value)
 #'
 #' @examples
 #' \donttest{
@@ -732,7 +732,6 @@ plot.dmcob <- function(x,
 #'      cols = c("black", "darkgrey"), pchs = c(1, 2), legend = FALSE, resetPar = FALSE)
 #' legend(200, 80, legend = c("Flanker Task", "Simon Task"),
 #'        col = c("black", "darkgrey"), lty = c(1, 1))
-#'
 #' }
 #' @export
 plot.dmcobs <- function(x,
@@ -1046,7 +1045,7 @@ plot.dmcobs <- function(x,
 #' @param resetPar TRUE/FALSE Reset graphical parameters
 #' @param ... additional plot pars
 #'
-#' @return Plot
+#' @return Plot (no return value)
 #'
 #' @examples
 #' \donttest{
@@ -1093,8 +1092,7 @@ plot.dmcfit <- function(x,
   }
 
   figType <- tolower(figType)
-  figTypes <- c("summary", "all", "rtcorrect", "errorrate",
-                "rterrors", "cdf", "caf", "delta")
+  figTypes <- c("summary", "all", "rtcorrect", "errorrate", "rterrors", "cdf", "caf", "delta")
   if (length(figType) > 1 || !figType %in% figTypes) {
     stop("figType must be one of:", paste0(figTypes, collapse = ", "))
   }
@@ -1249,7 +1247,7 @@ plot.dmcfit <- function(x,
 #' @param errorSize +- size of error bars
 #' @param arrowSize Width of the errorbar arrow
 #'
-#' @return Plot
+#' @return Plot (no return value)
 #'
 #' @examples
 #' # Example 1

@@ -82,7 +82,7 @@ caf, delta, rtCorrect, rtErrors, errorRate, all}
 \item{...}{additional plot pars}
 }
 \value{
-Plot
+Plot (no return value)
 }
 \description{
 Plot the simulation results from the output of dmcSim. The plot

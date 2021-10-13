@@ -1,4 +1,4 @@
-#' @title dmcFit: Fit DMC to aggregated data using optim (Nelder-Mead)
+#' @title dmcFit
 #'
 #' @description Fit theoretical data generated from dmcSim to observed data by
 #' minimizing the root-mean-square error ("RMSE") between a weighted combination
@@ -42,16 +42,14 @@
 #' @param optimControl Additional control parameters passed to optim (see optim details section)
 #' @param numCores Number of cores to use
 #'
-#' @return dmcfit
+#' @return dmcfit returns an object of class "dmcfit" with the following components:
 #'
-#' The function returns a list with the relevant results from the fitting procedure. The list
-#' is accessed with obj$name with the the following:
-#' \item{obj$means}{Condition means for reaction time and error rate}
-#' \item{obj$caf}{Accuracy per bin for compatible and incompatible trials}
-#' \item{obj$delta}{Mean RT and compatibility effect per bin}
-#' \item{obj$sim}{Individual trial data points (RTs for all trial types e.g., correct/error trials) and activation
-#' vectors from the simulation}
-#' \item{obj$par}{The fitted model parameters + final cost value of the fit}
+#' \item{sim}{Individual trial data points (RTs for all trial types e.g., correct/error trials) and activation vectors from the simulation}
+#' \item{summary}{Condition means for reaction time and error rate}
+#' \item{caf}{Conditional Accuracy Function (CAF) data per bin}
+#' \item{delta}{DataFrame with distributional delta analysis data correct trials (Bin, meanComp, meanIncomp, meanBin, meanEffect)}
+#' \item{delta_errs}{DataFrame with distributional delta analysis data incorrect trials (Bin, meanComp, meanIncomp, meanBin, meanEffect)}
+#' \item{par}{The fitted model parameters + final cost value of the fit}
 #'
 #' @examples
 #' \donttest{
@@ -264,7 +262,7 @@ dmcFit <- function(resOb,
 }
 
 
-#' @title dmcFitDE: Fit DMC to aggregated data using R-package DEoptim (Differential Evolution)
+#' @title dmcFitDE
 #'
 #' @description Fit theoretical data generated from dmcSim to observed data by
 #' minimizing the root-mean-square error (RMSE) between a weighted combination
@@ -296,13 +294,14 @@ dmcFit <- function(resOb,
 #' @param deControl Additional control parameters passed to DEoptim (see DEoptim.control)
 #' @param numCores Number of cores to use
 #'
-#' @return dmcfit
+#' @return dmcfit returns an object of class "dmcfit" with the following components:
 #'
-#' \item{obj$means}{Condition means for reaction time and error rate}
-#' \item{obj$caf}{Accuracy per bin for compatible and incompatible trials}
-#' \item{obj$delta}{Mean RT and compatibility effect per bin}
-#' \item{obj$sim}{Individual trial data points (RTs for all trial types e.g., correct/error trials) and activation}
-#' \item{obj$par}{The fitted model parameters + final cost value of the fit}
+#' \item{sim}{Individual trial data points (RTs for all trial types e.g., correct/error trials) and activation vectors from the simulation}
+#' \item{summary}{Condition means for reaction time and error rate}
+#' \item{caf}{Conditional Accuracy Function (CAF) data per bin}
+#' \item{delta}{DataFrame with distributional delta analysis data correct trials (Bin, meanComp, meanIncomp, meanBin, meanEffect)}
+#' \item{delta_errs}{DataFrame with distributional delta analysis data incorrect trials (Bin, meanComp, meanIncomp, meanBin, meanEffect)}
+#' \item{par}{The fitted model parameters + final cost value of the fit}
 #'
 #' @examples
 #' \donttest{
@@ -451,7 +450,7 @@ dmcFitDE <- function(resOb,
 }
 
 
-#' @title dmcFitSubject: Fit DMC to individual participant data using optim (Nelder-Mead)
+#' @title dmcFitSubject
 #'
 #' @description Fit theoretical data generated from dmcSim to observed data by
 #' minimizing the root-mean-square error ("RMSE") between a weighted combination
@@ -496,7 +495,7 @@ dmcFitDE <- function(resOb,
 #' @param optimControl Additional control parameters passed to optim (see optim details section)
 #' @param numCores Number of cores to use
 #'
-#' @return dmcfit_subject List of dmcfit per subject fitted (see dmcFit)
+#' @return dmcFitSubject returns a list of objects of class "dmcfit"
 #'
 #' @examples
 #' \donttest{
@@ -590,9 +589,7 @@ dmcFitSubject <- function(resOb,
 }
 
 
-#' @title dmcFitSubjectDE: Fit DMC to individual participant data using R-package DEoptim.
-#'
-#' @title dmcFitDE: Fit DMC to aggregated data using R-package DEoptim (Differential Evolution)
+#' @title dmcFitSubjectDE
 #'
 #' @description Fit theoretical data generated from dmcSim to observed data by
 #' minimizing the root-mean-square error (RMSE) between a weighted combination
@@ -625,7 +622,7 @@ dmcFitSubject <- function(resOb,
 #' @param deControl Additional control parameters passed to DEoptim (see DEoptim.control)
 #' @param numCores Number of cores to use
 #'
-#' @return dmcfit_subject List of dmcfit per subject fitted (see dmcFitDM)
+#' @return dmcFitSubjectDE returns a list of objects of class "dmcfit"
 #'
 #' @examples
 #' \donttest{
@@ -704,29 +701,24 @@ dmcFitSubjectDE <- function(resOb,
 }
 
 
-#' @title mean.dmcfit: Return mean simulation results from dmcFitSubject
+#' @title mean.dmcfit
 #'
 #' @description Aggregate simulation results from dmcFitSubject/dmcFitSubjectDE.
 #'
 #' @param x Output from dmcFitSubject/dmcFitSubjectDE
 #' @param ... pars
 #'
-#' @return dmcfit
-#'
-#' The function returns a list with the relevant aggregated results from dmcFitSubject/dmcFitSubjectDE. The list
-#' is accessed with obj$name and so on with the the following:
-#' \item{obj$means}{means}
-#' \item{obj$delta}{delta}
-#' \item{obj$caf}{caf}
-#' \item{obj$prms}{par}
+#' @return mean.dmcfit return an object of class "dmcfit" with the following components:
+#' \item{summary}{DataFrame within aggregated subject data (rtCor, sdRtCor, seRtCor, perErr, sdPerErr, sePerErr, rtErr, sdRtErr, seRtErr) for compatibility condition}
+#' \item{delta}{DataFrame within aggregated subject distributional delta analysis data correct trials (Bin, meanComp, meanIncomp, meanBin, meanEffect, sdEffect, seEffect)}
+#' \item{caf}{DataFrame within aggregated subject conditional accuracy function (CAF) data (Bin, accPerComp, accPerIncomp, meanEffect, sdEffect, seEffect)}
+#' \item{par}{The fitted model parameters + final cost value of the fit}
 #'
 #' @examples
 #' \donttest{
 #' # Code below can exceed CRAN check time limit with <= 2 cores, hence donttest
 #' # Example 1: Fit individual data then aggregate
 #' fitSubjects <- dmcFitSubject(flankerData, nTrl = 1000, subjects = c(1, 2))
-#' plot(fitSubjects, flankerData, subject = 1)
-#' summary(fitSubjects)
 #' fitAgg <- mean(fitSubjects)
 #' plot(fitAgg, flankerData)
 #' }
@@ -804,9 +796,9 @@ minimizeCostValue <- function(x,
   return(cost)
 }
 
-#' @title calculateCostValueRMSE: Calculate RMSE from RT and error data
+#' @title calculateCostValueRMSE
 #'
-#' @description Calculate cost value (fit) from combination of RT and error rate.
+#' @description Calculate cost value (fit) using root-mean-square error (RMSE) from a combination of RT and error rate.
 #'
 #' @param resTh list containing caf values for comp/incomp conditions (nbins * 4 columns) and
 #' delta values for comp/incomp conditions (nbins * 5 columns). See output from dmcSim (.$caf).
@@ -840,9 +832,9 @@ calculateCostValueRMSE <- function(resTh, resOb) {
   return(costValue)
 }
 
-#' @title calculateCostValueSPE: Calculate squared percentage error (SPE) from RT and error data
+#' @title calculateCostValueSPE
 #'
-#' @description Calculate cost value (fit) from combination of RT and error rate.
+#' @description Calculate cost value (fit) using squared percentage errror (SPE) from combination of RT and error rate.
 #'
 #' @param resTh list containing caf values for comp/incomp conditions (nbins * 4 columns) and
 #' delta values for comp/incomp conditions (nbins * 5 columns). See output from dmcSim (.$caf).
@@ -875,14 +867,13 @@ calculateCostValueSPE <- function(resTh, resOb) {
 }
 
 
-#' @title calculateCostValueCS: Calculate chi-square (CS) statistic from reaction times for both correct and
-#' incorrect trials
+#' @title calculateCostValueCS
 #'
-#' @description Calculate cost value (fit) from correct and incorrect RT data.
+#' @description Calculate cost value (fit) using chi-square (CS) from correct and incorrect RT data.
 #'
 #' @param resTh list containing simulation $sim values (output from dmcSim) for rts_comp, rts_incomp,
 #' errs_comp, errs_incomp
-#' @param resOb list containing raw observed data (see dmcObservedData with keepRaw = TRUE
+#' @param resOb list containing raw observed data (see dmcObservedData with keepRaw = TRUE)
 #'
 #' @return cost value (CS)
 #'
@@ -915,14 +906,13 @@ cs <- function(th, ob) {
 
 
 
-#' @title calculateCostValueGS: Calculate likelihood-ratio chi-square statistic (GS) statistic from reaction times
-#' for both correct and incorrect trials
+#' @title calculateCostValueGS
 #'
-#' @description Calculate cost value (fit) from correct and incorrect RT data.
+#' @description Calculate cost value (fit) using likelihood-ratio chi-square statistic (GS) from correct and incorrect RT data.
 #'
 #' @param resTh list containing simulation $sim values (output from dmcSim) for rts_comp, rts_incomp,
 #' errs_comp, errs_incomp
-#' @param resOb list containing raw observed data (see dmcObservedData with keepRaw = TRUE
+#' @param resOb list containing raw observed data (see dmcObservedData with keepRaw = TRUE)
 #'
 #' @return cost value (GS)
 #'
@@ -978,7 +968,7 @@ costValueFunction <- function(costFunction) {
   stop("costFunction must be one of 'rmse', 'spe', 'gs', 'cs', or custom function")
 }
 
-#' @title calculateBinProbabilities: Calculate bin probabilities in observed data
+#' @title calculateBinProbabilities
 #'
 #' @description Calculate bin probabilities in observed data
 #'

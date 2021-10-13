@@ -81,7 +81,7 @@
 \item{...}{additional plot pars}
 }
 \value{
-Plot
+Plot (no return value)
 }
 \description{
 Plot delta results from the output of dmcObservedData. The plot
@@ -96,6 +96,5 @@ plot(dat, figType = "delta", xlimDelta = c(200, 700), ylimDelta = c(-20, 80),
      cols = c("black", "darkgrey"), pchs = c(1, 2), legend = FALSE, resetPar = FALSE)
 legend(200, 80, legend = c("Flanker Task", "Simon Task"),
        col = c("black", "darkgrey"), lty = c(1, 1))
-
 }
 }

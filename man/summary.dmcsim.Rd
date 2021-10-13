@@ -14,7 +14,7 @@
 \item{...}{pars}
 }
 \value{
-list
+DataFrame
 }
 \description{
 Summary of the overall results from dmcSim

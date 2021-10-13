@@ -2,7 +2,7 @@
 % Please edit documentation in R/dmcSim.R
 \name{dmcSim}
 \alias{dmcSim}
-\title{dmcSim: Run dmc simulation}
+\title{dmcSim}
 \usage{
 dmcSim(
   amp = 20,
@@ -97,16 +97,13 @@ function and/or individual trials}
 \item{seedValue}{1}
 }
 \value{
-dmcsim
-
-The function returns a list with the relevant results from the simulation. The list
-is accessed with obj$name with the the following:
-\item{obj$means}{Condition means for reaction time and error rate}
-\item{obj$caf}{Accuracy per bin for compatible and incompatible trials}
-\item{obj$delta}{Mean RT and compatibility effect per bin}
-\item{obj$sim}{Individual trial data points (reaction times/error) and activation vectors from simulation}
-\item{obj$trials}{Example individual trial timecourse for n compatible and incompatible trials}
-\item{obj$prms}{The input parameters used in the simulation}
+dmcSim returns an object of class "dmcsim" with the following components:
+\item{sim}{Individual trial data points (reaction times/error) and activation vectors from simulation}
+\item{summary}{Condition means for reaction time and error rate}
+\item{caf}{Accuracy per bin for compatible and incompatible trials}
+\item{delta}{Mean RT and compatibility effect per bin}
+\item{delta_errs}{Mean RT and compatibility effect per bin}
+\item{prms}{The input parameters used in the simulation}
 }
 \description{
 DMC model simulation detailed in  Ulrich, R., Schroeter, H., Leuthold, H., & Birngruber, T. (2015).

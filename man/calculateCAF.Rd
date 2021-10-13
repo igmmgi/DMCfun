@@ -2,7 +2,7 @@
 % Please edit documentation in R/dmcData.R
 \name{calculateCAF}
 \alias{calculateCAF}
-\title{calculateCAF: Calculate conditional accuracy function (CAF).}
+\title{calculateCAF}
 \usage{
 calculateCAF(
   dat,
@@ -25,7 +25,7 @@ compatibility, RT data (in ms) and an Error column.}
 \item{errorCoding}{Coding for errors Default: c(0, 1))}
 }
 \value{
-DataFrame
+calculateCAF returns a DataFrame with conditional accuracy function (CAF) data (Bin, comp, incomp, effect)
 }
 \description{
 Calculate conditional accuracy function (CAF).

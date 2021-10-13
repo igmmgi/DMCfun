@@ -1,4 +1,4 @@
-#' @title dmcSim: Run dmc simulation
+#' @title dmcSim
 #'
 #' @description DMC model simulation detailed in  Ulrich, R., Schroeter, H., Leuthold, H., & Birngruber, T. (2015).
 #' Automatic and controlled stimulus processing in conflict tasks: Superimposed diffusion processes and delta functions.
@@ -35,16 +35,13 @@
 #' @param setSeed TRUE/FALSE If true, set seed to seed value
 #' @param seedValue 1
 #'
-#' @return dmcsim
-#'
-#' The function returns a list with the relevant results from the simulation. The list
-#' is accessed with obj$name with the the following:
-#' \item{obj$means}{Condition means for reaction time and error rate}
-#' \item{obj$caf}{Accuracy per bin for compatible and incompatible trials}
-#' \item{obj$delta}{Mean RT and compatibility effect per bin}
-#' \item{obj$sim}{Individual trial data points (reaction times/error) and activation vectors from simulation}
-#' \item{obj$trials}{Example individual trial timecourse for n compatible and incompatible trials}
-#' \item{obj$prms}{The input parameters used in the simulation}
+#' @return dmcSim returns an object of class "dmcsim" with the following components:
+#' \item{sim}{Individual trial data points (reaction times/error) and activation vectors from simulation}
+#' \item{summary}{Condition means for reaction time and error rate}
+#' \item{caf}{Accuracy per bin for compatible and incompatible trials}
+#' \item{delta}{Mean RT and compatibility effect per bin}
+#' \item{delta_errs}{Mean RT and compatibility effect per bin}
+#' \item{prms}{The input parameters used in the simulation}
 #'
 #' @examples
 #' \donttest{
@@ -176,7 +173,7 @@ dmcSim <- function(amp            = 20,
 #' @param printInputArgs Print DMC input arguments to console
 #' @param printResults Print DMC output to console
 #'
-#' @return list of dmcsim
+#' @return dmcSims returns a list of objects of class "dmcsim"
 #'
 #' @examples
 #' \donttest{
@@ -224,6 +221,21 @@ dmcSims <- function(params, printInputArgs = FALSE, printResults = FALSE) {
   return(dmc)
 
 }
+
+
+#' @title dmcSimApp
+#'
+#' @description Shiny interface to function dmcSim
+#'
+#' @return Shiny app
+#'
+#' @examples
+#' \donttest{
+#' dmcSimApp()
+#' }
+#'
+#' @return Shiny App
+#'
 
 #' A shiny app allowing interactive exploration of DMC parameters
 dmcSimApp <- function() {

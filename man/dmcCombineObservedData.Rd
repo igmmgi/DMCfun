@@ -2,7 +2,7 @@
 % Please edit documentation in R/dmcData.R
 \name{dmcCombineObservedData}
 \alias{dmcCombineObservedData}
-\title{dmcCombineObservedData: Combine results from dmcObservedData}
+\title{dmcCombineObservedData}
 \usage{
 dmcCombineObservedData(...)
 }
@@ -10,7 +10,7 @@ dmcCombineObservedData(...)
 \item{...}{Any number of outputs from dmcObservedData}
 }
 \value{
-dmcobs
+dmcCombineObservedData returns a list of objects of class "dmcob"
 }
 \description{
 Combine observed datasets

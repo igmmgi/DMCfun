@@ -2,7 +2,7 @@
 % Please edit documentation in R/dmcData.R
 \name{rtDist}
 \alias{rtDist}
-\title{rtDist: Create random RT distribution}
+\title{rtDist}
 \usage{
 rtDist(n = 10000, gaussMean = 600, gaussSD = 50, expRate = 200)
 }

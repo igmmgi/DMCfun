@@ -14,7 +14,7 @@ dmcSims(params, printInputArgs = FALSE, printResults = FALSE)
 \item{printResults}{Print DMC output to console}
 }
 \value{
-list of dmcsim
+dmcSims returns a list of objects of class "dmcsim"
 }
 \description{
 Run dmcSim with range of input parameters.

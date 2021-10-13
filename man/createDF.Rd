@@ -2,7 +2,7 @@
 % Please edit documentation in R/dmcData.R
 \name{createDF}
 \alias{createDF}
-\title{createDF: Create a simulated dataframe}
+\title{createDF}
 \usage{
 createDF(
   nSubjects = 20,
@@ -18,7 +18,7 @@ createDF(
 \item{design}{Factors and levels}
 }
 \value{
-dataframe
+DataFrame with Subject, Factor(s) columns
 }
 \description{
 Create dataframe (see also addDataDF)

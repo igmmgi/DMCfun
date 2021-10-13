@@ -43,7 +43,7 @@ NULL
 NULL
 
 
-#' @title createDF: Create a simulated dataframe
+#' @title createDF
 #'
 #' @description Create dataframe (see also addDataDF)
 #'
@@ -51,7 +51,7 @@ NULL
 #' @param nTrl Number of trials per factor/level for each participant
 #' @param design Factors and levels
 #'
-#' @return dataframe
+#' @return DataFrame with Subject, Factor(s) columns
 #'
 #' @examples
 #' # Example 1
@@ -76,7 +76,7 @@ createDF <- function(nSubjects = 20,
 
 
 
-#' @title addDataDF: Add data to a simuluated dataframe
+#' @title addDataDF
 #'
 #' @description Add simulated ex-gaussian reaction-time (RT) data and
 #' binary error (Error = 1, Correct = 0) data to an R DataFrame. This function
@@ -211,14 +211,16 @@ addDataDF <- function(dat, RT=NULL, Error=NULL) {
 
 
 
-#' @title dmcObservedData: Run standard analyses on observed raw data
+#' @title dmcObservedData
 #'
 #' @description Basic analysis to create data object required for observed data.
 #' Example raw *.txt files are flankerData.txt and simonData.txt. There are four critical columns:
-#' A column containing subject number
-#' A column coding for compatible or incompatible
-#' A column with RT (in ms)
-#' A column indicating of the response was correct
+#' \enumerate{
+#' \item column containing subject number
+#' \item column coding for compatible or incompatible
+#' \item column with RT (in ms)
+#' \item column indicating of the response was correct
+#' }
 #' @param dat A text file(s) containing the observed data or an R DataFrame (see createDF/addDataDF)
 #' @param nCAF The number of CAF bins.
 #' @param nDelta The number of delta bins.
@@ -233,7 +235,15 @@ addDataDF <- function(dat, RT=NULL, Error=NULL) {
 #' @param delim Single character used to separate fields within a record if reading from external text file.
 #' @param skip The number of lines to skip before reading data if reading from external text file.
 #'
-#' @return DataFrame
+#' @return dmcObservedData returns an object of class "dmcob" with the following components:
+#' \item{summarySubject}{DataFrame within individual subject data (rtCor, perErr, rtErr) for compatibility condition}
+#' \item{summary}{DataFrame within aggregated subject data (rtCor, sdRtCor, seRtCor, perErr, sdPerErr, sePerErr, rtErr, sdRtErr, seRtErr) for compatibility condition}
+#' \item{cafSubject}{DataFrame within individual subject conditional accuracy function (CAF) data (Bin, accPerComp, accPerIncomp, meanEffect)}
+#' \item{caf}{DataFrame within aggregated subject conditional accuracy function (CAF) data (Bin, accPerComp, accPerIncomp, meanEffect, sdEffect, seEffect)}
+#' \item{deltaSubject}{DataFrame within individual subject distributional delta analysis data correct trials (Bin, meanComp, meanIncomp, meanBin, meanEffect)}
+#' \item{delta}{DataFrame within aggregated subject distributional delta analysis data correct trials (Bin, meanComp, meanIncomp, meanBin, meanEffect, sdEffect, seEffect)}
+#' \item{deltaErrorsSubject}{DataFrame within individual subject distributional delta analysis data incorrect trials (Bin, meanComp, meanIncomp, meanBin, meanEffect)}
+#' \item{deltaErrors}{DataFrame within aggregated subject distributional delta analysis data incorrect trials (Bin, meanComp, meanIncomp, meanBin, meanEffect, sdEffect, seEffect)}
 #'
 #' @examples
 #' # Example 1
@@ -431,12 +441,12 @@ dmcObservedData <- function(dat,
 
 }
 
-#' @title dmcCombineObservedData: Combine results from dmcObservedData
+#' @title dmcCombineObservedData
 #'
 #' @description Combine observed datasets
 #' @param ... Any number of outputs from dmcObservedData
 #'
-#' @return dmcobs
+#' @return dmcCombineObservedData returns a list of objects of class "dmcob"
 #'
 #' @examples
 #' # Example 1
@@ -454,7 +464,7 @@ dmcCombineObservedData <- function(...) {
 }
 
 
-#' @title calculateCAF: Calculate conditional accuracy function (CAF).
+#' @title calculateCAF
 #'
 #' @description Calculate conditional accuracy function (CAF).
 #' The DataFrame should contain columns defining the participant, compatibility condition,
@@ -469,7 +479,7 @@ dmcCombineObservedData <- function(...) {
 #' @param compCoding Coding for compatibility Default: c("comp", "incomp")
 #' @param errorCoding Coding for errors Default: c(0, 1))
 #'
-#' @return DataFrame
+#' @return calculateCAF returns a DataFrame with conditional accuracy function (CAF) data (Bin, comp, incomp, effect)
 #'
 #' @examples
 #' # Example 1
@@ -537,7 +547,7 @@ calculateCAF <- function(dat,
 }
 
 
-#' @title calculateDelta: Calculate delta function
+#' @title calculateDelta
 #'
 #' @description Calculate delta plot. Here RTs are split into n bins (Default: 5) for compatible and
 #' incompatible trials separately. Mean RT is calculated for each condition in each bin then
@@ -551,7 +561,7 @@ calculateCAF <- function(dat,
 #' @param compCoding Coding for compatibility Default: c("comp", "incomp")
 #' @param quantileType Argument (1-9) from R function quantile specifying the algorithm (?quantile)
 #'
-#' @return DataFrame
+#' @return calculateDelta returns a DataFrame with distributional delta analysis data (Bin, comp, incomp, meanBin, Effect)
 #'
 #' @examples
 #' # Example 1
@@ -630,7 +640,7 @@ calculateDelta <- function(dat,
 
 
 
-#' @title rtDist: Create random RT distribution
+#' @title rtDist
 #'
 #' @description Returns value(s) from a distribution appropriate to simulate reaction times.
 #' The distribution is a combined exponential and gaussian distribution called
@@ -662,7 +672,7 @@ rtDist <- function(n=10000, gaussMean=600, gaussSD=50, expRate=200) {
 }
 
 
-#' @title errDist: Create random binary vector
+#' @title errDist
 #'
 #' @description Returns a random vector of 0's (correct) and 1's (incorrect) with
 #' defined proportions (default = 10\% errors).

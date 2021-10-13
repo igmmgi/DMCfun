@@ -2,7 +2,7 @@
 % Please edit documentation in R/dmcFit.R
 \name{dmcFitSubject}
 \alias{dmcFitSubject}
-\title{dmcFitSubject: Fit DMC to individual participant data using optim (Nelder-Mead)}
+\title{dmcFitSubject}
 \usage{
 dmcFitSubject(
   resOb,
@@ -94,7 +94,7 @@ squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS"
 \item{numCores}{Number of cores to use}
 }
 \value{
-dmcfit_subject List of dmcfit per subject fitted (see dmcFit)
+dmcFitSubject returns a list of objects of class "dmcfit"
 }
 \description{
 Fit theoretical data generated from dmcSim to observed data by

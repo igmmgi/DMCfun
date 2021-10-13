@@ -2,7 +2,7 @@
 % Please edit documentation in R/dmcFit.R
 \name{mean.dmcfit}
 \alias{mean.dmcfit}
-\title{mean.dmcfit: Return mean simulation results from dmcFitSubject}
+\title{mean.dmcfit}
 \usage{
 \method{mean}{dmcfit}(x, ...)
 }
@@ -12,14 +12,11 @@
 \item{...}{pars}
 }
 \value{
-dmcfit
-
-The function returns a list with the relevant aggregated results from dmcFitSubject/dmcFitSubjectDE. The list
-is accessed with obj$name and so on with the the following:
-\item{obj$means}{means}
-\item{obj$delta}{delta}
-\item{obj$caf}{caf}
-\item{obj$prms}{par}
+mean.dmcfit return an object of class "dmcfit" with the following components:
+\item{summary}{DataFrame within aggregated subject data (rtCor, sdRtCor, seRtCor, perErr, sdPerErr, sePerErr, rtErr, sdRtErr, seRtErr) for compatibility condition}
+\item{delta}{DataFrame within aggregated subject distributional delta analysis data correct trials (Bin, meanComp, meanIncomp, meanBin, meanEffect, sdEffect, seEffect)}
+\item{caf}{DataFrame within aggregated subject conditional accuracy function (CAF) data (Bin, accPerComp, accPerIncomp, meanEffect, sdEffect, seEffect)}
+\item{par}{The fitted model parameters + final cost value of the fit}
 }
 \description{
 Aggregate simulation results from dmcFitSubject/dmcFitSubjectDE.
@@ -29,8 +26,6 @@ Aggregate simulation results from dmcFitSubject/dmcFitSubjectDE.
 # Code below can exceed CRAN check time limit with <= 2 cores, hence donttest
 # Example 1: Fit individual data then aggregate
 fitSubjects <- dmcFitSubject(flankerData, nTrl = 1000, subjects = c(1, 2))
-plot(fitSubjects, flankerData, subject = 1)
-summary(fitSubjects)
 fitAgg <- mean(fitSubjects)
 plot(fitAgg, flankerData)
 }

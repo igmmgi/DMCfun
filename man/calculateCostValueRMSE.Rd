@@ -2,7 +2,7 @@
 % Please edit documentation in R/dmcFit.R
 \name{calculateCostValueRMSE}
 \alias{calculateCostValueRMSE}
-\title{calculateCostValueRMSE: Calculate RMSE from RT and error data}
+\title{calculateCostValueRMSE}
 \usage{
 calculateCostValueRMSE(resTh, resOb)
 }
@@ -17,7 +17,7 @@ delta values for comp/incomp conditions (nbins * 5 columns). See output from dmc
 cost value (RMSE)
 }
 \description{
-Calculate cost value (fit) from combination of RT and error rate.
+Calculate cost value (fit) using root-mean-square error (RMSE) from a combination of RT and error rate.
 }
 \examples{
 # Example 1:

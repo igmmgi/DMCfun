@@ -2,7 +2,7 @@
 % Please edit documentation in R/dmcFit.R
 \name{calculateCostValueSPE}
 \alias{calculateCostValueSPE}
-\title{calculateCostValueSPE: Calculate squared percentage error (SPE) from RT and error data}
+\title{calculateCostValueSPE}
 \usage{
 calculateCostValueSPE(resTh, resOb)
 }
@@ -17,7 +17,7 @@ delta values for comp/incomp conditions (nbins * 5 columns). See output from dmc
 cost value (SPE)
 }
 \description{
-Calculate cost value (fit) from combination of RT and error rate.
+Calculate cost value (fit) using squared percentage errror (SPE) from combination of RT and error rate.
 }
 \examples{
 # Example 1:
