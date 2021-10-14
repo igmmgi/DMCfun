@@ -7,18 +7,8 @@
 dmcSimApp()
 }
 \value{
-Shiny app
-
 Shiny App
-
-A shiny app allowing interactive exploration of DMC parameters
 }
 \description{
-Shiny interface to function dmcSim
-}
-\examples{
-\donttest{
-dmcSimApp()
-}
-
+A shiny app allowing interactive exploration of DMC parameters
 }
