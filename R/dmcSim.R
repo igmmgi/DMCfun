@@ -224,20 +224,10 @@ dmcSims <- function(params, printInputArgs = FALSE, printResults = FALSE) {
 
 
 #' @title dmcSimApp
-#'
-#' @description Shiny interface to function dmcSim
-#'
-#' @return Shiny app
-#'
-#' @examples
-#' \donttest{
-#' dmcSimApp()
-#' }
-#'
+#' @description A shiny app allowing interactive exploration of DMC parameters
 #' @return Shiny App
 #'
-
-#' A shiny app allowing interactive exploration of DMC parameters
+#' @export
 dmcSimApp <- function() {
   shiny::runApp(system.file('dmcSimApp', package = "DMCfun"))
 }
