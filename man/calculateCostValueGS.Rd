@@ -23,5 +23,5 @@ Calculate cost value (fit) using likelihood-ratio chi-square statistic (GS) from
 resTh <- dmcSim()
 resOb <- flankerData
 resOb <- calculateBinProbabilities(resOb)
-cost <- calculateCostValueGS(resTh, resOb)
+cost  <- calculateCostValueGS(resTh, resOb)
 }

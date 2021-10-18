@@ -53,7 +53,7 @@
 #'
 #' @examples
 #' \donttest{
-#' # Code below can exceed CRAN check time limit with <= 2 cores, hence donttest
+#' # Code below can exceed CRAN check time limit, hence donttest
 #' # Example 1: Flanker data from Ulrich et al. (2015)
 #' fit <- dmcFit(flankerData) # only initial search tau
 #' plot(fit, flankerData)
@@ -305,9 +305,13 @@ dmcFit <- function(resOb,
 #'
 #' @examples
 #' \donttest{
-#' # Code below can exceed CRAN check time limit with <= 2 cores, hence donttest
+#' The code below can exceed CRAN check time limit, hence donttest
+#' NB. The following code when using numCores = 2 (default) takes approx 20 minutes on
+#' a standard desktop, whilst when increasing the number of cores used, (numCores = 12),
+#' the code takes approx 5 minutes.
+#'
 #' # Example 1: Flanker data from Ulrich et al. (2015)
-#' fit <- dmcFitDE(flankerData)
+#' toc(); fit <- dmcFitDE(flankerData); toc()
 #' plot(fit, flankerData)
 #' summary(fit)
 #'
@@ -499,9 +503,9 @@ dmcFitDE <- function(resOb,
 #'
 #' @examples
 #' \donttest{
-#' # Code below can exceed CRAN check time limit with <= 2 cores, hence donttest
+#' # Code below can exceed CRAN check time limit, hence donttest
 #' # Example 1: Flanker data from Ulrich et al. (2015)
-#' fit <- dmcFitSubject(flankerData, nTrl = 1000, subjects = c(1, 2))
+#' fit <- dmcFitSubject(flankerData, nTrl = 1000, subjects = c(1, 2));
 #' plot(fit, flankerData, subject = 1)
 #' plot(fit, flankerData, subject = 2)
 #' summary(fit)
@@ -626,7 +630,7 @@ dmcFitSubject <- function(resOb,
 #'
 #' @examples
 #' \donttest{
-#' # Code below can exceed CRAN check time limit with <= 2 cores, hence donttest
+#' # Code below can exceed CRAN check time limit, hence donttest
 #' # Example 1: Flanker data from Ulrich et al. (2015)
 #' fit <- dmcFitSubjectDE(flankerData, nTrl = 1000, subjects = c(1, 2))
 #' plot(fit, flankerData, subject = 1)
@@ -716,7 +720,7 @@ dmcFitSubjectDE <- function(resOb,
 #'
 #' @examples
 #' \donttest{
-#' # Code below can exceed CRAN check time limit with <= 2 cores, hence donttest
+#' # Code below can exceed CRAN check time limit, hence donttest
 #' # Example 1: Fit individual data then aggregate
 #' fitSubjects <- dmcFitSubject(flankerData, nTrl = 1000, subjects = c(1, 2))
 #' fitAgg <- mean(fitSubjects)
@@ -921,7 +925,7 @@ cs <- function(th, ob) {
 #' resTh <- dmcSim()
 #' resOb <- flankerData
 #' resOb <- calculateBinProbabilities(resOb)
-#' cost <- calculateCostValueGS(resTh, resOb)
+#' cost  <- calculateCostValueGS(resTh, resOb)
 #' @export
 calculateCostValueGS <- function(resTh, resOb) {
   nComp <- nrow(resOb$data[resOb$data$Comp == "comp" & resOb$data$outlier == 0, ])

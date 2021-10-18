@@ -23,7 +23,7 @@ Aggregate simulation results from dmcFitSubject/dmcFitSubjectDE.
 }
 \examples{
 \donttest{
-# Code below can exceed CRAN check time limit with <= 2 cores, hence donttest
+# Code below can exceed CRAN check time limit, hence donttest
 # Example 1: Fit individual data then aggregate
 fitSubjects <- dmcFitSubject(flankerData, nTrl = 1000, subjects = c(1, 2))
 fitAgg <- mean(fitSubjects)
