@@ -84,10 +84,10 @@ include squared percentage error ("SPE"), and g-squared statistic ("GS").
 }
 \examples{
 \donttest{
-The code below can exceed CRAN check time limit, hence donttest
-NB. The following code when using numCores = 2 (default) takes approx 20 minutes on
-a standard desktop, whilst when increasing the number of cores used, (numCores = 12),
-the code takes approx 5 minutes.
+# The code below can exceed CRAN check time limit, hence donttest
+# NB. The following code when using numCores = 2 (default) takes approx 20 minutes on
+# a standard desktop, whilst when increasing the number of cores used, (numCores = 12),
+# the code takes approx 5 minutes.
 
 # Example 1: Flanker data from Ulrich et al. (2015)
 toc(); fit <- dmcFitDE(flankerData); toc()
