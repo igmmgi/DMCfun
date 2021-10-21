@@ -311,7 +311,7 @@ dmcFit <- function(resOb,
 #' # the code takes approx 5 minutes.
 #'
 #' # Example 1: Flanker data from Ulrich et al. (2015)
-#' toc(); fit <- dmcFitDE(flankerData); toc()
+#' fit <- dmcFitDE(flankerData);
 #' plot(fit, flankerData)
 #' summary(fit)
 #'
