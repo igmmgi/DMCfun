@@ -6,6 +6,11 @@ in conflict tasks: Superimposed diffusion processes and delta functions
 
 CRAN https://cran.r-project.org/web/packages/DMCfun/index.html
 
+
+The package is documented in the follwoing paper:
+
+https://www.sciencedirect.com/science/article/pii/S259026012100031X
+
 ## Installation
 
 ``` r
@@ -24,12 +29,12 @@ devtools::install_github("igmmgi/DMCfun")
 dmc <- dmcSim(fullData = TRUE)
 plot(dmc)
 ```
-![alt text](figures/figure1.png)     
+![alt text](figures/figure1.png)
 
 ``` r
 dmc$means
   Comp   rtCor sdRtCor perErr rtErr sdRtErr
-1 comp    440.   105.   0.633  479.   104. 
+1 comp    440.   105.   0.633  479.   104.
 2 incomp  459.    94.8  1.38   406.    95.2
 ```
 
@@ -37,12 +42,12 @@ dmc$means
 dmc <- dmcSim(fullData = TRUE, tau = 150)
 plot(dmc)
 ```
-![alt text](figures/figure2.png)     
+![alt text](figures/figure2.png)
 
 ``` r
 dmc$means
   Comp   rtCor sdRtCor perErr rtErr sdRtErr
-1 comp    421.    90.4  0.259  504.   119. 
+1 comp    421.    90.4  0.259  504.   119.
 2 incomp  484.   103.   2.37   425.    82.7
 ```
 
@@ -51,14 +56,14 @@ params <- list(tau = seq(20, 170, 10))
 dmc <- dmcSims(params)
 plot(dmc, ncol = 2, col = c("red", "green"))
 ```
-![alt text](figures/figure4.png)     
+![alt text](figures/figure4.png)
 
 ## Basic Examples DMC Fit: Real data using optimx (Nelder-Mead)
 ``` r
 fit <- dmcFit(flankerData) # flanker data from Ulrich et al. (2015)
 plot(fit, flankerData)
 ```
-![alt text](figures/figure5.png)     
+![alt text](figures/figure5.png)
 
 ``` r
 summary(fit)
@@ -70,7 +75,7 @@ summary(fit)
 fit <- dmcFit(simonData) # simon data from Ulrich et al. (2015)
 plot(fit, simonData)
 ```
-![alt text](figures/figure6.png)     
+![alt text](figures/figure6.png)
 
 ``` r
     amp   tau  drc  bnds resMean resSD aaShape spShape sigm  RMSE
@@ -82,7 +87,7 @@ plot(fit, simonData)
 fit <- dmcFitDE(flankerData) # flanker data from Ulrich et al. (2015)
 plot(fit, flankerData)
 ```
-![alt text](figures/figure7.png)     
+![alt text](figures/figure7.png)
 
 ``` r
 summary(fit)
@@ -94,12 +99,9 @@ summary(fit)
 fit <- dmcFitDE(simonData) # simon data from Ulrich et al. (2015)
 plot(fit, simonData)
 ```
-![alt text](figures/figure8.png)     
+![alt text](figures/figure8.png)
 
 ``` r
     amp   tau  drc  bnds resMean resSD aaShape spShape sigm RMSE
 1 14.31 42.29 0.55 57.54  308.63 25.98    2.15    3.56    4 8.86
 ```
-
-
-
