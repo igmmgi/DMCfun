@@ -7,7 +7,7 @@ in conflict tasks: Superimposed diffusion processes and delta functions
 CRAN https://cran.r-project.org/web/packages/DMCfun/index.html
 
 
-The package is documented in the follwoing paper:
+The package is presesented in the following paper:
 
 https://www.sciencedirect.com/science/article/pii/S259026012100031X
 
