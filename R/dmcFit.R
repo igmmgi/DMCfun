@@ -583,7 +583,8 @@ dmcFitSubject <- function(resOb,
       rtMax           = rtMax,
       printInputArgs  = printInputArgs,
       printResults    = printResults,
-      optimControl    = optimControl
+      optimControl    = optimControl,
+      numCores        = numCores
     )
   }
 
@@ -695,7 +696,8 @@ dmcFitSubjectDE <- function(resOb,
       costFunction = costFunction,
       spDist       = spDist,
       rtMax        = rtMax,
-      deControl    = deControl
+      deControl    = deControl,
+      numCores     = numCores
     )
   }
 
