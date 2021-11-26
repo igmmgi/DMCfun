@@ -1320,7 +1320,7 @@ plot_caf <- function(x, ylim, xlab, ylab, cols, xaxts, yaxts, cafBinLabels, type
   if (yaxts == "n") {
     axis(side = 2, labels = FALSE)  # keep tick marks
   } else if (yaxts == "s") {
-    axis(2, at = seq(0, 1, 0.2), labels = as.character(seq(0, 1, 0.2)), ...)
+    axis(2, at = seq(ylim[1], ylim[2], 0.2), labels = as.character(seq(ylim[1], ylim[2], 0.2)), ...)
   }
 
   lines(x$caf$accPerIncomp, col = cols[2], type = "o", ...)
