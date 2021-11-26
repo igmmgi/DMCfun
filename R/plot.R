@@ -1134,7 +1134,7 @@ plot.dmcfit <- function(x,
 
   # ylabels
   if (ylabs) {
-    ylabs <- c("RT Correct [ms]", "Error Rate [%]", "RT Error [ms]", "CDF", "CAF", expression(Delta))
+    ylabs <- c("RT Correct [ms]", "Error Rate [%]", "RT Error [ms]", "CDF", "CAF", expression(paste(Delta, " RT [ms]")))
   } else {
     ylabs <- rep("", 6)
   }
