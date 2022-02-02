@@ -12,7 +12,7 @@
 #' for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., startVals = list(amp = 20, tau = 200,
 #' drc = 0.5, bnds = 75, resMean = 300, resSD = 30, aaShape = 2, spShape = 3, spBias = 0, sigm = 4)).
 #' @param minVals Minimum values for the to-be estimated parameters. This is a list with values specified individually
-#' for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., minVals = list(amp = 10, tau = 5, drc = 0.1,
+#' for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., minVals = list(amp = 0, tau = 5, drc = 0.1,
 #' bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, spBias = -20, sigm = 1)).
 #' @param maxVals Maximum values for the to-be estimated parameters. This is a list with values specified individually
 #' for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., maxVals = list(amp = 40, tau = 300, drc = 1.0,
@@ -340,7 +340,7 @@ dmcFitDE <- function(resOb,
                      numCores = 2) {
 
   # default parameter space
-  defaultMinVals <- list(amp = 10, tau = 5, drc = 0.1, bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, spBias = 0, sigm = 4)
+  defaultMinVals <- list(amp = 0, tau = 5, drc = 0.1, bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, spBias = 0, sigm = 4)
   defaultMaxVals <- list(amp = 40, tau = 300, drc = 1.0, bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 0, sigm = 4)
   defaultFixedFit <- list(amp = F, tau = F, drc = F, bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T)
 
