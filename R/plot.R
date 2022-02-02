@@ -1271,6 +1271,9 @@ addErrorBars <- function(xpos, ypos, errorSize, arrowSize = 0.1) {
 plot_rt <- function(x, y, ylim, ylimOffset, xlabs, ylab, yaxts, col, ...) {
   if (is.null(ylim)) {
     ylim <- c(min(y) - ylimOffset, max(y) + ylimOffset)
+    if (any(is.na(ylim))) {
+      ylim <- NULL
+    }
   }
   plot(x, y, type = "o", col = col,
     ylim = ylim, xlim = c(0.5, 2.5),
@@ -1283,6 +1286,9 @@ plot_rt <- function(x, y, ylim, ylimOffset, xlabs, ylab, yaxts, col, ...) {
 plot_er <- function(x, y, ylim, ylimOffset, xlabs, ylab, yaxts, col, ...) {
   if (is.null(ylim)) {
     ylim <- c(0, max(y) + ylimOffset)
+    if (any(is.na(ylim))) {
+      ylim <- NULL
+    }
   }
   plot(x, y, type = "o", col = col,
     ylim = ylim, xlim = c(0.5, 2.5),
@@ -1330,9 +1336,15 @@ plot_caf <- function(x, ylim, xlab, ylab, cols, xaxts, yaxts, cafBinLabels, type
 plot_delta <- function(x, y, xlim, ylim, xlab, ylab, xaxts, yaxts, col, type = "o", ...) {
   if (is.null(xlim)) {
     xlim <- c(min(x) - 50, max(x) + 50)
+    if (any(is.na(xlim))) {
+      xlim <- NULL
+    }
   }
   if (is.null(ylim)) {
     ylim <- c(min(y) - 50, max(y) + 50)
+    if (any(is.na(ylim))) {
+      ylim <- NULL
+    }
   }
   plot(x, y, type = type, col = col,
     ylim = ylim, xlim = xlim, ylab = ylab,  xlab = xlab,
@@ -1345,6 +1357,9 @@ plot_delta_errors <- function(x, y, ylim, xlab, ylab, xaxts, yaxts, col, type = 
 
   if (is.null(ylim)) {
     ylim <- c(min(y) - 5, max(y) + 5)
+    if (any(is.na(ylim))) {
+      ylim <- NULL
+    }
   }
 
   plot(x, y, type = type, col = col,
