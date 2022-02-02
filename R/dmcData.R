@@ -343,6 +343,14 @@ dmcObservedData <- function(dat,
                      perErr  = (nErr / (nErr + nCor)) * 100,
                      .groups = "drop")
 
+  # quick data check
+  problem <- which((datSubject$N < nDelta) | (datSubject$nCor < nDelta))
+  if (length(problem) > 0) {
+    message(paste0("Subject ",
+      sprintf(paste0(datSubject$Subject[problem], collapse = ", ")),
+      " potentially too few trials within dataset!"))
+  }
+
   # aggregate data across subjects
   datAgg <- datSubject %>%
     dplyr::mutate(rtC = rtCor,
@@ -368,10 +376,10 @@ dmcObservedData <- function(dat,
 
   datAgg_caf <- datSubject_caf %>%
     dplyr::group_by(Bin) %>%
-    dplyr::summarize(accPerComp   = mean(comp),
-                     accPerIncomp = mean(incomp),
-                     meanEffect   = mean(effect),
-                     sdEffect     = sd(effect),
+    dplyr::summarize(accPerComp   = mean(comp, na.rm = TRUE),
+                     accPerIncomp = mean(incomp, na.rm = TRUE),
+                     meanEffect   = mean(effect, na.rm = TRUE),
+                     sdEffect     = sd(effect, na.rm = TRUE),
                      seEffect     = sdEffect/sqrt(n()),
                      .groups      = "drop")
 
@@ -391,11 +399,11 @@ dmcObservedData <- function(dat,
 
   datAgg_dec <- datSubject_dec %>%
     dplyr::group_by(Bin) %>%
-    dplyr::summarize(meanComp   = mean(comp),
-                     meanIncomp = mean(incomp),
-                     meanBin    = mean(meanBin),
-                     meanEffect = mean(Effect),
-                     sdEffect   = sd(Effect),
+    dplyr::summarize(meanComp   = mean(comp, na.rm = TRUE),
+                     meanIncomp = mean(incomp, na.rm = TRUE),
+                     meanBin    = mean(meanBin, na.rm = TRUE),
+                     meanEffect = mean(Effect, na.rm = TRUE),
+                     sdEffect   = sd(Effect, na.rm = TRUE),
                      seEffect   = sdEffect / sqrt(n()),
                      .groups    = "drop")
 
