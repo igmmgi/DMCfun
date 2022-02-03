@@ -1118,6 +1118,10 @@ plot.dmcfit <- function(x,
     y$delta   <- y$deltaSubject[y$deltaSubject$Subject == subject, ]
     y$caf     <- y$cafSubject[y$cafSubject$Subject == subject, ]
 
+  } else {
+    if (!"summary" %in% names(x)) {
+      x <- mean(x)
+    }
   }
 
   showFig <- rep(FALSE, 6)
