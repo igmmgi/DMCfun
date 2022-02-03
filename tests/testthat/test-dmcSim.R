@@ -100,8 +100,8 @@ test_that("dmcSim7", {
   dmc <- dmcSim(pDelta = c(10, 30, 50, 70, 90))
   testthat::expect_equal(nrow(dmc$delta), 5)
 
-  dmc <- dmcSim(pDelta = seq(10, 90, 10), tDelta = 2)
-  testthat::expect_equal(nrow(dmc$delta), 10)
+  dmc <- dmcSim(pDelta = seq(10, 90, 10))
+  testthat::expect_equal(nrow(dmc$delta), 9)
 
 })
 
