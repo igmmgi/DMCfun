@@ -28,7 +28,7 @@
 #' only searches the tau space.
 #' @param nCAF The number of CAF bins.
 #' @param nDelta The number of delta bins.
-#' @param pDelta An alternative option to nDelta by directly specifying required percentile values (vector of values 0-100)
+#' @param pDelta An alternative option to nDelta (tDelta = 1 only) by directly specifying required percentile values (vector of values 0-100)
 #' @param tDelta The type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)
 #' @param costFunction The cost function to minimise: root mean square error ("RMSE": default),
 #' squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")
@@ -282,7 +282,7 @@ dmcFit <- function(resOb,
 #' bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T))
 #' @param nCAF The number of CAF bins.
 #' @param nDelta The number of delta bins.
-#' @param pDelta An alternative option to nDelta by directly specifying required percentile values (vector of values 0-100)
+#' @param pDelta An alternative option to nDelta (tDelta = 1 only) by directly specifying required percentile values (vector of values 0-100)
 #' @param tDelta The type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)
 #' @param costFunction The cost function to minimise: root mean square error ("RMSE": default),
 #' squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")
@@ -484,7 +484,7 @@ dmcFitDE <- function(resOb,
 #' only searches the tau space.
 #' @param nCAF Number of CAF bins.
 #' @param nDelta Number of delta bins.
-#' @param pDelta An alternative option to nDelta by directly specifying required percentile values (vector of values 0-100)
+#' @param pDelta An alternative option to nDelta (tDelta = 1 only) by directly specifying required percentile values (vector of values 0-100)
 #' @param tDelta The type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)
 #' @param costFunction The cost function to minimise: root mean square error ("RMSE": default),
 #' squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")
@@ -505,6 +505,7 @@ dmcFitDE <- function(resOb,
 #' \donttest{
 #' # Code below can exceed CRAN check time limit, hence donttest
 #' # Example 1: Flanker data from Ulrich et al. (2015)
+#' fit <- dmcFitSubject(flankerData, nTrl = 1000, subjects = c(1, 2));
 #' fit <- dmcFitSubject(flankerData, nTrl = 1000, subjects = c(1, 2));
 #' plot(fit, flankerData, subject = 1)
 #' plot(fit, flankerData, subject = 2)
@@ -614,7 +615,7 @@ dmcFitSubject <- function(resOb,
 #' bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T))
 #' @param nCAF The number of CAF bins.
 #' @param nDelta The number of delta bins.
-#' @param pDelta An alternative option to nDelta by directly specifying required percentile values (vector of values 0-100)
+#' @param pDelta An alternative option to nDelta (tDelta = 1 only) by directly specifying required percentile values (vector of values 0-100)
 #' @param tDelta The type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)
 #' @param costFunction The cost function to minimise: root mean square error ("RMSE": default),
 #' squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")
