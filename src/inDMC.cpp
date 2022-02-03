@@ -1,5 +1,4 @@
 #include <Rcpp.h>
-// #include <vector>
 #include "inDMC.h"
 
 void print_input_args(Prms &p) {
@@ -8,4 +7,3 @@ void print_input_args(Prms &p) {
       p.amp, p.tau, p.drc, p.bnds, p.resMean, p.resSD, p.aaShape, p.spShape, p.spBias, p.drShape, p.sigm) ;
     if (p.printResults) Rprintf("\n\n");
 }
-
