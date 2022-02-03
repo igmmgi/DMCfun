@@ -27,7 +27,7 @@
 #' function and/or individual trials
 #' @param nTrlData Number of trials to plot
 #' @param nDelta number of delta bins
-#' @param pDelta alternative to nDelta by directly specifying required percentile values (0-100)
+#' @param pDelta alternative to nDelta (tDelta = 1 only) by directly specifying required percentile values (0-100)
 #' @param tDelta type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)
 #' @param nCAF Number of CAF bins
 #' @param printInputArgs TRUE/FALSE
@@ -106,9 +106,7 @@ dmcSim <- function(amp            = 20,
   # change nDelta to length of pDelta if pDelta not empty
   if (length(pDelta) != 0) {
     nDelta <- length(pDelta)
-    if (tDelta == 2) {
-      nDelta <- nDelta + 1
-    }
+    tDelta <- 1
   }
 
   # call to cpp function for the simulation
