@@ -224,7 +224,7 @@ addDataDF <- function(dat, RT=NULL, Error=NULL) {
 #' @param dat A text file(s) containing the observed data or an R DataFrame (see createDF/addDataDF)
 #' @param nCAF The number of CAF bins.
 #' @param nDelta The number of delta bins.
-#' @param pDelta An alternative option to nDelta by directly specifying required percentile values (vector of values 0-100)
+#' @param pDelta An alternative option to nDelta (tDelta = 1 only) by directly specifying required percentile values (vector of values 0-100)
 #' @param tDelta The type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)
 #' @param outlier Outlier limits in ms (e.g., c(200, 1200))
 #' @param columns Name of required columns DEFAULT = c("Subject", "Comp", "RT", "Error")
@@ -383,9 +383,10 @@ dmcObservedData <- function(dat,
                      seEffect     = sdEffect/sqrt(n()),
                      .groups      = "drop")
 
-  # change nDelta to length of pDelta if pDelta not empty
+  # change nDelta to pDelta if pDelta not empty
   if (length(pDelta) != 0) {
-    nDelta <- length(pDelta)
+    nDelta <- pDelta
+    tDelta <- 1
   }
 
   # DELTA
@@ -616,8 +617,12 @@ calculateDelta <- function(dat,
 
   if (tDelta == 1) {
 
-    deltaSeq <- seq(0, 100, length.out = nDelta + 2)
-    deltaSeq <- deltaSeq[2:(length(deltaSeq) - 1)]
+    if (length(nDelta) > 1) {
+      deltaSeq <- nDelta
+    } else {
+      deltaSeq <- seq(0, 100, length.out = nDelta + 2)
+      deltaSeq <- deltaSeq[2:(length(deltaSeq) - 1)]
+    }
 
     dat_delta <- dat %>%
       dplyr::group_by(Subject, Comp) %>%
@@ -632,7 +637,7 @@ calculateDelta <- function(dat,
 
     dat_delta <- dat %>%
       dplyr::group_by(Subject, Comp) %>%
-      dplyr::mutate(Bin = ntile(RT, nDelta + 1)) %>%
+      dplyr::mutate(Bin = ntile(RT, nDelta)) %>%
       dplyr::group_by(Subject, Comp, Bin) %>%
       dplyr::summarize(rt = mean(RT),
                        .groups = "drop")  %>%

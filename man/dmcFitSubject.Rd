@@ -66,7 +66,7 @@ only searches the tau space.}
 
 \item{nDelta}{Number of delta bins.}
 
-\item{pDelta}{An alternative option to nDelta by directly specifying required percentile values (vector of values 0-100)}
+\item{pDelta}{An alternative option to nDelta (tDelta = 1 only) by directly specifying required percentile values (vector of values 0-100)}
 
 \item{tDelta}{The type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)}
 
@@ -106,6 +106,7 @@ include squared percentage error ("SPE"), and g-squared statistic ("GS").
 \donttest{
 # Code below can exceed CRAN check time limit, hence donttest
 # Example 1: Flanker data from Ulrich et al. (2015)
+fit <- dmcFitSubject(flankerData, nTrl = 1000, subjects = c(1, 2));
 fit <- dmcFitSubject(flankerData, nTrl = 1000, subjects = c(1, 2));
 plot(fit, flankerData, subject = 1)
 plot(fit, flankerData, subject = 2)

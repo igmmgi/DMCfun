@@ -82,7 +82,7 @@ function and/or individual trials}
 
 \item{nDelta}{number of delta bins}
 
-\item{pDelta}{alternative to nDelta by directly specifying required percentile values (0-100)}
+\item{pDelta}{alternative to nDelta (tDelta = 1 only) by directly specifying required percentile values (0-100)}
 
 \item{tDelta}{type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)}
 

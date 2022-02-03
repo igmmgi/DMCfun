@@ -41,7 +41,7 @@ for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., s
 drc = 0.5, bnds = 75, resMean = 300, resSD = 30, aaShape = 2, spShape = 3, spBias = 0, sigm = 4)).}
 
 \item{minVals}{Minimum values for the to-be estimated parameters. This is a list with values specified individually
-for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., minVals = list(amp = 10, tau = 5, drc = 0.1,
+for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., minVals = list(amp = 0, tau = 5, drc = 0.1,
 bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, spBias = -20, sigm = 1)).}
 
 \item{maxVals}{Maximum values for the to-be estimated parameters. This is a list with values specified individually
@@ -65,7 +65,7 @@ only searches the tau space.}
 
 \item{nDelta}{The number of delta bins.}
 
-\item{pDelta}{An alternative option to nDelta by directly specifying required percentile values (vector of values 0-100)}
+\item{pDelta}{An alternative option to nDelta (tDelta = 1 only) by directly specifying required percentile values (vector of values 0-100)}
 
 \item{tDelta}{The type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)}
 

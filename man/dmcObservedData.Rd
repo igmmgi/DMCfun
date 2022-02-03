@@ -27,7 +27,7 @@ dmcObservedData(
 
 \item{nDelta}{The number of delta bins.}
 
-\item{pDelta}{An alternative option to nDelta by directly specifying required percentile values (vector of values 0-100)}
+\item{pDelta}{An alternative option to nDelta (tDelta = 1 only) by directly specifying required percentile values (vector of values 0-100)}
 
 \item{tDelta}{The type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)}
 
