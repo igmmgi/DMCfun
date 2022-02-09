@@ -20,6 +20,7 @@
 #' @param fixedFit Fix parameter to starting value. This is a list with bool values specified individually for
 #' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., fixedFit = list(amp = F, tau = F, drc = F,
 #' bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T))
+#' NB. Value if fixed at startVals.
 #' @param fitInitialGrid TRUE/FALSE
 #' @param fitInitialGridN 10 linear steps between parameters min/max values (reduce if searching more than ~2/3 initial parameters)
 #' @param fixedGrid Fix parameter for initial grid search. This is a list with bool values specified individually for
@@ -280,6 +281,7 @@ dmcFit <- function(resOb,
 #' @param fixedFit Fix parameter to starting value. This is a list with bool values specified individually for
 #' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedFit = list(amp = F,  tau = F, drc = F,
 #' bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T))
+#' NB. Value if fixed at midpoint between minVals and maxVals.
 #' @param nCAF The number of CAF bins.
 #' @param nDelta The number of delta bins.
 #' @param pDelta An alternative option to nDelta (tDelta = 1 only) by directly specifying required percentile values (vector of values 0-100)
@@ -476,6 +478,7 @@ dmcFitDE <- function(resOb,
 #' @param fixedFit Fix parameter to starting value. This is a list with bool values specified individually for
 #' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., fixedFit = list(amp = F, tau = F, drc = F,
 #' bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T))
+#' NB. Value if fixed at startVals.
 #' @param fitInitialGrid TRUE/FALSE
 #' @param fitInitialGridN 10 linear steps between parameters min/max values (reduce if searching more than ~2/3 initial parameters)
 #' @param fixedGrid Fix parameter for initial grid search. This is a list with bool values specified individually for
@@ -613,6 +616,7 @@ dmcFitSubject <- function(resOb,
 #' @param fixedFit Fix parameter to starting value. This is a list with bool values specified individually for
 #' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedFit = list(amp = F,  tau = F, drc = F,
 #' bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T))
+#' NB. Value if fixed at midpoint between minVals and maxVals.
 #' @param nCAF The number of CAF bins.
 #' @param nDelta The number of delta bins.
 #' @param pDelta An alternative option to nDelta (tDelta = 1 only) by directly specifying required percentile values (vector of values 0-100)

@@ -50,7 +50,8 @@ bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 20, s
 
 \item{fixedFit}{Fix parameter to starting value. This is a list with bool values specified individually for
 amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., fixedFit = list(amp = F, tau = F, drc = F,
-bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T))}
+bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T))
+NB. Value if fixed at startVals.}
 
 \item{fitInitialGrid}{TRUE/FALSE}
 
