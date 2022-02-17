@@ -1275,9 +1275,12 @@ addErrorBars <- function(xpos, ypos, errorSize, arrowSize = 0.1) {
 plot_rt <- function(x, y, ylim, ylimOffset, xlabs, ylab, yaxts, col, ...) {
   if (is.null(ylim)) {
     ylim <- c(min(y) - ylimOffset, max(y) + ylimOffset)
-    if (any(is.na(ylim))) {
+    if (any(is.na(ylim)) | any(is.nan(ylim))) {
       ylim <- NULL
     }
+  }
+  if (any(is.nan(y))) {
+    y <- c(0, 0)
   }
   plot(x, y, type = "o", col = col,
     ylim = ylim, xlim = c(0.5, 2.5),
