@@ -123,7 +123,7 @@ plot.dmcsim <- function(x,
   # y-labels
   if (ylabs) {
     ylabs <- c("E[X(t)]", "X(t)", "PDF", "CDF", "CAF",
-      expression(paste(Delta, " RT [ms]")), expression(paste(Delta, " ER [%]")),
+      expression(paste(Delta, " RT [ms]")), expression(paste(Delta, " RT [ms]")),
       "RT Correct [ms]", "Error Rate [%]", "RT Error [ms]")
   } else {
     ylabs <- rep("", 10)
@@ -316,7 +316,8 @@ plot.dmcsim <- function(x,
 
   # delta errors
   if (showFig[7]) {
-    plot_delta_errors(x$caf$Bin, x$caf$meanEffect, ylimDelta, xlabs[7], ylabs[7], xaxts, yaxts, cols[1], ...)
+    plot_delta(x$deltaErrors$meanBin, x$deltaErrors$meanEffect, xlimDelta, ylimDelta,
+      xlabs[7], ylabs[7], xaxts, yaxts, cols[1], ...)
   }
 
   # rtCorrect
@@ -412,21 +413,21 @@ plot.dmclist <- function(x,
     }
 
   } else if (tolower(figType) == "deltaerrors") {
-    if (is.null(ylim)) {
-      miny <- min(sapply(x, function(x) min(x$caf$meanEffect)))
-      maxy <- max(sapply(x, function(x) max(x$caf$meanEffect)))
-      ylim <- c(miny - 5, maxy + 5)
+     if (is.null(xlim)) {
+      minx <- min(sapply(x, function(x) min(x$deltaErrors$meanBin)))
+      maxx <- max(sapply(x, function(x) max(x$deltaErrors$meanBin)))
+      xlim <- c(minx - 100, maxx + 100)
     }
-
-    if (xlab == "Time [ms]") {
-      xlab = "Bin"
+    if (is.null(ylim)) {
+      miny <- min(sapply(x, function(x) min(x$deltaErrors$meanEffect)))
+      maxy <- max(sapply(x, function(x) max(x$deltaErrors$meanEffect)))
+      ylim <- c(miny - 10, maxy + 10)
     }
 
     # plot
-    plot(NULL, NULL, ylim = ylim, xlim = c(min(x[[1]]$caf$Bin - 0.5), max(x[[1]]$caf$Bin + 0.5)),
-      ylab = expression(paste(Delta, " ER [%]")), xlab = xlab, ...)
+    plot(NULL, NULL, ylim = ylim, xlim = xlim, ylab = expression(paste(Delta, " RT [ms]")), xlab = xlab, ...)
     for (i in seq_along(x)) {
-      lines(x[[i]]$caf$Bin, x[[i]]$caf$meanEffect, col = cols[i], type = lineType)
+      lines(x[[i]]$deltaErrors$meanBin, x[[i]]$deltaErrors$meanEffect, col = cols[i], type = lineType)
     }
 
   }
@@ -676,15 +677,15 @@ plot.dmcob <- function(x,
     }
   }
 
-  # delta
+  # delta errors
   if (showFig[7]) {
-    plot_delta_errors(x$caf$Bin, x$caf$meanEffect, ylimDeltaErrors,
+    plot_delta(x$deltaErrors$meanBin, x$deltaErrors$meanEffect, ylimDeltaErrors,
       xlabs[7], ylabs[7], xaxts, yaxts, cols[1], ...)
     if (errorBars) {
       errorBarCol <- which(grepl(errorBarType, colnames(x$caf)))
-      addErrorBars(x$caf$Bin,
-        x$caf$meanEffect,
-        x$caf[[errorBarCol]],
+      addErrorBars(x$deltaErrors$meanBin,
+        x$deltaErrors$meanEffect,
+        x$deltaErrors[[errorBarCol]],
         arrowSize = 0.05)
     }
   }
@@ -834,7 +835,7 @@ plot.dmcobs <- function(x,
     par(mar = c(4, 4, 1, 1), mfrow = c(1, 1), ...)
     showFig[1:6] <- TRUE
   } else {
-    showFig[figTypes[2:7] %in% figType] <- TRUE
+    showFig[figTypes[2:6] %in% figType] <- TRUE
   }
 
   # rtCorrect
@@ -1360,21 +1361,22 @@ plot_delta <- function(x, y, xlim, ylim, xlab, ylab, xaxts, yaxts, col, type = "
   axis(side = 2, labels = FALSE)
 }
 
-plot_delta_errors <- function(x, y, ylim, xlab, ylab, xaxts, yaxts, col, type = "o", ...) {
-
-  if (is.null(ylim)) {
-    ylim <- c(min(y) - 5, max(y) + 5)
-    if (any(is.na(ylim))) {
-      ylim <- NULL
-    }
-  }
-
-  plot(x, y, type = type, col = col,
-    ylim = ylim, ylab = ylab,  xlab = xlab,
-    xaxt = xaxts, yaxt = yaxts, ...)
-  axis(side = 1, labels = FALSE)
-  axis(side = 2, labels = FALSE)
-}
+# TO DO! This should be the CAF difference!
+# plot_delta_errors <- function(x, y, ylim, xlab, ylab, xaxts, yaxts, col, type = "o", ...) {
+#
+#   if (is.null(ylim)) {
+#     ylim <- c(min(y) - 5, max(y) + 5)
+#     if (any(is.na(ylim))) {
+#       ylim <- NULL
+#     }
+#   }
+#
+#   plot(x, y, type = type, col = col,
+#     ylim = ylim, ylab = ylab,  xlab = xlab,
+#     xaxt = xaxts, yaxt = yaxts, ...)
+#   axis(side = 1, labels = FALSE)
+#   axis(side = 2, labels = FALSE)
+# }
 
 add_legend <- function(legend, labels, cols, ltys, pchs, position = "bottomright", inset=c(0.05, 0.05), ...) {
   if (is.function(legend)) {

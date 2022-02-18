@@ -412,7 +412,7 @@ dmcObservedData <- function(dat,
     dplyr::group_by(Bin) %>%
     dplyr::summarize(meanComp   = mean(comp, na.rm = TRUE),
                      meanIncomp = mean(incomp, na.rm = TRUE),
-                     meanBin    = mean(Bin, na.rm = TRUE),
+                     meanBin    = mean(meanBin, na.rm = TRUE),
                      meanEffect = mean(Effect, na.rm = TRUE),
                      sdEffect   = sd(Effect, na.rm = TRUE),
                      seEffect   = sdEffect / sqrt(n()),
