@@ -179,8 +179,10 @@ plot.dmcsim <- function(x,
     plot(c(1:x$prms$tmax), x$sim$eq4, type = "l", lty = 2, col = tail(cols, 2)[1],
          ylim = c(-x$prms$bnds - 20, x$prms$bnds + 20),
          xlim = xlimActivation,
-         xlab = xlabs[1], ylab = ylabs[1],
+         xlab = "", ylab = "",
          xaxt = xaxts, yaxt = yaxts, ...)
+    title(xlab = xlabs[1], line = 2)
+    title(ylab = ylabs[1], line = 2)
     if (xaxts == "n") axis(side = 1, labels = FALSE)  # keep tick marks
     if (yaxts == "n") axis(side = 2, labels = FALSE)  # keep tick marks
 
@@ -217,23 +219,19 @@ plot.dmcsim <- function(x,
     plot(NULL, NULL,
          ylim = c(-x$prms$bnds - 20, x$prms$bnds + 20),
          xlim = xlimTrials,
-         xlab = xlabs[2], ylab = ylabs[2],
+         xlab = "", ylab = "",
          xaxt = xaxts, yaxt = yaxts, ...)
+    title(xlab = xlabs[2], line = 2)
+    title(ylab = ylabs[2], line = 2)
     if (xaxts == "n") axis(side = 1, labels = FALSE)  # keep tick marks
     if (yaxts == "n") axis(side = 2, labels = FALSE)  # keep tick marks
 
     # individual trials until bounds
     for (trl in c(1:x$prms$nTrlData)) {
-      boundsHit <- abs(x$trials$comp[[trl]]) >= x$prms$bnds
-      if (any(boundsHit)) {
-        idx <- which(boundsHit)[1]
-        lines(x$trials$comp[[trl]][1:idx], type = "l", col = tail(cols, 2)[1], ...)
-      }
-      boundsHit <- abs(x$trials$incomp[[trl]]) >= x$prms$bnds
-      if (any(boundsHit)) {
-        idx <- which(boundsHit)[1]
-        lines(x$trials$incomp[[trl]][1:idx], type = "l", col = tail(cols, 2)[2], ...)
-      }
+      idx <- min(which(abs(x$trials$comp[[trl]]) >= x$prms$bnds)[1], length(x$trials$comp[[trl]]), na.rm = TRUE)
+      lines(x$trials$comp[[trl]][1:idx], type = "l", col = tail(cols, 2)[1], ...)
+      idx <- min(which(abs(x$trials$incomp[[trl]]) >= x$prms$bnds)[1], length(x$trials$incomp[[trl]]), na.rm = TRUE)
+      lines(x$trials$incomp[[trl]][1:idx], type = "l", col = tail(cols, 2)[2], ...)
     }
 
     # bounds
@@ -254,8 +252,10 @@ plot.dmcsim <- function(x,
     }
 
     plot(density(x$sim$rts_comp), col = tail(cols, 2)[1], main = NA, type = "l",
-         ylim = ylimPDF, xlim = xlimPDF, ylab = ylabs[3], xlab = xlabs[3],
+         ylim = ylimPDF, xlim = xlimPDF, ylab = "", xlab = "",
          xaxt = xaxts, yaxt = "n", ...)
+    title(xlab = xlabs[3], line = 2)
+    title(ylab = ylabs[3], line = 2)
 
     if (xaxts == "n") axis(side = 1, labels = FALSE)  # keep tick marks
     if (yaxts == "n") {
@@ -284,8 +284,10 @@ plot.dmcsim <- function(x,
     }
 
     plot(density_comp$x, cdf_comp, type = "l", col = tail(cols, 2)[1],
-         ylab = ylabs[4], xlab = xlabs[4],
+         ylab = "", xlab = "",
          ylim = c(0, 1), xaxt = xaxts, yaxt = "n", xlim = xlimCDF)
+    title(xlab = xlabs[4], line = 2)
+    title(ylab = ylabs[4], line = 2)
 
     if (xaxts == "n") axis(side = 1, labels = FALSE)  # keep tick marks
     if (yaxts == "n") {
@@ -1312,9 +1314,11 @@ plot_caf <- function(x, ylim, xlab, ylab, cols, xaxts, yaxts, cafBinLabels, type
   }
 
   plot(x$caf$accPerComp, type = type,
-    ylim = ylim, ylab = ylab,  xlab = xlab,
+    ylim = ylim, ylab = "",  xlab = "",
     xaxt = "n",  yaxt = "n",
     col = cols[1], ...)
+  title(xlab = xlab, line = 2)
+  title(ylab = ylab, line = 2)
 
   if (xaxts == "n") {
     axis(side = 1, labels = FALSE)  # keep tick marks
@@ -1355,8 +1359,10 @@ plot_delta <- function(x, y, xlim, ylim, xlab, ylab, xaxts, yaxts, col, type = "
     }
   }
   plot(x, y, type = type, col = col,
-    ylim = ylim, xlim = xlim, ylab = ylab,  xlab = xlab,
+    ylim = ylim, xlim = xlim, ylab = "",  xlab = "",
     xaxt = xaxts, yaxt = yaxts, ...)
+  title(xlab = xlab, line = 2)
+  title(ylab = ylab, line = 2)
   axis(side = 1, labels = FALSE)
   axis(side = 2, labels = FALSE)
 }
