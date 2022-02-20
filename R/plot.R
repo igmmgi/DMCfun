@@ -1190,9 +1190,11 @@ plot.dmcfit <- function(x,
     ypoints <- seq(0, 1, length.out = ndelta + 2)[2:(ndelta + 1)]
     plot(y$delta$meanComp, ypoints, type = "p",
          ylim = c(0, 1), xlim = xlimCDF,
-         ylab = ylabs[4], xlab = xlabs[4],
+         ylab = "", xlab = "",
          yaxt = "n", col = tail(cols, 2)[1],
          xaxt = xaxts, yaxt = "n", ...)
+    title(xlab = xlabs[4], line = 2)
+    title(ylab = ylabs[4], line = 2)
 
     if (xaxts == "n") axis(side = 1, labels = FALSE)  # keep tick marks
     if (yaxts == "n") axis(side = 2, labels = FALSE)  # keep tick marks
