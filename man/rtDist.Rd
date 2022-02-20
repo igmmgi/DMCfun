@@ -29,7 +29,7 @@ x <- rtDist()
 hist(x, 100, xlab = "RT [ms]")
 
 # Example 2
-x <- rtDist(n=20000, gaussMean=800, gaussSD=50, expRate=100)
+x <- rtDist(n=2000, gaussMean=500, gaussSD=100, expRate=300)
 hist(x, 100, xlab = "RT [ms]")
 
 }

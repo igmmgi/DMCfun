@@ -102,7 +102,7 @@ dmcSim returns an object of class "dmcsim" with the following components:
 \item{summary}{Condition means for reaction time and error rate}
 \item{caf}{Accuracy per bin for compatible and incompatible trials}
 \item{delta}{Mean RT and compatibility effect per bin}
-\item{delta_errs}{Mean RT and compatibility effect per bin}
+\item{deltaErrors}{Mean RT and compatibility effect per bin}
 \item{prms}{The input parameters used in the simulation}
 }
 \description{
