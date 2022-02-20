@@ -825,7 +825,7 @@ plot.dmcobs <- function(x,
     par(mar = c(4, 4, 1, 1), mfrow = c(1, 1), ...)
     showFig[1:6] <- TRUE
   } else {
-    showFig[figTypes[2:6] %in% figType] <- TRUE
+    showFig[figTypes[2:7] %in% figType] <- TRUE
   }
 
   # rtCorrect
@@ -899,8 +899,10 @@ plot.dmcobs <- function(x,
 
     plot(NULL, NULL,
          ylim = c(0, 1), xlim = xlimCDF,
-         ylab = ylabs[4], xlab = xlabs[4],
+         ylab = "", xlab = "",
          xaxt = xaxts, yaxt = "n", ...)
+    title(xlab = xlabs[4], line = 2)
+    title(ylab = ylabs[4], line = 2)
     if (xaxts == "n") axis(side = 1, labels = FALSE)  # keep tick marks
     if (yaxts == "n") {
       axis(side = 2, labels = FALSE)  # keep tick marks
@@ -933,8 +935,10 @@ plot.dmcobs <- function(x,
     nCAF <- length(x[[1]]$caf$Bin)
     plot(NULL, NULL,
          ylim = ylimCAF,
-         ylab = ylabs[5], xlab = xlabs[5], xlim = c(0.5, nCAF + 0.5),
+         ylab = "", xlab = "", xlim = c(0.5, nCAF + 0.5),
          xaxt = "n", yaxt = "n", ...)
+    title(xlab = xlabs[5], line = 2)
+    title(ylab = ylabs[5], line = 2)
     if (xaxts == "n") {
       axis(side = 1, labels = FALSE)  # keep tick marks
     } else if (xaxts == "s" | cafBinLabels) {
@@ -981,8 +985,10 @@ plot.dmcobs <- function(x,
 
     plot(NULL, NULL,
          ylim = ylimDelta, xlim = xlimDelta,
-         ylab = ylabs[6], xlab = xlabs[6],
+         ylab = "", xlab = "",
          xaxt = xaxts, yaxt = yaxts, ...)
+    title(xlab = xlabs[6], line = 2)
+    title(ylab = ylabs[6], line = 2)
     axis(side = 1, labels = FALSE)
     axis(2, labels = FALSE)
 
