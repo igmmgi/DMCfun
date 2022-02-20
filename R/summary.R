@@ -17,7 +17,6 @@
 #' # Example 2
 #' dmc <- dmcSim(tau = 90)
 #' summary(dmc)
-#'
 #' }
 #'
 #' @export
