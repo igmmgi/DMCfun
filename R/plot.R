@@ -290,25 +290,25 @@ plot.dmcsim <- function(x,
 
   # CAF
   if (showFig[5]) {
-    plot_caf(x, ylimCAF, xlabs[5], ylabs[5], tail(cols, 2), xaxts, yaxts, cafBinLabels, ...)
+    .plot_caf(x, ylimCAF, xlabs[5], ylabs[5], tail(cols, 2), xaxts, yaxts, cafBinLabels, ...)
     add_legend(legend, labels, tail(cols, 2), c(1, 1), c(1, 1))
   }
 
   # delta
   if (showFig[6]) {
-    plot_delta(x$delta$meanBin, x$delta$meanEffect, xlimDelta, ylimDelta,
+    .plot_delta(x$delta$meanBin, x$delta$meanEffect, xlimDelta, ylimDelta,
       xlabs[6], ylabs[6], xaxts, yaxts, cols[1], ...)
   }
 
   # delta errors
   if (showFig[7]) {
-    plot_delta(x$deltaErrors$meanBin, x$deltaErrors$meanEffect, xlimDelta, ylimDelta,
+    .plot_delta(x$deltaErrors$meanBin, x$deltaErrors$meanEffect, xlimDelta, ylimDelta,
       xlabs[7], ylabs[7], xaxts, yaxts, cols[1], ...)
   }
 
   # rtCorrect
   if (showFig[8]) {
-    plot_rt(c(1, 2), x$summary$rtCor, ylimRt, 100, xlabs[9:10], ylabs[8], yaxts, cols[1], ...)
+    .plot_rt(c(1, 2), x$summary$rtCor, ylimRt, 100, xlabs[9:10], ylabs[8], yaxts, cols[1], ...)
     if (errorBars) {
       addErrorBars(c(1, 2), x$summary$rtCor, x$summary$sdRtCor)
     }
@@ -316,12 +316,12 @@ plot.dmcsim <- function(x,
 
   # error rate
   if (showFig[9]) {
-    plot_er(c(1, 2), x$summary$perErr, ylimErr, 5, xlabs[9:10], ylabs[9], yaxts, cols[1], ...)
+    .plot_er(c(1, 2), x$summary$perErr, ylimErr, 5, xlabs[9:10], ylabs[9], yaxts, cols[1], ...)
   }
 
   # rtError
   if (showFig[10]) {
-    plot_rt(c(1, 2), x$summary$rtErr, ylimRt, 100, xlabs[9:10], ylabs[10], yaxts, cols[1], ...)
+    .plot_rt(c(1, 2), x$summary$rtErr, ylimRt, 100, xlabs[9:10], ylabs[10], yaxts, cols[1], ...)
     if (errorBars) {
       addErrorBars(c(1, 2), x$means$rtErr, x$means$sdRtErr)
     }
@@ -597,7 +597,7 @@ plot.dmcob <- function(x,
 
   # rtCorrect
   if (showFig[1]) {
-    plot_rt(c(1, 2), x$summary$rtCor, ylimRt, 100, xlabs[1:2], ylabs[1], yaxts, cols[1], ...)
+    .plot_rt(c(1, 2), x$summary$rtCor, ylimRt, 100, xlabs[1:2], ylabs[1], yaxts, cols[1], ...)
     if (errorBars) {
       addErrorBars(c(1, 2), x$summary$rtCor, x$summary[[paste0(errorBarType, "RtCor")]])
     }
@@ -605,7 +605,7 @@ plot.dmcob <- function(x,
 
   # errorRate
   if (showFig[2]) {
-    plot_er(c(1, 2), x$summary$perErr, ylimErr, 5, xlabs[1:2], ylabs[2], yaxts, cols[1], ...)
+    .plot_er(c(1, 2), x$summary$perErr, ylimErr, 5, xlabs[1:2], ylabs[2], yaxts, cols[1], ...)
     if (errorBars) {
       addErrorBars(c(1, 2), x$summary$perErr, x$summary[[paste0(errorBarType, "PerErr")]])
     }
@@ -613,7 +613,7 @@ plot.dmcob <- function(x,
 
   # rtError
   if (showFig[3]) {
-    plot_rt(c(1, 2), x$summary$rtErr, ylimRt, 100, xlabs[1:2], ylabs[3], yaxts, cols[1], ...)
+    .plot_rt(c(1, 2), x$summary$rtErr, ylimRt, 100, xlabs[1:2], ylabs[3], yaxts, cols[1], ...)
     if (errorBars) {
       addErrorBars(c(1, 2), x$summary$rtErr, x$summary[[paste0(errorBarType, "RtErr")]])
     }
@@ -650,13 +650,13 @@ plot.dmcob <- function(x,
 
   # caf
   if (showFig[5]) {
-    plot_caf(x, ylimCAF, xlabs[5], ylabs[5], tail(cols, 2), xaxts, yaxts, cafBinLabels, ...)
+    .plot_caf(x, ylimCAF, xlabs[5], ylabs[5], tail(cols, 2), xaxts, yaxts, cafBinLabels, ...)
     add_legend(legend, labels, tail(cols, 2), c(1, 1), c(1, 1))
   }
 
   # delta
   if (showFig[6]) {
-    plot_delta(x$delta$meanBin, x$delta$meanEffect, xlimDelta, ylimDelta,
+    .plot_delta(x$delta$meanBin, x$delta$meanEffect, xlimDelta, ylimDelta,
       xlabs[6], ylabs[6], xaxts, yaxts, cols[1], ...)
     if (errorBars) {
       errorBarCol <- which(grepl(errorBarType, colnames(x$delta)))
@@ -669,7 +669,7 @@ plot.dmcob <- function(x,
 
   # delta errors
   if (showFig[7]) {
-    plot_delta(x$deltaErrors$meanBin, x$deltaErrors$meanEffect, ylimDeltaErrors,
+    .plot_delta(x$deltaErrors$meanBin, x$deltaErrors$meanEffect, ylimDeltaErrors,
       xlabs[7], ylabs[7], xaxts, yaxts, cols[1], ...)
     if (errorBars) {
       errorBarCol <- which(grepl(errorBarType, colnames(x$caf)))
@@ -837,7 +837,7 @@ plot.dmcobs <- function(x,
       ylimRt <- c(minx - 100, maxx + 100)
     }
 
-    plot_rt(NULL, NULL, ylimRt, 0, xlabs[1:2], ylabs[1], yaxts, cols[1], ...)
+    .plot_rt(NULL, NULL, ylimRt, 0, xlabs[1:2], ylabs[1], yaxts, cols[1], ...)
     for (i in seq_along(x)) {
       lines(c(1, 2), x[[i]]$summary$rtCor, type = "o", col = cols[i], lty = ltys[i], pch = pchs[i], ...)
       if (errorBars) {
@@ -857,7 +857,7 @@ plot.dmcobs <- function(x,
       ylimErr <- c(0, maxy + 10)
     }
 
-    plot_er(NULL, NULL, ylimErr, 0, xlabs[1:2], ylabs[2], yaxts, cols[1], ...)
+    .plot_er(NULL, NULL, ylimErr, 0, xlabs[1:2], ylabs[2], yaxts, cols[1], ...)
     for (i in seq_along(x)) {
       lines(c(1, 2), x[[i]]$summary$perErr, type = "o", col = cols[i], lty = ltys[i], pch = pchs[i], ...)
       if (errorBars) {
@@ -877,7 +877,7 @@ plot.dmcobs <- function(x,
       ylimRt <- c(miny - 100, maxy + 100)
     }
 
-    plot_rt(NULL, NULL, ylimRt, 0, xlabs[1:2], ylabs[3], yaxts, cols[1], ...)
+    .plot_rt(NULL, NULL, ylimRt, 0, xlabs[1:2], ylabs[3], yaxts, cols[1], ...)
     for (i in seq_along(x)) {
       lines(c(1, 2), x[[i]]$summary$rtErr, type = "o", col = cols[i], lty = ltys[i], pch = pchs[i], ...)
       if (errorBars) {
@@ -1160,21 +1160,21 @@ plot.dmcfit <- function(x,
 
   # rtCorrect
   if (showFig[1]) {
-    plot_rt(c(1, 2), y$summary$rtCor, ylimRt, 100, xlabs[1:2], ylabs[1], yaxts, cols[1], ...)
+    .plot_rt(c(1, 2), y$summary$rtCor, ylimRt, 100, xlabs[1:2], ylabs[1], yaxts, cols[1], ...)
     lines(c(1, 2), c(x$summary$rtCor), type = "o", lty = 2, ...)
     add_legend(legend, labels[3:4], c(cols[1], cols[1]), c(1, 2), c(1, 1))
   }
 
   # errorRate
   if (showFig[2]) {
-    plot_er(c(1, 2), y$summary$perErr, ylimErr, 5, xlabs[1:2], ylabs[2], yaxts, cols[1], ...)
+    .plot_er(c(1, 2), y$summary$perErr, ylimErr, 5, xlabs[1:2], ylabs[2], yaxts, cols[1], ...)
     lines(c(1, 2), x$summary$perErr, type = "b", lty = 2, ...)
     add_legend(legend, labels[3:4], c(cols[1], cols[1]), c(1, 2), c(1, 1))
   }
 
   # rt Error
   if (showFig[3]) {
-    plot_rt(c(1, 2), y$summary$rtErr, ylimRt, 100, xlabs[1:2], ylabs[3], yaxts, cols[1], ...)
+    .plot_rt(c(1, 2), y$summary$rtErr, ylimRt, 100, xlabs[1:2], ylabs[3], yaxts, cols[1], ...)
     lines(c(1, 2), x$summary$rtErr, type = "b", lty = 2, ...)
     add_legend(legend, labels[3:4], c(cols[1], cols[1]), c(1, 2), c(1, 1))
   }
@@ -1215,7 +1215,7 @@ plot.dmcfit <- function(x,
   # caf
   if (showFig[5]) {
 
-    plot_caf(x, ylimCAF, xlabs[5], ylabs[5], tail(cols, 2)[1], xaxts, yaxts, cafBinLabels, type = "l", ...)
+    .plot_caf(x, ylimCAF, xlabs[5], ylabs[5], tail(cols, 2)[1], xaxts, yaxts, cafBinLabels, type = "l", ...)
     lines(x$caf$accPerIncomp, type = "l", col = tail(cols, 2)[2], ...)
     lines(y$caf$accPerComp,   type = "p", col = tail(cols, 2)[1], ...)
     lines(y$caf$accPerIncomp, type = "p", col = tail(cols, 2)[2], ...)
@@ -1230,7 +1230,7 @@ plot.dmcfit <- function(x,
 
   # delta
   if (showFig[6]) {
-     plot_delta(x$delta$meanBin, x$delta$meanEffect, xlimDelta, ylimDelta,
+     .plot_delta(x$delta$meanBin, x$delta$meanEffect, xlimDelta, ylimDelta,
         xlabs[6], ylabs[6], xaxts, yaxts, cols[1], type = "l", ...)
      lines(y$delta$meanBin, y$delta$meanEffect, type = "p", ...)
     add_legend(legend, labels[3:4], cols[1], c(0, 1), c(1, NA))
@@ -1269,7 +1269,7 @@ addErrorBars <- function(xpos, ypos, errorSize, arrowSize = 0.1) {
 
 
 #################################### INTERNAL PLOT FUNCTIONS ###########################################################
-plot_rt <- function(x, y, ylim, ylimOffset, xlabs, ylab, yaxts, col, ...) {
+.plot_rt <- function(x, y, ylim, ylimOffset, xlabs, ylab, yaxts, col, ...) {
   if (is.null(ylim)) {
     ylim <- c(min(y) - ylimOffset, max(y) + ylimOffset)
     if (any(is.na(ylim)) | any(is.nan(ylim))) {
@@ -1288,7 +1288,7 @@ plot_rt <- function(x, y, ylim, ylimOffset, xlabs, ylab, yaxts, col, ...) {
 
 }
 
-plot_er <- function(x, y, ylim, ylimOffset, xlabs, ylab, yaxts, col, ...) {
+.plot_er <- function(x, y, ylim, ylimOffset, xlabs, ylab, yaxts, col, ...) {
   if (is.null(ylim)) {
     ylim <- c(0, max(y) + ylimOffset)
     if (any(is.na(ylim))) {
@@ -1304,7 +1304,7 @@ plot_er <- function(x, y, ylim, ylimOffset, xlabs, ylab, yaxts, col, ...) {
   axis(2, labels = FALSE)
 }
 
-plot_caf <- function(x, ylim, xlab, ylab, cols, xaxts, yaxts, cafBinLabels, type = "o", ...) {
+.plot_caf <- function(x, ylim, xlab, ylab, cols, xaxts, yaxts, cafBinLabels, type = "o", ...) {
   if (is.null(ylim)) ylim <- c(0, 1)
 
   plot(x$caf$accPerComp, type = type,
@@ -1339,7 +1339,7 @@ plot_caf <- function(x, ylim, xlab, ylab, cols, xaxts, yaxts, cafBinLabels, type
 
 }
 
-plot_delta <- function(x, y, xlim, ylim, xlab, ylab, xaxts, yaxts, col, type = "o", ...) {
+.plot_delta <- function(x, y, xlim, ylim, xlab, ylab, xaxts, yaxts, col, type = "o", ...) {
   if (is.null(xlim)) {
     xlim <- c(min(x) - 50, max(x) + 50)
     if (any(is.na(xlim))) {
@@ -1385,3 +1385,286 @@ add_legend <- function(legend, labels, cols, ltys, pchs, position = "bottomright
     legend(position, legend = labels, col = cols, lty = ltys, pch = pchs, inset = inset, ...)
   }
 }
+
+
+
+
+
+# ########################### ggplot2 #######################################
+#
+# theme_dmcfun <- function() {
+#   theme <- ggplot2::theme_bw() +
+#       ggplot2::theme(
+#         plot.margin      = ggplot2::unit(c(0.5, 0.5, 0.5, 0.5), "cm"),
+#         panel.grid.major = ggplot2::element_blank(),
+#         panel.grid.minor = ggplot2::element_blank()
+#       )
+#   return(theme)
+# }
+#
+# plot_activation <- function(
+#     x,
+#     labels = c("Compatible", "Incompatible"),
+#     cols = c("green", "red"),
+#     xlab = "Time [ms]",
+#     ylab = "E[X(t)]",
+#     xlim = NULL,
+#     ylim = NULL,
+#     legendPosition = c(0.8, 0.3),
+#     theme = NULL
+# ) {
+#
+#   if (!requireNamespace("ggplot2")) {
+#     stop("This addin requires the 'ggplot2' package.")
+#   }
+#
+#   if (is.null(ylim)) {
+#     ylim <- c(-x$prms$bnds - 20, x$prms$bnds + 20)
+#   }
+#   if (is.null(xlim)) {
+#     xlim <- c(0, x$prms$tmax)
+#   }
+#
+#   dr <- x$prms$drc
+#   dr <- cumsum(rep(dr, x$prms$tmax))
+#   dr <- dr + mean(c(x$prms$spLim1, x$prms$spLim2))
+#
+#   dat <- data.frame(
+#     time   = 1:x$prms$tmax,
+#     dr     = dr,
+#     comp   = x$sim$activation_comp,
+#     incomp = x$sim$activation_incomp
+#   )
+#
+#   plt <- ggplot2::ggplot(dat, ggplot2::aes(x = time)) +
+#     ggplot2::geom_line(ggplot2::aes(y =  x$sim$eq4, colour = labels[1]), linetype = 2, na.rm = TRUE)  +
+#     ggplot2::geom_line(ggplot2::aes(y = -x$sim$eq4, color = labels[2]),  linetype = 2, na.rm = TRUE)  +
+#     ggplot2::scale_color_manual(values = cols) +
+#     ggplot2::geom_line(ggplot2::aes(y = dr), na.rm = TRUE) +
+#     ggplot2::geom_line(ggplot2::aes(y = comp, color = labels[1]), na.rm = TRUE) +
+#     ggplot2::geom_line(ggplot2::aes(y = incomp, color = labels[2]),  na.rm = TRUE) +
+#     ggplot2::coord_cartesian( xlim = xlim, ylim = ylim) +
+#     ggplot2::labs(x = xlab, y = ylab, color = "") +
+#     ggplot2::geom_hline(yintercept = c(-x$prms$bnds, x$prms$bnds), linetype = "dashed",  color = "darkgrey", size = 0.5) +
+#     DMCfun:::theme_dmcfun() +
+#     ggplot2::theme(legend.position = legendPosition)
+#
+#   if (!is.null(theme)) {
+#     plt <- plt + theme
+#   }
+#
+#   return(plt)
+#
+# }
+#
+#
+# plot_trials <- function(
+#     x,
+#     labels = c("Compatible", "Incompatible"),
+#     cols = c("green", "red"),
+#     xlab = "Time [ms]",
+#     ylab = "X(t)",
+#     xlim = NULL,
+#     ylim = NULL,
+#     legendPosition = c(0.8, 0.3),
+#     theme = NULL
+# ) {
+#
+#   if (is.null(ylim)) {
+#     ylim <- c(-x$prms$bnds - 20, x$prms$bnds + 20)
+#   }
+#   if (is.null(xlim)) {
+#     xlim <- c(0, x$prms$tmax)
+#   }
+#
+#   dat = data.frame(Trial = NULL, time = NULL, comp = NULL, data = NULL)
+#   for (trl in c(1:x$prms$nTrlData)) {
+#     idx <- min(which(abs(x$trials$comp[[trl]]) >= x$prms$bnds)[1], length(x$trials$comp[[trl]]), na.rm = TRUE)
+#     dat <- rbind(dat, data.frame(Trial = trl, time = 1:idx, comp = labels[1], data = x$trials$comp[[trl]][1:idx]))
+#     idx <- min(which(abs(x$trials$incomp[[trl]]) >= x$prms$bnds)[1], length(x$trials$incomp[[trl]]), na.rm = TRUE)
+#     dat <- rbind(dat, data.frame(Trial = -trl, time = 1:idx, comp = labels[2], data = x$trials$incomp[[trl]][1:idx]))
+#   }
+#   plt <- ggplot(dat, aes(x = time, y = data, group = Trial, color = comp)) +
+#     geom_line(aes(group = Trial, color = comp), size = 0.2, na.rm = TRUE) +
+#     scale_color_manual(values = cols) +
+#     coord_cartesian( xlim = xlim, ylim = ylim) +
+#     labs(x = xlab, y = ylab, color = "") +
+#     geom_hline(yintercept = c(-x$prms$bnds, x$prms$bnds), linetype = "dashed",  color = "darkgrey", size = 0.5) +
+#     theme_dmcfun() +
+#     theme(legend.position = legendPosition)
+#
+#   if (!is.null(theme)) {
+#     plt <- plt + theme
+#   }
+#
+#   return(plt)
+#
+# }
+#
+# plot_pdf <- function(
+#     x,
+#     labels = c("Compatible", "Incompatible"),
+#     cols = c("green", "red"),
+#     xlab = "Time [ms]",
+#     ylab = "PDF",
+#     xlim = NULL,
+#     ylim = NULL,
+#     legendPosition = c(0.8, 0.8),
+#     theme = NULL
+# ) {
+#
+#   if (is.null(xlim)) {
+#     xlim <- c(0, x$prms$tmax)
+#   }
+#
+#   comp <- rep(labels,  times = c(length(x$sim$rts_comp), length(x$sim$rts_incomp)))
+#   dat  <- data.frame(comp = comp, data = c(x$sim$rts_comp, x$sim$rts_incomp))
+#
+#   plt <- ggplot(dat, aes(x = data, color = comp)) +
+#     stat_density(geom = "line", position = "identity", na.rm = TRUE) +
+#     scale_color_manual(values = cols) +
+#     coord_cartesian( xlim = xlim, ylim = ylim) +
+#     labs(x = xlab, y = ylab, color = "") +
+#     theme_dmcfun() +
+#     theme(legend.position = legendPosition)
+#
+#   if (!is.null(theme)) {
+#     plt <- plt + theme
+#   }
+#
+#   return(plt)
+#
+# }
+#
+# plot_cdf <- function(
+#     x,
+#     labels = c("Compatible", "Incompatible"),
+#     cols = c("green", "red"),
+#     xlab = "Time [ms]",
+#     ylab = "CDF",
+#     xlim = NULL,
+#     ylim = NULL,
+#     legendPosition = c(0.2, 0.8),
+#     theme = NULL
+# ) {
+#
+#   if (is.null(xlim)) {
+#     xlim <- c(0, x$prms$tmax)
+#   }
+#
+#   density_comp   <- density(x$sim$rts_comp)
+#   cdf_comp       <- cumsum(density_comp$y * diff(density_comp$x[1:2]))
+#   density_incomp <- density(x$sim$rts_incomp)
+#   cdf_incomp     <- cumsum(density_incomp$y * diff(density_incomp$x[1:2]))
+#
+#   comp <- rep(labels, times = c(length(cdf_comp), length(cdf_incomp)))
+#   dat  <- data.frame(comp = comp, time = c(density_comp$x, density_incomp$x), pdf = c(cdf_comp, cdf_incomp))
+#
+#   plt <- ggplot(dat, aes(x = time, y = pdf, color = comp)) +
+#     geom_line(na.rm = TRUE) +
+#     scale_color_manual(values = cols) +
+#     coord_cartesian( xlim = xlim, ylim = ylim) +
+#     labs(x = xlab, y = ylab, color = "") +
+#     geom_hline(yintercept = c(0, 1), linetype = "dashed",  color = "darkgrey", size = 0.5) +
+#     theme_dmcfun() +
+#     theme(legend.position = legendPosition)
+#
+#   if (!is.null(theme)) {
+#     plt <- plt + theme
+#   }
+#
+#   return(plt)
+#
+# }
+#
+# plot_caf <- function(
+#     x,
+#     labels = c("Compatible", "Incompatible"),
+#     cols = c("green", "red"),
+#     xlab = "Bin",
+#     ylab = "CAF",
+#     ylim = c(0, 1),
+#     legendPosition = c(0.8, 0.8),
+#     theme = NULL
+# ) {
+#
+#   comp <- rep(labels, each = length(x$caf$accPerComp))
+#   dat  <- data.frame(comp = comp, bin = 1:length(x$caf$accPerComp), data = c(x$caf$accPerComp, x$caf$accPerIncomp))
+#
+#   plt <- ggplot(dat, aes(x = bin, y = data, color = comp)) +
+#     geom_line() +
+#     geom_point() +
+#     scale_color_manual(values = cols) +
+#     coord_cartesian(ylim = ylim) +
+#     labs(x = xlab, y = ylab, color = "") +
+#     theme_dmcfun() +
+#     theme(legend.position = legendPosition)
+#
+#   if (!is.null(theme)) {
+#     plt <- plt + theme
+#   }
+#
+#   return(plt)
+#
+# }
+#
+# plot_delta <- function(
+#     x,
+#     xlab = "Time [ms]",
+#     ylab = "Delta [ms]",
+#     xlim = NULL,
+#     ylim = NULL,
+#     legendPosition = "right",
+#     theme = NULL
+# ) {
+#
+#   dat  <- data.frame(time = x$delta$meanBin, effect = x$delta$meanEffect)
+#
+#   plt <- ggplot(dat, aes(x = time, y = effect)) +
+#     geom_line() +
+#     geom_point() +
+#     coord_cartesian(xlim = xlim, ylim = ylim) +
+#     labs(x = xlab, y = ylab) +
+#     theme_dmcfun() +
+#     theme(legend.position = legendPosition)
+#
+#   if (!is.null(theme)) {
+#     plt <- plt + theme
+#   }
+#
+#   return(plt)
+# }
+#
+# plot_deltas <- function(
+#     x,
+#     xlab = "Time [ms]",
+#     ylab = "Delta [ms]",
+#     col = c("black", "lightgrey"),
+#     xlim = NULL,
+#     ylim = NULL,
+#     ncol = 1
+# ) {
+#
+#   # colour range
+#   cols <- colorRampPalette(col)(length(x))
+#   legendLabels = NULL
+#   for (i in seq_along(x)) {
+#     legendLabels <- rbind(legendLabels, paste0(names(x[[i]]$params), "=", x[[1]]$params[i,], collapse = ", "))
+#   }
+#   dat <- data.frame(Parameters = legendLabels[1], x[[1]]$delta)
+#   for (i in c(2:length(x))) {
+#     dat <- rbind(dat, data.frame(Parameters = legendLabels[i], x[[i]]$delta))
+#   }
+#
+#   plt <- ggplot(dat, aes(x = meanBin, y = meanEffect, color = Parameters)) +
+#     geom_line(aes(group = Parameters) )  +
+#     scale_color_manual(values = cols) +
+#     labs(x = xlab, y = ylab) +
+#     coord_cartesian(xlim = xlim, ylim = ylim) +
+#     guides(color = guide_legend(ncol = ncol)) +
+#     theme_dmcfun() +
+#     theme(legend.position = legendPosition)
+#
+#   return(plt)
+#
+# }
