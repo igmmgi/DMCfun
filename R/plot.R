@@ -171,9 +171,7 @@ plot.dmcsim <- function(x,
   # activation
   if (showFig[1]) {
 
-    if (is.null(xlimActivation)) {
-      xlimActivation <- c(0, x$prms$tmax)
-    }
+    if (is.null(xlimActivation)) xlimActivation <- c(0, x$prms$tmax)
 
     # automatic
     plot(c(1:x$prms$tmax), x$sim$eq4, type = "l", lty = 2, col = tail(cols, 2)[1],
@@ -212,9 +210,7 @@ plot.dmcsim <- function(x,
   # individual trials
   if (showFig[2]) {
 
-    if (is.null(xlimTrials)) {
-      xlimTrials <- c(0, x$prms$tmax)
-    }
+    if (is.null(xlimTrials)) xlimTrials <- c(0, x$prms$tmax)
 
     plot(NULL, NULL,
          ylim = c(-x$prms$bnds - 20, x$prms$bnds + 20),
@@ -244,12 +240,8 @@ plot.dmcsim <- function(x,
   # PDF
   if (showFig[3]) {
 
-    if (is.null(xlimPDF)) {
-      xlimPDF <- c(0, x$prms$tmax)
-    }
-    if (is.null(ylimPDF)) {
-      ylimPDF <- c(0, 0.01)
-    }
+    if (is.null(xlimPDF)) xlimPDF <- c(0, x$prms$tmax)
+    if (is.null(ylimPDF)) ylimPDF <- c(0, 0.01)
 
     plot(density(x$sim$rts_comp), col = tail(cols, 2)[1], main = NA, type = "l",
          ylim = ylimPDF, xlim = xlimPDF, ylab = "", xlab = "",
@@ -258,11 +250,8 @@ plot.dmcsim <- function(x,
     title(ylab = ylabs[3], line = 2)
 
     if (xaxts == "n") axis(side = 1, labels = FALSE)  # keep tick marks
-    if (yaxts == "n") {
-      axis(side = 2, labels = FALSE)  # keep tick marks
-    } else if (yaxts == "s") {
-      axis(side = 2, at = c(0, 0.005, 0.01), labels = c("0", ".005", ".001"))
-    }
+    if (yaxts == "n") axis(side = 2, labels = FALSE)  # keep tick marks
+    if (yaxts == "s") axis(side = 2, at = c(0, 0.005, 0.01), labels = c("0", ".005", ".001"))
 
     lines(density(x$sim$rts_incomp), col = tail(cols, 2)[2], type = "l", ...)
 
@@ -279,9 +268,7 @@ plot.dmcsim <- function(x,
     density_incomp <- density(x$sim$rts_incomp)
     cdf_incomp     <- cumsum(density_incomp$y * diff(density_incomp$x[1:2]))
 
-    if (is.null(xlimCDF)) {
-      xlimCDF <- c(0, x$prms$tmax)
-    }
+    if (is.null(xlimCDF)) xlimCDF <- c(0, x$prms$tmax)
 
     plot(density_comp$x, cdf_comp, type = "l", col = tail(cols, 2)[1],
          ylab = "", xlab = "",
@@ -290,11 +277,8 @@ plot.dmcsim <- function(x,
     title(ylab = ylabs[4], line = 2)
 
     if (xaxts == "n") axis(side = 1, labels = FALSE)  # keep tick marks
-    if (yaxts == "n") {
-      axis(side = 2, labels = FALSE)  # keep tick marks
-    } else if (yaxts == "s") {
-      axis(side = 2, at = seq(0, 1, 0.5), labels = as.character(seq(0, 1, 0.5)))
-    }
+    if (yaxts == "n") axis(side = 2, labels = FALSE)  # keep tick marks
+    if (yaxts == "s") axis(side = 2, at = seq(0, 1, 0.5), labels = as.character(seq(0, 1, 0.5)))
 
     lines(density_incomp$x, cdf_incomp, type = "l", col = tail(cols, 2)[2])
 
@@ -409,7 +393,7 @@ plot.dmclist <- function(x,
     }
 
     # plot
-    plot(NULL, NULL, ylim = ylim, xlim = xlim, ylab = expression(paste(Delta, " RT [ms]")), xlab = xlab, ...)
+    plot(NULL, NULL, ylim = ylim, xlim = xlim, ylab = "", xlab = "", ...)
     for (i in seq_along(x)) {
       lines(x[[i]]$delta$meanBin, x[[i]]$delta$meanEffect, col = cols[i], type = lineType)
     }
@@ -427,10 +411,12 @@ plot.dmclist <- function(x,
     }
 
     # plot
-    plot(NULL, NULL, ylim = ylim, xlim = xlim, ylab = expression(paste(Delta, " RT [ms]")), xlab = xlab, ...)
+    plot(NULL, NULL, ylim = ylim, xlim = xlim, ylab = "", xlab = "", ...)
     for (i in seq_along(x)) {
       lines(x[[i]]$deltaErrors$meanBin, x[[i]]$deltaErrors$meanEffect, col = cols[i], type = lineType)
     }
+    title(xlab = xlab, line = 2)
+    title(ylab = expression(paste(Delta, " RT [ms]")), line = 2)
 
   }
 
@@ -644,9 +630,11 @@ plot.dmcob <- function(x,
     ypoints <- seq(0, 1, length.out = ndelta + 2)[2:(ndelta + 1)]
     plot(x$delta$meanComp, ypoints, type = "o",
          ylim = c(0, 1), xlim = xlimCDF,
-         ylab = ylabs[4], xlab = xlabs[4],
+         ylab = "", xlab = "",
          col = tail(cols, 2)[1],
          xaxt = xaxts, yaxt = "n", ...)
+    title(ylab = ylabs[4], line = 2)
+    title(xlab = xlabs[4], line = 2)
     if (xaxts == "n") axis(side = 1, labels = FALSE)  # keep tick marks
     if (yaxts == "n") {
       axis(side = 2, labels = FALSE)  # keep tick marks
@@ -1199,12 +1187,10 @@ plot.dmcfit <- function(x,
          ylab = ylabs[4], xlab = xlabs[4],
          yaxt = "n", col = tail(cols, 2)[1],
          xaxt = xaxts, yaxt = "n", ...)
+
     if (xaxts == "n") axis(side = 1, labels = FALSE)  # keep tick marks
-    if (yaxts == "n") {
-      axis(side = 2, labels = FALSE)  # keep tick marks
-    } else if (yaxts == "s") {
-      axis(2, at = seq(0, 1, 0.25), labels = as.character(seq(0, 1, 0.25)))
-    }
+    if (yaxts == "n") axis(side = 2, labels = FALSE)  # keep tick marks
+    if (yaxts == "s") axis(2, at = seq(0, 1, 0.25), labels = as.character(seq(0, 1, 0.25)))
 
     lines(y$delta$meanIncomp, ypoints, type = "p", col = tail(cols, 2)[2], ...)
     lines(x$delta$meanComp,   ypoints, type = "l", col = tail(cols, 2)[1], ...)
@@ -1282,15 +1268,16 @@ plot_rt <- function(x, y, ylim, ylimOffset, xlabs, ylab, yaxts, col, ...) {
       ylim <- NULL
     }
   }
-  if (any(is.nan(y))) {
-    y <- c(0, 0)
-  }
+  if (any(is.nan(y))) y <- c(0, 0)
+
   plot(x, y, type = "o", col = col,
-    ylim = ylim, xlim = c(0.5, 2.5),
-    ylab = ylab, xlab = "",
-    xaxt = "n",  yaxt = yaxts, ...)
+       ylim = ylim, xlim = c(0.5, 2.5),
+       ylab = "", xlab = "",
+       xaxt = "n",  yaxt = yaxts, ...)
+  title(ylab = ylab, line = 2)
   axis(1, at = c(1, 2), labels = xlabs)
   axis(2, labels = FALSE)
+
 }
 
 plot_er <- function(x, y, ylim, ylimOffset, xlabs, ylab, yaxts, col, ...) {
@@ -1302,16 +1289,15 @@ plot_er <- function(x, y, ylim, ylimOffset, xlabs, ylab, yaxts, col, ...) {
   }
   plot(x, y, type = "o", col = col,
     ylim = ylim, xlim = c(0.5, 2.5),
-    ylab = ylab, xlab = "",
+    ylab = "", xlab = "",
     xaxt = "n",  yaxt = yaxts, ...)
+  title(ylab = ylab, line = 2)
   axis(1, at = c(1, 2), labels = xlabs)
   axis(2, labels = FALSE)
 }
 
 plot_caf <- function(x, ylim, xlab, ylab, cols, xaxts, yaxts, cafBinLabels, type = "o", ...) {
-  if (is.null(ylim)) {
-    ylim <- c(0, 1)
-  }
+  if (is.null(ylim)) ylim <- c(0, 1)
 
   plot(x$caf$accPerComp, type = type,
     ylim = ylim, ylab = "",  xlab = "",
