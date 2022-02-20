@@ -70,6 +70,8 @@ createDF <- function(nSubjects = 20,
                      design = list("A" = c("A1", "A2"), "B" = c("B1", "B2"))) {
 
   dat <-  data.frame(expand.grid(modifyList(design, list(Subject = c(1:nSubjects), Trial = c(1:nTrl)))))
+  dat <- dat[order(dat$Subject), ]
+
   return(dat[c("Subject", names(design))])
 
 }
@@ -422,9 +424,7 @@ dmcObservedData <- function(dat,
   # save results
   obj <- list()
 
-  if (keepRaw) {
-    obj$data <- dat
-  }
+  if (keepRaw) obj$data <- dat
 
   # summary
   obj$summarySubject <- as.data.frame(datSubject[, c(1, 2, 7, 9, 8)])
@@ -672,7 +672,7 @@ calculateDelta <- function(dat,
 #' hist(x, 100, xlab = "RT [ms]")
 #'
 #' # Example 2
-#' x <- rtDist(n=20000, gaussMean=800, gaussSD=50, expRate=100)
+#' x <- rtDist(n=2000, gaussMean=500, gaussSD=100, expRate=300)
 #' hist(x, 100, xlab = "RT [ms]")
 #'
 #' @export
