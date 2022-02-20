@@ -40,7 +40,7 @@
 #' \item{summary}{Condition means for reaction time and error rate}
 #' \item{caf}{Accuracy per bin for compatible and incompatible trials}
 #' \item{delta}{Mean RT and compatibility effect per bin}
-#' \item{delta_errs}{Mean RT and compatibility effect per bin}
+#' \item{deltaErrors}{Mean RT and compatibility effect per bin}
 #' \item{prms}{The input parameters used in the simulation}
 #'
 #' @examples
@@ -135,17 +135,21 @@ dmcSim <- function(amp            = 20,
     meanEffect   = ((100 - summary$caf_incomp) - (100 - summary$caf_comp)) * 100))
 
   # delta
-  dmc$delta <- as.data.frame(cbind(Bin = 1:nDelta,
+  dmc$delta <- as.data.frame(cbind(
+    Bin        = 1:nDelta,
     meanComp   = summary$delta_correct_comp,
     meanIncomp = summary$delta_correct_incomp,
     meanBin    = summary$delta_correct_mean,
-    meanEffect = summary$delta_correct_delta))
+    meanEffect = summary$delta_correct_delta)
+  )
 
-  dmc$delta_errs <- as.data.frame(cbind(Bin = 1:nDelta,
+  dmc$deltaErrors <- as.data.frame(cbind(
+    Bin        = 1:nDelta,
     meanComp   = summary$delta_errors_comp,
     meanIncomp = summary$delta_errors_incomp,
     meanBin    = summary$delta_errors_mean,
-    meanEffect = summary$delta_errors_delta))
+    meanEffect = summary$delta_errors_delta)
+  )
 
   # store parameters used to call function
   dmc$prms <- data.frame(
