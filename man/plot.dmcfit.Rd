@@ -11,7 +11,7 @@
   figType = "summary",
   legend = TRUE,
   labels = c("Compatible", "Incompatible", "Observed", "Predicted"),
-  cols = c("black", "green", "red"),
+  cols = c("green", "red"),
   ylimRt = NULL,
   ylimErr = NULL,
   xlimCDF = NULL,

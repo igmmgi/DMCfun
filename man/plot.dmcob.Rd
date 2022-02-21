@@ -20,7 +20,6 @@
   cafBinLabels = FALSE,
   ylimDelta = NULL,
   xlimDelta = NULL,
-  ylimDeltaErrors = NULL,
   xlabs = TRUE,
   ylabs = TRUE,
   xaxts = TRUE,
@@ -59,8 +58,6 @@
 \item{ylimDelta}{ylimit for delta plot}
 
 \item{xlimDelta}{xlimit for delta plot}
-
-\item{ylimDeltaErrors}{ylimit for delta plot errors}
 
 \item{xlabs}{TRUE/FALSE}
 
