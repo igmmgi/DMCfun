@@ -506,7 +506,6 @@ plot.dmcob <- function(x,
     }
   }
 
-
   # # CDF
   # if (showFig[4]) {
   #   l <- ifelse(figType == "summary1", 0.5, 1)
@@ -1144,7 +1143,7 @@ addErrorBars <- function(xpos, ypos, errorSize, arrowSize = 0.1) {
 
 
 plot_activation <- function(
-    x,
+    resTh = NULL,
     labels = c("Compatible", "Incompatible"),
     cols = c("green", "red"),
     xlab = "Time [ms]",
@@ -1158,45 +1157,43 @@ plot_activation <- function(
     ...
 ) {
 
-  if (is.null(xlim)) xlim <- c(0, x$prms$tmax)
-  if (is.null(xlim)) ylim <- c(-x$prms$bnds - 20, x$prms$bnds + 20)
+  if (is.null(xlim)) xlim <- c(0, resTh$prms$tmax)
+  if (is.null(ylim)) ylim <- c(-resTh$prms$bnds - 20, resTh$prms$bnds + 20)
 
   # automatic
-  plot(c(1:x$prms$tmax), x$sim$eq4, type = "l", lty = 2, col = cols,
-       ylim = c(-x$prms$bnds - 20, x$prms$bnds + 20),
-       xlim = xlim,
+  plot(c(1:resTh$prms$tmax), resTh$sim$eq4, type = "l", lty = 2, col = cols,
+       ylim = ylim, xlim = xlim,
        xlab = "", ylab = "",
        xaxt = xaxt, yaxt = yaxt, ...)
-  title(xlab = xlab, line = 2)
-  title(ylab = ylab, line = 2)
+  title(xlab = xlab, ylab = ylab, line = 2)
   if (xaxt == "n") axis(side = 1, labels = FALSE)  # keep tick marks
   if (yaxt == "n") axis(side = 2, labels = FALSE)  # keep tick marks
 
-  lines(c(1:x$prms$tmax), -x$sim$eq4, type = "l", lty = 2, col = cols[2], ...)
+  lines(c(1:resTh$prms$tmax), -resTh$sim$eq4, type = "l", lty = 2, col = cols[2], ...)
 
   # controlled
-  if (x$prms$drDist != 0) {
-    dr <- mean(c(x$prms$drLim1, x$prms$drLim2))
+  if (resTh$prms$drDist != 0) {
+    dr <- mean(c(resTh$prms$drLim1, resTh$prms$drLim2))
   } else {
-    dr <- x$prms$drc
+    dr <- resTh$prms$drc
   }
-  dr <- cumsum(rep(dr, x$prms$tmax))
-  dr <- dr + mean(c(x$prms$spLim1, x$prms$spLim2))
-  lines(c(1:x$prms$tmax), dr, ...)
+  dr <- cumsum(rep(dr, resTh$prms$tmax))
+  dr <- dr + mean(c(resTh$prms$spLim1, resTh$prms$spLim2))
+  lines(c(1:resTh$prms$tmax), dr, ...)
 
   # superimposed automatic + controlled comp/incomp
-  lines(c(1:x$prms$tmax), x$sim$activation_comp,   col = cols[1], ...)
-  lines(c(1:x$prms$tmax), x$sim$activation_incomp, col = cols[2], ...)
+  lines(c(1:resTh$prms$tmax), resTh$sim$activation_comp,   col = cols[1], ...)
+  lines(c(1:resTh$prms$tmax), resTh$sim$activation_incomp, col = cols[2], ...)
 
   # bounds
-  abline(h = c(-x$prms$bnds, x$prms$bnds), col = "darkgrey")
+  abline(h = c(-resTh$prms$bnds, resTh$prms$bnds), col = "darkgrey")
 
   add_legend(legend, labels, cols, c(1, 1), c(1, 1), legendPosition)
 
 }
 
 plot_trials <- function(
-    x,
+    resTh = NULL,
     labels = c("Compatible", "Incompatible"),
     cols = c("green", "red"),
     xlab = "Time [ms]",
@@ -1210,40 +1207,34 @@ plot_trials <- function(
     ...
 ) {
 
-  if (is.null(xlim)) {
-    xlim <- c(0, x$prms$tmax)
-  }
-  if (is.null(ylim)) {
-    ylim <- c(-x$prms$bnds - 20, x$prms$bnds + 20)
-  }
+  if (is.null(xlim)) xlim <- c(0, resTh$prms$tmax)
+  if (is.null(ylim)) ylim <- c(-resTh$prms$bnds - 20, resTh$prms$bnds + 20)
 
   plot(NULL, NULL,
-       ylim = ylim,
-       xlim = xlim,
+       ylim = ylim, xlim = xlim,
        xlab = "", ylab = "",
        xaxt = xaxt, yaxt = yaxt, ...)
-  title(xlab = xlab, line = 2)
-  title(ylab = ylab, line = 2)
+  title(xlab = xlab, ylab = ylab, line = 2)
   if (xaxt == "n") axis(side = 1, labels = FALSE)  # keep tick marks
   if (yaxt == "n") axis(side = 2, labels = FALSE)  # keep tick marks
 
   # individual trials until bounds
-  for (trl in c(1:x$prms$nTrlData)) {
-    idx <- min(which(abs(x$trials$comp[[trl]]) >= x$prms$bnds)[1], length(x$trials$comp[[trl]]), na.rm = TRUE)
-    lines(x$trials$comp[[trl]][1:idx], type = "l", col = cols[1], ...)
-    idx <- min(which(abs(x$trials$incomp[[trl]]) >= x$prms$bnds)[1], length(x$trials$incomp[[trl]]), na.rm = TRUE)
-    lines(x$trials$incomp[[trl]][1:idx], type = "l", col = cols[2], ...)
+  for (trl in c(1:resTh$prms$nTrlData)) {
+    idx <- min(which(abs(resTh$trials$comp[[trl]]) >= resTh$prms$bnds)[1], length(resTh$trials$comp[[trl]]), na.rm = TRUE)
+    lines(resTh$trials$comp[[trl]][1:idx], type = "l", col = cols[1], ...)
+    idx <- min(which(abs(resTh$trials$incomp[[trl]]) >= resTh$prms$bnds)[1], length(resTh$trials$incomp[[trl]]), na.rm = TRUE)
+    lines(resTh$trials$incomp[[trl]][1:idx], type = "l", col = cols[2], ...)
   }
 
   # bounds
-  abline(h = c(-x$prms$bnds, x$prms$bnds), col = "darkgrey");
+  abline(h = c(-resTh$prms$bnds, resTh$prms$bnds), col = "darkgrey");
 
   add_legend(legend, labels, cols, c(1, 1), c(1, 1), legendPosition)
 
 }
 
 plot_pdf <- function(
-    x,
+    resTh = NULL,
     labels = c("Compatible", "Incompatible"),
     cols = c("green", "red"),
     xlab = "Time [ms]",
@@ -1258,24 +1249,20 @@ plot_pdf <- function(
     ...
 ) {
 
-  if (is.null(xlim)) {
-    xlim <- c(0, x$prms$tmax)
-  }
-  if (is.null(ylim)) {
-    ylim <- c(0, 0.01)
-  }
+  if (is.null(xlim)) xlim <- c(0, resTh$prms$tmax)
+  if (is.null(ylim)) ylim <- c(0, 0.01)
 
-  plot(density(x$sim$rts_comp), col = cols[1], main = NA, type = "l",
-       ylim = ylim, xlim = xlim, ylab = "", xlab = "",
-       xaxt = xaxt, yaxt = "n", ...)
-  title(xlab = xlab, line = 2)
-  title(ylab = ylab, line = 2)
+  plot(density(resTh$sim$rts_comp), col = cols[1], main = NA, type = "l",
+    ylim = ylim, xlim = xlim,
+    ylab = "", xlab = "",
+    xaxt = xaxt, yaxt = "n", ...)
+  title(xlab = xlab, ylab = ylab, line = 2)
 
   if (xaxt == "n") axis(side = 1, labels = FALSE)  # keep tick marks
   if (yaxt == "n") axis(side = 2, labels = FALSE)  # keep tick marks
   if (yaxt == "s") axis(side = 2, at = c(0, 0.005, 0.01), labels = c("0", ".005", ".001"))
 
-  lines(density(x$sim$rts_incomp), col = cols[2], type = "l", ...)
+  lines(density(resTh$sim$rts_incomp), col = cols[2], type = "l", ...)
 
   abline(h = 0, col = "darkgrey", lty = 2);
   add_legend(legend, labels, cols, c(1, 1), c(1, 1), legendPosition, cex = legend.cex)
@@ -1283,7 +1270,7 @@ plot_pdf <- function(
 }
 
 plot_cdf <- function(
-    x,
+    resTh = NULL,
     labels = c("Compatible", "Incompatible"),
     cols = c("green", "red"),
     xlab = "Time [ms]",
@@ -1297,21 +1284,18 @@ plot_cdf <- function(
     ...
 ) {
 
-    density_comp   <- density(x$sim$rts_comp)
+    density_comp   <- density(resTh$sim$rts_comp)
     cdf_comp       <- cumsum(density_comp$y * diff(density_comp$x[1:2]))
-    density_incomp <- density(x$sim$rts_incomp)
+    density_incomp <- density(resTh$sim$rts_incomp)
     cdf_incomp     <- cumsum(density_incomp$y * diff(density_incomp$x[1:2]))
 
-    if (is.null(xlim)) {
-      xlim <- c(0, x$prms$tmax)
-    }
+    if (is.null(xlim)) xlim <- c(0, resTh$prms$tmax)
 
     plot(density_comp$x, cdf_comp, type = "l", col = cols[1],
          ylab = "", xlab = "",
          ylim = c(0, 1), xlim = xlim,
          xaxt = xaxt, yaxt = "n")
-    title(xlab = xlab, line = 2)
-    title(ylab = ylab, line = 2)
+    title(xlab = xlab, ylab = ylab, line = 2)
 
     if (xaxt == "n") axis(side = 1, labels = FALSE)  # keep tick marks
     if (yaxt == "n") axis(side = 2, labels = FALSE)  # keep tick marks
@@ -1427,8 +1411,8 @@ plot_caf <- function(
     xlab = "RT Bin",
     ylab = "CAF",
     ylim = NULL,
-    xaxts = "n",
-    yaxts = "n",
+    xaxts = "s",
+    yaxts = "s",
     cafBinLabels = FALSE,
     legend = TRUE,
     legendPosition = "bottomright",
@@ -1440,6 +1424,7 @@ plot_caf <- function(
     datThComp   <- resTh$caf$accPerComp
     datThIncomp <- resTh$caf$accPerIncomp
     types <- c("p", "l")
+    nCAF <- length(datObComp)
   } else if (!is.null(resTh) & is.null(resOb)) {
     datObComp   <- NULL
     datObIncomp <- NULL
@@ -1447,6 +1432,7 @@ plot_caf <- function(
     datThIncomp <- resTh$caf$accPerIncomp
     types <- c("b", "b")
     labels <- labels[1:2]
+    nCAF <- length(datThComp)
   } else if (is.null(resTh) & !is.null(resOb)) {
     datObComp   <- resOb$caf$accPerComp
     datObIncomp <- resOb$caf$accPerIncomp
@@ -1454,18 +1440,17 @@ plot_caf <- function(
     datThIncomp <- NULL
     types <- c("b", "b")
     labels <- labels[1:2]
+    nCAF <- length(datObComp)
   }
 
-  if (is.null(ylim)) {
-    ylim <- c(0, 1)
-  }
+  if (is.null(ylim))  ylim <- c(0, 1)
 
   plot(NULL, NULL, type = "o",
-       ylim = ylim, xlim = c(1, 5), ylab = "",  xlab = "",
-       xaxt = "n",  yaxt = "n",
-       col = cols[1], ...)
-  title(xlab = xlab, line = 2)
-  title(ylab = ylab, line = 2)
+    ylim = ylim, xlim = c(1, nCAF),
+    ylab = "",  xlab = "",
+    xaxt = "n",  yaxt = "n",
+    col = cols[1], ...)
+  title(xlab = xlab, ylab = ylab, line = 2)
 
   if (!is.null(datObComp)) {
     lines(datObComp,   type = types[1], col = cols[1])
@@ -1480,7 +1465,6 @@ plot_caf <- function(
    if (xaxts == "n") {
      axis(side = 1, labels = FALSE)  # keep tick marks
    } else if (xaxts == "s" | cafBinLabels) {
-     nCAF <- max(length(datObComp), length(datThComp))
      if (cafBinLabels) {
        stepCAF <- 100 / nCAF
        cafLabels <- paste0(paste(seq(0, 100 - stepCAF, stepCAF), seq(stepCAF, 100, stepCAF), sep = "-"), "%")
@@ -1513,15 +1497,15 @@ plot_caf <- function(
 
 
 plot_delta <- function(
-    resTh = NULL,
+  resTh = NULL,
   resOb = NULL,
   figType = "delta",
   xlim = NULL,
   ylim = NULL,
   xlab = "Time [ms]",
   ylab = "Delta [ms]",
-  xaxts = "n",
-  yaxts = "n",
+  xaxts = "s",
+  yaxts = "s",
   type = "o",
   legend = TRUE,
   legendPosition = "bottomright",
