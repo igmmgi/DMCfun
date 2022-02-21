@@ -214,9 +214,7 @@ plot.dmcsim <- function(
   # rtCorrect
   if (showFig[8]) {
     plot_beh(resTh = x, figType = "rtCor", xlabs = labels, ylab = ylabs[8], ylim = ylimRt)
-    if (errorBars) {
-      addErrorBars(c(1, 2), x$summary$rtCor, x$summary$sdRtCor)
-    }
+    if (errorBars) addErrorBars(c(1, 2), x$summary$rtCor, x$summary$sdRtCor)
   }
 
   # error rate
@@ -227,9 +225,7 @@ plot.dmcsim <- function(
   # rtError
   if (showFig[10]) {
     plot_beh(resTh = x, figType = "rtErr", xlabs = labels, ylab = ylabs[10], ylim = ylimRt)
-    if (errorBars) {
-      addErrorBars(c(1, 2), x$means$rtErr, x$means$sdRtErr)
-    }
+    if (errorBars) addErrorBars(c(1, 2), x$summary$rtErr, x$summary$sdRtErr)
   }
 
 }
@@ -286,8 +282,8 @@ plot.dmclist <- function(x,
    stop("plotting multiple dmcSims only possible with figType = delta/deltaErrors")
   }
 
+  # find suitable x/y limits
   idx <- ifelse(tolower(figType) == "delta", 4, 5)
-
   if (is.null(xlim)) {
     minx <- min(sapply(x, function(x) min(x[[idx]]$meanBin)))
     maxx <- max(sapply(x, function(x) max(x[[idx]]$meanBin)))
@@ -305,8 +301,7 @@ plot.dmclist <- function(x,
   for (i in seq_along(x)) {
     lines(x[[i]][[idx]]$meanBin, x[[i]][[idx]]$meanEffect, col = cols[i], type = lineType)
   }
-  title(xlab = xlab, line = 2)
-  title(ylab = expression(paste(Delta, " RT [ms]")), line = 2)
+  title(xlab = xlab, ylab = expression(paste(Delta, " RT [ms]")), line = 2)
 
   # legend
   if (is.null(legendLabels)) {
@@ -485,25 +480,19 @@ plot.dmcob <- function(x,
   # rtCorrect
   if (showFig[1]) {
     plot_beh(resOb = x, figType = "rtCor", xlabs = labels, ylab = ylabs[1], ylim = ylimRt)
-    if (errorBars) {
-      addErrorBars(c(1, 2), x$summary$rtCor, x$summary[[paste0(errorBarType, "RtCor")]])
-    }
+    if (errorBars) addErrorBars(c(1, 2), x$summary$rtCor, x$summary[[paste0(errorBarType, "RtCor")]])
   }
 
   # errorRate
   if (showFig[2]) {
     plot_beh(resOb = x, figType = "perErr", xlabs = labels, ylab = ylabs[2], ylim = ylimErr)
-    if (errorBars) {
-      addErrorBars(c(1, 2), x$summary$perErr, x$summary[[paste0(errorBarType, "PerErr")]])
-    }
+    if (errorBars) addErrorBars(c(1, 2), x$summary$perErr, x$summary[[paste0(errorBarType, "PerErr")]])
   }
 
   # rtError
   if (showFig[3]) {
     plot_beh(resOb = x, figType = "rtErr", xlabs = labels, ylab = ylabs[2], ylim = ylimErr)
-    if (errorBars) {
-      addErrorBars(c(1, 2), x$summary$rtErr, x$summary[[paste0(errorBarType, "RtErr")]])
-    }
+    if (errorBars) addErrorBars(c(1, 2), x$summary$rtErr, x$summary[[paste0(errorBarType, "RtErr")]])
   }
 
   # # CDF
@@ -543,34 +532,26 @@ plot.dmcob <- function(x,
 
   # CAF
   if (showFig[5]) {
-    plot_caf(resOb = x, labels = labels, cols = cols, xlab = xlabs[5], ylab = ylabs[5], ylim = ylimCAF, xaxt = xaxts, yaxt = yaxts, cafBinLabels = cafBinLabels, legend = legend, ...)
+    plot_caf(resOb = x, labels = labels, cols = cols, xlab = xlabs[5], ylab = ylabs[5], ylim = ylimCAF,
+             xaxt = xaxts, yaxt = yaxts, cafBinLabels = cafBinLabels, legend = legend, ...)
   }
 
-  # delta
-  if (showFig[6]) {
-    plot_delta(resOb = x, figType = "delta", xlim = xlimDelta, ylim = ylimDelta, xlab = xlabs[6], ylab = ylabs[6], xaxt = xaxts, yaxt = yaxts, ...)
+  # delta/delta Errors
+  if (showFig[6] | showFig[7]) {
+    d <- ifelse(showFig[6], "delta", "deltaErrors")
+    plot_delta(resOb = x, figType = d, xlim = xlimDelta, ylim = ylimDelta, xlab = xlabs[6], ylab = ylabs[6],
+      xaxt = xaxts, yaxt = yaxts, ...)
     if (errorBars) {
-      errorBarCol <- which(grepl(errorBarType, colnames(x$delta)))
-      addErrorBars(
-        x$delta$meanBin,
-        x$delta$meanEffect,
-        x$delta[[errorBarCol]],
-        arrowSize = 0.05
-      )
-    }
-  }
-
-  # delta errors
-  if (showFig[7]) {
-    plot_delta(resOb = x, figType = "deltaErrors", xlim = xlimDelta, ylim = ylimDelta, xlab = xlabs[6], ylab = ylabs[6], xaxt = xaxts, yaxt = yaxts, ...)
-    if (errorBars) {
-      errorBarCol <- which(grepl(errorBarType, colnames(x$caf)))
-      addErrorBars(
-        x$deltaErrors$meanBin,
-        x$deltaErrors$meanEffect,
-        x$deltaErrors[[errorBarCol]],
-        arrowSize = 0.05
-      )
+      if (showFig[6]) {
+        ebc   <- which(grepl(errorBarType, colnames(x$delta)))
+        xdata <- x$delta$meanBin
+        ydata <- x$delta$meanEffect
+      } else {
+        ebc   <- which(grepl(errorBarType, colnames(x$deltaErrors)))
+        xdata <- x$deltaErrors$meanBin
+        ydata <- x$deltaErrors$meanEffect
+      }
+      addErrorBars( xdata, ydata, x$delta[[ebc]], arrowSize = 0.05)
     }
   }
 
@@ -1141,6 +1122,9 @@ addErrorBars <- function(xpos, ypos, errorSize, arrowSize = 0.1) {
                        arrowSize, 90, 3))
 }
 
+
+
+# TO DO: Export these functions below?
 
 plot_activation <- function(
     resTh = NULL,
