@@ -8,7 +8,9 @@
   x,
   figType = "summary1",
   xlimActivation = NULL,
+  ylimActivation = NULL,
   xlimTrials = NULL,
+  ylimTrials = NULL,
   xlimPDF = NULL,
   ylimPDF = NULL,
   xlimCDF = NULL,
@@ -21,7 +23,7 @@
   ylimErr = NULL,
   legend = TRUE,
   labels = c("Compatible", "Incompatible"),
-  cols = c("black", "green", "red"),
+  cols = c("green", "red"),
   errorBars = FALSE,
   xlabs = TRUE,
   ylabs = TRUE,
@@ -39,7 +41,11 @@ caf, delta, rtCorrect, rtErrors, errorRate, all}
 
 \item{xlimActivation}{xlimit for activation plot}
 
+\item{ylimActivation}{ylimit for activation plot}
+
 \item{xlimTrials}{xlimit for trials plot}
+
+\item{ylimTrials}{ylimit for trials plot}
 
 \item{xlimPDF}{xlimit for PDF plot}
 

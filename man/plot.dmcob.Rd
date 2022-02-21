@@ -10,7 +10,7 @@
   subject = NULL,
   legend = TRUE,
   labels = c("Compatible", "Incompatible"),
-  cols = c("black", "green", "red"),
+  cols = c("green", "red"),
   errorBars = FALSE,
   errorBarType = "sd",
   ylimRt = NULL,
