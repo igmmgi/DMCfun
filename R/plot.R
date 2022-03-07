@@ -33,6 +33,7 @@
 #' @param ylabs TRUE/FALSE
 #' @param xaxts TRUE/FALSE
 #' @param yaxts TRUE/FALSE
+#' @param xylabPos 2
 #' @param resetPar TRUE/FALSE Reset graphical parameters
 #' @param ... additional plot pars
 #'
@@ -83,6 +84,7 @@ plot.dmcsim <- function(
     ylabs = TRUE,
     xaxts = TRUE,
     yaxts = TRUE,
+    xylabPos = 2,
     resetPar = TRUE,
     ...)
 {
@@ -173,59 +175,59 @@ plot.dmcsim <- function(
   # activation
   if (showFig[1]) {
     plot_activation(x, labels, cols, xlabs[1], ylabs[1], xlimActivation, ylimActivation,
-                    legend, xaxt = xaxts, yaxt = yaxts, ... )
+                    legend, xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, ... )
   }
 
   # individual trials
   if (showFig[2]) {
     plot_trials(x, labels, cols, xlabs[2], ylabs[2], xlimActivation, ylimActivation,
-                legend, xaxt = xaxts, yaxt = yaxts, ...)
+                legend, xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, ...)
   }
 
   # PDF
   if (showFig[3]) {
     plot_pdf(resTh = x, labels = labels, cols = cols, xlab = xlabs[3], ylab = ylabs[3],
              xlim = xlimPDF, ylim = ylimPDF, legend = legend, legend.cex = ifelse(figType == "summary1", 0.75, 1),
-             xaxt = xaxts, yaxt = yaxts, ...)
+             xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, ...)
   }
 
   # CDF
   if (showFig[4]) {
     plot_cdf(resTh = x, labels = labels, cols = cols, xlab = xlabs[4], ylab = ylabs[4],
              xlim = xlimCDF, legend = legend, legend.cex = ifelse(figType == "summary1", 0.75, 1),
-             xaxt = xaxts, yaxt = yaxts, ...)
+             xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, ...)
   }
 
   # CAF
   if (showFig[5]) {
     plot_caf(resTh = x, labels = labels, cols = cols, xlab = xlabs[5], ylab = ylabs[5],
-             ylim = ylimCAF, xaxt = xaxts, yaxt = yaxts, cafBinLabels = cafBinLabels, legend = legend, ...)
+             ylim = ylimCAF, xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, cafBinLabels = cafBinLabels, legend = legend, ...)
   }
 
   # delta/delta errors
   if (showFig[6] | showFig[7]) {
     d <- ifelse(showFig[6], "delta", "deltaErrors")
     plot_delta(resTh = x, figType = d, labels = NULL, xlim = xlimDelta, ylim = ylimDelta,
-               xlab = xlabs[6], ylab = ylabs[6], xaxt = xaxts, yaxt = yaxts, ...)
+               xlab = xlabs[6], ylab = ylabs[6], xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, ...)
   }
 
   # rtCorrect
   if (showFig[8]) {
     plot_beh(resTh = x, figType = "rtCor", xlabs = labels, ylab = ylabs[8],
-             ylim = ylimRt, xaxt = "n", yaxt = yaxts, ...)
+             ylim = ylimRt, xaxt = "n", yaxt = yaxts, xylabPos = xylabPos, ...)
     if (errorBars) addErrorBars(c(1, 2), x$summary$rtCor, x$summary$sdRtCor)
   }
 
   # error rate
   if (showFig[9]) {
     plot_beh(resTh = x, figType = "perErr", xlabs = labels, ylab = ylabs[9],
-             ylim = ylimErr, xaxt = "n", yaxt = yaxts, ...)
+             ylim = ylimErr, xaxt = "n", yaxt = yaxts, xylabPos = xylabPos, ...)
   }
 
   # rtError
   if (showFig[10]) {
     plot_beh(resTh = x, figType = "rtErr", xlabs = labels, ylab = ylabs[10],
-             ylim = ylimRt, xaxt = "n", yaxt = yaxts, ...)
+             ylim = ylimRt, xaxt = "n", yaxt = yaxts, xylabPos = xylabPos, ...)
     if (errorBars) addErrorBars(c(1, 2), x$summary$rtErr, x$summary$sdRtErr)
   }
 
@@ -1085,6 +1087,7 @@ plot_activation <- function(
     legendPosition = "bottomright",
     xaxt = "s",
     yaxt = "s",
+    xylabPos = 2,
     ...
 ) {
 
@@ -1096,7 +1099,7 @@ plot_activation <- function(
        ylim = ylim, xlim = xlim,
        xlab = "", ylab = "",
        xaxt = xaxt, yaxt = yaxt, ...)
-  title(xlab = xlab, ylab = ylab, line = 2)
+  title(xlab = xlab, ylab = ylab, line = xylabPos)
   if (xaxt == "n") axis(side = 1, labels = FALSE)  # keep tick marks
   if (yaxt == "n") axis(side = 2, labels = FALSE)  # keep tick marks
 
@@ -1135,6 +1138,7 @@ plot_trials <- function(
     legendPosition = "bottomright",
     xaxt = "s",
     yaxt = "s",
+    xylabPos = 2,
     ...
 ) {
 
@@ -1145,7 +1149,7 @@ plot_trials <- function(
        ylim = ylim, xlim = xlim,
        xlab = "", ylab = "",
        xaxt = xaxt, yaxt = yaxt, ...)
-  title(xlab = xlab, ylab = ylab, line = 2)
+  title(xlab = xlab, ylab = ylab, line = xylabPos)
   if (xaxt == "n") axis(side = 1, labels = FALSE)  # keep tick marks
   if (yaxt == "n") axis(side = 2, labels = FALSE)  # keep tick marks
 
@@ -1177,6 +1181,7 @@ plot_pdf <- function(
     legend.cex = 1,
     xaxt = "s",
     yaxt = "s",
+    xylabPos = 2,
     ...
 ) {
 
@@ -1187,7 +1192,7 @@ plot_pdf <- function(
     ylim = ylim, xlim = xlim,
     ylab = "", xlab = "",
     xaxt = xaxt, yaxt = "n", ...)
-  title(xlab = xlab, ylab = ylab, line = 2)
+  title(xlab = xlab, ylab = ylab, line = xylabPos)
 
   if (xaxt == "n") axis(side = 1, labels = FALSE)  # keep tick marks
   if (yaxt == "n") axis(side = 2, labels = FALSE)  # keep tick marks
@@ -1213,6 +1218,7 @@ plot_cdf <- function(
     legend.cex = 1,
     xaxt = "s",
     yaxt = "s",
+    xylabPos = 2,
     ...
 ) {
 
@@ -1259,7 +1265,7 @@ plot_cdf <- function(
          ylab = "", xlab = "",
          ylim = c(0, 1), xlim = xlim,
          xaxt = xaxt, yaxt = "n")
-    title(xlab = xlab, ylab = ylab, line = 2)
+    title(xlab = xlab, ylab = ylab, line = xylabPos)
 
     if (!is.null(datThCompX)) {
       lines(datThCompX,   datThCompY,   type = types[1], col = cols[1])
@@ -1299,6 +1305,7 @@ plot_caf <- function(
     ylim = NULL,
     xaxts = "s",
     yaxts = "s",
+    xylabPos = 2,
     cafBinLabels = FALSE,
     legend = TRUE,
     legendPosition = "bottomright",
@@ -1335,7 +1342,7 @@ plot_caf <- function(
     ylab = "",  xlab = "",
     xaxt = "n",  yaxt = "n",
     col = cols[1], ...)
-  title(xlab = xlab, ylab = ylab, line = 2)
+  title(xlab = xlab, ylab = ylab, line = xylabPos)
 
   if (!is.null(datObComp)) {
     lines(datObComp,   type = types[1], col = cols[1])
@@ -1390,6 +1397,7 @@ plot_delta <- function(
   ylab = "Delta [ms]",
   xaxts = "s",
   yaxts = "s",
+  xylabPos = 2,
   type = "o",
   legend = TRUE,
   legendPosition = "bottomright",
@@ -1442,7 +1450,7 @@ plot_delta <- function(
     ylim = ylim, xlim = xlim,
     ylab = "",  xlab = "",
     xaxt = xaxts, yaxt = yaxts, ...)
-  title(xlab = xlab, ylab = ylab, line = 2)
+  title(xlab = xlab, ylab = ylab, line = xylabPos)
   axis(side = 1, labels = FALSE)
   axis(side = 2, labels = FALSE)
 
@@ -1471,6 +1479,7 @@ plot_beh <- function(
     legend.cex = 1,
     condLabels = NULL,
     yaxt = "s",
+  xylabPos = 2,
     ...)
 {
   datOb <- NULL
@@ -1499,7 +1508,7 @@ plot_beh <- function(
     ylim = ylim, xlim = c(0.5, 2.5),
     ylab = "", xlab = "",
     xaxt = "n",  yaxt = yaxt, ...)
-  title(ylab = ylab, line = 2)
+  title(ylab = ylab, line = xylabPos)
   axis(1, at = c(1, 2), labels = xlabs)
   axis(2, labels = FALSE)
 
