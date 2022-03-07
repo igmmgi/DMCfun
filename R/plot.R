@@ -683,26 +683,8 @@ plot.dmcobs <- function(x,
       ylimRt <- c(minx - 100, maxx + 100)
     }
 
-#     plot_beh <- function(
-#   resTh = NULL,
-#   resOb = NULL,
-#   figType = "rtCor",
-#   xlabs = c("Compatible", "Incompatible"),
-#   ylab = NULL,
-#   ylim = NULL,
-#   legend = TRUE,
-#   legendPosition = "bottomright",
-#   legend.cex = 1,
-#   condLabels = NULL,
-#   yaxt = "s",
-#   xylabPos = 2,
-#   ...)
-# {
-
-      plot_beh(resTh = NULL, resOb = NULL, figType = "rtCor", xlabs = labels,
-               ylab = ylabs[1], ylim = ylimRt, ...)
-
-    # .plot_rt(NULL, NULL, ylimRt, 0, xlabs[1:2], ylabs[1], yaxts, cols[1], ...)
+    plot_beh(resTh = NULL, resOb = NULL, figType = "rtCor", xlabs = labels,
+             ylab = ylabs[1], ylim = ylimRt, ...)
     for (i in seq_along(x)) {
       lines(c(1, 2), x[[i]]$summary$rtCor, type = "o", col = cols[i], lty = ltys[i], pch = pchs[i], ...)
       if (errorBars) {
@@ -722,9 +704,8 @@ plot.dmcobs <- function(x,
       ylimErr <- c(0, maxy + 10)
     }
 
-      plot_beh(resTh = NULL, resOb = NULL, figType = "perErr", xlabs = labels,
-               ylab = ylabs[2], ylim = ylimErr, ...)
-    # .plot_er(NULL, NULL, ylimErr, 0, xlabs[1:2], ylabs[2], yaxts, cols[1], ...)
+    plot_beh(resTh = NULL, resOb = NULL, figType = "perErr", xlabs = labels,
+             ylab = ylabs[2], ylim = ylimErr, ...)
     for (i in seq_along(x)) {
       lines(c(1, 2), x[[i]]$summary$perErr, type = "o", col = cols[i], lty = ltys[i], pch = pchs[i], ...)
       if (errorBars) {
@@ -744,9 +725,8 @@ plot.dmcobs <- function(x,
       ylimRt <- c(miny - 100, maxy + 100)
     }
 
-      plot_beh(resTh = NULL, resOb = NULL, figType = "rtErr", xlabs = labels,
-               ylab = ylabs[3], ylim = ylimRt, ...)
-    # .plot_rt(NULL, NULL, ylimRt, 0, xlabs[1:2], ylabs[3], yaxts, cols[1], ...)
+    plot_beh(resTh = NULL, resOb = NULL, figType = "rtErr", xlabs = labels,
+             ylab = ylabs[3], ylim = ylimRt, ...)
     for (i in seq_along(x)) {
       lines(c(1, 2), x[[i]]$summary$rtErr, type = "o", col = cols[i], lty = ltys[i], pch = pchs[i], ...)
       if (errorBars) {
