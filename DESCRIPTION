@@ -32,6 +32,7 @@ Imports:
   pbapply,
   tidyr
 Suggests:
+  ggplot2,
   shiny,
   testthat
 LinkingTo: Rcpp, BH
