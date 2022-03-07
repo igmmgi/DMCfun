@@ -62,56 +62,7 @@ shiny::shinyApp(
         plot(dmc, figType = "summary3", cex = 1.5, mar = c(2,5,2,2), lwd = 3,
           ylimRt = ylimRt, ylimErr = ylimErr, xylabPos = 2)
       } else if (input$plottype == 4) {
-
-        # keep original user par and reset later
-        opar <- par(no.readonly = TRUE)
-
-        # histogram of RT distributions
-        par(mfrow = (c(2, 1)))
-        par(mar = c(0, 4, 2, 2))
-
-        # Correct RTs
-        comp   <- dmc$sim$rts_comp
-        y      <- length(comp) / 10
-        hist(comp,
-          xlim = c(0, 1000), ylim = c(0, y),
-          xaxt = "n", col = scales::alpha('green', .5), border = FALSE,
-          breaks = 100, main = "", yaxt = "n", xlab = "", ylab = "")
-        abline(v = mean(comp), col = "green", lwd = 2)
-        legend("topright", c("Compatible", "Incompatible"), fill = c("green", "red"),
-          bty = "n", cex = 2)
-
-        incomp <- dmc$sim$rts_incomp
-        hist(incomp,  add = TRUE,
-          xlim = c(0, 1000), ylim = c(0, y),
-          xaxt = "n", col = scales::alpha('red', .5),
-          border = FALSE, breaks = 100, main = "", xlab = "", ylab = "")
-        abline(v = mean(incomp), col = "red", lwd = 2)
-
-        # Error RTs
-        par(mar = c(5, 4, 0, 2))
-        comp   <- dmc$sim$errs_comp
-
-        if (length(comp) > 0) {
-          hist(comp,
-            xlim = c(0, 1000), ylim = c(y, 0),
-            col = scales::alpha('green', .5), border = FALSE,
-            breaks = 100, main = "", yaxt = "n", xlab = "Time [ms]", ylab = "", cex.axis = 1.5, cex.lab = 2)
-          abline(v = mean(comp), col = "green", lwd = 2)
-        }
-
-        incomp <- dmc$sim$errs_incomp
-        if (length(incomp) > 0) {
-          hist(incomp, add = TRUE,
-            xlim = c(0, 1000), ylim = c(y, 0),
-            col = scales::alpha('red', .5),
-            border = FALSE, breaks = 100, main = "", ylab = "")
-          abline(v = mean(incomp), col = "red", lwd = 2)
-        }
-
-        # reset original par
-        par(opar)
-
+        plot_distribution(dmc)
       }
     })
   }
