@@ -683,7 +683,26 @@ plot.dmcobs <- function(x,
       ylimRt <- c(minx - 100, maxx + 100)
     }
 
-    .plot_rt(NULL, NULL, ylimRt, 0, xlabs[1:2], ylabs[1], yaxts, cols[1], ...)
+#     plot_beh <- function(
+#   resTh = NULL,
+#   resOb = NULL,
+#   figType = "rtCor",
+#   xlabs = c("Compatible", "Incompatible"),
+#   ylab = NULL,
+#   ylim = NULL,
+#   legend = TRUE,
+#   legendPosition = "bottomright",
+#   legend.cex = 1,
+#   condLabels = NULL,
+#   yaxt = "s",
+#   xylabPos = 2,
+#   ...)
+# {
+
+      plot_beh(resTh = NULL, resOb = NULL, figType = "rtCor", xlabs = labels,
+               ylab = ylabs[1], ylim = ylimRt, ...)
+
+    # .plot_rt(NULL, NULL, ylimRt, 0, xlabs[1:2], ylabs[1], yaxts, cols[1], ...)
     for (i in seq_along(x)) {
       lines(c(1, 2), x[[i]]$summary$rtCor, type = "o", col = cols[i], lty = ltys[i], pch = pchs[i], ...)
       if (errorBars) {
@@ -703,7 +722,9 @@ plot.dmcobs <- function(x,
       ylimErr <- c(0, maxy + 10)
     }
 
-    .plot_er(NULL, NULL, ylimErr, 0, xlabs[1:2], ylabs[2], yaxts, cols[1], ...)
+      plot_beh(resTh = NULL, resOb = NULL, figType = "perErr", xlabs = labels,
+               ylab = ylabs[2], ylim = ylimErr, ...)
+    # .plot_er(NULL, NULL, ylimErr, 0, xlabs[1:2], ylabs[2], yaxts, cols[1], ...)
     for (i in seq_along(x)) {
       lines(c(1, 2), x[[i]]$summary$perErr, type = "o", col = cols[i], lty = ltys[i], pch = pchs[i], ...)
       if (errorBars) {
@@ -723,7 +744,9 @@ plot.dmcobs <- function(x,
       ylimRt <- c(miny - 100, maxy + 100)
     }
 
-    .plot_rt(NULL, NULL, ylimRt, 0, xlabs[1:2], ylabs[3], yaxts, cols[1], ...)
+      plot_beh(resTh = NULL, resOb = NULL, figType = "rtErr", xlabs = labels,
+               ylab = ylabs[3], ylim = ylimRt, ...)
+    # .plot_rt(NULL, NULL, ylimRt, 0, xlabs[1:2], ylabs[3], yaxts, cols[1], ...)
     for (i in seq_along(x)) {
       lines(c(1, 2), x[[i]]$summary$rtErr, type = "o", col = cols[i], lty = ltys[i], pch = pchs[i], ...)
       if (errorBars) {
@@ -1076,7 +1099,7 @@ addErrorBars <- function(xpos, ypos, errorSize, arrowSize = 0.1) {
 # TO DO: Export/document any of these functions?
 
 plot_activation <- function(
-    resTh = NULL,
+    resTh,
     labels = c("Compatible", "Incompatible"),
     cols = c("green", "red"),
     xlab = "Time [ms]",
@@ -1090,6 +1113,10 @@ plot_activation <- function(
     xylabPos = 2,
     ...
 ) {
+
+  if (is.null(resTh$trials)) {
+    stop("plotting activation data requires dmcSim with fullData = TRUE")
+  }
 
   if (is.null(xlim)) xlim <- c(0, resTh$prms$tmax)
   if (is.null(ylim)) ylim <- c(-resTh$prms$bnds - 20, resTh$prms$bnds + 20)
@@ -1127,7 +1154,7 @@ plot_activation <- function(
 }
 
 plot_trials <- function(
-    resTh = NULL,
+    resTh,
     labels = c("Compatible", "Incompatible"),
     cols = c("green", "red"),
     xlab = "Time [ms]",
@@ -1141,6 +1168,10 @@ plot_trials <- function(
     xylabPos = 2,
     ...
 ) {
+
+  if (is.null(resTh$trials)) {
+    stop("plotting trials data requires dmcSim with fullData = TRUE")
+  }
 
   if (is.null(xlim)) xlim <- c(0, resTh$prms$tmax)
   if (is.null(ylim)) ylim <- c(-resTh$prms$bnds - 20, resTh$prms$bnds + 20)
@@ -1594,50 +1625,12 @@ plot_distribution <- function(
 
 }
 
-
-
-
 add_legend <- function(legend, labels, cols, ltys, pchs, position = "bottomright", inset=c(0.05, 0.05), ...) {
   if (is.function(legend)) {
     legend()
   } else if (legend == TRUE) {
     legend(position, legend = labels, col = cols, lty = ltys, pch = pchs, inset = inset, ...)
   }
-}
-
-.plot_rt <- function(x, y, ylim, ylimOffset, xlabs, ylab, yaxts, col, ...) {
-  if (is.null(ylim)) {
-    ylim <- c(min(y) - ylimOffset, max(y) + ylimOffset)
-    if (any(is.na(ylim)) | any(is.nan(ylim))) {
-      ylim <- NULL
-    }
-  }
-  if (any(is.nan(y))) y <- c(0, 0)
-
-  plot(x, y, type = "o", col = col,
-       ylim = ylim, xlim = c(0.5, 2.5),
-       ylab = "", xlab = "",
-       xaxt = "n",  yaxt = yaxts, ...)
-  title(ylab = ylab, line = 2)
-  axis(1, at = c(1, 2), labels = xlabs)
-  axis(2, labels = FALSE)
-
-}
-
-.plot_er <- function(x, y, ylim, ylimOffset, xlabs, ylab, yaxts, col, ...) {
-  if (is.null(ylim)) {
-    ylim <- c(0, max(y) + ylimOffset)
-    if (any(is.na(ylim))) {
-      ylim <- NULL
-    }
-  }
-  plot(x, y, type = "o", col = col,
-    ylim = ylim, xlim = c(0.5, 2.5),
-    ylab = "", xlab = "",
-    xaxt = "n",  yaxt = yaxts, ...)
-  title(ylab = ylab, line = 2)
-  axis(1, at = c(1, 2), labels = xlabs)
-  axis(2, labels = FALSE)
 }
 
 
@@ -1659,10 +1652,8 @@ add_legend <- function(legend, labels, cols, ltys, pchs, position = "bottomright
 # }
 
 
-
 ########################### ggplot2 #######################################
-
-theme_dmcfun_ggplot2 <- function() {
+plot_theme_ggplot2 <- function() {
   theme <- ggplot2::theme_bw() +
       ggplot2::theme(
         plot.margin      = ggplot2::unit(c(0.5, 0.5, 0.5, 0.5), "cm"),
@@ -1673,7 +1664,7 @@ theme_dmcfun_ggplot2 <- function() {
 }
 
 plot_activation_ggplot2 <- function(
-    x,
+    resTh,
     labels = c("Compatible", "Incompatible"),
     cols = c("green", "red"),
     xlab = "Time [ms]",
@@ -1689,34 +1680,34 @@ plot_activation_ggplot2 <- function(
   }
 
   if (is.null(ylim)) {
-    ylim <- c(-x$prms$bnds - 20, x$prms$bnds + 20)
+    ylim <- c(-resTh$prms$bnds - 20, resTh$prms$bnds + 20)
   }
   if (is.null(xlim)) {
-    xlim <- c(0, x$prms$tmax)
+    xlim <- c(0, resTh$prms$tmax)
   }
 
-  dr <- x$prms$drc
-  dr <- cumsum(rep(dr, x$prms$tmax))
-  dr <- dr + mean(c(x$prms$spLim1, x$prms$spLim2))
+  dr <- resTh$prms$drc
+  dr <- cumsum(rep(dr, resTh$prms$tmax))
+  dr <- dr + mean(c(resTh$prms$spLim1, resTh$prms$spLim2))
 
   dat <- data.frame(
-    time   = 1:x$prms$tmax,
+    time   = 1:resTh$prms$tmax,
     dr     = dr,
-    comp   = x$sim$activation_comp,
-    incomp = x$sim$activation_incomp
+    comp   = resTh$sim$activation_comp,
+    incomp = resTh$sim$activation_incomp
   )
 
   plt <- ggplot2::ggplot(dat, ggplot2::aes(x = time)) +
-    ggplot2::geom_line(ggplot2::aes(y =  x$sim$eq4, colour = labels[1]), linetype = 2, na.rm = TRUE)  +
-    ggplot2::geom_line(ggplot2::aes(y = -x$sim$eq4, color = labels[2]),  linetype = 2, na.rm = TRUE)  +
+    ggplot2::geom_line(ggplot2::aes(y =  resTh$sim$eq4, colour = labels[1]), linetype = 2, na.rm = TRUE)  +
+    ggplot2::geom_line(ggplot2::aes(y = -resTh$sim$eq4, color = labels[2]),  linetype = 2, na.rm = TRUE)  +
     ggplot2::scale_color_manual(values = cols) +
     ggplot2::geom_line(ggplot2::aes(y = dr), na.rm = TRUE) +
     ggplot2::geom_line(ggplot2::aes(y = comp, color = labels[1]), na.rm = TRUE) +
     ggplot2::geom_line(ggplot2::aes(y = incomp, color = labels[2]),  na.rm = TRUE) +
     ggplot2::coord_cartesian( xlim = xlim, ylim = ylim) +
     ggplot2::labs(x = xlab, y = ylab, color = "") +
-    ggplot2::geom_hline(yintercept = c(-x$prms$bnds, x$prms$bnds), linetype = "dashed",  color = "darkgrey", size = 0.5) +
-    DMCfun:::theme_dmcfun_ggplot2() +
+    ggplot2::geom_hline(yintercept = c(-resTh$prms$bnds, resTh$prms$bnds), linetype = "dashed",  color = "darkgrey", size = 0.5) +
+    DMCfun:::plot_theme_ggplot2() +
     ggplot2::theme(legend.position = legendPosition)
 
   if (!is.null(theme)) {
@@ -1729,7 +1720,7 @@ plot_activation_ggplot2 <- function(
 
 
 plot_trials_ggplot2 <- function(
-    x,
+    resTh,
     labels = c("Compatible", "Incompatible"),
     cols = c("green", "red"),
     xlab = "Time [ms]",
@@ -1740,22 +1731,26 @@ plot_trials_ggplot2 <- function(
     theme = NULL
 ) {
 
+  if (is.null(resTh$trials)) {
+    stop("plotting trials data requires dmcSim with fullData = TRUE")
+  }
+
   if (!requireNamespace("ggplot2")) {
     stop("This addin requires the 'ggplot2' package.")
   }
 
   if (is.null(ylim)) {
-    ylim <- c(-x$prms$bnds - 20, x$prms$bnds + 20)
+    ylim <- c(-resTh$prms$bnds - 20, resTh$prms$bnds + 20)
   }
   if (is.null(xlim)) {
-    xlim <- c(0, x$prms$tmax)
+    xlim <- c(0, resTh$prms$tmax)
   }
 
   dat = data.frame(Trial = NULL, time = NULL, comp = NULL, data = NULL)
-  for (trl in c(1:x$prms$nTrlData)) {
-    idx <- min(which(abs(x$trials$comp[[trl]]) >= x$prms$bnds)[1], length(x$trials$comp[[trl]]), na.rm = TRUE)
-    dat <- rbind(dat, data.frame(Trial = trl, time = 1:idx, comp = labels[1], data = x$trials$comp[[trl]][1:idx]))
-    idx <- min(which(abs(x$trials$incomp[[trl]]) >= x$prms$bnds)[1], length(x$trials$incomp[[trl]]), na.rm = TRUE)
+  for (trl in c(1:resTh$prms$nTrlData)) {
+    idx <- min(which(abs(resTh$trials$comp[[trl]]) >= resTh$prms$bnds)[1], length(resTh$trials$comp[[trl]]), na.rm = TRUE)
+    dat <- rbind(dat, data.frame(Trial = trl, time = 1:idx, comp = labels[1], data = resTh$trials$comp[[trl]][1:idx]))
+    idx <- min(which(abs(resTh$trials$incomp[[trl]]) >= resTh$prms$bnds)[1], length(resTh$trials$incomp[[trl]]), na.rm = TRUE)
     dat <- rbind(dat, data.frame(Trial = -trl, time = 1:idx, comp = labels[2], data = x$trials$incomp[[trl]][1:idx]))
   }
 
@@ -1764,8 +1759,8 @@ plot_trials_ggplot2 <- function(
     ggplot2::scale_color_manual(values = cols) +
     ggplot2::coord_cartesian( xlim = xlim, ylim = ylim) +
     ggplot2::labs(x = xlab, y = ylab, color = "") +
-    ggplot2::geom_hline(yintercept = c(-x$prms$bnds, x$prms$bnds), linetype = "dashed",  color = "darkgrey", size = 0.5) +
-    DMCfun:::theme_dmcfun_ggplot2() +
+    ggplot2::geom_hline(yintercept = c(-resTh$prms$bnds, resTh$prms$bnds), linetype = "dashed",  color = "darkgrey", size = 0.5) +
+    DMCfun:::plot_theme_ggplot2() +
     ggplot2::theme(legend.position = legendPosition)
 
   if (!is.null(theme)) {
@@ -1777,7 +1772,7 @@ plot_trials_ggplot2 <- function(
 }
 
 plot_pdf_ggplot2 <- function(
-    x,
+    resTh = NULL,
     labels = c("Compatible", "Incompatible"),
     cols = c("green", "red"),
     xlab = "Time [ms]",
@@ -1793,18 +1788,18 @@ plot_pdf_ggplot2 <- function(
   }
 
   if (is.null(xlim)) {
-    xlim <- c(0, x$prms$tmax)
+    xlim <- c(0, resTh$prms$tmax)
   }
 
-  comp <- rep(labels,  times = c(length(x$sim$rts_comp), length(x$sim$rts_incomp)))
-  dat  <- data.frame(comp = comp, data = c(x$sim$rts_comp, x$sim$rts_incomp))
+  comp <- rep(labels,  times = c(length(resTh$sim$rts_comp), length(resTh$sim$rts_incomp)))
+  dat  <- data.frame(comp = comp, data = c(resTh$sim$rts_comp, resTh$sim$rts_incomp))
 
   plt <- ggplot2::ggplot(dat, ggplot2::aes(x = data, color = comp)) +
     ggplot2::stat_density(geom = "line", position = "identity", na.rm = TRUE) +
     ggplot2::scale_color_manual(values = cols) +
     ggplot2::coord_cartesian( xlim = xlim, ylim = ylim) +
     ggplot2::labs(x = xlab, y = ylab, color = "") +
-    DMCfun:::theme_dmcfun_ggplot2() +
+    DMCfun:::plot_theme_ggplot2() +
     ggplot2::theme(legend.position = legendPosition)
 
   if (!is.null(theme)) {
@@ -1816,7 +1811,7 @@ plot_pdf_ggplot2 <- function(
 }
 
 plot_cdf_ggplot2 <- function(
-    x,
+    resTh,
     labels = c("Compatible", "Incompatible"),
     cols = c("green", "red"),
     xlab = "Time [ms]",
@@ -1832,12 +1827,12 @@ plot_cdf_ggplot2 <- function(
   }
 
   if (is.null(xlim)) {
-    xlim <- c(0, x$prms$tmax)
+    xlim <- c(0, resTh$prms$tmax)
   }
 
-  density_comp   <- density(x$sim$rts_comp)
+  density_comp   <- density(resTh$sim$rts_comp)
   cdf_comp       <- cumsum(density_comp$y * diff(density_comp$x[1:2]))
-  density_incomp <- density(x$sim$rts_incomp)
+  density_incomp <- density(resTh$sim$rts_incomp)
   cdf_incomp     <- cumsum(density_incomp$y * diff(density_incomp$x[1:2]))
 
   comp <- rep(labels, times = c(length(cdf_comp), length(cdf_incomp)))
@@ -1849,7 +1844,7 @@ plot_cdf_ggplot2 <- function(
     ggplot2::coord_cartesian( xlim = xlim, ylim = ylim) +
     ggplot2::labs(x = xlab, y = ylab, color = "") +
     ggplot2::geom_hline(yintercept = c(0, 1), linetype = "dashed",  color = "darkgrey", size = 0.5) +
-    DMCfun:::theme_dmcfun_ggplot2() +
+    DMCfun:::plot_theme_ggplot2() +
     ggplot2::theme(legend.position = legendPosition)
 
   if (!is.null(theme)) {
@@ -1861,7 +1856,7 @@ plot_cdf_ggplot2 <- function(
 }
 
 plot_caf_ggplot2 <- function(
-    x,
+    resTh,
     labels = c("Compatible", "Incompatible"),
     cols = c("green", "red"),
     xlab = "Bin",
@@ -1875,8 +1870,8 @@ plot_caf_ggplot2 <- function(
     stop("This addin requires the 'ggplot2' package.")
   }
 
-  comp <- rep(labels, each = length(x$caf$accPerComp))
-  dat  <- data.frame(comp = comp, bin = 1:length(x$caf$accPerComp), data = c(x$caf$accPerComp, x$caf$accPerIncomp))
+  comp <- rep(labels, each = length(resTh$caf$accPerComp))
+  dat  <- data.frame(comp = comp, bin = 1:length(resTh$caf$accPerComp), data = c(resTh$caf$accPerComp, resTh$caf$accPerIncomp))
 
   plt <- ggplot2::ggplot(dat, ggplot2::aes(x = bin, y = data, color = comp)) +
     ggplot2::geom_line() +
@@ -1884,7 +1879,7 @@ plot_caf_ggplot2 <- function(
     ggplot2::scale_color_manual(values = cols) +
     ggplot2::coord_cartesian(ylim = ylim) +
     ggplot2::labs(x = xlab, y = ylab, color = "") +
-    DMCfun:::theme_dmcfun_ggplot2() +
+    DMCfun:::plot_theme_ggplot2() +
     ggplot2::theme(legend.position = legendPosition)
 
   if (!is.null(theme)) {
@@ -1896,7 +1891,7 @@ plot_caf_ggplot2 <- function(
 }
 
 plot_delta_ggplot2 <- function(
-    x,
+    resTh,
     xlab = "Time [ms]",
     ylab = "Delta [ms]",
     xlim = NULL,
@@ -1909,14 +1904,14 @@ plot_delta_ggplot2 <- function(
     stop("This addin requires the 'ggplot2' package.")
   }
 
-  dat  <- data.frame(time = x$delta$meanBin, effect = x$delta$meanEffect)
+  dat  <- data.frame(time = resTh$delta$meanBin, effect = resTh$delta$meanEffect)
 
   plt <- ggplot2::ggplot(dat, ggplot2::aes(x = time, y = effect)) +
     ggplot2::geom_line() +
     ggplot2::geom_point() +
     ggplot2::coord_cartesian(xlim = xlim, ylim = ylim) +
     ggplot2::labs(x = xlab, y = ylab) +
-    DMCfun:::theme_dmcfun_ggplot2() +
+    DMCfun:::plot_theme_ggplot2() +
     ggplot2::theme(legend.position = legendPosition)
 
   if (!is.null(theme)) {
@@ -1928,7 +1923,7 @@ plot_delta_ggplot2 <- function(
 }
 
 plot_deltas_ggplot2 <- function(
-    x,
+    resTh,
     xlab = "Time [ms]",
     ylab = "Delta [ms]",
     col = c("black", "lightgrey"),
@@ -1940,14 +1935,14 @@ plot_deltas_ggplot2 <- function(
 ) {
 
   # colour range
-  cols <- colorRampPalette(col)(length(x))
+  cols <- colorRampPalette(col)(length(resTh))
   legendLabels = NULL
-  for (i in seq_along(x)) {
-    legendLabels <- rbind(legendLabels, paste0(names(x[[i]]$params), "=", x[[1]]$params[i,], collapse = ", "))
+  for (i in seq_along(resTh)) {
+    legendLabels <- rbind(legendLabels, paste0(names(resTh[[i]]$params), "=", resTh[[1]]$params[i,], collapse = ", "))
   }
-  dat <- data.frame(Parameters = legendLabels[1], x[[1]]$delta)
-  for (i in c(2:length(x))) {
-    dat <- rbind(dat, data.frame(Parameters = legendLabels[i], x[[i]]$delta))
+  dat <- data.frame(Parameters = legendLabels[1], resTh[[1]]$delta)
+  for (i in c(2:length(resTh))) {
+    dat <- rbind(dat, data.frame(Parameters = legendLabels[i], resTh[[i]]$delta))
   }
 
   plt <- ggplot2::ggplot(dat, ggplot2::aes(x = meanBin, y = meanEffect, color = Parameters)) +
@@ -1956,7 +1951,7 @@ plot_deltas_ggplot2 <- function(
     ggplot2::labs(x = xlab, y = ylab) +
     ggplot2::coord_cartesian(xlim = xlim, ylim = ylim) +
     ggplot2::guides(color = ggplot2::guide_legend(ncol = ncol)) +
-    DMCfun:::theme_dmcfun_ggplot2() +
+    DMCfun:::plot_theme_ggplot2() +
     ggplot2::theme(legend.position = legendPosition)
 
   return(plt)
