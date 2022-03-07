@@ -1468,20 +1468,21 @@ plot_delta <- function(
 }
 
 plot_beh <- function(
-    resTh = NULL,
-    resOb = NULL,
-    figType = "rtCor",
-    xlabs = c("Compatible", "Incompatible"),
-    ylab = NULL,
-    ylim = NULL,
-    legend = TRUE,
-    legendPosition = "bottomright",
-    legend.cex = 1,
-    condLabels = NULL,
-    yaxt = "s",
+  resTh = NULL,
+  resOb = NULL,
+  figType = "rtCor",
+  xlabs = c("Compatible", "Incompatible"),
+  ylab = NULL,
+  ylim = NULL,
+  legend = TRUE,
+  legendPosition = "bottomright",
+  legend.cex = 1,
+  condLabels = NULL,
+  yaxt = "s",
   xylabPos = 2,
-    ...)
+  ...)
 {
+
   datOb <- NULL
   datTh <- NULL
   if (figType == "rtCor") {
@@ -1528,6 +1529,73 @@ plot_beh <- function(
   }
 
 }
+
+plot_distribution <- function(
+  resTh,
+  labels = c("Compatible", "Incompatible"),
+  cols = c("green", "red"),
+  xlab = "Time [ms]",
+  xlim = NULL
+) {
+
+  # keep original user par and reset later
+  opar <- par(no.readonly = TRUE)
+
+  # histogram of RT distributions
+  par(mfrow = (c(2, 1)))
+  par(mar = c(0, 4, 2, 2))
+
+  # data
+  comp_correct   <- resTh$sim$rts_comp
+  incomp_correct <- resTh$sim$rts_incomp
+  comp_error     <- resTh$sim$errs_comp
+  incomp_error   <- resTh$sim$errs_incomp
+  y              <- length(comp_correct) / 10
+
+  if (is.null(xlim)) {
+    xlim <- c(min(comp_correct, incomp_correct, comp_error, incomp_error),
+            c(max(comp_correct, incomp_correct, comp_error, incomp_error)))
+  }
+
+  hist(comp_correct,
+    xlim = xlim, ylim = c(0, y),
+    xaxt = "n", col = scales::alpha(cols[1], .5), border = FALSE,
+    breaks = 100, main = "", yaxt = "n", xlab = "", ylab = "")
+  abline(v = mean(comp_correct), col = cols[1], lwd = 2)
+  legend("topright", labels, fill = cols, bty = "n", cex = 2)
+
+  hist(incomp_correct,  add = TRUE,
+    xlim = xlim, ylim = c(0, y),
+    xaxt = "n", col = scales::alpha(cols[2], .5),
+    border = FALSE, breaks = 100, main = "", xlab = "", ylab = "")
+  abline(v = mean(incomp_correct), col = cols[2], lwd = 2)
+
+  # Error RTs
+  par(mar = c(5, 4, 0, 2))
+
+  if (length(comp_error) > 0) {
+    hist(comp_error,
+      xlim = xlim, ylim = c(y, 0),
+      col = scales::alpha(cols[1], .5), border = FALSE,
+      breaks = 100, main = "", yaxt = "n", xlab = xlab, ylab = "", cex.axis = 1.5, cex.lab = 2)
+    abline(v = mean(comp_error), col = cols[1], lwd = 2)
+  }
+
+  if (length(incomp_error) > 0) {
+    hist(incomp_error, add = TRUE,
+      xlim = xlim, ylim = c(y, 0),
+      col = scales::alpha(cols[2], .5),
+      border = FALSE, breaks = 100, main = "", ylab = "")
+    abline(v = mean(incomp_error), col = cols[2], lwd = 2)
+  }
+
+  # reset original par
+  par(opar)
+
+}
+
+
+
 
 add_legend <- function(legend, labels, cols, ltys, pchs, position = "bottomright", inset=c(0.05, 0.05), ...) {
   if (is.function(legend)) {
