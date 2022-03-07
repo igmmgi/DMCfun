@@ -6,7 +6,7 @@ ui <- shiny::fluidPage(
 shiny::shinyApp(
   ui = shiny::fluidPage(
     shiny::sidebarLayout(
-      shiny::sidebarPanel(width = 2, style = "margin: 20px; overflow-y:scroll; max-height: 100%; font-size:12px",
+      shiny::sidebarPanel(width = 2, style = "margin: 20px; overflow-y:scroll; max-height: 100%; font-size:18px",
 
         shiny::sliderInput(inputId = "amp",      label = "amp",      min =     0,    max =  50,     value =     20,   ticks = FALSE, step = 1,    width = 250),
         shiny::sliderInput(inputId = "tau",      label = "tau",      min =     1,    max = 200,     value =     30,   ticks = FALSE, step = 1,    width = 250),
@@ -27,7 +27,7 @@ shiny::shinyApp(
 
       ),
 
-      shiny::mainPanel(width = 10, position = "right", fluid = FALSE, style = "margin-top:10px",
+      shiny::mainPanel(width = 10, position = "center", fluid = TRUE, style = "margin-top:10px",
         shiny::plotOutput("dmcSim", width = "100%", height = "1000px")
       )
     )
@@ -51,16 +51,16 @@ shiny::shinyApp(
         sigm = input$sigm, nTrl = input$nTrl, fullData = fullData, nTrlData = input$nTrlData, spDist = input$spDist,
         drDist = input$drDist, printInputArgs = FALSE, printResults = FALSE)
       if (input$plottype == 1) {
-        plot(dmc, figType = "summary1", cex = 2, cex.lab = 2.5, cex.axis = 2.5, mar = c(6,6,2,2), legend = FALSE, lwd = 3,
-          xlimDelta = xlimDelta, ylimDelta = ylimDelta)
+        plot(dmc, figType = "summary1", cex = 2, cex.lab = 2.0, cex.axis = 2.0, mar = c(5,5,2,2), legend = FALSE, lwd = 3,
+          xlimDelta = xlimDelta, ylimDelta = ylimDelta, xylabPos = 3)
         legend(0.15, 0.75, legend = c("Compatible", "Incompatible"), lty = c(1,1), col = c("green", "red"), cex = 1.5)
       } else if (input$plottype == 2) {
-        plot(dmc, figType = "summary2", cex = 2, cex.lab = 2.5, cex.axis = 2.5, mar = c(6,6,2,2), legend = FALSE, lwd = 3,
-          xlimDelta = xlimDelta, ylimDelta = ylimDelta)
+        plot(dmc, figType = "summary2", cex = 2, cex.lab = 2.0, cex.axis = 2.0, mar = c(5,5,2,2), legend = FALSE, lwd = 3,
+          xlimDelta = xlimDelta, ylimDelta = ylimDelta, xylabPos = 3)
         legend(0.7, 0.5, legend = c("Compatible", "Incompatible"), lty = c(1,1), col = c("green", "red"), cex = 1.5)
       } else if (input$plottype == 3) {
-        plot(dmc, figType = "summary3", cex = 1.5, mar = c(2,6,2,2), lwd = 3,
-          ylimRt = ylimRt, ylimErr = ylimErr)
+        plot(dmc, figType = "summary3", cex = 1.5, mar = c(2,5,2,2), lwd = 3,
+          ylimRt = ylimRt, ylimErr = ylimErr, xylabPos = 2)
       } else if (input$plottype == 4) {
 
         # keep original user par and reset later
