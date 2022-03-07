@@ -231,5 +231,8 @@ dmcSims <- function(params, printInputArgs = FALSE, printResults = FALSE) {
 #'
 #' @export
 dmcSimApp <- function() {
+  if (!requireNamespace("shiny")) {
+    stop("This addin requires the 'shiny' package.")
+  }
   shiny::runApp(system.file('dmcSimApp', package = "DMCfun"))
 }
