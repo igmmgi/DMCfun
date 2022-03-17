@@ -1500,19 +1500,21 @@ plot_beh <- function(
     if (!is.null(resTh)) datTh <- resTh$summary$rtCor
     if (!is.null(resOb)) datOb <- resOb$summary$rtCor
     if (is.null(ylab)) ylab <- "RT Correct [ms]"
-    if (is.null(ylim)) ylim <- c(min(datOb, datTh) * 0.9, max(datOb, datTh) * 1.1)
+    if (is.null(ylim)) ylim <- c(min(datOb, datTh, na.rm = TRUE) * 0.9,
+      max(datOb, datTh, na.rm = TRUE) * 1.1)
     legendPosition = "topleft"
   } else if (figType == "rtErr") {
     if (!is.null(resTh)) datTh <- resTh$summary$rtErr
     if (!is.null(resOb)) datOb <- resOb$summary$rtErr
     if (is.null(ylab)) ylab <- "RT Error [ms]"
-    if (is.null(ylim)) ylim <- c(min(datOb, datTh) * 0.9, max(datOb, datTh) * 1.1)
+    if (is.null(ylim)) ylim <- c(min(datOb, datTh, na.rm = TRUE) * 0.9,
+      max(datOb, datTh, na.rm = TRUE) * 1.1)
     legendPosition = "topright"
   } else if (figType == "perErr") {
     if (!is.null(resTh)) datTh <- resTh$summary$perErr
     if (!is.null(resOb)) datOb <- resOb$summary$perErr
     if (is.null(ylab)) ylab <- "Error Rate [%]"
-    if (is.null(ylim)) ylim <- c(0, max(datOb, datTh) * 1.5)
+    if (is.null(ylim)) ylim <- c(0, max(datOb, datTh, na.rm = TRUE) * 1.5)
     legendPosition = "topleft"
   }
 
