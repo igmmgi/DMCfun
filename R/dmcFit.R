@@ -765,7 +765,8 @@ mean.dmcfit <- function(x, ...) {
   meanfit$sim <- dmcSim(amp = meanfit$par$amp, tau = meanfit$par$tau, drc = meanfit$par$drc,
     bnds = meanfit$par$bnds, resMean = meanfit$par$resMean, resSD = meanfit$par$resSD,
     aaShape = meanfit$par$aaShape, spShape = meanfit$par$spShape,
-    spBias = meanfit$par$spBias, sigm = meanfit$par$sigm)$sim
+    spBias = meanfit$par$spBias, sigm = meanfit$par$sigm,
+    printInputArgs = FALSE, printResults = FALSE)$sim
 
   class(meanfit) <- c("dmcfit")
 
