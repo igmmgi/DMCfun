@@ -1032,7 +1032,7 @@ plot.dmcfit <- function(x,
 
   # CAF
   if (showFig[5]) {
-    plot_caf(resTh = x, resOb = y, labels = labels, cols = cols, xlab = xlabs[5], ylab = ylabs[5],
+    plot_caf(resTh = x, resOb = y, labels = labels, cols = cols, xlab = xlabs[5], ylab = ylabs[5], ylim = ylimCAF,
              legend = legend, legend.cex = ifelse(figType == "summary", 0.75, 1), ...)
   }
 
