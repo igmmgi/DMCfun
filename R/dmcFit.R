@@ -762,6 +762,11 @@ mean.dmcfit <- function(x, ...) {
   meanfit$par <- as.data.frame(mergeLists(x, "par")) %>%
     dplyr::summarize_all(~ mean(unlist(.x)))
 
+  meanfit$sim <- dmcSim(amp = meanfit$par$amp, tau = meanfit$par$tau, drc = meanfit$par$drc,
+    bnds = meanfit$par$bnds, resMean = meanfit$par$resMean, resSD = meanfit$par$resSD,
+    aaShape = meanfit$par$aaShape, spShape = meanfit$par$spShape,
+    spBias = meanfit$par$spBias, sigm = meanfit$par$sigm)$sim
+
   class(meanfit) <- c("dmcfit")
 
   return(meanfit)
