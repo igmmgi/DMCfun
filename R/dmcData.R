@@ -233,6 +233,7 @@ addDataDF <- function(dat, RT=NULL, Error=NULL) {
 #' @param compCoding Coding for compatibility DEFAULT = c("comp", "incomp")
 #' @param errorCoding Coding for errors DEFAULT = c(0, 1))
 #' @param quantileType Argument (1-9) from R function quantile specifying the algorithm (?quantile)
+#' @param deltaErrors TRUE/FALSE Calculate RT delta for error trials. Set to FALSE if very few errors!
 #' @param keepRaw TRUE/FALSE
 #' @param delim Single character used to separate fields within a record if reading from external text file.
 #' @param skip The number of lines to skip before reading data if reading from external text file.
@@ -304,6 +305,7 @@ dmcObservedData <- function(dat,
                             compCoding   = c("comp", "incomp"),
                             errorCoding  = c(0, 1),
                             quantileType = 5,
+                            deltaErrors  = TRUE,
                             keepRaw      = FALSE,
                             delim        = "\t",
                             skip         = 0) {
@@ -396,10 +398,6 @@ dmcObservedData <- function(dat,
     dplyr::filter(Error == 0, outlier == 0) %>%
     calculateDelta(., nDelta = nDelta, tDelta = tDelta, quantileType = quantileType)
 
-  datSubject_dec_errors <- dat %>%
-    dplyr::filter(Error == 1, outlier == 0) %>%
-    calculateDelta(., nDelta = nDelta, tDelta = tDelta, quantileType = quantileType)
-
   datAgg_dec <- datSubject_dec %>%
     dplyr::group_by(Bin) %>%
     dplyr::summarize(meanComp   = mean(comp, na.rm = TRUE),
@@ -410,15 +408,23 @@ dmcObservedData <- function(dat,
                      seEffect   = sdEffect / sqrt(n()),
                      .groups    = "drop")
 
-  datAgg_dec_errors <- datSubject_dec_errors %>%
-    dplyr::group_by(Bin) %>%
-    dplyr::summarize(meanComp   = mean(comp, na.rm = TRUE),
-                     meanIncomp = mean(incomp, na.rm = TRUE),
-                     meanBin    = mean(meanBin, na.rm = TRUE),
-                     meanEffect = mean(Effect, na.rm = TRUE),
-                     sdEffect   = sd(Effect, na.rm = TRUE),
-                     seEffect   = sdEffect / sqrt(n()),
-                     .groups    = "drop")
+  if (deltaErrors) {
+
+    datSubject_dec_errors <- dat %>%
+      dplyr::filter(Error == 1, outlier == 0) %>%
+      calculateDelta(., nDelta = nDelta, tDelta = tDelta, quantileType = quantileType)
+
+    datAgg_dec_errors <- datSubject_dec_errors %>%
+      dplyr::group_by(Bin) %>%
+      dplyr::summarize(meanComp   = mean(comp, na.rm = TRUE),
+        meanIncomp = mean(incomp, na.rm = TRUE),
+        meanBin    = mean(meanBin, na.rm = TRUE),
+        meanEffect = mean(Effect, na.rm = TRUE),
+        sdEffect   = sd(Effect, na.rm = TRUE),
+        seEffect   = sdEffect / sqrt(n()),
+        .groups    = "drop")
+
+  }
 
   ##############################################################################
   # save results
@@ -440,9 +446,11 @@ dmcObservedData <- function(dat,
   names(obj$deltaSubject) <- c("Subject", "Bin", "meanComp", "meanIncomp", "meanBin", "meanEffect")
   obj$delta               <- as.data.frame(datAgg_dec)
 
-  obj$deltaErrorsSubject        <- as.data.frame(datSubject_dec_errors)
-  names(obj$deltaErrorsSubject) <- c("Subject", "Bin", "meanComp", "meanIncomp", "meanBin", "meanEffect")
-  obj$deltaErrors               <- as.data.frame(datAgg_dec_errors)
+  if (deltaErrors) {
+    obj$deltaErrorsSubject        <- as.data.frame(datSubject_dec_errors)
+    names(obj$deltaErrorsSubject) <- c("Subject", "Bin", "meanComp", "meanIncomp", "meanBin", "meanEffect")
+    obj$deltaErrors               <- as.data.frame(datAgg_dec_errors)
+  }
 
   class(obj) <- "dmcob"
 
