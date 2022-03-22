@@ -1243,13 +1243,20 @@ plot_cdf <- function(
   datObIncompX <- NULL
   datObIncompY <- NULL
 
-  if (!is.null(resTh)) {
+  if (!is.null(resTh) & is.null(resOb)) {
     densityComp   <- density(resTh$sim$rts_comp)
     datThCompX    <- densityComp$x
     datThCompY    <- cumsum(densityComp$y * diff(densityComp$x[1:2]))
     densityIncomp <- density(resTh$sim$rts_incomp)
     datThIncompX  <- densityIncomp$x
     datThIncompY  <- cumsum(densityIncomp$y * diff(densityIncomp$x[1:2]))
+  }
+  if (!is.null(resTh) & !is.null(resOb)) {
+    ndelta       <- nrow(resTh$delta)
+    datThCompX   <- resTh$delta$meanComp
+    datThCompY   <- seq(0, 1, length.out = ndelta + 2)[2:(ndelta + 1)]
+    datThIncompX <- resTh$delta$meanIncomp
+    datThIncompY <- seq(0, 1, length.out = ndelta + 2)[2:(ndelta + 1)]
   }
   if (!is.null(resOb)) {
     ndelta       <- nrow(resOb$delta)
