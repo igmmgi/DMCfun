@@ -897,7 +897,7 @@ plot.dmcobs <- function(x,
 #' \donttest{
 #' # Example 1
 #' resTh <- dmcFit(flankerData, nTrl = 5000)
-#' plot(resTh, flankerData, figType = "rtcorrect")
+#' plot(resTh, flankerData)
 #'
 #' # Example 2
 #' resTh <- dmcFit(flankerData, nTrl = 5000)
