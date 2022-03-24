@@ -1127,7 +1127,7 @@ plot_activation <- function(
   lines(c(1:resTh$prms$tmax), resTh$sim$activation_incomp, col = cols[2], ...)
 
   # bounds
-  abline(h = c(-resTh$prms$bnds, resTh$prms$bnds), col = "darkgrey")
+  abline(h = c(-resTh$prms$bnds, resTh$prms$bnds), col = "darkgrey", xpd = FALSE)
 
   add_legend(legend, labels, cols, c(1, 1), c(1, 1), legendPosition)
 
@@ -1173,7 +1173,7 @@ plot_trials <- function(
   }
 
   # bounds
-  abline(h = c(-resTh$prms$bnds, resTh$prms$bnds), col = "darkgrey");
+  abline(h = c(-resTh$prms$bnds, resTh$prms$bnds), col = "darkgrey", xpd = FALSE);
 
   add_legend(legend, labels, cols, c(1, 1), c(1, 1), legendPosition)
 
@@ -1211,7 +1211,7 @@ plot_pdf <- function(
 
   lines(density(resTh$sim$rts_incomp), col = cols[2], type = "l", ...)
 
-  abline(h = 0, col = "darkgrey", lty = 2);
+  abline(h = 0, col = "darkgrey", lty = 2, xpd = FALSE);
   add_legend(legend, labels, cols, c(1, 1), c(1, 1), legendPosition, cex = legend.cex)
 
 }
@@ -1299,7 +1299,7 @@ plot_cdf <- function(
     if (yaxt == "n") axis(side = 2, labels = FALSE)  # keep tick marks
     if (yaxt == "s") axis(side = 2, at = seq(0, 1, 0.5), labels = as.character(seq(0, 1, 0.5)))
 
-    abline(h = c(0, 1), col = "darkgrey", lty = 2);
+    abline(h = c(0, 1), col = "darkgrey", lty = 2, xpd = FALSE);
 
   if (length(labels) == 4) {
     labels <- c(paste(labels[1], labels[3], sep = " "),
@@ -1581,14 +1581,14 @@ plot_distribution <- function(
     xlim = xlim, ylim = c(0, y),
     xaxt = "n", col = scales::alpha(cols[1], .5), border = FALSE,
     breaks = 100, main = "", yaxt = "n", xlab = "", ylab = "")
-  abline(v = mean(comp_correct), col = cols[1], lwd = 2)
+  abline(v = mean(comp_correct), col = cols[1], lwd = 2, xpd = FALSE)
   legend("topright", labels, fill = cols, bty = "n", cex = 2)
 
   hist(incomp_correct,  add = TRUE,
     xlim = xlim, ylim = c(0, y),
     xaxt = "n", col = scales::alpha(cols[2], .5),
     border = FALSE, breaks = 100, main = "", xlab = "", ylab = "")
-  abline(v = mean(incomp_correct), col = cols[2], lwd = 2)
+  abline(v = mean(incomp_correct), col = cols[2], lwd = 2, xpd = FALSE)
 
   # Error RTs
   par(mar = c(5, 4, 0, 2))
@@ -1598,7 +1598,7 @@ plot_distribution <- function(
       xlim = xlim, ylim = c(y, 0),
       col = scales::alpha(cols[1], .5), border = FALSE,
       breaks = 100, main = "", yaxt = "n", xlab = xlab, ylab = "", cex.axis = 1.5, cex.lab = 2)
-    abline(v = mean(comp_error), col = cols[1], lwd = 2)
+    abline(v = mean(comp_error), col = cols[1], lwd = 2, xpd = FALSE)
   }
 
   if (length(incomp_error) > 0) {
@@ -1606,7 +1606,7 @@ plot_distribution <- function(
       xlim = xlim, ylim = c(y, 0),
       col = scales::alpha(cols[2], .5),
       border = FALSE, breaks = 100, main = "", ylab = "")
-    abline(v = mean(incomp_error), col = cols[2], lwd = 2)
+    abline(v = mean(incomp_error), col = cols[2], lwd = 2, xpd = FALSE)
   }
 
   # reset original par
