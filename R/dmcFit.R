@@ -31,6 +31,7 @@
 #' @param nDelta The number of delta bins.
 #' @param pDelta An alternative option to nDelta (tDelta = 1 only) by directly specifying required percentile values (vector of values 0-100)
 #' @param tDelta The type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)
+#' @param deltaErrors TRUE/FALSE Calculate delta bins for error trials
 #' @param costFunction The cost function to minimise: root mean square error ("RMSE": default),
 #' squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")
 #' @param rtMax The limit on simulated RT (decision + non-decisional components)
@@ -105,6 +106,7 @@ dmcFit <- function(resOb,
                    nDelta = 19,
                    pDelta = vector(),
                    tDelta = 1,
+                   deltaErrors = FALSE,
                    spDist = 1,
                    drDist = 0,
                    drShape = 3,
@@ -197,7 +199,7 @@ dmcFit <- function(resOb,
         spShape = startValsGrid$spShape[i], spBias = startValsGrid$spBias[i], sigm = startValsGrid$sigm[i],
         spLim = c(-startValsGrid$bnds[i], startValsGrid$bnds[i]), spDist = spDist,
         drDist = drDist, drShape = drShape, drLim = drLim,
-        rtMax = rtMax, nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, nCAF = nCAF,
+        rtMax = rtMax, nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF,
         printInputArgs = TRUE, printResults = FALSE
       )
       return(calculateCostValue(resTh, resOb))
@@ -217,7 +219,7 @@ dmcFit <- function(resOb,
   fit <- optim(
     par = as.numeric(startVals[!as.logical(fixedFit)]), fn = minimizeCostValue,
     costFunction = calculateCostValue, prms = prms, fixedFit = fixedFit, resOb = resOb,
-    nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, nCAF = nCAF,
+    nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF,
     spDist = spDist, drDist = drDist, drShape = drShape, drLim = drLim,
     rtMax = rtMax, minVals = minVals, maxVals = maxVals,
     printInputArgs = printInputArgs, printResults = printResults,
@@ -239,7 +241,7 @@ dmcFit <- function(resOb,
     resMean = prms$resMean, resSD = prms$resSD, aaShape = prms$aaShape,
     spDist = spDist, spBias = prms$spBias, spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
     sigm = prms$sigm, drDist = drDist, drShape = drShape, drLim = drLim,
-    rtMax = rtMax, nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, nCAF = nCAF,
+    rtMax = rtMax, nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF,
     printResults = TRUE
   )
 
@@ -286,6 +288,7 @@ dmcFit <- function(resOb,
 #' @param nDelta The number of delta bins.
 #' @param pDelta An alternative option to nDelta (tDelta = 1 only) by directly specifying required percentile values (vector of values 0-100)
 #' @param tDelta The type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)
+#' @param deltaErrors TRUE/FALSE Calculate delta bins for error trials
 #' @param costFunction The cost function to minimise: root mean square error ("RMSE": default),
 #' squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")
 #' @param rtMax The limit on simulated RT (decision + non-decisional components)
@@ -302,7 +305,7 @@ dmcFit <- function(resOb,
 #' \item{summary}{Condition means for reaction time and error rate}
 #' \item{caf}{Conditional Accuracy Function (CAF) data per bin}
 #' \item{delta}{DataFrame with distributional delta analysis data correct trials (Bin, meanComp, meanIncomp, meanBin, meanEffect)}
-#' \item{delta_errs}{DataFrame with distributional delta analysis data incorrect trials (Bin, meanComp, meanIncomp, meanBin, meanEffect)}
+#' \item{delta_errs}{Optional: DataFrame with distributional delta analysis data incorrect trials (Bin, meanComp, meanIncomp, meanBin, meanEffect)}
 #' \item{par}{The fitted model parameters + final cost value of the fit}
 #'
 #' @examples
@@ -332,6 +335,7 @@ dmcFitDE <- function(resOb,
                      nDelta = 19,
                      pDelta = vector(),
                      tDelta = 1,
+                     deltaErrors = FALSE,
                      costFunction = "RMSE",
                      spDist = 1,
                      drDist = 0,
@@ -402,6 +406,7 @@ dmcFitDE <- function(resOb,
     nCAF = nCAF,
     pDelta = pDelta,
     tDelta = tDelta,
+    deltaErrors = deltaErrors,
     spDist = spDist,
     drDist = drDist,
     drShape = drShape,
@@ -432,7 +437,7 @@ dmcFitDE <- function(resOb,
     resMean = prms$resMean, resSD = prms$resSD, aaShape = prms$aaShape,
     spDist = spDist, spBias = prms$spBias, spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
     sigm = prms$sigm, drDist = drDist, drShape = drShape, drLim = drLim,
-    rtMax = rtMax, nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, nCAF = nCAF,
+    rtMax = rtMax, nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF,
     printResults = TRUE
   )
 
@@ -489,6 +494,7 @@ dmcFitDE <- function(resOb,
 #' @param nDelta Number of delta bins.
 #' @param pDelta An alternative option to nDelta (tDelta = 1 only) by directly specifying required percentile values (vector of values 0-100)
 #' @param tDelta The type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)
+#' @param deltaErrors TRUE/FALSE Calculate delta bins for error trials
 #' @param costFunction The cost function to minimise: root mean square error ("RMSE": default),
 #' squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")
 #' @param spDist The starting point (sp) distribution (0 = constant, 1 = beta, 2 = uniform)
@@ -535,6 +541,7 @@ dmcFitSubject <- function(resOb,
                           nDelta = 19,
                           pDelta = vector(),
                           tDelta = 1,
+                          deltaErrors = FALSE,
                           costFunction = "RMSE",
                           spDist = 1,
                           drDist = 0,
@@ -579,6 +586,7 @@ dmcFitSubject <- function(resOb,
       nDelta          = nDelta,
       pDelta          = pDelta,
       tDelta          = tDelta,
+      deltaErrors     = deltaErrors,
       costFunction    = costFunction,
       spDist          = spDist,
       drDist          = drDist,
@@ -621,6 +629,7 @@ dmcFitSubject <- function(resOb,
 #' @param nDelta The number of delta bins.
 #' @param pDelta An alternative option to nDelta (tDelta = 1 only) by directly specifying required percentile values (vector of values 0-100)
 #' @param tDelta The type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)
+#' @param deltaErrors TRUE/FALSE Calculate delta bins for error trials
 #' @param costFunction The cost function to minimise: root mean square error ("RMSE": default),
 #' squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")
 #' @param rtMax The limit on simulated RT (decision + non-decisional components)
@@ -660,6 +669,7 @@ dmcFitSubjectDE <- function(resOb,
                             nDelta = 19,
                             pDelta = vector(),
                             tDelta = 1,
+                            deltaErrors = FALSE,
                             costFunction = "RMSE",
                             spDist = 1,
                             drDist = 0,
@@ -698,6 +708,7 @@ dmcFitSubjectDE <- function(resOb,
       nDelta       = nDelta,
       pDelta       = pDelta,
       tDelta       = tDelta,
+      deltaErrors  = deltaErrors,
       costFunction = costFunction,
       spDist       = spDist,
       rtMax        = rtMax,
@@ -783,6 +794,7 @@ minimizeCostValue <- function(x,
                               nDelta,
                               pDelta,
                               tDelta,
+                              deltaErrors,
                               nCAF,
                               spDist,
                               drDist,
@@ -804,7 +816,7 @@ minimizeCostValue <- function(x,
     resMean = prms$resMean, resSD = prms$resSD, aaShape = prms$aaShape,
     spDist = spDist, spShape = prms$spShape, spBias = prms$spBias, sigm = prms$sigm, spLim = c(-prms$bnds, prms$bnds),
     drDist = drDist, drShape = drShape, drLim = drLim,
-    rtMax = rtMax, nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, nCAF = nCAF,
+    rtMax = rtMax, nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF,
     printInputArgs = printInputArgs, printResults = printResults
   )
 

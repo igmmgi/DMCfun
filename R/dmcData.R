@@ -233,7 +233,7 @@ addDataDF <- function(dat, RT=NULL, Error=NULL) {
 #' @param compCoding Coding for compatibility DEFAULT = c("comp", "incomp")
 #' @param errorCoding Coding for errors DEFAULT = c(0, 1))
 #' @param quantileType Argument (1-9) from R function quantile specifying the algorithm (?quantile)
-#' @param deltaErrors TRUE/FALSE Calculate RT delta for error trials. Set to FALSE if very few errors!
+#' @param deltaErrors TRUE/FALSE Calculate RT delta for error trials.
 #' @param keepRaw TRUE/FALSE
 #' @param delim Single character used to separate fields within a record if reading from external text file.
 #' @param skip The number of lines to skip before reading data if reading from external text file.
@@ -245,15 +245,15 @@ addDataDF <- function(dat, RT=NULL, Error=NULL) {
 #' \item{caf}{DataFrame within aggregated subject conditional accuracy function (CAF) data (Bin, accPerComp, accPerIncomp, meanEffect, sdEffect, seEffect)}
 #' \item{deltaSubject}{DataFrame within individual subject distributional delta analysis data correct trials (Bin, meanComp, meanIncomp, meanBin, meanEffect)}
 #' \item{delta}{DataFrame within aggregated subject distributional delta analysis data correct trials (Bin, meanComp, meanIncomp, meanBin, meanEffect, sdEffect, seEffect)}
-#' \item{deltaErrorsSubject}{DataFrame within individual subject distributional delta analysis data incorrect trials (Bin, meanComp, meanIncomp, meanBin, meanEffect)}
-#' \item{deltaErrors}{DataFrame within aggregated subject distributional delta analysis data incorrect trials (Bin, meanComp, meanIncomp, meanBin, meanEffect, sdEffect, seEffect)}
+#' \item{deltaErrorsSubject}{Optional: DataFrame within individual subject distributional delta analysis data incorrect trials (Bin, meanComp, meanIncomp, meanBin, meanEffect)}
+#' \item{deltaErrors}{Optional: DataFrame within aggregated subject distributional delta analysis data incorrect trials (Bin, meanComp, meanIncomp, meanBin, meanEffect, sdEffect, seEffect)}
 #'
 #' @examples
 #' # Example 1
 #' plot(flankerData)  # flanker data from Ulrich et al. (2015)
 #' plot(simonData)    # simon data from Ulrich et al. (2015)
 #'
-#' # Example 2 (Basic behavioural analysis from Ulrich et al. 2015)
+#' # Example 2 (Basic behavioural analysis from Ulrich et al. )
 #' flankerDat <- cbind(Task = "flanker", flankerData$summarySubject)
 #' simonDat   <- cbind(Task = "simon",   simonData$summarySubject)
 #' datAgg     <- rbind(flankerDat, simonDat)
@@ -305,7 +305,7 @@ dmcObservedData <- function(dat,
                             compCoding   = c("comp", "incomp"),
                             errorCoding  = c(0, 1),
                             quantileType = 5,
-                            deltaErrors  = TRUE,
+                            deltaErrors  = FALSE,
                             keepRaw      = FALSE,
                             delim        = "\t",
                             skip         = 0) {

@@ -41,6 +41,7 @@ List dmcCppR(List r_in) {
   if (r_in.containsElementNamed("nDelta"))         p.nDelta         = as<double>(r_in["nDelta"]);
   if (r_in.containsElementNamed("pDelta"))         p.pDelta         = Rcpp::as< std::vector<double>> (r_in["pDelta"]);
   if (r_in.containsElementNamed("tDelta"))         p.tDelta         = as<unsigned int>(r_in["tDelta"]);
+  if (r_in.containsElementNamed("deltaErrors"))    p.deltaErrors    = as<bool>(r_in["deltaErrors"]);
   if (r_in.containsElementNamed("nCAF"))           p.nCAF           = as<double>(r_in["nCAF"]);
   if (r_in.containsElementNamed("printInputArgs")) p.printInputArgs = as<bool>(r_in["printInputArgs"]);
   if (r_in.containsElementNamed("printResults"))   p.printResults   = as<bool>(r_in["printResults"]);

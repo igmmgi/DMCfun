@@ -28,6 +28,7 @@ struct Prms {
     unsigned long nTrlData = 5;
     int nDelta = 10;
     unsigned int tDelta = 1;
+    bool deltaErrors = false;
     std::vector<double> pDelta;
     std::vector<double> vDelta;
     int nCAF = 5;

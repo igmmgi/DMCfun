@@ -93,8 +93,11 @@ void run_dmc_sim_ci(Prms &p,
 
     rsum[comp]                    = calculate_summary(rts, errs, slows, p.nTrl );
     rsum["delta_correct_" + comp] = calculate_percentile(p.vDelta, rts, p.tDelta);
-    rsum["delta_errors_" + comp]  = calculate_percentile(p.vDelta, errs, p.tDelta);
+    if (p.deltaErrors) {
+      rsum["delta_errors_" + comp]  = calculate_percentile(p.vDelta, errs, p.tDelta);
+    }
     rsum["caf_" + comp]           = calculate_caf(rts, errs, p.nCAF);
+    rsum["caf_rt_" + comp]        = calculate_percentile(p.vCAF, rts, 2);
     m.unlock();
 
 }
@@ -266,14 +269,16 @@ std::vector<double> calculate_percentile( std::vector<double> vDelta, std::vecto
     return res_b;
 }
 
-void calculate_delta( std::map<std::string, std::vector<double> > &rdelta) {
+void calculate_delta(std::map<std::string, std::vector<double> > &rdelta) {
 
-    for (auto i = 0u; i < rdelta["delta_correct_comp"].size(); i++) {
-        rdelta["delta_correct_mean"].push_back((rdelta["delta_correct_comp"][i]   + rdelta["delta_correct_incomp"][i]) / 2);
-        rdelta["delta_correct_delta"].push_back(rdelta["delta_correct_incomp"][i] - rdelta["delta_correct_comp"][i]);
-        rdelta["delta_errors_mean"].push_back((rdelta["delta_errors_comp"][i]   + rdelta["delta_errors_incomp"][i]) / 2);
-        rdelta["delta_errors_delta"].push_back(rdelta["delta_errors_incomp"][i] - rdelta["delta_errors_comp"][i]);
-    }
+  for (auto i = 0u; i < rdelta["delta_correct_comp"].size(); i++) {
+    rdelta["delta_correct_mean"].push_back((rdelta["delta_correct_comp"][i]   + rdelta["delta_correct_incomp"][i]) / 2);
+    rdelta["delta_correct_delta"].push_back(rdelta["delta_correct_incomp"][i] - rdelta["delta_correct_comp"][i]);
+  }
+  for (auto i = 0u; i < rdelta["delta_errors_comp"].size(); i++) {
+    rdelta["delta_errors_mean"].push_back((rdelta["delta_errors_comp"][i]   + rdelta["delta_errors_incomp"][i]) / 2);
+    rdelta["delta_errors_delta"].push_back(rdelta["delta_errors_incomp"][i] - rdelta["delta_errors_comp"][i]);
+  }
 
 }
 

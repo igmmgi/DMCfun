@@ -30,6 +30,9 @@ void print_results(Prms &p, std::map<std::string, std::vector<double>> &rsum) {
 
     // results delta distribution
     for (int ce = 0; ce < 2; ce++) {
+      if (ce == 1 && !p.deltaErrors) {
+        break;
+      }
       std::string t;
       if (ce == 0) {
         Rcpp::Rcout << "Delta Values (Correct):\n" << "\t";

@@ -29,6 +29,7 @@
 #' @param nDelta number of delta bins
 #' @param pDelta alternative to nDelta (tDelta = 1 only) by directly specifying required percentile values (0-100)
 #' @param tDelta type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)
+#' @param deltaErrors TRUE/FALSE Calculate delta bins for error trials
 #' @param nCAF Number of CAF bins
 #' @param printInputArgs TRUE/FALSE
 #' @param printResults TRUE/FALSE
@@ -40,7 +41,7 @@
 #' \item{summary}{Condition means for reaction time and error rate}
 #' \item{caf}{Accuracy per bin for compatible and incompatible trials}
 #' \item{delta}{Mean RT and compatibility effect per bin}
-#' \item{deltaErrors}{Mean RT and compatibility effect per bin}
+#' \item{deltaErrors}{Optional output: Mean RT and compatibility effect per bin for error trials}
 #' \item{prms}{The input parameters used in the simulation}
 #'
 #' @examples
@@ -97,6 +98,7 @@ dmcSim <- function(amp            = 20,
                    nDelta         = 9,
                    pDelta         = vector(),
                    tDelta         = 1,
+                   deltaErrors    = FALSE,
                    nCAF           = 5,
                    printInputArgs = TRUE,
                    printResults   = TRUE,
@@ -114,7 +116,7 @@ dmcSim <- function(amp            = 20,
     r_in = list(amp = amp, tau = tau, drc = drc, bnds = bnds, resDist = resDist, resMean = resMean,
       resSD = resSD, aaShape = aaShape, spShape = spShape, spBias = spBias, sigm = sigm,
       nTrl = nTrl, tmax = tmax, rtMax = rtMax, fullData = fullData, nTrlData = nTrlData,
-      nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, nCAF = nCAF,
+      nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF,
       spDist = spDist, spLimLow = spLim[1], spLimHigh = spLim[2],
       drDist = drDist, drShape = drShape, drLimLow = drLim[1], drLimHigh = drLim[2],
       printInputArgs = printInputArgs, printResults = printResults, setSeed = setSeed, seedValue = seedValue)
@@ -130,7 +132,9 @@ dmcSim <- function(amp            = 20,
 
   # caf
   dmc$caf <- as.data.frame(cbind(Bin = 1:nCAF,
+    rtComp       = summary$caf_rt_comp,
     accPerComp   = summary$caf_comp,
+    rtIncomp     = summary$caf_rt_incomp,
     accPerIncomp = summary$caf_incomp,
     meanEffect   = ((100 - summary$caf_incomp) - (100 - summary$caf_comp)) * 100))
 
@@ -143,13 +147,15 @@ dmcSim <- function(amp            = 20,
     meanEffect = summary$delta_correct_delta)
   )
 
-  dmc$deltaErrors <- as.data.frame(cbind(
-    Bin        = 1:nDelta,
-    meanComp   = summary$delta_errors_comp,
-    meanIncomp = summary$delta_errors_incomp,
-    meanBin    = summary$delta_errors_mean,
-    meanEffect = summary$delta_errors_delta)
-  )
+  if (deltaErrors) {
+    dmc$deltaErrors <- as.data.frame(cbind(
+      Bin        = 1:nDelta,
+      meanComp   = summary$delta_errors_comp,
+      meanIncomp = summary$delta_errors_incomp,
+      meanBin    = summary$delta_errors_mean,
+      meanEffect = summary$delta_errors_delta)
+    )
+  }
 
   # store parameters used to call function
   dmc$prms <- data.frame(
