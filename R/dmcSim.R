@@ -132,11 +132,13 @@ dmcSim <- function(amp            = 20,
 
   # caf
   dmc$caf <- as.data.frame(cbind(Bin = 1:nCAF,
-    rtComp       = summary$caf_rt_comp,
+    # rtComp       = summary$caf_rt_comp,
     accPerComp   = summary$caf_comp,
-    rtIncomp     = summary$caf_rt_incomp,
+    # rtIncomp     = summary$caf_rt_incomp,
     accPerIncomp = summary$caf_incomp,
-    meanEffect   = ((100 - summary$caf_incomp) - (100 - summary$caf_comp)) * 100))
+    meanBin      = (summary$caf_rt_comp + summary$caf_rt_incomp) / 2,
+    meanEffect   = ((100 - summary$caf_incomp) - (100 - summary$caf_comp)) * 100)
+  )
 
   # delta
   dmc$delta <- as.data.frame(cbind(

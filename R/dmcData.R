@@ -382,6 +382,7 @@ dmcObservedData <- function(dat,
     dplyr::group_by(Bin) %>%
     dplyr::summarize(accPerComp   = mean(comp, na.rm = TRUE),
                      accPerIncomp = mean(incomp, na.rm = TRUE),
+                     meanBin      = mean(meanBin, na.rm = TRUE),
                      meanEffect   = mean(effect, na.rm = TRUE),
                      sdEffect     = sd(effect, na.rm = TRUE),
                      seEffect     = sdEffect/sqrt(n()),
@@ -438,7 +439,7 @@ dmcObservedData <- function(dat,
 
   # caf
   obj$cafSubject        <- as.data.frame(datSubject_caf)
-  names(obj$cafSubject) <- c("Subject", "Bin", "accPerComp", "accPerIncomp", "meanEffect")
+  names(obj$cafSubject) <- c("Subject", "Bin", "accPerComp", "accPerIncomp", "meanBin", "meanEffect")
   obj$caf               <- as.data.frame(datAgg_caf)
 
   # delta
@@ -552,12 +553,17 @@ calculateCAF <- function(dat,
     dplyr::mutate(Bin = ntile(RT, nCAF)) %>%
     dplyr::group_by(Subject, Comp, Bin) %>%
     dplyr::summarize(accPer  = sum(Error == 0) / n(),
-                     .groups = "drop")  %>%
+                     rt = mean(RT),
+                     .groups = "drop") %>%
     dplyr::group_by(Subject, Comp, Bin) %>%
     dplyr::summarize(accPer  = mean(accPer),
-                     .groups = "drop") %>%
-    tidyr::pivot_wider(., id_cols = c("Subject", "Bin"), names_from = "Comp", values_from = "accPer") %>%
-    dplyr::mutate(effect = ((100 - incomp) - (100 - comp)) * 100)
+                     rt = mean(rt),
+                     .groups = "drop")  %>%
+    tidyr::pivot_wider(., id_cols = c("Subject", "Bin"), names_from = "Comp", values_from = c("rt", "accPer"))  %>%
+    dplyr::mutate(meanBin = (rt_comp + rt_comp) / 2,
+                  effect = ((100 - accPer_incomp) - (100 - accPer_comp)) * 100) %>%
+    dplyr::select(-c("rt_comp", "rt_incomp")) %>%
+    dplyr::rename(comp = accPer_comp, incomp = accPer_incomp)
 
   return(dat_caf)
 
