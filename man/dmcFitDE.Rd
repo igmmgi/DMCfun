@@ -14,6 +14,7 @@ dmcFitDE(
   nDelta = 19,
   pDelta = vector(),
   tDelta = 1,
+  deltaErrors = FALSE,
   costFunction = "RMSE",
   spDist = 1,
   drDist = 0,
@@ -50,6 +51,8 @@ NB. Value if fixed at midpoint between minVals and maxVals.}
 
 \item{tDelta}{The type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)}
 
+\item{deltaErrors}{TRUE/FALSE Calculate delta bins for error trials}
+
 \item{costFunction}{The cost function to minimise: root mean square error ("RMSE": default),
 squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")}
 
@@ -74,7 +77,7 @@ dmcfit returns an object of class "dmcfit" with the following components:
 \item{summary}{Condition means for reaction time and error rate}
 \item{caf}{Conditional Accuracy Function (CAF) data per bin}
 \item{delta}{DataFrame with distributional delta analysis data correct trials (Bin, meanComp, meanIncomp, meanBin, meanEffect)}
-\item{delta_errs}{DataFrame with distributional delta analysis data incorrect trials (Bin, meanComp, meanIncomp, meanBin, meanEffect)}
+\item{delta_errs}{Optional: DataFrame with distributional delta analysis data incorrect trials (Bin, meanComp, meanIncomp, meanBin, meanEffect)}
 \item{par}{The fitted model parameters + final cost value of the fit}
 }
 \description{

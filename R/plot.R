@@ -1702,7 +1702,7 @@ plot_activation_ggplot2 <- function(
     ggplot2::coord_cartesian( xlim = xlim, ylim = ylim) +
     ggplot2::labs(x = xlab, y = ylab, color = "") +
     ggplot2::geom_hline(yintercept = c(-resTh$prms$bnds, resTh$prms$bnds), linetype = "dashed",  color = "darkgrey", size = 0.5) +
-    DMCfun:::plot_theme_ggplot2() +
+    plot_theme_ggplot2() +
     ggplot2::theme(legend.position = legendPosition)
 
   if (!is.null(theme)) {
@@ -1755,7 +1755,7 @@ plot_trials_ggplot2 <- function(
     ggplot2::coord_cartesian( xlim = xlim, ylim = ylim) +
     ggplot2::labs(x = xlab, y = ylab, color = "") +
     ggplot2::geom_hline(yintercept = c(-resTh$prms$bnds, resTh$prms$bnds), linetype = "dashed",  color = "darkgrey", size = 0.5) +
-    DMCfun:::plot_theme_ggplot2() +
+    plot_theme_ggplot2() +
     ggplot2::theme(legend.position = legendPosition)
 
   if (!is.null(theme)) {
@@ -1794,7 +1794,7 @@ plot_pdf_ggplot2 <- function(
     ggplot2::scale_color_manual(values = cols) +
     ggplot2::coord_cartesian( xlim = xlim, ylim = ylim) +
     ggplot2::labs(x = xlab, y = ylab, color = "") +
-    DMCfun:::plot_theme_ggplot2() +
+    plot_theme_ggplot2() +
     ggplot2::theme(legend.position = legendPosition)
 
   if (!is.null(theme)) {
@@ -1839,7 +1839,7 @@ plot_cdf_ggplot2 <- function(
     ggplot2::coord_cartesian( xlim = xlim, ylim = ylim) +
     ggplot2::labs(x = xlab, y = ylab, color = "") +
     ggplot2::geom_hline(yintercept = c(0, 1), linetype = "dashed",  color = "darkgrey", size = 0.5) +
-    DMCfun:::plot_theme_ggplot2() +
+    plot_theme_ggplot2() +
     ggplot2::theme(legend.position = legendPosition)
 
   if (!is.null(theme)) {
@@ -1874,7 +1874,7 @@ plot_caf_ggplot2 <- function(
     ggplot2::scale_color_manual(values = cols) +
     ggplot2::coord_cartesian(ylim = ylim) +
     ggplot2::labs(x = xlab, y = ylab, color = "") +
-    DMCfun:::plot_theme_ggplot2() +
+    plot_theme_ggplot2() +
     ggplot2::theme(legend.position = legendPosition)
 
   if (!is.null(theme)) {
@@ -1906,7 +1906,7 @@ plot_delta_ggplot2 <- function(
     ggplot2::geom_point() +
     ggplot2::coord_cartesian(xlim = xlim, ylim = ylim) +
     ggplot2::labs(x = xlab, y = ylab) +
-    DMCfun:::plot_theme_ggplot2() +
+    plot_theme_ggplot2() +
     ggplot2::theme(legend.position = legendPosition)
 
   if (!is.null(theme)) {
@@ -1946,7 +1946,7 @@ plot_deltas_ggplot2 <- function(
     ggplot2::labs(x = xlab, y = ylab) +
     ggplot2::coord_cartesian(xlim = xlim, ylim = ylim) +
     ggplot2::guides(color = ggplot2::guide_legend(ncol = ncol)) +
-    DMCfun:::plot_theme_ggplot2() +
+    plot_theme_ggplot2() +
     ggplot2::theme(legend.position = legendPosition)
 
   return(plt)

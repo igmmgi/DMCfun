@@ -29,6 +29,7 @@ dmcSim(
   nDelta = 9,
   pDelta = vector(),
   tDelta = 1,
+  deltaErrors = FALSE,
   nCAF = 5,
   printInputArgs = TRUE,
   printResults = TRUE,
@@ -86,6 +87,8 @@ function and/or individual trials}
 
 \item{tDelta}{type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)}
 
+\item{deltaErrors}{TRUE/FALSE Calculate delta bins for error trials}
+
 \item{nCAF}{Number of CAF bins}
 
 \item{printInputArgs}{TRUE/FALSE}
@@ -102,7 +105,7 @@ dmcSim returns an object of class "dmcsim" with the following components:
 \item{summary}{Condition means for reaction time and error rate}
 \item{caf}{Accuracy per bin for compatible and incompatible trials}
 \item{delta}{Mean RT and compatibility effect per bin}
-\item{deltaErrors}{Mean RT and compatibility effect per bin}
+\item{deltaErrors}{Optional output: Mean RT and compatibility effect per bin for error trials}
 \item{prms}{The input parameters used in the simulation}
 }
 \description{

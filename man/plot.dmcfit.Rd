@@ -23,6 +23,7 @@
   ylabs = TRUE,
   xaxts = TRUE,
   yaxts = TRUE,
+  xylabPos = 2,
   resetPar = TRUE,
   ...
 )
@@ -64,6 +65,8 @@
 
 \item{yaxts}{TRUE/FALSE}
 
+\item{xylabPos}{2}
+
 \item{resetPar}{TRUE/FALSE Reset graphical parameters}
 
 \item{...}{additional plot pars}
@@ -85,7 +88,7 @@ that dmcSim is run with fullData = TRUE.
 \donttest{
 # Example 1
 resTh <- dmcFit(flankerData, nTrl = 5000)
-plot(resTh, flankerData, figType = "rtcorrect")
+plot(resTh, flankerData)
 
 # Example 2
 resTh <- dmcFit(flankerData, nTrl = 5000)

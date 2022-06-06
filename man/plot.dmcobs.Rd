@@ -27,6 +27,7 @@
   ylabs = TRUE,
   xaxts = TRUE,
   yaxts = TRUE,
+  xylabPos = 2,
   resetPar = TRUE,
   ...
 )
@@ -75,6 +76,8 @@
 \item{xaxts}{TRUE/FALSE}
 
 \item{yaxts}{TRUE/FALSE}
+
+\item{xylabPos}{2}
 
 \item{resetPar}{TRUE/FALSE Reset graphical parameters}
 

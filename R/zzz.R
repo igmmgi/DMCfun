@@ -7,14 +7,34 @@
   utils::globalVariables(
     c(names(DMCfun::flankerData$data),
       names(DMCfun::flankerData$summary),
+      names(DMCfun::flankerData$summarySubject),
       names(DMCfun::flankerData$delta),
+      names(DMCfun::flankerData$deltaSubject),
       names(DMCfun::flankerData$caf),
-      ".", "Effect", "aaShape", "accPer", "amp", "bnds", "comp",
-      "cost", "drc", "effect", "incomp", "N", "nCor", "nErr", "per", "perSlow",
-      "perE", "resMean", "resSD", "rtC", "rtE", "sigm", "spBias", "spShape", "tau",
-      "nTrials", "prob", "boundary", "outlier", "Subject", "Error", "RT")
-  )
-
+      names(DMCfun::flankerData$cafSubject),
+      ".",
+      "Effect",
+      "N",
+      "Parameters",
+      "Trial",
+      "accPer",
+      "accPer_comp",
+      "accPer_incomp",
+      "bin",
+      "boundary",
+      "comp",
+      "incomp",
+      "nCor",
+      "nErr",
+      "nTrials",
+      "perE",
+      "prob",
+      "rtC",
+      "rtE",
+      "rt_comp",
+      "rt_incomp",
+      "x")
+    )
 }
 
 .onUnload <- function(libpath) {

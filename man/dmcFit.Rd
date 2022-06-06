@@ -18,6 +18,7 @@ dmcFit(
   nDelta = 19,
   pDelta = vector(),
   tDelta = 1,
+  deltaErrors = FALSE,
   spDist = 1,
   drDist = 0,
   drShape = 3,
@@ -69,6 +70,8 @@ only searches the tau space.}
 \item{pDelta}{An alternative option to nDelta (tDelta = 1 only) by directly specifying required percentile values (vector of values 0-100)}
 
 \item{tDelta}{The type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)}
+
+\item{deltaErrors}{TRUE/FALSE Calculate delta bins for error trials}
 
 \item{spDist}{The starting point (sp) distribution (0 = constant, 1 = beta, 2 = uniform)}
 

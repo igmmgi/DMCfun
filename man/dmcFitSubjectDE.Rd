@@ -14,6 +14,7 @@ dmcFitSubjectDE(
   nDelta = 19,
   pDelta = vector(),
   tDelta = 1,
+  deltaErrors = FALSE,
   costFunction = "RMSE",
   spDist = 1,
   drDist = 0,
@@ -50,6 +51,8 @@ NB. Value if fixed at midpoint between minVals and maxVals.}
 \item{pDelta}{An alternative option to nDelta (tDelta = 1 only) by directly specifying required percentile values (vector of values 0-100)}
 
 \item{tDelta}{The type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)}
+
+\item{deltaErrors}{TRUE/FALSE Calculate delta bins for error trials}
 
 \item{costFunction}{The cost function to minimise: root mean square error ("RMSE": default),
 squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")}
