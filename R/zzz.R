@@ -23,6 +23,7 @@
       "bin",
       "boundary",
       "comp",
+      "cond",
       "incomp",
       "nCor",
       "nErr",

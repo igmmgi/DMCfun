@@ -213,20 +213,20 @@ plot.dmcsim <- function(
 
   # rtCorrect
   if (showFig[8]) {
-    plot_beh(resTh = x, figType = "rtCor", xlabs = labels, ylab = ylabs[8],
+    plot_beh(resTh = x, figType = "rtcorrect", xlabs = labels, ylab = ylabs[8],
              ylim = ylimRt, xaxt = "n", yaxt = yaxts, xylabPos = xylabPos, ...)
     if (errorBars) addErrorBars(c(1, 2), x$summary$rtCor, x$summary$sdRtCor)
   }
 
   # error rate
   if (showFig[9]) {
-    plot_beh(resTh = x, figType = "perErr", xlabs = labels, ylab = ylabs[9],
+    plot_beh(resTh = x, figType = "errorrate", xlabs = labels, ylab = ylabs[9],
              ylim = ylimErr, xaxt = "n", yaxt = yaxts, xylabPos = xylabPos, ...)
   }
 
   # rtError
   if (showFig[10]) {
-    plot_beh(resTh = x, figType = "rtErr", xlabs = labels, ylab = ylabs[10],
+    plot_beh(resTh = x, figType = "rterrors", xlabs = labels, ylab = ylabs[10],
              ylim = ylimRt, xaxt = "n", yaxt = yaxts, xylabPos = xylabPos, ...)
     if (errorBars) addErrorBars(c(1, 2), x$summary$rtErr, x$summary$sdRtErr)
   }
@@ -481,19 +481,19 @@ plot.dmcob <- function(x,
 
   # rtCorrect
   if (showFig[1]) {
-    plot_beh(resOb = x, figType = "rtCor", xlabs = labels, ylab = ylabs[1], ylim = ylimRt, xaxt = "n", yaxt = yaxts, xylabPos = xylabPos)
+    plot_beh(resOb = x, figType = "rtcorrect", xlabs = labels, ylab = ylabs[1], ylim = ylimRt, xaxt = "n", yaxt = yaxts, xylabPos = xylabPos)
     if (errorBars) addErrorBars(c(1, 2), x$summary$rtCor, x$summary[[paste0(errorBarType, "RtCor")]])
   }
 
   # errorRate
   if (showFig[2]) {
-    plot_beh(resOb = x, figType = "perErr", xlabs = labels, ylab = ylabs[2], ylim = ylimErr, xaxt = "n", yaxt = yaxts, xylabPos = xylabPos)
+    plot_beh(resOb = x, figType = "errorrate", xlabs = labels, ylab = ylabs[2], ylim = ylimErr, xaxt = "n", yaxt = yaxts, xylabPos = xylabPos)
     if (errorBars) addErrorBars(c(1, 2), x$summary$perErr, x$summary[[paste0(errorBarType, "PerErr")]])
   }
 
   # rtError
   if (showFig[3]) {
-    plot_beh(resOb = x, figType = "rtErr", xlabs = labels, ylab = ylabs[3], ylim = ylimErr, xaxt = "n", yaxt = yaxts, xylabPos = xylabPos)
+    plot_beh(resOb = x, figType = "rterrors", xlabs = labels, ylab = ylabs[3], ylim = ylimErr, xaxt = "n", yaxt = yaxts, xylabPos = xylabPos)
     if (errorBars) addErrorBars(c(1, 2), x$summary$rtErr, x$summary[[paste0(errorBarType, "RtErr")]])
   }
 
@@ -687,7 +687,7 @@ plot.dmcobs <- function(x,
       ylimRt <- c(minx - 100, maxx + 100)
     }
 
-    plot_beh(resTh = NULL, resOb = NULL, figType = "rtCor", xlabs = labels,
+    plot_beh(resTh = NULL, resOb = NULL, figType = "rtcorrect", xlabs = labels,
              ylab = ylabs[1], ylim = ylimRt, xylabPos = xylabPos, ...)
     for (i in seq_along(x)) {
       lines(c(1, 2), x[[i]]$summary$rtCor, type = "o", col = cols[i], lty = ltys[i], pch = pchs[i], ...)
@@ -708,7 +708,7 @@ plot.dmcobs <- function(x,
       ylimErr <- c(0, maxy + 10)
     }
 
-    plot_beh(resTh = NULL, resOb = NULL, figType = "perErr", xlabs = labels,
+    plot_beh(resTh = NULL, resOb = NULL, figType = "errorrate", xlabs = labels,
              ylab = ylabs[2], ylim = ylimErr, xylabPos = xylabPos, ...)
     for (i in seq_along(x)) {
       lines(c(1, 2), x[[i]]$summary$perErr, type = "o", col = cols[i], lty = ltys[i], pch = pchs[i], ...)
@@ -729,7 +729,7 @@ plot.dmcobs <- function(x,
       ylimRt <- c(miny - 100, maxy + 100)
     }
 
-    plot_beh(resTh = NULL, resOb = NULL, figType = "rtErr", xlabs = labels,
+    plot_beh(resTh = NULL, resOb = NULL, figType = "rterrors", xlabs = labels,
              ylab = ylabs[3], ylim = ylimRt, xylabPos = xylabPos, ...)
     for (i in seq_along(x)) {
       lines(c(1, 2), x[[i]]$summary$rtErr, type = "o", col = cols[i], lty = ltys[i], pch = pchs[i], ...)
@@ -1011,22 +1011,21 @@ plot.dmcfit <- function(x,
   } else {
     showFig[figTypes[3:8] %in% figType] <- TRUE
   }
-
   # rtCorrect
   if (showFig[1]) {
-    plot_beh(resTh = x, resOb = y, figType = "rtCor", xlabs = labels[1:2],
+    plot_beh(resTh = x, resOb = y, figType = "rtcorrect", xlabs = labels[1:2],
              ylab = ylabs[1], ylim = ylimRt, legend, condLabels = labels[3:4], xylabPos = xylabPos)
   }
 
   # errorRate
   if (showFig[2]) {
-    plot_beh(resTh = x, resOb = y, figType = "perErr", xlabs = labels[1:2],
+    plot_beh(resTh = x, resOb = y, figType = "errorrate", xlabs = labels[1:2],
              ylab = ylabs[2], ylim = ylimRt, legend, condLabels = labels[3:4], xylabPos = xylabPos)
   }
 
   # rt Error
   if (showFig[3]) {
-    plot_beh(resTh = x, resOb = y, figType = "rtErr", xlabs = labels[1:2],
+    plot_beh(resTh = x, resOb = y, figType = "rterrors", xlabs = labels[1:2],
              ylab = ylabs[3], ylim = ylimRt, legend, condLabels = labels[3:4], xylabPos = xylabPos)
   }
 
@@ -1083,7 +1082,6 @@ addErrorBars <- function(xpos, ypos, errorSize, arrowSize = 0.1) {
 
 #################################### INTERNAL PLOT FUNCTIONS ###########################################################
 # TO DO: Export/document any of these functions?
-
 plot_activation <- function(
     resTh,
     labels = c("Compatible", "Incompatible"),
@@ -1494,7 +1492,7 @@ plot_delta <- function(
 plot_beh <- function(
   resTh = NULL,
   resOb = NULL,
-  figType = "rtCor",
+  figType = "rtcorrect",
   xlabs = c("Compatible", "Incompatible"),
   ylab = NULL,
   ylim = NULL,
@@ -1509,26 +1507,31 @@ plot_beh <- function(
 
   datOb <- NULL
   datTh <- NULL
-  if (figType == "rtCor") {
+  if (figType == "rtcorrect") {
     if (!is.null(resTh)) datTh <- resTh$summary$rtCor
     if (!is.null(resOb)) datOb <- resOb$summary$rtCor
     if (is.null(ylab)) ylab <- "RT Correct [ms]"
-    if (is.null(ylim)) ylim <- c(min(datOb, datTh, na.rm = TRUE) * 0.9,
-      max(datOb, datTh, na.rm = TRUE) * 1.1)
+    if (is.null(ylim)) {
+      ylim <- c(min(datOb, datTh, na.rm = TRUE) * 0.9, max(datOb, datTh, na.rm = TRUE) * 1.1)
+    }
     legendPosition = "topleft"
-  } else if (figType == "rtErr") {
+  } else if (figType == "rterrors") {
     if (!is.null(resTh)) datTh <- resTh$summary$rtErr
     if (!is.null(resOb)) datOb <- resOb$summary$rtErr
     if (is.null(ylab)) ylab <- "RT Error [ms]"
     if (is.null(ylim)) ylim <- c(min(datOb, datTh, na.rm = TRUE) * 0.9,
       max(datOb, datTh, na.rm = TRUE) * 1.1)
     legendPosition = "topright"
-  } else if (figType == "perErr") {
+  } else if (figType == "errorrate") {
     if (!is.null(resTh)) datTh <- resTh$summary$perErr
     if (!is.null(resOb)) datOb <- resOb$summary$perErr
     if (is.null(ylab)) ylab <- "Error Rate [%]"
     if (is.null(ylim)) ylim <- c(0, max(datOb, datTh, na.rm = TRUE) * 1.5)
     legendPosition = "topleft"
+  }
+
+  if (!is.null(resTh) & !is.null(resOb) & is.null(condLabels)) {
+    condLabels <- c("Observed", "Predicted")
   }
 
   plot(NULL, NULL,
@@ -1629,22 +1632,6 @@ add_legend <- function(legend, labels, cols, ltys, pchs, position = "bottomright
 }
 
 
-# ########################### CAF Difference? ##################################
-# TO DO! This should be the CAF difference!
-# plot_delta_errors <- function(x, y, ylim, xlab, ylab, xaxts, yaxts, col, type = "o", ...) {
-#
-#     ylim <- c(min(y) - 5, max(y) + 5)
-#     if (any(is.na(ylim))) {
-#       ylim <- NULL
-#     }
-#   }
-#
-#   plot(x, y, type = type, col = col,
-#     ylim = ylim, ylab = ylab,  xlab = xlab,
-#     xaxt = xaxts, yaxt = yaxts, ...)
-#   axis(side = 1, labels = FALSE)
-#   axis(side = 2, labels = FALSE)
-# }
 
 
 ########################### ggplot2 #######################################
@@ -1746,7 +1733,7 @@ plot_trials_ggplot2 <- function(
     idx <- min(which(abs(resTh$trials$comp[[trl]]) >= resTh$prms$bnds)[1], length(resTh$trials$comp[[trl]]), na.rm = TRUE)
     dat <- rbind(dat, data.frame(Trial = trl, time = 1:idx, comp = labels[1], data = resTh$trials$comp[[trl]][1:idx]))
     idx <- min(which(abs(resTh$trials$incomp[[trl]]) >= resTh$prms$bnds)[1], length(resTh$trials$incomp[[trl]]), na.rm = TRUE)
-    dat <- rbind(dat, data.frame(Trial = -trl, time = 1:idx, comp = labels[2], data = x$trials$incomp[[trl]][1:idx]))
+    dat <- rbind(dat, data.frame(Trial = -trl, time = 1:idx, comp = labels[2], data = resTh$trials$incomp[[trl]][1:idx]))
   }
 
   plt <- ggplot2::ggplot(dat, ggplot2::aes(x = time, y = data, group = Trial, color = comp)) +
@@ -1952,3 +1939,93 @@ plot_deltas_ggplot2 <- function(
   return(plt)
 
 }
+
+
+plot_beh_ggplot2 <- function(resTh = NULL,
+                             resOb = NULL,
+                             figType = "rtcorrect",
+                             xlabs = c("Compatible", "Incompatible"),
+                             ylab = NULL,
+                             ylim = NULL,
+                             legend = TRUE,
+                             condLabels = NULL,
+                             ...) {
+  datOb <- NULL
+  datTh <- NULL
+  if (figType == "rtcorrect") {
+    if (!is.null(resTh)) datTh <- resTh$summary$rtCor
+    if (!is.null(resOb)) datOb <- resOb$summary$rtCor
+    if (is.null(ylab)) ylab <- "RT Correct [ms]"
+    if (is.null(ylim)) {
+      ylim <- c(min(datOb, datTh, na.rm = TRUE) * 0.9, max(datOb, datTh, na.rm = TRUE) * 1.1)
+    }
+  } else if (figType == "rterrors") {
+    if (!is.null(resTh)) datTh <- resTh$summary$rtErr
+    if (!is.null(resOb)) datOb <- resOb$summary$rtErr
+    if (is.null(ylab)) ylab <- "RT Error [ms]"
+    if (is.null(ylim)) {
+      ylim <- c(min(datOb, datTh, na.rm = TRUE) * 0.9, max(datOb, datTh, na.rm = TRUE) * 1.1)
+    }
+  } else if (figType == "errorrate") {
+    if (!is.null(resTh)) datTh <- resTh$summary$perErr
+    if (!is.null(resOb)) datOb <- resOb$summary$perErr
+    if (is.null(ylab)) ylab <- "Error Rate [%]"
+    if (is.null(ylim)) ylim <- c(0, max(datOb, datTh, na.rm = TRUE) * 1.5)
+  }
+
+  if (is.null(resTh) | is.null(resOb)) {
+    x <- xlabs
+    if (is.null(resTh)) {
+      y <- datOb
+    } else {
+      y <- datTh
+    }
+    dat <- data.frame(x = x, y = y)
+
+    return (ggplot2::ggplot(dat, ggplot2::aes(x = x, y = y)) +
+              ggplot2::geom_line(group = 1) +
+              ggplot2::geom_point(group = 1)  +
+              ggplot2::labs(x = "", y = ylab) +
+              ggplot2::coord_cartesian(ylim = ylim) +
+              plot_theme_ggplot2())
+
+  } else if (!is.null(resTh) & !is.null(resOb)) {
+
+    if (is.null(condLabels)) {
+      condLabels <- c("Observed", "Predicted")
+    }
+    dat <- data.frame(cond = rep(condLabels, each = length(datOb)), x = xlabs, y = c(datOb, datTh))
+
+    return (ggplot2::ggplot(dat, ggplot2::aes(x = x, y = y, linetype=cond)) +
+              ggplot2::geom_line(ggplot2::aes(group=cond)) +
+              ggplot2::geom_point(ggplot2::aes(group=cond))  +
+              ggplot2::labs(x = "", y = ylab) +
+              ggplot2::coord_cartesian(ylim = ylim) +
+              plot_theme_ggplot2() +
+              ggplot2::theme(legend.position = "bottom",
+                             legend.title = ggplot2::element_blank()))
+
+  }
+}
+
+
+
+
+# ########################### CAF Difference? ##################################
+# TO DO! This should be the CAF difference!
+# plot_delta_errors <- function(x, y, ylim, xlab, ylab, xaxts, yaxts, col, type = "o", ...) {
+#
+#     ylim <- c(min(y) - 5, max(y) + 5)
+#     if (any(is.na(ylim))) {
+#       ylim <- NULL
+#     }
+#   }
+#
+#   plot(x, y, type = type, col = col,
+#     ylim = ylim, ylab = ylab,  xlab = xlab,
+#     xaxt = xaxts, yaxt = yaxts, ...)
+#   axis(side = 1, labels = FALSE)
+#   axis(side = 2, labels = FALSE)
+# }
+
+
