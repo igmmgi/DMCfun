@@ -1649,7 +1649,7 @@ plot_activation_ggplot2 <- function(
     ylab = "E[X(t)]",
     xlim = NULL,
     ylim = NULL,
-    legendPosition = c(0.8, 0.3),
+    legendPosition = "bottom",
     theme = NULL
 ) {
 
@@ -1705,7 +1705,7 @@ plot_trials_ggplot2 <- function(
     ylab = "X(t)",
     xlim = NULL,
     ylim = NULL,
-    legendPosition = c(0.8, 0.3),
+    legendPosition = "bottom",
     theme = NULL
 ) {
 
@@ -1733,7 +1733,7 @@ plot_trials_ggplot2 <- function(
   }
 
   plt <- ggplot2::ggplot(dat, ggplot2::aes(x = time, y = data, group = Trial, color = comp)) +
-    ggplot2::geom_line(ggplot2::aes(group = Trial, color = comp), size = 0.2, na.rm = TRUE) +
+    ggplot2::geom_line(ggplot2::aes(group = Trial, color = comp), size = 0.5, na.rm = TRUE) +
     ggplot2::scale_color_manual(values = cols) +
     ggplot2::coord_cartesian( xlim = xlim, ylim = ylim) +
     ggplot2::labs(x = xlab, y = ylab, color = "") +
@@ -1757,7 +1757,7 @@ plot_pdf_ggplot2 <- function(
     ylab = "PDF",
     xlim = NULL,
     ylim = NULL,
-    legendPosition = c(0.8, 0.8),
+    legendPosition = "bottom",
     theme = NULL
 ) {
 
@@ -1797,7 +1797,7 @@ plot_cdf_ggplot2 <- function(
     ylab = "CDF",
     xlim = NULL,
     ylim = NULL,
-    legendPosition = c(0.7, 0.2),
+    legendPosition = "bottom",
     theme = NULL
 ) {
 
@@ -1809,6 +1809,7 @@ plot_cdf_ggplot2 <- function(
   datThIncompX <- NULL
   datObCompX   <- NULL
   datObIncompX <- NULL
+  dat          <- NULL
   datOb        <- NULL
   datTh        <- NULL
 
@@ -1820,8 +1821,8 @@ plot_cdf_ggplot2 <- function(
     datThIncompX  <- densityIncomp$x
     datThIncompY  <- cumsum(densityIncomp$y * diff(densityIncomp$x[1:2]))
 
-    comp   <- rep(labels[1:2], times = c(length(datThCompY), length(datThIncompY)))
-    datTh  <- data.frame(comp = comp, time = c(datObCompX, datThIncompX), pdf = c(datThCompY, datThIncompY))
+    comp <- rep(labels[1:2], times = c(length(datThCompY), length(datThIncompY)))
+    dat  <- data.frame(comp = comp, time = c(datObCompX, datThIncompX), pdf = c(datThCompY, datThIncompY))
 
   } else if (is.null(resTh) & !is.null(resOb)) {
     ndelta       <- nrow(resOb$delta)
@@ -1830,9 +1831,8 @@ plot_cdf_ggplot2 <- function(
     datObIncompX <- resOb$delta$meanIncomp
     datObIncompY <- seq(0, 1, length.out = ndelta + 2)[2:(ndelta + 1)]
 
-    comp   <- rep(labels[1:2], times = c(length(datObCompY), length(datObIncompY)))
-    datOb  <- data.frame(comp = comp, time = c(datObCompX, datObIncompX), pdf = c(datObCompY, datObIncompY))
-    labels <- labels[1:2]
+    comp <- rep(labels[1:2], times = c(length(datObCompY), length(datObIncompY)))
+    dat  <- data.frame(comp = comp, time = c(datObCompX, datObIncompX), pdf = c(datObCompY, datObIncompY))
 
   } else if (!is.null(resTh) & !is.null(resOb)) {
 
@@ -1867,45 +1867,36 @@ plot_cdf_ggplot2 <- function(
     xlim <- c(minx, maxx)
   }
 
-  if (!is.null(datTh) & is.null(datOb)) {
+  if (!is.null(dat)) {
 
-    plt <- ggplot2::ggplot(datTh, ggplot2::aes(x = time, y = pdf, color = comp)) +
+    plt <- ggplot2::ggplot(dat, ggplot2::aes(x = time, y = pdf, color = comp)) +
       ggplot2::geom_line(na.rm = TRUE) +
       ggplot2::scale_color_manual(values = cols) +
       ggplot2::coord_cartesian( xlim = xlim, ylim = ylim) +
       ggplot2::labs(x = xlab, y = ylab, color = "") +
-      ggplot2::geom_hline(yintercept = c(0, 1), linetype = "dashed",  color = "darkgrey", size = 0.5) +
-      plot_theme_ggplot2() +
-      ggplot2::theme(legend.position = legendPosition)
+      ggplot2::geom_hline(yintercept = c(0, 1), linetype = "dashed",  color = "darkgrey", size = 0.5)
+    if (!is.null(resOb)) {
+      plt <- plt + ggplot2::geom_point()
+    }
 
-  } else if (is.null(datTh) & !is.null(datOb)) {
-
-    plt <- ggplot2::ggplot(datOb, ggplot2::aes(x = time, y = pdf, color = comp)) +
-      ggplot2::geom_line(na.rm = TRUE) +
-      ggplot2::geom_point() +
-      ggplot2::scale_color_manual(values = cols) +
-      ggplot2::coord_cartesian( xlim = xlim, ylim = ylim) +
-      ggplot2::labs(x = xlab, y = ylab, color = "") +
-      ggplot2::geom_hline(yintercept = c(0, 1), linetype = "dashed",  color = "darkgrey", size = 0.5) +
-      plot_theme_ggplot2() +
-      ggplot2::theme(legend.position = legendPosition)
-
-  } else if (!is.null(datTh) & !is.null(datOb)) {
+  } else {
 
     plt <- ggplot2::ggplot(NULL, ggplot2::aes(x = time, y = pdf)) +
       ggplot2::geom_point(data=datOb, ggplot2::aes(group=1, color=comp)) +
       ggplot2::geom_line(data=datTh, ggplot2::aes(color=comp), show.legend = TRUE) +
       ggplot2::scale_color_manual(name = "", values = rep(cols, times = 2), labels = labels,
                                   breaks = c(labels[3], labels[4], labels[1], labels[2]),
-                                  guide = ggplot2::guide_legend(override.aes = list(
+                                  guide = ggplot2::guide_legend(nrow=2, byrow=TRUE, override.aes = list(
                                     linetype = c("blank", "blank", "solid", "solid"),
                                     shape = c(16, 16, NA, NA)))
       ) +
-      plot_theme_ggplot2() +
-      ggplot2::theme(legend.position = legendPosition)
-
+      ggplot2::coord_cartesian( xlim = xlim, ylim = ylim) +
+      ggplot2::labs(x = xlab, y = ylab, color = "")
   }
 
+  plt <- plt +
+    plot_theme_ggplot2() +
+    ggplot2::theme(legend.position = legendPosition)
   if (!is.null(theme)) {
     plt <- plt + theme
   }
@@ -1922,28 +1913,12 @@ plot_caf_ggplot2 <- function(
     xlab = "Bin",
     ylab = "CAF",
     ylim = c(0, 1),
-    legendPosition = c(0.7, 0.2),
+    legendPosition = "bottom",
     theme = NULL
 ) {
 
   if (!requireNamespace("ggplot2")) {
     stop("This addin requires the 'ggplot2' package.")
-  }
-
-  datObComp   <- NULL
-  datObIncomp <- NULL
-  datThComp   <- NULL
-  datThIncomp <- NULL
-
-  if (!is.null(resTh)) {
-    datThComp   <- resTh$caf$accPerComp
-    datThIncomp <- resTh$caf$accPerIncomp
-    nCAF        <- length(datThComp)
-  }
-  if (!is.null(resOb)) {
-    datObComp   <- resOb$caf$accPerComp
-    datObIncomp <- resOb$caf$accPerIncomp
-    nCAF        <- length(datObComp)
   }
 
   if (!is.null(resTh) & !is.null(resOb)) {
@@ -1953,64 +1928,52 @@ plot_caf_ggplot2 <- function(
     labels <- labels[1:2]
   }
 
-  if (is.null(ylim)) ylim <- c(0, 1)
-
+  dat <- NULL
   if (!is.null(resTh) & is.null(resOb)) {
-
     comp <- rep(labels, each = length(resTh$caf$accPerComp))
     dat  <- data.frame(comp = comp, bin = 1:length(resTh$caf$accPerComp), data = c(resTh$caf$accPerComp, resTh$caf$accPerIncomp))
-
-    plt <- ggplot2::ggplot(dat, ggplot2::aes(x = bin, y = data, color = comp)) +
-      ggplot2::geom_line() +
-      ggplot2::geom_point() +
-      ggplot2::scale_color_manual(values = cols) +
-      ggplot2::coord_cartesian(ylim = ylim) +
-      ggplot2::labs(x = xlab, y = ylab, color = "") +
-      plot_theme_ggplot2() +
-      ggplot2::theme(legend.position = legendPosition)
-
   } else if (is.null(resTh) & !is.null(resOb)) {
-     comp <- rep(labels, each = length(resOb$caf$accPerComp))
+    comp <- rep(labels, each = length(resOb$caf$accPerComp))
     dat  <- data.frame(comp = comp, bin = 1:length(resOb$caf$accPerComp), data = c(resOb$caf$accPerComp, resOb$caf$accPerIncomp))
-
-    plt <- ggplot2::ggplot(dat, ggplot2::aes(x = bin, y = data, color = comp)) +
-      ggplot2::geom_line() +
-      ggplot2::geom_point() +
-      ggplot2::scale_color_manual(values = cols) +
-      ggplot2::coord_cartesian(ylim = ylim) +
-      ggplot2::labs(x = xlab, y = ylab, color = "") +
-      plot_theme_ggplot2() +
-      ggplot2::theme(legend.position = legendPosition)
-
   } else if (!is.null(resTh) & !is.null(resOb)) {
-
     labels <- c(paste(labels[1], labels[3], sep = " "),
                 paste(labels[2], labels[3], sep = " "),
                 paste(labels[1], labels[4], sep = " "),
                 paste(labels[2], labels[4], sep = " "))
-
     comp  <- rep(labels[1:2], each = length(resOb$caf$accPerComp))
     datOb <- data.frame(comp = comp, bin = 1:length(resOb$caf$accPerComp), data = c(resOb$caf$accPerComp, resOb$caf$accPerIncomp))
+    comp  <- rep(labels[3:4], each = length(resTh$caf$accPerComp))
+    datTh <- data.frame(comp = comp, bin = 1:length(resTh$caf$accPerComp), data = c(resTh$caf$accPerComp, resTh$caf$accPerIncomp))
+  }
 
-    comp <- rep(labels[3:4], each = length(resTh$caf$accPerComp))
-    datTh  <- data.frame(comp = comp, bin = 1:length(resTh$caf$accPerComp), data = c(resTh$caf$accPerComp, resTh$caf$accPerIncomp))
+  if (!is.null(dat)) {
+
+    plt <- ggplot2::ggplot(dat, ggplot2::aes(x = bin, y = data, color = comp)) +
+      ggplot2::geom_line() +
+      ggplot2::geom_point() +
+      ggplot2::scale_color_manual(values = cols) +
+      ggplot2::coord_cartesian(ylim = ylim) +
+      ggplot2::labs(x = xlab, y = ylab, color = "")
+
+  } else {
 
     plt <- ggplot2::ggplot(NULL, ggplot2::aes(x = bin, y = data)) +
       ggplot2::geom_point(data=datOb, ggplot2::aes(group=1, color=comp)) +
       ggplot2::geom_line(data=datTh, ggplot2::aes(color=comp), show.legend = TRUE) +
       ggplot2::scale_color_manual(name = "", values = rep(cols, each = 2), labels = labels,
-                                  guide = ggplot2::guide_legend(override.aes = list(
+                                  guide = ggplot2::guide_legend(nrow=2, byrow=TRUE, override.aes = list(
                                     color = c(cols[1], cols[2], cols[1], cols[2]),
                                     linetype = c("blank", "blank", "solid", "solid"),
                                     shape = c(16, 16, NA, NA)))
       ) +
       ggplot2::coord_cartesian(ylim = ylim) +
-      ggplot2::labs(x = xlab, y = ylab, color = "") +
-      plot_theme_ggplot2() +
-      ggplot2::theme(legend.position = legendPosition)
+      ggplot2::labs(x = xlab, y = ylab, color = "")
 
   }
 
+  plt <- plt +
+  plot_theme_ggplot2() +
+  ggplot2::theme(legend.position = legendPosition)
   if (!is.null(theme)) {
     plt <- plt + theme
   }
@@ -2025,7 +1988,7 @@ plot_delta_ggplot2 <- function(
     ylab = "Delta [ms]",
     xlim = NULL,
     ylim = NULL,
-    legendPosition = "right",
+    legendPosition = "bottom",
     theme = NULL
 ) {
 
@@ -2096,69 +2059,77 @@ plot_beh_ggplot2 <- function(resTh = NULL,
                              ylim = NULL,
                              legend = TRUE,
                              condLabels = NULL,
+                             legendPosition = "bottom",
+                             theme=NULL,
                              ...) {
-  datOb <- NULL
+
+  if (figType == "rtcorrect") figType <- "rtCor"
+  if (figType == "rterrors") figType <- "rtErr"
+  if (figType == "errorrate") figType <- "perErr"
+
   datTh <- NULL
-  if (figType == "rtcorrect") {
-    if (!is.null(resTh)) datTh <- resTh$summary$rtCor
-    if (!is.null(resOb)) datOb <- resOb$summary$rtCor
-    if (is.null(ylab)) ylab <- "RT Correct [ms]"
-    if (is.null(ylim)) {
+  datOb <- NULL
+  if (!is.null(resTh)) datTh <- resTh$summary[, figType]
+  if (!is.null(resOb)) datOb <- resOb$summary[, figType]
+
+  if (is.null(ylab)) {
+    if (figType == "rtCor") ylab <- "RT Correct [ms]"
+    if (figType == "rtErr") ylab <- "RT Error [ms]"
+    if (figType == "perErr") ylab <- "Error Rate [%]"
+  }
+
+  if (is.null(ylim)) {
+    if (figType %in% c("rtCor", "rtErr")) {
       ylim <- c(min(datOb, datTh, na.rm = TRUE) * 0.9, max(datOb, datTh, na.rm = TRUE) * 1.1)
+    } else {
+      ylim <- c(0, max(datOb, datTh, na.rm = TRUE) * 1.5)
     }
-  } else if (figType == "rterrors") {
-    if (!is.null(resTh)) datTh <- resTh$summary$rtErr
-    if (!is.null(resOb)) datOb <- resOb$summary$rtErr
-    if (is.null(ylab)) ylab <- "RT Error [ms]"
-    if (is.null(ylim)) {
-      ylim <- c(min(datOb, datTh, na.rm = TRUE) * 0.9, max(datOb, datTh, na.rm = TRUE) * 1.1)
-    }
-  } else if (figType == "errorrate") {
-    if (!is.null(resTh)) datTh <- resTh$summary$perErr
-    if (!is.null(resOb)) datOb <- resOb$summary$perErr
-    if (is.null(ylab)) ylab <- "Error Rate [%]"
-    if (is.null(ylim)) ylim <- c(0, max(datOb, datTh, na.rm = TRUE) * 1.5)
   }
 
   if (is.null(resTh) | is.null(resOb)) {
-    x <- xlabs
+
     if (is.null(resTh)) {
       y <- datOb
     } else {
       y <- datTh
     }
-    dat <- data.frame(x = x, y = y)
+    dat <- data.frame(x = xlabs, y = y)
 
-    return (ggplot2::ggplot(dat, ggplot2::aes(x = x, y = y)) +
-              ggplot2::geom_line(group = 1) +
-              ggplot2::geom_point(group = 1)  +
-              ggplot2::labs(x = "", y = ylab) +
-              ggplot2::coord_cartesian(ylim = ylim) +
-              plot_theme_ggplot2())
+    plt <- ggplot2::ggplot(dat, ggplot2::aes(x = x, y = y)) +
+      ggplot2::geom_line(group = 1) +
+      ggplot2::geom_point(group = 1)  +
+      ggplot2::labs(x = "", y = ylab) +
+      ggplot2::coord_cartesian(ylim = ylim) +
+      plot_theme_ggplot2()
 
   } else if (!is.null(resTh) & !is.null(resOb)) {
 
     if (is.null(condLabels)) {
       condLabels <- c("Observed", "Predicted")
     }
-    dat <- data.frame(cond = rep(condLabels, each = length(datOb)), x = xlabs, y = c(datOb, datTh))
+    dat <- data.frame(cond = rep(condLabels, each = 2), x = xlabs, y = c(datOb, datTh))
 
-    return (ggplot2::ggplot(dat, ggplot2::aes(x = x, y = y, linetype=cond)) +
-              ggplot2::geom_line(ggplot2::aes(group=cond)) +
-              ggplot2::geom_point(ggplot2::aes(group=cond))  +
-              ggplot2::labs(x = "", y = ylab) +
-              ggplot2::coord_cartesian(ylim = ylim) +
-              plot_theme_ggplot2() +
-              ggplot2::theme(legend.position = "bottom",
-                             legend.title = ggplot2::element_blank()))
+    plt <- ggplot2::ggplot(dat, ggplot2::aes(x = x, y = y, linetype=cond)) +
+      ggplot2::geom_line(ggplot2::aes(group=cond)) +
+      ggplot2::geom_point(ggplot2::aes(group=cond))  +
+      ggplot2::labs(x = "", y = ylab) +
+      ggplot2::coord_cartesian(ylim = ylim) +
+      plot_theme_ggplot2() +
+      ggplot2::theme(legend.position = legendPosition,
+                     legend.title = ggplot2::element_blank())
 
   }
+
+  if (!is.null(theme)) {
+    plt <- plt + theme
+  }
+
+  return(plt)
+
 }
 
 
 
-
-# ########################### CAF Difference? ##################################
 # TO DO! This should be the CAF difference!
 # plot_delta_errors <- function(x, y, ylim, xlab, ylab, xaxts, yaxts, col, type = "o", ...) {
 #
