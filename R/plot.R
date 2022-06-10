@@ -282,7 +282,7 @@ plot.dmclist <- function(x,
                          ...) {
 
   if (!tolower(figType) %in% c("delta", "deltaerrors")) {
-   stop("plotting multiple dmcSims only possible with figType = delta/deltaErrors")
+    stop("plotting multiple dmcSims only possible with figType = delta/deltaErrors")
   }
 
   # find suitable x/y limits
@@ -513,7 +513,7 @@ plot.dmcob <- function(x,
   if (showFig[6] | showFig[7]) {
     d <- ifelse(showFig[6], "delta", "deltaErrors")
     plot_delta(resOb = x, figType = d, xlim = xlimDelta, ylim = ylimDelta, xlab = xlabs[6], ylab = ylabs[6],
-      xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos)
+               xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos)
     if (errorBars) {
       if (showFig[6]) {
         ebc   <- which(grepl(errorBarType, colnames(x$delta)))
@@ -767,10 +767,10 @@ plot.dmcobs <- function(x,
     ypoints <- seq(0, 1, length.out = ndelta + 2)[2:(ndelta + 1)]
     for (i in seq_along(x)) {
       lines(x[[i]]$delta$meanComp, ypoints, type = "o",
-           ylim = c(0, 1), xlim = c(200, 1000),
-           ylab = ylabs[4], xlab = xlabs[4],
-           col = tail(cols, 2)[1], lty = ltys[i], pch = pchs[i],
-           xaxt = xaxts, yaxt = "n", ...)
+            ylim = c(0, 1), xlim = c(200, 1000),
+            ylab = ylabs[4], xlab = xlabs[4],
+            col = tail(cols, 2)[1], lty = ltys[i], pch = pchs[i],
+            xaxt = xaxts, yaxt = "n", ...)
       lines(x[[i]]$delta$meanIncomp, ypoints, type = "o", col = tail(cols, 2)[2], ...)
     }
 
@@ -1184,7 +1184,7 @@ plot_trials <- function(
 }
 
 plot_pdf <- function(
-    resTh = NULL,
+    resTh,
     labels = c("Compatible", "Incompatible"),
     cols = c("green", "red"),
     xlab = "Time [ms]",
@@ -1204,9 +1204,9 @@ plot_pdf <- function(
   if (is.null(ylim)) ylim <- c(0, 0.01)
 
   plot(density(resTh$sim$rts_comp), col = cols[1], main = NA, type = "l",
-    ylim = ylim, xlim = xlim,
-    ylab = "", xlab = "",
-    xaxt = xaxt, yaxt = "n", ...)
+       ylim = ylim, xlim = xlim,
+       ylab = "", xlab = "",
+       xaxt = xaxt, yaxt = "n", ...)
   title(xlab = xlab, ylab = ylab, line = xylabPos)
 
   if (xaxt == "n") axis(side = 1, labels = FALSE)  # keep tick marks
@@ -1238,14 +1238,9 @@ plot_cdf <- function(
 ) {
 
   datThCompX   <- NULL
-  datThCompY   <- NULL
   datThIncompX <- NULL
-  datThIncompY <- NULL
-
   datObCompX   <- NULL
-  datObCompY   <- NULL
   datObIncompX <- NULL
-  datObIncompY <- NULL
 
   if (!is.null(resTh) & is.null(resOb)) {
     densityComp   <- density(resTh$sim$rts_comp)
@@ -1254,27 +1249,27 @@ plot_cdf <- function(
     densityIncomp <- density(resTh$sim$rts_incomp)
     datThIncompX  <- densityIncomp$x
     datThIncompY  <- cumsum(densityIncomp$y * diff(densityIncomp$x[1:2]))
-  }
-  if (!is.null(resTh) & !is.null(resOb)) {
-    ndelta       <- nrow(resTh$delta)
-    datThCompX   <- resTh$delta$meanComp
-    datThCompY   <- seq(0, 1, length.out = ndelta + 2)[2:(ndelta + 1)]
-    datThIncompX <- resTh$delta$meanIncomp
-    datThIncompY <- seq(0, 1, length.out = ndelta + 2)[2:(ndelta + 1)]
-  }
-  if (!is.null(resOb)) {
+    types         <- c("l", "o")
+    labels        <- labels[1:2]
+  } else if (is.null(resTh) & !is.null(resOb)) {
     ndelta       <- nrow(resOb$delta)
     datObCompX   <- resOb$delta$meanComp
     datObCompY   <- seq(0, 1, length.out = ndelta + 2)[2:(ndelta + 1)]
     datObIncompX <- resOb$delta$meanIncomp
     datObIncompY <- seq(0, 1, length.out = ndelta + 2)[2:(ndelta + 1)]
-  }
-
-  if (!is.null(resTh) & !is.null(resOb)) {
-    types <- c("l", "p")
-  } else {
-    types  <- c("l", "o")
-    labels <- labels[1:2]
+    types        <- c("l", "o")
+    labels       <- labels[1:2]
+  } else if (!is.null(resTh) & !is.null(resOb)) {
+    ndelta       <- nrow(resTh$delta)
+    datThCompX   <- resTh$delta$meanComp
+    datThCompY   <- seq(0, 1, length.out = ndelta + 2)[2:(ndelta + 1)]
+    datThIncompX <- resTh$delta$meanIncomp
+    datThIncompY <- seq(0, 1, length.out = ndelta + 2)[2:(ndelta + 1)]
+    datObCompX   <- resOb$delta$meanComp
+    datObCompY   <- seq(0, 1, length.out = ndelta + 2)[2:(ndelta + 1)]
+    datObIncompX <- resOb$delta$meanIncomp
+    datObIncompY <- seq(0, 1, length.out = ndelta + 2)[2:(ndelta + 1)]
+    types        <- c("l", "p")
   }
 
   if (is.null(xlim)) {
@@ -1283,39 +1278,40 @@ plot_cdf <- function(
     xlim <- c(minx, maxx)
   }
 
-    plot(NULL, NULL,
-         ylab = "", xlab = "",
-         ylim = c(0, 1), xlim = xlim,
-         xaxt = xaxt, yaxt = "n")
-    title(xlab = xlab, ylab = ylab, line = xylabPos)
+  plot(NULL, NULL,
+       ylab = "", xlab = "",
+       ylim = c(0, 1), xlim = xlim,
+       xaxt = xaxt, yaxt = "n")
+  title(xlab = xlab, ylab = ylab, line = xylabPos)
 
-    if (!is.null(datThCompX)) {
-      lines(datThCompX,   datThCompY,   type = types[1], col = cols[1])
-      lines(datThIncompX, datThIncompY, type = types[1], col = cols[2])
-    }
+  if (!is.null(datThCompX)) {
+    lines(datThCompX,   datThCompY,   type = types[1], col = cols[1])
+    lines(datThIncompX, datThIncompY, type = types[1], col = cols[2])
+  }
 
-    if (!is.null(datObCompX)) {
-      lines(datObCompX,   datObCompY,   type = types[2], col = cols[1])
-      lines(datObIncompX, datObIncompY, type = types[2], col = cols[2])
-    }
+  if (!is.null(datObCompX)) {
+    lines(datObCompX,   datObCompY,   type = types[2], col = cols[1])
+    lines(datObIncompX, datObIncompY, type = types[2], col = cols[2])
+  }
 
-    if (xaxt == "n") axis(side = 1, labels = FALSE)  # keep tick marks
-    if (yaxt == "n") axis(side = 2, labels = FALSE)  # keep tick marks
-    if (yaxt == "s") axis(side = 2, at = seq(0, 1, 0.5), labels = as.character(seq(0, 1, 0.5)))
+  if (xaxt == "n") axis(side = 1, labels = FALSE)  # keep tick marks
+  if (yaxt == "n") axis(side = 2, labels = FALSE)  # keep tick marks
+  if (yaxt == "s") axis(side = 2, at = seq(0, 1, 0.5), labels = as.character(seq(0, 1, 0.5)))
 
-    abline(h = c(0, 1), col = "darkgrey", lty = 2, xpd = FALSE);
+  abline(h = c(0, 1), col = "darkgrey", lty = 2, xpd = FALSE);
 
   if (length(labels) == 4) {
     labels <- c(paste(labels[1], labels[3], sep = " "),
-      paste(labels[2], labels[3], sep = " "),
-      paste(labels[1], labels[4], sep = " "),
-      paste(labels[2], labels[4], sep = " "))
+                paste(labels[2], labels[3], sep = " "),
+                paste(labels[1], labels[4], sep = " "),
+                paste(labels[2], labels[4], sep = " "))
     add_legend(legend, labels, cols, c(0, 0, 1, 1), c(1, 1, NA, NA), legendPosition, cex = legend.cex)
   } else {
     add_legend(legend, labels, cols, c(1, 1), c(1, 1), legendPosition, cex = legend.cex)
   }
 
 }
+
 
 plot_caf <- function(
     resTh = NULL,
@@ -1360,10 +1356,10 @@ plot_caf <- function(
   if (is.null(ylim)) ylim <- c(0, 1)
 
   plot(NULL, NULL, type = "o",
-    ylim = ylim, xlim = c(1, nCAF),
-    ylab = "",  xlab = "",
-    xaxt = "n",  yaxt = "n",
-    col = cols[1], ...)
+       ylim = ylim, xlim = c(1, nCAF),
+       ylab = "",  xlab = "",
+       xaxt = "n",  yaxt = "n",
+       col = cols[1], ...)
   title(xlab = xlab, ylab = ylab, line = xylabPos)
 
   if (!is.null(datObComp)) {
@@ -1375,19 +1371,19 @@ plot_caf <- function(
     lines(datThIncomp, type = types[2], col = cols[2])
   }
 
-   if (xaxts == "n") {
-     axis(side = 1, labels = FALSE)  # keep tick marks
-   } else if (xaxts == "s" | cafBinLabels) {
-     if (cafBinLabels) {
-       stepCAF <- 100 / nCAF
-       cafLabels <- paste0(paste(seq(0, 100 - stepCAF, stepCAF), seq(stepCAF, 100, stepCAF), sep = "-"), "%")
-       axis(1, at = seq(1, nCAF, 1), labels = cafLabels, ...)
-     } else {
-       axis(1, at = seq(1, nCAF, 1), ...)
-     }
-   } else {
-     axis(side = 1, labels = F)
-   }
+  if (xaxts == "n") {
+    axis(side = 1, labels = FALSE)  # keep tick marks
+  } else if (xaxts == "s" | cafBinLabels) {
+    if (cafBinLabels) {
+      stepCAF <- 100 / nCAF
+      cafLabels <- paste0(paste(seq(0, 100 - stepCAF, stepCAF), seq(stepCAF, 100, stepCAF), sep = "-"), "%")
+      axis(1, at = seq(1, nCAF, 1), labels = cafLabels, ...)
+    } else {
+      axis(1, at = seq(1, nCAF, 1), ...)
+    }
+  } else {
+    axis(side = 1, labels = F)
+  }
 
   if (yaxts == "n") {
     axis(side = 2, labels = FALSE)  # keep tick marks
@@ -1397,9 +1393,9 @@ plot_caf <- function(
 
   if (length(labels) == 4) {
     labels <- c(paste(labels[1], labels[3], sep = " "),
-      paste(labels[2], labels[3], sep = " "),
-      paste(labels[1], labels[4], sep = " "),
-      paste(labels[2], labels[4], sep = " "))
+                paste(labels[2], labels[3], sep = " "),
+                paste(labels[1], labels[4], sep = " "),
+                paste(labels[2], labels[4], sep = " "))
     add_legend(legend, labels, cols, c(0, 0, 1, 1), c(1, 1, NA, NA), legendPosition, cex = legend.cex)
   } else {
     add_legend(legend, labels, cols, c(1, 1), c(1, 1), legendPosition)
@@ -1409,22 +1405,22 @@ plot_caf <- function(
 
 
 plot_delta <- function(
-  resTh = NULL,
-  resOb = NULL,
-  figType = "delta",
-  labels = NULL,
-  xlim = NULL,
-  ylim = NULL,
-  xlab = "Time [ms]",
-  ylab = "Delta [ms]",
-  xaxts = "s",
-  yaxts = "s",
-  xylabPos = 2,
-  type = "o",
-  legend = TRUE,
-  legendPosition = "bottomright",
-  legend.cex = 1,
-  ...)
+    resTh = NULL,
+    resOb = NULL,
+    figType = "delta",
+    labels = NULL,
+    xlim = NULL,
+    ylim = NULL,
+    xlab = "Time [ms]",
+    ylab = "Delta [ms]",
+    xaxts = "s",
+    yaxts = "s",
+    xylabPos = 2,
+    type = "o",
+    legend = TRUE,
+    legendPosition = "bottomright",
+    legend.cex = 1,
+    ...)
 {
 
   datObX <- NULL
@@ -1469,9 +1465,9 @@ plot_delta <- function(
   if (any(is.na(ylim))) ylim <- NULL
 
   plot(NULL, NULL, type = type,
-    ylim = ylim, xlim = xlim,
-    ylab = "",  xlab = "",
-    xaxt = xaxts, yaxt = yaxts, ...)
+       ylim = ylim, xlim = xlim,
+       ylab = "",  xlab = "",
+       xaxt = xaxts, yaxt = yaxts, ...)
   title(xlab = xlab, ylab = ylab, line = xylabPos)
   axis(side = 1, labels = FALSE)
   axis(side = 2, labels = FALSE)
@@ -1490,19 +1486,19 @@ plot_delta <- function(
 }
 
 plot_beh <- function(
-  resTh = NULL,
-  resOb = NULL,
-  figType = "rtcorrect",
-  xlabs = c("Compatible", "Incompatible"),
-  ylab = NULL,
-  ylim = NULL,
-  legend = TRUE,
-  legendPosition = "bottomright",
-  legend.cex = 1,
-  condLabels = NULL,
-  yaxt = "s",
-  xylabPos = 2,
-  ...)
+    resTh = NULL,
+    resOb = NULL,
+    figType = "rtcorrect",
+    xlabs = c("Compatible", "Incompatible"),
+    ylab = NULL,
+    ylim = NULL,
+    legend = TRUE,
+    legendPosition = "bottomright",
+    legend.cex = 1,
+    condLabels = NULL,
+    yaxt = "s",
+    xylabPos = 2,
+    ...)
 {
 
   datOb <- NULL
@@ -1520,7 +1516,7 @@ plot_beh <- function(
     if (!is.null(resOb)) datOb <- resOb$summary$rtErr
     if (is.null(ylab)) ylab <- "RT Error [ms]"
     if (is.null(ylim)) ylim <- c(min(datOb, datTh, na.rm = TRUE) * 0.9,
-      max(datOb, datTh, na.rm = TRUE) * 1.1)
+                                 max(datOb, datTh, na.rm = TRUE) * 1.1)
     legendPosition = "topright"
   } else if (figType == "errorrate") {
     if (!is.null(resTh)) datTh <- resTh$summary$perErr
@@ -1535,9 +1531,9 @@ plot_beh <- function(
   }
 
   plot(NULL, NULL,
-    ylim = ylim, xlim = c(0.5, 2.5),
-    ylab = "", xlab = "",
-    xaxt = "n",  yaxt = yaxt, ...)
+       ylim = ylim, xlim = c(0.5, 2.5),
+       ylab = "", xlab = "",
+       xaxt = "n",  yaxt = yaxt, ...)
   title(ylab = ylab, line = xylabPos)
   axis(1, at = c(1, 2), labels = xlabs)
   axis(2, labels = FALSE)
@@ -1560,11 +1556,11 @@ plot_beh <- function(
 }
 
 plot_distribution <- function(
-  resTh,
-  labels = c("Compatible", "Incompatible"),
-  cols = c("green", "red"),
-  xlab = "Time [ms]",
-  xlim = NULL
+    resTh,
+    labels = c("Compatible", "Incompatible"),
+    cols = c("green", "red"),
+    xlab = "Time [ms]",
+    xlim = NULL
 ) {
 
   # keep original user par and reset later
@@ -1583,20 +1579,20 @@ plot_distribution <- function(
 
   if (is.null(xlim)) {
     xlim <- c(min(comp_correct, incomp_correct, comp_error, incomp_error),
-            c(max(comp_correct, incomp_correct, comp_error, incomp_error)))
+              c(max(comp_correct, incomp_correct, comp_error, incomp_error)))
   }
 
   hist(comp_correct,
-    xlim = xlim, ylim = c(0, y),
-    xaxt = "n", col = scales::alpha(cols[1], .5), border = FALSE,
-    breaks = 100, main = "", yaxt = "n", xlab = "", ylab = "")
+       xlim = xlim, ylim = c(0, y),
+       xaxt = "n", col = scales::alpha(cols[1], .5), border = FALSE,
+       breaks = 100, main = "", yaxt = "n", xlab = "", ylab = "")
   abline(v = mean(comp_correct), col = cols[1], lwd = 2, xpd = FALSE)
   legend("topright", labels, fill = cols, bty = "n", cex = 2)
 
   hist(incomp_correct,  add = TRUE,
-    xlim = xlim, ylim = c(0, y),
-    xaxt = "n", col = scales::alpha(cols[2], .5),
-    border = FALSE, breaks = 100, main = "", xlab = "", ylab = "")
+       xlim = xlim, ylim = c(0, y),
+       xaxt = "n", col = scales::alpha(cols[2], .5),
+       border = FALSE, breaks = 100, main = "", xlab = "", ylab = "")
   abline(v = mean(incomp_correct), col = cols[2], lwd = 2, xpd = FALSE)
 
   # Error RTs
@@ -1604,17 +1600,17 @@ plot_distribution <- function(
 
   if (length(comp_error) > 0) {
     hist(comp_error,
-      xlim = xlim, ylim = c(y, 0),
-      col = scales::alpha(cols[1], .5), border = FALSE,
-      breaks = 100, main = "", yaxt = "n", xlab = xlab, ylab = "", cex.axis = 1.5, cex.lab = 2)
+         xlim = xlim, ylim = c(y, 0),
+         col = scales::alpha(cols[1], .5), border = FALSE,
+         breaks = 100, main = "", yaxt = "n", xlab = xlab, ylab = "", cex.axis = 1.5, cex.lab = 2)
     abline(v = mean(comp_error), col = cols[1], lwd = 2, xpd = FALSE)
   }
 
   if (length(incomp_error) > 0) {
     hist(incomp_error, add = TRUE,
-      xlim = xlim, ylim = c(y, 0),
-      col = scales::alpha(cols[2], .5),
-      border = FALSE, breaks = 100, main = "", ylab = "")
+         xlim = xlim, ylim = c(y, 0),
+         col = scales::alpha(cols[2], .5),
+         border = FALSE, breaks = 100, main = "", ylab = "")
     abline(v = mean(incomp_error), col = cols[2], lwd = 2, xpd = FALSE)
   }
 
@@ -1637,11 +1633,11 @@ add_legend <- function(legend, labels, cols, ltys, pchs, position = "bottomright
 ########################### ggplot2 #######################################
 plot_theme_ggplot2 <- function() {
   theme <- ggplot2::theme_bw() +
-      ggplot2::theme(
-        plot.margin      = ggplot2::unit(c(0.5, 0.5, 0.5, 0.5), "cm"),
-        panel.grid.major = ggplot2::element_blank(),
-        panel.grid.minor = ggplot2::element_blank()
-      )
+    ggplot2::theme(
+      plot.margin      = ggplot2::unit(c(0.5, 0.5, 0.5, 0.5), "cm"),
+      panel.grid.major = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank()
+    )
   return(theme)
 }
 
@@ -1754,7 +1750,7 @@ plot_trials_ggplot2 <- function(
 }
 
 plot_pdf_ggplot2 <- function(
-    resTh = NULL,
+    resTh,
     labels = c("Compatible", "Incompatible"),
     cols = c("green", "red"),
     xlab = "Time [ms]",
@@ -1793,14 +1789,15 @@ plot_pdf_ggplot2 <- function(
 }
 
 plot_cdf_ggplot2 <- function(
-    resTh,
-    labels = c("Compatible", "Incompatible"),
+    resTh=NULL,
+    resOb=NULL,
+    labels = c("Compatible", "Incompatible", "Observed", "Predicted"),
     cols = c("green", "red"),
     xlab = "Time [ms]",
     ylab = "CDF",
     xlim = NULL,
     ylim = NULL,
-    legendPosition = c(0.2, 0.8),
+    legendPosition = c(0.7, 0.2),
     theme = NULL
 ) {
 
@@ -1808,26 +1805,106 @@ plot_cdf_ggplot2 <- function(
     stop("This addin requires the 'ggplot2' package.")
   }
 
-  if (is.null(xlim)) {
-    xlim <- c(0, resTh$prms$tmax)
+  datThCompX   <- NULL
+  datThIncompX <- NULL
+  datObCompX   <- NULL
+  datObIncompX <- NULL
+  datOb        <- NULL
+  datTh        <- NULL
+
+  if (!is.null(resTh) & is.null(resOb)) {
+    densityComp   <- density(resTh$sim$rts_comp)
+    datThCompX    <- densityComp$x
+    datThCompY    <- cumsum(densityComp$y * diff(densityComp$x[1:2]))
+    densityIncomp <- density(resTh$sim$rts_incomp)
+    datThIncompX  <- densityIncomp$x
+    datThIncompY  <- cumsum(densityIncomp$y * diff(densityIncomp$x[1:2]))
+
+    comp   <- rep(labels[1:2], times = c(length(datThCompY), length(datThIncompY)))
+    datTh  <- data.frame(comp = comp, time = c(datObCompX, datThIncompX), pdf = c(datThCompY, datThIncompY))
+
+  } else if (is.null(resTh) & !is.null(resOb)) {
+    ndelta       <- nrow(resOb$delta)
+    datObCompX   <- resOb$delta$meanComp
+    datObCompY   <- seq(0, 1, length.out = ndelta + 2)[2:(ndelta + 1)]
+    datObIncompX <- resOb$delta$meanIncomp
+    datObIncompY <- seq(0, 1, length.out = ndelta + 2)[2:(ndelta + 1)]
+
+    comp   <- rep(labels[1:2], times = c(length(datObCompY), length(datObIncompY)))
+    datOb  <- data.frame(comp = comp, time = c(datObCompX, datObIncompX), pdf = c(datObCompY, datObIncompY))
+    labels <- labels[1:2]
+
+  } else if (!is.null(resTh) & !is.null(resOb)) {
+
+    ndelta       <- nrow(resOb$delta)
+    datObCompX   <- resOb$delta$meanComp
+    datObCompY   <- seq(0, 1, length.out = ndelta + 2)[2:(ndelta + 1)]
+    datObIncompX <- resOb$delta$meanIncomp
+    datObIncompY <- seq(0, 1, length.out = ndelta + 2)[2:(ndelta + 1)]
+
+    labels <- c(paste(labels[1], labels[3], sep = " "),
+                paste(labels[2], labels[3], sep = " "),
+                paste(labels[1], labels[4], sep = " "),
+                paste(labels[2], labels[4], sep = " "))
+
+    comp   <- rep(labels[1:2], times = c(length(datObCompY), length(datObIncompY)))
+    datOb  <- data.frame(comp = comp, time = c(datObCompX, datObIncompX), pdf = c(datObCompY, datObIncompY))
+
+    ndelta       <- nrow(resTh$delta)
+    datThCompX   <- resTh$delta$meanComp
+    datThCompY   <- seq(0, 1, length.out = ndelta + 2)[2:(ndelta + 1)]
+    datThIncompX <- resTh$delta$meanIncomp
+    datThIncompY <- seq(0, 1, length.out = ndelta + 2)[2:(ndelta + 1)]
+
+    comp  <- rep(labels[3:4], times = c(length(datThCompY), length(datThIncompY)))
+    datTh <- data.frame(comp = comp, time = c(datThCompX, datThIncompX), pdf = c(datThCompY, datThIncompY))
+
   }
 
-  density_comp   <- density(resTh$sim$rts_comp)
-  cdf_comp       <- cumsum(density_comp$y * diff(density_comp$x[1:2]))
-  density_incomp <- density(resTh$sim$rts_incomp)
-  cdf_incomp     <- cumsum(density_incomp$y * diff(density_incomp$x[1:2]))
+  if (is.null(xlim)) {
+    minx <- min(datObCompX, datThCompX, datObIncompX, datThIncompX)
+    maxx <- max(datObCompX, datThCompX, datObIncompX, datThIncompX)
+    xlim <- c(minx, maxx)
+  }
 
-  comp <- rep(labels, times = c(length(cdf_comp), length(cdf_incomp)))
-  dat  <- data.frame(comp = comp, time = c(density_comp$x, density_incomp$x), pdf = c(cdf_comp, cdf_incomp))
+  if (!is.null(datTh) & is.null(datOb)) {
 
-  plt <- ggplot2::ggplot(dat, ggplot2::aes(x = time, y = pdf, color = comp)) +
-    ggplot2::geom_line(na.rm = TRUE) +
-    ggplot2::scale_color_manual(values = cols) +
-    ggplot2::coord_cartesian( xlim = xlim, ylim = ylim) +
-    ggplot2::labs(x = xlab, y = ylab, color = "") +
-    ggplot2::geom_hline(yintercept = c(0, 1), linetype = "dashed",  color = "darkgrey", size = 0.5) +
-    plot_theme_ggplot2() +
-    ggplot2::theme(legend.position = legendPosition)
+    plt <- ggplot2::ggplot(datTh, ggplot2::aes(x = time, y = pdf, color = comp)) +
+      ggplot2::geom_line(na.rm = TRUE) +
+      ggplot2::scale_color_manual(values = cols) +
+      ggplot2::coord_cartesian( xlim = xlim, ylim = ylim) +
+      ggplot2::labs(x = xlab, y = ylab, color = "") +
+      ggplot2::geom_hline(yintercept = c(0, 1), linetype = "dashed",  color = "darkgrey", size = 0.5) +
+      plot_theme_ggplot2() +
+      ggplot2::theme(legend.position = legendPosition)
+
+  } else if (is.null(datTh) & !is.null(datOb)) {
+
+    plt <- ggplot2::ggplot(datOb, ggplot2::aes(x = time, y = pdf, color = comp)) +
+      ggplot2::geom_line(na.rm = TRUE) +
+      ggplot2::geom_point() +
+      ggplot2::scale_color_manual(values = cols) +
+      ggplot2::coord_cartesian( xlim = xlim, ylim = ylim) +
+      ggplot2::labs(x = xlab, y = ylab, color = "") +
+      ggplot2::geom_hline(yintercept = c(0, 1), linetype = "dashed",  color = "darkgrey", size = 0.5) +
+      plot_theme_ggplot2() +
+      ggplot2::theme(legend.position = legendPosition)
+
+  } else if (!is.null(datTh) & !is.null(datOb)) {
+
+    plt <- ggplot2::ggplot(NULL, ggplot2::aes(x = time, y = pdf)) +
+      ggplot2::geom_point(data=datOb, ggplot2::aes(group=1, color=comp)) +
+      ggplot2::geom_line(data=datTh, ggplot2::aes(color=comp), show.legend = TRUE) +
+      ggplot2::scale_color_manual(name = "", values = rep(cols, times = 2), labels = labels,
+                                  breaks = c(labels[3], labels[4], labels[1], labels[2]),
+                                  guide = ggplot2::guide_legend(override.aes = list(
+                                    linetype = c("blank", "blank", "solid", "solid"),
+                                    shape = c(16, 16, NA, NA)))
+      ) +
+      plot_theme_ggplot2() +
+      ggplot2::theme(legend.position = legendPosition)
+
+  }
 
   if (!is.null(theme)) {
     plt <- plt + theme
@@ -1838,13 +1915,14 @@ plot_cdf_ggplot2 <- function(
 }
 
 plot_caf_ggplot2 <- function(
-    resTh,
-    labels = c("Compatible", "Incompatible"),
+    resTh=NULL,
+    resOb=NULL,
+    labels = c("Compatible", "Incompatible", "Observed", "Predicted"),
     cols = c("green", "red"),
     xlab = "Bin",
     ylab = "CAF",
     ylim = c(0, 1),
-    legendPosition = c(0.8, 0.8),
+    legendPosition = c(0.7, 0.2),
     theme = NULL
 ) {
 
@@ -1852,17 +1930,86 @@ plot_caf_ggplot2 <- function(
     stop("This addin requires the 'ggplot2' package.")
   }
 
-  comp <- rep(labels, each = length(resTh$caf$accPerComp))
-  dat  <- data.frame(comp = comp, bin = 1:length(resTh$caf$accPerComp), data = c(resTh$caf$accPerComp, resTh$caf$accPerIncomp))
+  datObComp   <- NULL
+  datObIncomp <- NULL
+  datThComp   <- NULL
+  datThIncomp <- NULL
 
-  plt <- ggplot2::ggplot(dat, ggplot2::aes(x = bin, y = data, color = comp)) +
-    ggplot2::geom_line() +
-    ggplot2::geom_point() +
-    ggplot2::scale_color_manual(values = cols) +
-    ggplot2::coord_cartesian(ylim = ylim) +
-    ggplot2::labs(x = xlab, y = ylab, color = "") +
-    plot_theme_ggplot2() +
-    ggplot2::theme(legend.position = legendPosition)
+  if (!is.null(resTh)) {
+    datThComp   <- resTh$caf$accPerComp
+    datThIncomp <- resTh$caf$accPerIncomp
+    nCAF        <- length(datThComp)
+  }
+  if (!is.null(resOb)) {
+    datObComp   <- resOb$caf$accPerComp
+    datObIncomp <- resOb$caf$accPerIncomp
+    nCAF        <- length(datObComp)
+  }
+
+  if (!is.null(resTh) & !is.null(resOb)) {
+    types <- c("p", "l")
+  } else {
+    types <- c("o", "o")
+    labels <- labels[1:2]
+  }
+
+  if (is.null(ylim)) ylim <- c(0, 1)
+
+  if (!is.null(resTh) & is.null(resOb)) {
+
+    comp <- rep(labels, each = length(resTh$caf$accPerComp))
+    dat  <- data.frame(comp = comp, bin = 1:length(resTh$caf$accPerComp), data = c(resTh$caf$accPerComp, resTh$caf$accPerIncomp))
+
+    plt <- ggplot2::ggplot(dat, ggplot2::aes(x = bin, y = data, color = comp)) +
+      ggplot2::geom_line() +
+      ggplot2::geom_point() +
+      ggplot2::scale_color_manual(values = cols) +
+      ggplot2::coord_cartesian(ylim = ylim) +
+      ggplot2::labs(x = xlab, y = ylab, color = "") +
+      plot_theme_ggplot2() +
+      ggplot2::theme(legend.position = legendPosition)
+
+  } else if (is.null(resTh) & !is.null(resOb)) {
+     comp <- rep(labels, each = length(resOb$caf$accPerComp))
+    dat  <- data.frame(comp = comp, bin = 1:length(resOb$caf$accPerComp), data = c(resOb$caf$accPerComp, resOb$caf$accPerIncomp))
+
+    plt <- ggplot2::ggplot(dat, ggplot2::aes(x = bin, y = data, color = comp)) +
+      ggplot2::geom_line() +
+      ggplot2::geom_point() +
+      ggplot2::scale_color_manual(values = cols) +
+      ggplot2::coord_cartesian(ylim = ylim) +
+      ggplot2::labs(x = xlab, y = ylab, color = "") +
+      plot_theme_ggplot2() +
+      ggplot2::theme(legend.position = legendPosition)
+
+  } else if (!is.null(resTh) & !is.null(resOb)) {
+
+    labels <- c(paste(labels[1], labels[3], sep = " "),
+                paste(labels[2], labels[3], sep = " "),
+                paste(labels[1], labels[4], sep = " "),
+                paste(labels[2], labels[4], sep = " "))
+
+    comp  <- rep(labels[1:2], each = length(resOb$caf$accPerComp))
+    datOb <- data.frame(comp = comp, bin = 1:length(resOb$caf$accPerComp), data = c(resOb$caf$accPerComp, resOb$caf$accPerIncomp))
+
+    comp <- rep(labels[3:4], each = length(resTh$caf$accPerComp))
+    datTh  <- data.frame(comp = comp, bin = 1:length(resTh$caf$accPerComp), data = c(resTh$caf$accPerComp, resTh$caf$accPerIncomp))
+
+    plt <- ggplot2::ggplot(NULL, ggplot2::aes(x = bin, y = data)) +
+      ggplot2::geom_point(data=datOb, ggplot2::aes(group=1, color=comp)) +
+      ggplot2::geom_line(data=datTh, ggplot2::aes(color=comp), show.legend = TRUE) +
+      ggplot2::scale_color_manual(name = "", values = rep(cols, each = 2), labels = labels,
+                                  guide = ggplot2::guide_legend(override.aes = list(
+                                    color = c(cols[1], cols[2], cols[1], cols[2]),
+                                    linetype = c("blank", "blank", "solid", "solid"),
+                                    shape = c(16, 16, NA, NA)))
+      ) +
+      ggplot2::coord_cartesian(ylim = ylim) +
+      ggplot2::labs(x = xlab, y = ylab, color = "") +
+      plot_theme_ggplot2() +
+      ggplot2::theme(legend.position = legendPosition)
+
+  }
 
   if (!is.null(theme)) {
     plt <- plt + theme
