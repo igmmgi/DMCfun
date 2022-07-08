@@ -1506,23 +1506,29 @@ plot_beh <- function(
   if (figType == "rtcorrect") {
     if (!is.null(resTh)) datTh <- resTh$summary$rtCor
     if (!is.null(resOb)) datOb <- resOb$summary$rtCor
-    if (is.null(ylab)) ylab <- "RT Correct [ms]"
     if (is.null(ylim)) {
       ylim <- c(min(datOb, datTh, na.rm = TRUE) * 0.9, max(datOb, datTh, na.rm = TRUE) * 1.1)
     }
+    if (is.null(ylab)) ylab <- "RT Correct [ms]"
     legendPosition = "topleft"
   } else if (figType == "rterrors") {
     if (!is.null(resTh)) datTh <- resTh$summary$rtErr
+    if (!is.null(datTh) & all(is.na(datTh))) datTh <- NULL
     if (!is.null(resOb)) datOb <- resOb$summary$rtErr
+    if (!is.null(datOb) & all(is.na(datOb))) datOb <- NULL
+    if (is.null(ylim)) {
+      ylim = c(0, 0)
+      if (!is.null(datOb) | !is.null(datTh)) {
+        ylim <- c(min(datOb, datTh, na.rm = TRUE) * 0.9, max(datOb, datTh, na.rm = TRUE) * 1.1)
+      }
+    }
     if (is.null(ylab)) ylab <- "RT Error [ms]"
-    if (is.null(ylim)) ylim <- c(min(datOb, datTh, na.rm = TRUE) * 0.9,
-                                 max(datOb, datTh, na.rm = TRUE) * 1.1)
     legendPosition = "topright"
   } else if (figType == "errorrate") {
     if (!is.null(resTh)) datTh <- resTh$summary$perErr
     if (!is.null(resOb)) datOb <- resOb$summary$perErr
-    if (is.null(ylab)) ylab <- "Error Rate [%]"
     if (is.null(ylim)) ylim <- c(0, max(datOb, datTh, na.rm = TRUE) * 1.5)
+    if (is.null(ylab)) ylab <- "Error Rate [%]"
     legendPosition = "topleft"
   }
 
