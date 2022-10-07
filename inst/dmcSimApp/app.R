@@ -62,7 +62,7 @@ shiny::shinyApp(
         plot(dmc, figType = "summary3", cex = 1.5, mar = c(2,5,2,2), lwd = 3,
           ylimRt = ylimRt, ylimErr = ylimErr, xylabPos = 2)
       } else if (input$plottype == 4) {
-        plot_distribution(dmc)
+        DMCfun:::plot_distribution(dmc)
       }
     })
   }
