@@ -418,12 +418,12 @@ dmcObservedData <- function(dat,
     datAgg_dec_errors <- datSubject_dec_errors %>%
       dplyr::group_by(Bin) %>%
       dplyr::summarize(meanComp   = mean(comp, na.rm = TRUE),
-        meanIncomp = mean(incomp, na.rm = TRUE),
-        meanBin    = mean(meanBin, na.rm = TRUE),
-        meanEffect = mean(Effect, na.rm = TRUE),
-        sdEffect   = sd(Effect, na.rm = TRUE),
-        seEffect   = sdEffect / sqrt(n()),
-        .groups    = "drop")
+                       meanIncomp = mean(incomp, na.rm = TRUE),
+                       meanBin    = mean(meanBin, na.rm = TRUE),
+                       meanEffect = mean(Effect, na.rm = TRUE),
+                       sdEffect   = sd(Effect, na.rm = TRUE),
+                       seEffect   = sdEffect / sqrt(n()),
+                       .groups    = "drop")
 
   }
 
@@ -628,7 +628,6 @@ calculateDelta <- function(dat,
     dat$Comp <- ifelse(dat$Comp == compCoding[1], "comp", "incomp")
   }
 
-
   if (tDelta == 1) {
 
     if (length(nDelta) > 1) {
@@ -640,7 +639,7 @@ calculateDelta <- function(dat,
 
     dat_delta <- dat %>%
       dplyr::group_by(Subject, Comp) %>%
-      dplyr::summarize(Bin    = seq(1, length(deltaSeq)),
+      dplyr::summarize(Bin     = seq(1, length(deltaSeq)),
                        rt      = quantile(RT, deltaSeq / 100, type = quantileType),
                        .groups = "drop")  %>%
       tidyr::pivot_wider(., id_cols = c("Subject", "Bin"), names_from = "Comp", values_from = "rt") %>%
@@ -653,7 +652,7 @@ calculateDelta <- function(dat,
       dplyr::group_by(Subject, Comp) %>%
       dplyr::mutate(Bin = ntile(RT, nDelta)) %>%
       dplyr::group_by(Subject, Comp, Bin) %>%
-      dplyr::summarize(rt = mean(RT),
+      dplyr::summarize(rt      = mean(RT),
                        .groups = "drop")  %>%
       tidyr::pivot_wider(., id_cols = c("Subject", "Bin"), names_from = "Comp", values_from = "rt") %>%
       dplyr::mutate(meanBin = (comp + incomp) / 2,
