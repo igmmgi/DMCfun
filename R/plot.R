@@ -1260,11 +1260,20 @@ plot_cdf <- function(
     types        <- c("l", "o")
     labels       <- labels[1:2]
   } else if (!is.null(resTh) & !is.null(resOb)) {
-    ndelta       <- nrow(resTh$delta)
+    ndelta        <- nrow(resTh$delta)
+
+    # densityComp   <- density(resTh$sim$rts_comp)
+    # datThCompX    <- densityComp$x
+    # datThCompY    <- cumsum(densityComp$y * diff(densityComp$x[1:2]))
+    # densityIncomp <- density(resTh$sim$rts_incomp)
+    # datThIncompX  <- densityIncomp$x
+    # datThIncompY  <- cumsum(densityIncomp$y * diff(densityIncomp$x[1:2]))
+
     datThCompX   <- resTh$delta$meanComp
     datThCompY   <- seq(0, 1, length.out = ndelta + 2)[2:(ndelta + 1)]
     datThIncompX <- resTh$delta$meanIncomp
     datThIncompY <- seq(0, 1, length.out = ndelta + 2)[2:(ndelta + 1)]
+
     datObCompX   <- resOb$delta$meanComp
     datObCompY   <- seq(0, 1, length.out = ndelta + 2)[2:(ndelta + 1)]
     datObIncompX <- resOb$delta$meanIncomp
