@@ -166,7 +166,7 @@ void run_simulation(Prms &p, std::vector<double> &u_vec,
     activation_trial = sp[trl];
     for (auto i = 0u; i < p.tmax; i++) {
       activation_trial += (u_vec[i] + (p.sigm * snd(rng)));
-      if (i > p.drOnset)
+      if (i >= p.drOnset)
         activation_trial += dr[trl];
       if (activation_trial > p.bnds) {
         value = (i + residual_distribution[trl] + 1);
@@ -204,7 +204,7 @@ void run_simulation(Prms &p, std::vector<double> &activation_sum,
     activation_trial = sp[trl];
     for (auto i = 0u; i < activation_sum.size(); i++) {
       activation_trial += u_vec[i] + (p.sigm * snd(rng));
-      if (i > p.drOnset)
+      if (i >= p.drOnset)
         activation_trial += dr[trl];
       if (!criterion && activation_trial > p.bnds) {
         value = (i + residual_distribution[trl] + 1);

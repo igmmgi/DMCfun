@@ -36,6 +36,7 @@
 #' squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")
 #' @param rtMax The limit on simulated RT (decision + non-decisional components)
 #' @param spDist The starting point (sp) distribution (0 = constant, 1 = beta, 2 = uniform)
+#' @param drOnset The starting point of controlled drift rate (i.e., "target" information) relative to automatic ("distractor" incormation) (> 0 ms)
 #' @param drDist The drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)
 #' @param drShape The drift rate (dr) shape parameter
 #' @param drLim The drift rate (dr) range
@@ -108,6 +109,7 @@ dmcFit <- function(resOb,
                    tDelta = 1,
                    deltaErrors = FALSE,
                    spDist = 1,
+                   drOnset = 0,
                    drDist = 0,
                    drShape = 3,
                    drLim = c(0.1, 0.7),
@@ -198,7 +200,7 @@ dmcFit <- function(resOb,
         resMean = startValsGrid$resMean[i], resSD = startValsGrid$resSD[i], aaShape = startValsGrid$aaShape[i],
         spShape = startValsGrid$spShape[i], spBias = startValsGrid$spBias[i], sigm = startValsGrid$sigm[i],
         spLim = c(-startValsGrid$bnds[i], startValsGrid$bnds[i]), spDist = spDist,
-        drDist = drDist, drShape = drShape, drLim = drLim,
+        drOnset = drOnset, drDist = drDist, drShape = drShape, drLim = drLim,
         rtMax = rtMax, nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF,
         printInputArgs = TRUE, printResults = FALSE
       )
@@ -220,7 +222,7 @@ dmcFit <- function(resOb,
     par = as.numeric(startVals[!as.logical(fixedFit)]), fn = minimizeCostValue,
     costFunction = calculateCostValue, prms = prms, fixedFit = fixedFit, resOb = resOb,
     nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF,
-    spDist = spDist, drDist = drDist, drShape = drShape, drLim = drLim,
+    spDist = spDist, drOnset = drOnset, drDist = drDist, drShape = drShape, drLim = drLim,
     rtMax = rtMax, minVals = minVals, maxVals = maxVals,
     printInputArgs = printInputArgs, printResults = printResults,
     method = "Nelder-Mead", control = optimControl
@@ -240,7 +242,7 @@ dmcFit <- function(resOb,
     amp = prms$amp, tau = prms$tau, drc = prms$drc, bnds = prms$bnds,
     resMean = prms$resMean, resSD = prms$resSD, aaShape = prms$aaShape,
     spDist = spDist, spBias = prms$spBias, spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
-    sigm = prms$sigm, drDist = drDist, drShape = drShape, drLim = drLim,
+    sigm = prms$sigm, drOnset = drOnset, drDist = drDist, drShape = drShape, drLim = drLim,
     rtMax = rtMax, nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF,
     printResults = TRUE
   )
@@ -293,6 +295,7 @@ dmcFit <- function(resOb,
 #' squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")
 #' @param rtMax The limit on simulated RT (decision + non-decisional components)
 #' @param spDist The starting point distribution (0 = constant, 1 = beta, 2 = uniform)
+#' @param drOnset The starting point of controlled drift rate (i.e., "target" information) relative to automatic ("distractor" incormation) (> 0 ms)
 #' @param drDist The drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)
 #' @param drShape The drift rate (dr) shape parameter
 #' @param drLim The drift rate (dr) range
@@ -338,6 +341,7 @@ dmcFitDE <- function(resOb,
                      deltaErrors = FALSE,
                      costFunction = "RMSE",
                      spDist = 1,
+                     drOnset = 0,
                      drDist = 0,
                      drShape = 3,
                      drLim = c(0.1, 0.7),
@@ -408,6 +412,7 @@ dmcFitDE <- function(resOb,
     tDelta = tDelta,
     deltaErrors = deltaErrors,
     spDist = spDist,
+    drOnset = drOnset,
     drDist = drDist,
     drShape = drShape,
     drLim = drLim,
@@ -436,7 +441,7 @@ dmcFitDE <- function(resOb,
     amp = prms$amp, tau = prms$tau, drc = prms$drc, bnds = prms$bnds,
     resMean = prms$resMean, resSD = prms$resSD, aaShape = prms$aaShape,
     spDist = spDist, spBias = prms$spBias, spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
-    sigm = prms$sigm, drDist = drDist, drShape = drShape, drLim = drLim,
+    sigm = prms$sigm, drOnset = drOnset, drDist = drDist, drShape = drShape, drLim = drLim,
     rtMax = rtMax, nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF,
     printResults = TRUE
   )
@@ -498,6 +503,7 @@ dmcFitDE <- function(resOb,
 #' @param costFunction The cost function to minimise: root mean square error ("RMSE": default),
 #' squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")
 #' @param spDist The starting point (sp) distribution (0 = constant, 1 = beta, 2 = uniform)
+#' @param drOnset The starting point of controlled drift rate (i.e., "target" information) relative to automatic ("distractor" incormation) (> 0 ms)
 #' @param drDist The drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)
 #' @param drShape The drift rate (dr) shape parameter
 #' @param drLim The drift rate (dr) range
@@ -544,6 +550,7 @@ dmcFitSubject <- function(resOb,
                           deltaErrors = FALSE,
                           costFunction = "RMSE",
                           spDist = 1,
+                          drOnset = 0,
                           drDist = 0,
                           drShape = 3,
                           drLim = c(0.1, 0.7),
@@ -589,6 +596,7 @@ dmcFitSubject <- function(resOb,
       deltaErrors     = deltaErrors,
       costFunction    = costFunction,
       spDist          = spDist,
+      drOnset         = drOnset,
       drDist          = drDist,
       drShape         = drShape,
       drLim           = drLim,
@@ -634,6 +642,7 @@ dmcFitSubject <- function(resOb,
 #' squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")
 #' @param rtMax The limit on simulated RT (decision + non-decisional components)
 #' @param spDist The starting point distribution (0 = constant, 1 = beta, 2 = uniform)
+#' @param drOnset The starting point of controlled drift rate (i.e., "target" information) relative to automatic ("distractor" incormation) (> 0 ms)
 #' @param drDist The drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)
 #' @param drShape The drift rate (dr) shape parameter
 #' @param drLim The drift rate (dr) range
@@ -672,6 +681,7 @@ dmcFitSubjectDE <- function(resOb,
                             deltaErrors = FALSE,
                             costFunction = "RMSE",
                             spDist = 1,
+                            drOnset = 0,
                             drDist = 0,
                             drShape = 3,
                             drLim = c(0.1, 0.7),
@@ -711,6 +721,10 @@ dmcFitSubjectDE <- function(resOb,
       deltaErrors  = deltaErrors,
       costFunction = costFunction,
       spDist       = spDist,
+      drOnset      = drOnset,
+      drDist       = drDist,
+      drShape      = drShape,
+      drLim        = drLim,
       rtMax        = rtMax,
       deControl    = deControl,
       numCores     = numCores
@@ -797,6 +811,7 @@ minimizeCostValue <- function(x,
                               deltaErrors,
                               nCAF,
                               spDist,
+                              drOnset,
                               drDist,
                               drShape,
                               drLim,
@@ -815,7 +830,7 @@ minimizeCostValue <- function(x,
     amp = prms$amp, tau = prms$tau, drc = prms$drc, bnds = prms$bnds,
     resMean = prms$resMean, resSD = prms$resSD, aaShape = prms$aaShape,
     spDist = spDist, spShape = prms$spShape, spBias = prms$spBias, sigm = prms$sigm, spLim = c(-prms$bnds, prms$bnds),
-    drDist = drDist, drShape = drShape, drLim = drLim,
+    drOnset = drOnset, drDist = drDist, drShape = drShape, drLim = drLim,
     rtMax = rtMax, nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF,
     printInputArgs = printInputArgs, printResults = printResults
   )
