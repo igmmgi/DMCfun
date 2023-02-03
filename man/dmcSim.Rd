@@ -116,7 +116,7 @@ Cognitive Psychology, 78, 148-174. This function is essentially a wrapper around
 \examples{
 \donttest{
 # Example 1
-dmc <- dmcSim(fullData = TRUE)  # fullData only required for activation/trials (top/bottom left)
+dmc <- dmcSim(fullData = TRUE)  # fullData only required for activation/trials (top/bottom left plot)
 plot(dmc)
 dmc <- dmcSim() # faster!
 plot(dmc)
