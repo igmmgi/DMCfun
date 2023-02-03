@@ -47,7 +47,7 @@
 #' @examples
 #' \donttest{
 #' # Example 1
-#' dmc <- dmcSim(fullData = TRUE)  # fullData only required for activation/trials (top/bottom left plot)
+#' dmc <- dmcSim(fullData = TRUE) # fullData only needed for activation/trials (left column plot)
 #' plot(dmc)
 #' dmc <- dmcSim() # faster!
 #' plot(dmc)
@@ -89,6 +89,7 @@ dmcSim <- function(amp            = 20,
                    spDist         = 0,
                    spLim          = c(-75, 75),
                    spBias         = 0,
+                   drOnset        = 0,
                    drDist         = 0,
                    drShape        = 3,
                    drLim          = c(0.1, 0.7),
@@ -118,7 +119,7 @@ dmcSim <- function(amp            = 20,
       nTrl = nTrl, tmax = tmax, rtMax = rtMax, fullData = fullData, nTrlData = nTrlData,
       nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF,
       spDist = spDist, spLimLow = spLim[1], spLimHigh = spLim[2],
-      drDist = drDist, drShape = drShape, drLimLow = drLim[1], drLimHigh = drLim[2],
+      drOnset = drOnset, drDist = drDist, drShape = drShape, drLimLow = drLim[1], drLimHigh = drLim[2],
       printInputArgs = printInputArgs, printResults = printResults, setSeed = setSeed, seedValue = seedValue)
   )
 
@@ -165,7 +166,7 @@ dmcSim <- function(amp            = 20,
     aaShape = aaShape, spShape = spShape, spBias = spBias, sigm = sigm,
     nTrl = nTrl, nTrlData = nTrlData, tmax = tmax, resDist = resDist,
     spDist = spDist, spLim1 = spLim[1], spLim2 = spLim[2],
-    drDist = drDist, drShape = drShape, drLim1 = drLim[1], drLim2 = drLim[2]
+    drOnset = drOnset, drDist = drDist, drShape = drShape, drLim1 = drLim[1], drLim2 = drLim[2]
     )
 
   class(dmc) <- "dmcsim"

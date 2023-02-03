@@ -38,7 +38,7 @@ the required input from either an R data frame or external *.txt/*.csv files}
 
 \item{nTrl}{Number of trials to use within dmcSim.}
 
-\item{startVals}{Starting values for to-be estimated parameters. This is a list with values specified individually
+\item{startVals}{Starting values for the to-be estimated parameters. This is a list with values specified individually
 for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., startVals = list(amp = 20, tau = 200,
 drc = 0.5, bnds = 75, resMean = 300, resSD = 30, aaShape = 2, spShape = 3, spBias = 0, sigm = 4)).}
 
