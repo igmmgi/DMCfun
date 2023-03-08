@@ -47,19 +47,22 @@ summary.dmcsim <- function(object, digits = 1, ...) {
 #'
 #' @export
 summary.dmcfit <- function(object, digits = 2, ...) {
-  if ("sim" %in% names(object)) {  # aggregated fit
-    return(round(do.call(cbind.data.frame, object$par), digits))
-  } else {  # individual fits
+
+    # aggregated fit
+    if ("sim" %in% names(object)) {  
+      return(round(do.call(cbind.data.frame, object$par), digits))
+    } 
+
+    # individual fits
     subjects <- which(!unlist(lapply(object, is.null)))
     outSubject <- NULL
     for (subject in subjects) {
-      outSubject <- rbind(outSubject, cbind(subject, as.data.frame(object[[subject]]$par)))
+        outSubject <- rbind(outSubject, cbind(subject, as.data.frame(object[[subject]]$par)))
     }
     outSubject <- round(outSubject, digits)
     outAvg     <- round(as.data.frame(t(colMeans(data.matrix(outSubject[, 2:(length(outSubject))])))), digits)
     out        <- list(outSubject, outAvg)
 
     return(out)
-  }
 
 }

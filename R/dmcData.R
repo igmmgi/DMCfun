@@ -348,7 +348,7 @@ dmcObservedData <- function(dat,
                      .groups = "drop")
 
   # quick data check
-  problem <- which((datSubject$N < nDelta) | (datSubject$nCor < nDelta))
+  problem <- which((datSubject$N < nDelta) | ((datSubject$nCor - datSubject$nOut) < nDelta))
   if (length(problem) > 0) {
     message(paste0("Subject ",
       sprintf(paste0(datSubject$Subject[problem], collapse = ", ")),
