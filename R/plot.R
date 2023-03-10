@@ -274,7 +274,7 @@ plot.dmclist <- function(x,
                          xlim = NULL,
                          figType = "delta",
                          xlab = "Time [ms]",
-                         ylab = "Time [ms]",
+                         ylab = expression(paste(Delta, "Time [ms]")),
                          col=c("black", "lightgrey"),
                          lineType = "l",
                          legend = TRUE,
@@ -306,10 +306,7 @@ plot.dmclist <- function(x,
   for (i in seq_along(x)) {
     lines(x[[i]][[idx]]$meanBin, x[[i]][[idx]]$meanEffect, col = cols[i], type = lineType)
   }
-  title(xlab = xlab, line = 2)
-  if (ylab != "") {
-    title(ylab = expression(paste(Delta, ylab)), line = 2)
-  }
+  title(xlab = xlab, ylab = ylab, line = 2)
 
   # legend
   if (is.null(legendLabels)) {
