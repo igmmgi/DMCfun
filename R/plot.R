@@ -243,6 +243,7 @@ plot.dmcsim <- function(
 #' @param xlim xlimit for delta plot
 #' @param figType delta (default), deltaErrors
 #' @param xlab x-label
+#' @param ylab y-label
 #' @param col color range start/end color
 #' @param lineType line type ("l", "b", "o") for delta plot
 #' @param legend TRUE/FALSE Show legend
@@ -273,6 +274,7 @@ plot.dmclist <- function(x,
                          xlim = NULL,
                          figType = "delta",
                          xlab = "Time [ms]",
+                         ylab = "Time [ms]",
                          col=c("black", "lightgrey"),
                          lineType = "l",
                          legend = TRUE,
@@ -304,7 +306,10 @@ plot.dmclist <- function(x,
   for (i in seq_along(x)) {
     lines(x[[i]][[idx]]$meanBin, x[[i]][[idx]]$meanEffect, col = cols[i], type = lineType)
   }
-  title(xlab = xlab, ylab = expression(paste(Delta, " RT [ms]")), line = 2)
+  title(xlab = xlab, line = 2)
+  if (ylab != "") {
+    title(ylab = expression(paste(Delta, ylab)), line = 2)
+  }
 
   # legend
   if (is.null(legendLabels)) {
