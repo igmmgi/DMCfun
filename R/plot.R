@@ -306,7 +306,7 @@ plot.dmclist <- function(x,
   for (i in seq_along(x)) {
     lines(x[[i]][[idx]]$meanBin, x[[i]][[idx]]$meanEffect, col = cols[i], type = lineType)
   }
-  title(xlab = xlab, ylab = ylab, line = 2)
+  title(xlab = xlab, ylab = ylab, line = 2, ...)
 
   # legend
   if (is.null(legendLabels)) {
