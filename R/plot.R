@@ -244,12 +244,15 @@ plot.dmcsim <- function(
 #' @param figType delta (default), deltaErrors
 #' @param xlab x-label
 #' @param ylab y-label
+#' @param xylabPos 2
 #' @param col color range start/end color
 #' @param lineType line type ("l", "b", "o") for delta plot
 #' @param legend TRUE/FALSE Show legend
 #' @param legendPos legend position
 #' @param legendLabels Custom legend labels
 #' @param ncol number of legend columns
+#' @param legend.cex legend size
+#' @param legendInset legend inset
 #' @param ... pars for legend
 #'
 #' @return Plot (no return value)
@@ -264,7 +267,7 @@ plot.dmcsim <- function(
 #' # Example 2
 #' params <- list(amp=c(10, 20), tau = seq(20, 80, 40), drc = seq(0.2, 0.6, 0.2), nTrl = 50000)
 #' dmc <- dmcSims(params)
-#' plot(dmc, ncol = 2, col=c("green", "blue"), ylim = c(-10, 120))
+#' plot(dmc, ncol = 2, col=c("green", "blue"), ylim = c(-10, 120), cex=1)
 #'
 #' }
 #'
@@ -275,12 +278,15 @@ plot.dmclist <- function(x,
                          figType = "delta",
                          xlab = "Time [ms]",
                          ylab = expression(paste(Delta, "Time [ms]")),
+                         xylabPos = 2,
                          col=c("black", "lightgrey"),
                          lineType = "l",
                          legend = TRUE,
                          legendPos = "topleft",
                          legendLabels = NULL,
                          ncol = 1,
+                         legend.cex = 1,
+                         legendInset = c(0.05, 0.05),
                          ...) {
 
   if (!tolower(figType) %in% c("delta", "deltaerrors")) {
@@ -306,7 +312,7 @@ plot.dmclist <- function(x,
   for (i in seq_along(x)) {
     lines(x[[i]][[idx]]$meanBin, x[[i]][[idx]]$meanEffect, col = cols[i], type = lineType)
   }
-  title(xlab = xlab, ylab = ylab, line = 2, ...)
+  title(xlab = xlab, ylab = ylab, line = xylabPos, ...)
 
   # legend
   if (is.null(legendLabels)) {
@@ -314,7 +320,7 @@ plot.dmclist <- function(x,
       legendLabels <- c(NULL, legendLabels, paste0(names(x[[i]]$params), "=", x[[1]]$params[i, ], collapse = ", "))
     }
   }
-  add_legend(legend, legendLabels, as.vector(cols), c(1), c(NA), position = legendPos, ncol = ncol)
+  add_legend(legend, legendLabels, as.vector(cols), c(1), c(NA), position = legendPos, inset = legendInset, ncol = ncol, cex=legend.cex)
 
 }
 
