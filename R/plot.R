@@ -252,7 +252,8 @@ plot.dmcsim <- function(
 #' @param legendLabels Custom legend labels
 #' @param ncol number of legend columns
 #' @param legend.cex legend size
-#' @param legendInset legend inset
+#' @param legend.incest legend inset
+#' @param legend.bty legend bty
 #' @param ... pars for legend
 #'
 #' @return Plot (no return value)
@@ -286,7 +287,8 @@ plot.dmclist <- function(x,
                          legendLabels = NULL,
                          ncol = 1,
                          legend.cex = 1,
-                         legendInset = c(0.05, 0.05),
+                         legend.inset = c(0.05, 0.05),
+                         legend.bty = "o",
                          ...) {
 
   if (!tolower(figType) %in% c("delta", "deltaerrors")) {
@@ -320,7 +322,8 @@ plot.dmclist <- function(x,
       legendLabels <- c(NULL, legendLabels, paste0(names(x[[i]]$params), "=", x[[1]]$params[i, ], collapse = ", "))
     }
   }
-  add_legend(legend, legendLabels, as.vector(cols), c(1), c(NA), position = legendPos, inset = legendInset, ncol = ncol, cex=legend.cex)
+  add_legend(legend, legendLabels, as.vector(cols), c(1), c(NA), position = legendPos,
+             inset = legend.inset, ncol = ncol, cex=legend.cex, bty=legend.bty)
 
 }
 
@@ -1642,11 +1645,11 @@ plot_distribution <- function(
 
 }
 
-add_legend <- function(legend, labels, cols, ltys, pchs, position = "bottomright", inset=c(0.05, 0.05), ...) {
+add_legend <- function(legend, labels, cols, ltys, pchs, position = "bottomright", inset=c(0.05, 0.05), bty="o", ...) {
   if (is.function(legend)) {
     legend()
   } else if (legend == TRUE) {
-    legend(position, legend = labels, col = cols, lty = ltys, pch = pchs, inset = inset, ...)
+    legend(position, legend = labels, col = cols, lty = ltys, pch = pchs, inset = inset, bty=bty, ...)
   }
 }
 
