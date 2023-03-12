@@ -481,19 +481,22 @@ plot.dmcob <- function(x,
 
   # rtCorrect
   if (showFig[1]) {
-    plot_beh(resOb = x, figType = "rtcorrect", xlabs = labels, ylab = ylabs[1], ylim = ylimRt, xaxt = "n", yaxt = yaxts, xylabPos = xylabPos)
+    plot_beh(resOb = x, figType = "rtcorrect", xlabs = labels, ylab = ylabs[1], ylim = ylimRt,
+             xaxt = "n", yaxt = yaxts, xylabPos = xylabPos, ...)
     if (errorBars) addErrorBars(c(1, 2), x$summary$rtCor, x$summary[[paste0(errorBarType, "RtCor")]])
   }
 
   # errorRate
   if (showFig[2]) {
-    plot_beh(resOb = x, figType = "errorrate", xlabs = labels, ylab = ylabs[2], ylim = ylimErr, xaxt = "n", yaxt = yaxts, xylabPos = xylabPos)
+    plot_beh(resOb = x, figType = "errorrate", xlabs = labels, ylab = ylabs[2], ylim = ylimErr,
+             xaxt = "n", yaxt = yaxts, xylabPos = xylabPos, ...)
     if (errorBars) addErrorBars(c(1, 2), x$summary$perErr, x$summary[[paste0(errorBarType, "PerErr")]])
   }
 
   # rtError
   if (showFig[3]) {
-    plot_beh(resOb = x, figType = "rterrors", xlabs = labels, ylab = ylabs[3], ylim = ylimErr, xaxt = "n", yaxt = yaxts, xylabPos = xylabPos)
+    plot_beh(resOb = x, figType = "rterrors", xlabs = labels, ylab = ylabs[3], ylim = ylimErr,
+             xaxt = "n", yaxt = yaxts, xylabPos = xylabPos, ...)
     if (errorBars) addErrorBars(c(1, 2), x$summary$rtErr, x$summary[[paste0(errorBarType, "RtErr")]])
   }
 
@@ -513,7 +516,7 @@ plot.dmcob <- function(x,
   if (showFig[6] | showFig[7]) {
     d <- ifelse(showFig[6], "delta", "deltaErrors")
     plot_delta(resOb = x, figType = d, xlim = xlimDelta, ylim = ylimDelta, xlab = xlabs[6], ylab = ylabs[6],
-               xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos)
+               xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, ...)
     if (errorBars) {
       if (showFig[6]) {
         ebc   <- which(grepl(errorBarType, colnames(x$delta)))
@@ -1294,13 +1297,13 @@ plot_cdf <- function(
   title(xlab = xlab, ylab = ylab, line = xylabPos)
 
   if (!is.null(datThCompX)) {
-    lines(datThCompX,   datThCompY,   type = types[1], col = cols[1])
-    lines(datThIncompX, datThIncompY, type = types[1], col = cols[2])
+    lines(datThCompX,   datThCompY,   type = types[1], col = cols[1], ...)
+    lines(datThIncompX, datThIncompY, type = types[1], col = cols[2], ...)
   }
 
   if (!is.null(datObCompX)) {
-    lines(datObCompX,   datObCompY,   type = types[2], col = cols[1])
-    lines(datObIncompX, datObIncompY, type = types[2], col = cols[2])
+    lines(datObCompX,   datObCompY,   type = types[2], col = cols[1], ...)
+    lines(datObIncompX, datObIncompY, type = types[2], col = cols[2], ...)
   }
 
   if (xaxt == "n") axis(side = 1, labels = FALSE)  # keep tick marks
@@ -1372,12 +1375,12 @@ plot_caf <- function(
   title(xlab = xlab, ylab = ylab, line = xylabPos)
 
   if (!is.null(datObComp)) {
-    lines(datObComp,   type = types[1], col = cols[1])
-    lines(datObIncomp, type = types[1], col = cols[2])
+    lines(datObComp,   type = types[1], col = cols[1], ...)
+    lines(datObIncomp, type = types[1], col = cols[2], ...)
   }
   if (!is.null(datThComp)) {
-    lines(datThComp,   type = types[2], col = cols[1])
-    lines(datThIncomp, type = types[2], col = cols[2])
+    lines(datThComp,   type = types[2], col = cols[1], ...)
+    lines(datThIncomp, type = types[2], col = cols[2], ...)
   }
 
   if (xaxts == "n") {
@@ -1386,9 +1389,9 @@ plot_caf <- function(
     if (cafBinLabels) {
       stepCAF <- 100 / nCAF
       cafLabels <- paste0(paste(seq(0, 100 - stepCAF, stepCAF), seq(stepCAF, 100, stepCAF), sep = "-"), "%")
-      axis(1, at = seq(1, nCAF, 1), labels = cafLabels, ...)
+      axis(1, at = seq(1, nCAF, 1), labels = cafLabels)
     } else {
-      axis(1, at = seq(1, nCAF, 1), ...)
+      axis(1, at = seq(1, nCAF, 1))
     }
   } else {
     axis(side = 1, labels = F)
@@ -1397,7 +1400,7 @@ plot_caf <- function(
   if (yaxts == "n") {
     axis(side = 2, labels = FALSE)  # keep tick marks
   } else if (yaxts == "s") {
-    axis(2, at = seq(ylim[1], ylim[2], 0.2), labels = as.character(seq(ylim[1], ylim[2], 0.2)), ...)
+    axis(2, at = seq(ylim[1], ylim[2], 0.2), labels = as.character(seq(ylim[1], ylim[2], 0.2)))
   }
 
   if (length(labels) == 4) {
@@ -1425,7 +1428,6 @@ plot_delta <- function(
     xaxts = "s",
     yaxts = "s",
     xylabPos = 2,
-    type = "o",
     legend = TRUE,
     legendPosition = "bottomright",
     legend.cex = 1,
@@ -1473,7 +1475,7 @@ plot_delta <- function(
   if (any(is.na(xlim))) xlim <- NULL
   if (any(is.na(ylim))) ylim <- NULL
 
-  plot(NULL, NULL, type = type,
+  plot(NULL, NULL,
        ylim = ylim, xlim = xlim,
        ylab = "",  xlab = "",
        xaxt = xaxts, yaxt = yaxts, ...)
@@ -1482,10 +1484,10 @@ plot_delta <- function(
   axis(side = 2, labels = FALSE)
 
   if (!is.null(datThX)) {
-    lines(datThX, datThY, type = types[2])
+    lines(datThX, datThY, type = types[2], ...)
   }
   if (!is.null(datObX)) {
-    lines(datObX, datObY, type = types[1])
+    lines(datObX, datObY, type = types[1], ...)
   }
 
   if (!is.null(labels)) {
