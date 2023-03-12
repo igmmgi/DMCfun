@@ -310,7 +310,7 @@ plot.dmclist <- function(x,
 
   plot(NULL, NULL, ylim = ylim, xlim = xlim, ylab = "", xlab = "", ...)
   for (i in seq_along(x)) {
-    lines(x[[i]][[idx]]$meanBin, x[[i]][[idx]]$meanEffect, col = cols[i], type = lineType)
+    lines(x[[i]][[idx]]$meanBin, x[[i]][[idx]]$meanEffect, col = cols[i], type = lineType, ...)
   }
   title(xlab = xlab, ylab = ylab, line = xylabPos, ...)
 
