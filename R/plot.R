@@ -243,17 +243,12 @@ plot.dmcsim <- function(
 #' @param xlim xlimit for delta plot
 #' @param figType delta (default), deltaErrors
 #' @param xlab x-label
-#' @param ylab y-label
-#' @param xylabPos 2
 #' @param col color range start/end color
 #' @param lineType line type ("l", "b", "o") for delta plot
 #' @param legend TRUE/FALSE Show legend
 #' @param legendPos legend position
 #' @param legendLabels Custom legend labels
 #' @param ncol number of legend columns
-#' @param legend.cex legend size
-#' @param legend.incest legend inset
-#' @param legend.bty legend bty
 #' @param ... pars for legend
 #'
 #' @return Plot (no return value)
@@ -268,7 +263,7 @@ plot.dmcsim <- function(
 #' # Example 2
 #' params <- list(amp=c(10, 20), tau = seq(20, 80, 40), drc = seq(0.2, 0.6, 0.2), nTrl = 50000)
 #' dmc <- dmcSims(params)
-#' plot(dmc, ncol = 2, col=c("green", "blue"), ylim = c(-10, 120), cex=1)
+#' plot(dmc, ncol = 2, col=c("green", "blue"), ylim = c(-10, 120))
 #'
 #' }
 #'
@@ -278,17 +273,12 @@ plot.dmclist <- function(x,
                          xlim = NULL,
                          figType = "delta",
                          xlab = "Time [ms]",
-                         ylab = expression(paste(Delta, "Time [ms]")),
-                         xylabPos = 2,
                          col=c("black", "lightgrey"),
                          lineType = "l",
                          legend = TRUE,
                          legendPos = "topleft",
                          legendLabels = NULL,
                          ncol = 1,
-                         legend.cex = 1,
-                         legend.inset = c(0.05, 0.05),
-                         legend.bty = "o",
                          ...) {
 
   if (!tolower(figType) %in% c("delta", "deltaerrors")) {
@@ -314,7 +304,7 @@ plot.dmclist <- function(x,
   for (i in seq_along(x)) {
     lines(x[[i]][[idx]]$meanBin, x[[i]][[idx]]$meanEffect, col = cols[i], type = lineType)
   }
-  title(xlab = xlab, ylab = ylab, line = xylabPos, ...)
+  title(xlab = xlab, ylab = expression(paste(Delta, " RT [ms]")), line = 2)
 
   # legend
   if (is.null(legendLabels)) {
@@ -322,8 +312,7 @@ plot.dmclist <- function(x,
       legendLabels <- c(NULL, legendLabels, paste0(names(x[[i]]$params), "=", x[[1]]$params[i, ], collapse = ", "))
     }
   }
-  add_legend(legend, legendLabels, as.vector(cols), c(1), c(NA), position = legendPos,
-             inset = legend.inset, ncol = ncol, cex=legend.cex, bty=legend.bty)
+  add_legend(legend, legendLabels, as.vector(cols), c(1), c(NA), position = legendPos, ncol = ncol)
 
 }
 
@@ -492,19 +481,22 @@ plot.dmcob <- function(x,
 
   # rtCorrect
   if (showFig[1]) {
-    plot_beh(resOb = x, figType = "rtcorrect", xlabs = labels, ylab = ylabs[1], ylim = ylimRt, xaxt = "n", yaxt = yaxts, xylabPos = xylabPos)
+    plot_beh(resOb = x, figType = "rtcorrect", xlabs = labels, ylab = ylabs[1], ylim = ylimRt,
+             xaxt = "n", yaxt = yaxts, xylabPos = xylabPos, ...)
     if (errorBars) addErrorBars(c(1, 2), x$summary$rtCor, x$summary[[paste0(errorBarType, "RtCor")]])
   }
 
   # errorRate
   if (showFig[2]) {
-    plot_beh(resOb = x, figType = "errorrate", xlabs = labels, ylab = ylabs[2], ylim = ylimErr, xaxt = "n", yaxt = yaxts, xylabPos = xylabPos)
+    plot_beh(resOb = x, figType = "errorrate", xlabs = labels, ylab = ylabs[2], ylim = ylimErr,
+             xaxt = "n", yaxt = yaxts, xylabPos = xylabPos, ...)
     if (errorBars) addErrorBars(c(1, 2), x$summary$perErr, x$summary[[paste0(errorBarType, "PerErr")]])
   }
 
   # rtError
   if (showFig[3]) {
-    plot_beh(resOb = x, figType = "rterrors", xlabs = labels, ylab = ylabs[3], ylim = ylimErr, xaxt = "n", yaxt = yaxts, xylabPos = xylabPos)
+    plot_beh(resOb = x, figType = "rterrors", xlabs = labels, ylab = ylabs[3], ylim = ylimErr,
+             xaxt = "n", yaxt = yaxts, xylabPos = xylabPos, ...)
     if (errorBars) addErrorBars(c(1, 2), x$summary$rtErr, x$summary[[paste0(errorBarType, "RtErr")]])
   }
 
@@ -524,7 +516,7 @@ plot.dmcob <- function(x,
   if (showFig[6] | showFig[7]) {
     d <- ifelse(showFig[6], "delta", "deltaErrors")
     plot_delta(resOb = x, figType = d, xlim = xlimDelta, ylim = ylimDelta, xlab = xlabs[6], ylab = ylabs[6],
-               xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos)
+               xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, ...)
     if (errorBars) {
       if (showFig[6]) {
         ebc   <- which(grepl(errorBarType, colnames(x$delta)))
@@ -1305,13 +1297,13 @@ plot_cdf <- function(
   title(xlab = xlab, ylab = ylab, line = xylabPos)
 
   if (!is.null(datThCompX)) {
-    lines(datThCompX,   datThCompY,   type = types[1], col = cols[1])
-    lines(datThIncompX, datThIncompY, type = types[1], col = cols[2])
+    lines(datThCompX,   datThCompY,   type = types[1], col = cols[1], ...)
+    lines(datThIncompX, datThIncompY, type = types[1], col = cols[2], ...)
   }
 
   if (!is.null(datObCompX)) {
-    lines(datObCompX,   datObCompY,   type = types[2], col = cols[1])
-    lines(datObIncompX, datObIncompY, type = types[2], col = cols[2])
+    lines(datObCompX,   datObCompY,   type = types[2], col = cols[1], ...)
+    lines(datObIncompX, datObIncompY, type = types[2], col = cols[2], ...)
   }
 
   if (xaxt == "n") axis(side = 1, labels = FALSE)  # keep tick marks
@@ -1383,12 +1375,12 @@ plot_caf <- function(
   title(xlab = xlab, ylab = ylab, line = xylabPos)
 
   if (!is.null(datObComp)) {
-    lines(datObComp,   type = types[1], col = cols[1])
-    lines(datObIncomp, type = types[1], col = cols[2])
+    lines(datObComp,   type = types[1], col = cols[1], ...)
+    lines(datObIncomp, type = types[1], col = cols[2], ...)
   }
   if (!is.null(datThComp)) {
-    lines(datThComp,   type = types[2], col = cols[1])
-    lines(datThIncomp, type = types[2], col = cols[2])
+    lines(datThComp,   type = types[2], col = cols[1], ...)
+    lines(datThIncomp, type = types[2], col = cols[2], ...)
   }
 
   if (xaxts == "n") {
@@ -1397,9 +1389,9 @@ plot_caf <- function(
     if (cafBinLabels) {
       stepCAF <- 100 / nCAF
       cafLabels <- paste0(paste(seq(0, 100 - stepCAF, stepCAF), seq(stepCAF, 100, stepCAF), sep = "-"), "%")
-      axis(1, at = seq(1, nCAF, 1), labels = cafLabels, ...)
+      axis(1, at = seq(1, nCAF, 1), labels = cafLabels)
     } else {
-      axis(1, at = seq(1, nCAF, 1), ...)
+      axis(1, at = seq(1, nCAF, 1))
     }
   } else {
     axis(side = 1, labels = F)
@@ -1408,7 +1400,7 @@ plot_caf <- function(
   if (yaxts == "n") {
     axis(side = 2, labels = FALSE)  # keep tick marks
   } else if (yaxts == "s") {
-    axis(2, at = seq(ylim[1], ylim[2], 0.2), labels = as.character(seq(ylim[1], ylim[2], 0.2)), ...)
+    axis(2, at = seq(ylim[1], ylim[2], 0.2), labels = as.character(seq(ylim[1], ylim[2], 0.2)))
   }
 
   if (length(labels) == 4) {
@@ -1436,7 +1428,6 @@ plot_delta <- function(
     xaxts = "s",
     yaxts = "s",
     xylabPos = 2,
-    type = "o",
     legend = TRUE,
     legendPosition = "bottomright",
     legend.cex = 1,
@@ -1484,7 +1475,7 @@ plot_delta <- function(
   if (any(is.na(xlim))) xlim <- NULL
   if (any(is.na(ylim))) ylim <- NULL
 
-  plot(NULL, NULL, type = type,
+  plot(NULL, NULL,
        ylim = ylim, xlim = xlim,
        ylab = "",  xlab = "",
        xaxt = xaxts, yaxt = yaxts, ...)
@@ -1493,10 +1484,10 @@ plot_delta <- function(
   axis(side = 2, labels = FALSE)
 
   if (!is.null(datThX)) {
-    lines(datThX, datThY, type = types[2])
+    lines(datThX, datThY, type = types[2], ...)
   }
   if (!is.null(datObX)) {
-    lines(datObX, datObY, type = types[1])
+    lines(datObX, datObY, type = types[1], ...)
   }
 
   if (!is.null(labels)) {
@@ -1645,11 +1636,11 @@ plot_distribution <- function(
 
 }
 
-add_legend <- function(legend, labels, cols, ltys, pchs, position = "bottomright", inset=c(0.05, 0.05), bty="o", ...) {
+add_legend <- function(legend, labels, cols, ltys, pchs, position = "bottomright", inset=c(0.05, 0.05), ...) {
   if (is.function(legend)) {
     legend()
   } else if (legend == TRUE) {
-    legend(position, legend = labels, col = cols, lty = ltys, pch = pchs, inset = inset, bty=bty, ...)
+    legend(position, legend = labels, col = cols, lty = ltys, pch = pchs, inset = inset, ...)
   }
 }
 
