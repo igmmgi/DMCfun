@@ -637,14 +637,27 @@ calculateDelta <- function(dat,
       deltaSeq <- deltaSeq[2:(length(deltaSeq) - 1)]
     }
 
-    dat_delta <- dat %>%
-      dplyr::group_by(Subject, Comp) %>%
-      dplyr::summarize(Bin     = seq(1, length(deltaSeq)),
+    # dplyr 1.1.0 reframe replaces functionality from summarize
+    # https://www.tidyverse.org/blog/2023/02/dplyr-1-1-0-pick-reframe-arrange/
+    if (packageVersion("dplyr")>="1.1.0") {
+      dat_delta <- dat %>%
+        dplyr::group_by(Subject, Comp) %>%
+        dplyr::reframe(Bin     = seq(1, length(deltaSeq)),
                        rt      = quantile(RT, deltaSeq / 100, type = quantileType),
                        .groups = "drop")  %>%
-      tidyr::pivot_wider(., id_cols = c("Subject", "Bin"), names_from = "Comp", values_from = "rt") %>%
-      dplyr::mutate(meanBin = (comp + incomp) / 2,
-                    Effect  = (incomp - comp))
+        tidyr::pivot_wider(., id_cols = c("Subject", "Bin"), names_from = "Comp", values_from = "rt") %>%
+        dplyr::mutate(meanBin = (comp + incomp) / 2,
+                      Effect  = (incomp - comp))
+    } else {
+      dat_delta <- dat %>%
+        dplyr::group_by(Subject, Comp) %>%
+        dplyr::summarize(Bin     = seq(1, length(deltaSeq)),
+                         rt      = quantile(RT, deltaSeq / 100, type = quantileType),
+                         .groups = "drop")  %>%
+        tidyr::pivot_wider(., id_cols = c("Subject", "Bin"), names_from = "Comp", values_from = "rt") %>%
+        dplyr::mutate(meanBin = (comp + incomp) / 2,
+                      Effect  = (incomp - comp))
+    }
 
   } else if (tDelta == 2) {
 
