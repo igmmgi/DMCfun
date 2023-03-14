@@ -11,7 +11,7 @@
 #'
 #' @param x Output from dmcSim
 #' @param figType summary1, summary2, summary3, activation, trials, pdf, cdf,
-#' caf, delta, rtCorrect, rtErrors, errorRate, all
+#' caf, delta, deltaErrors, deltaER, rtCorrect, rtErrors, errorRate, all
 #' @param xlimActivation xlimit for activation plot
 #' @param ylimActivation ylimit for activation plot
 #' @param xlimTrials xlimit for trials plot
@@ -97,7 +97,7 @@ plot.dmcsim <- function(
 
   figType <- tolower(figType)
   figTypes <- c("summary1", "summary2", "summary3", "all", "activation", "trials",
-                "pdf", "cdf", "caf", "delta", "deltaerrors", "rtcorrect", "errorrate",  "rterrors")
+                "pdf", "cdf", "caf", "delta", "deltaerrors", "deltaer", "rtcorrect", "errorrate",  "rterrors")
   if (length(figType) > 1 || !figType %in% figTypes) {
     stop("figType must be one of:", paste0(figTypes, collapse = ", "))
   }
@@ -116,27 +116,28 @@ plot.dmcsim <- function(
 
   # x-labels
   if (xlabs) {
-    xlabs[c(1:4, 6)] <- c("Time [ms]")
-    xlabs[c(5, 7)]   <- c("RT Bin")
-    xlabs[c(9:10)]   <- c(labels)
+    xlabs[c(1:4, 6, 8)] <- c("Time [ms]")
+    xlabs[c(5, 7)]      <- c("RT Bin")
+    xlabs[c(10:11)]     <- c(labels)
   } else {
-    xlabs <- rep("", 10)
+    xlabs <- rep("", 11)
   }
 
   # y-labels
   if (ylabs) {
     ylabs <- c("E[X(t)]", "X(t)", "PDF", "CDF", "CAF",
                expression(paste(Delta, " RT [ms]")), expression(paste(Delta, " RT [ms]")),
+               expression(paste(Delta, " ER [%]")),
                "RT Correct [ms]", "Error Rate [%]", "RT Error [ms]")
   } else {
-    ylabs <- rep("", 10)
+    ylabs <- rep("", 11)
   }
 
   # x-axts and y-axts
   xaxts <- ifelse(xaxts, "s", "n")
   yaxts <- ifelse(yaxts, "s", "n")
 
-  showFig <- rep(FALSE, 10)
+  showFig <- rep(FALSE, 11)
   if (figType == "summary1") {
     par(mar = c(3, 4, 1, 1), ...)
     layout(matrix(
@@ -161,15 +162,15 @@ plot.dmcsim <- function(
     showFig[3:6] <- TRUE
   } else if (figType == "summary3") {
     par(mar = c(2, 4, 1, 2), mfrow = c(3, 1), ...)
-    showFig[8:10] <- TRUE
+    showFig[9:11] <- TRUE
   } else if (figType == "all" & length(x) == 7) {
     par(mar = c(4, 4, 2, 2), mfrow = c(1, 1), ...)
     showFig[1:10] <- TRUE
   } else if (figType == "all" & length(x) == 6) {
     par(mar = c(4, 4, 2, 2), mfrow = c(1, 1), ...)
-    showFig[4:10] <- TRUE
+    showFig[4:11] <- TRUE
   } else {
-    showFig[figTypes[5:14] %in% figType] <- TRUE
+    showFig[figTypes[5:15] %in% figType] <- TRUE
   }
 
   # activation
@@ -205,28 +206,39 @@ plot.dmcsim <- function(
   }
 
   # delta/delta errors
-  if (showFig[6] | showFig[7]) {
-    d <- ifelse(showFig[6], "delta", "deltaErrors")
-    plot_delta(resTh = x, figType = d, labels = NULL, xlim = xlimDelta, ylim = ylimDelta,
+  if (showFig[6]) {
+    plot_delta(resTh = x, figType = "delta", labels = NULL, xlim = xlimDelta, ylim = ylimDelta,
                xlab = xlabs[6], ylab = ylabs[6], xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, ...)
   }
 
-  # rtCorrect
+  # delta/delta errors
+  if (showFig[7]) {
+    plot_delta(resTh = x, figType = "deltaErrors", labels = NULL, xlim = xlimDelta, ylim = ylimDelta,
+               xlab = xlabs[7], ylab = ylabs[7], xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, ...)
+  }
+
+  # deltaER
   if (showFig[8]) {
-    plot_beh(resTh = x, figType = "rtcorrect", xlabs = labels, ylab = ylabs[8],
+    plot_delta_er(resTh = x, labels = NULL, xlim = xlimDelta, ylim = ylimDelta,
+               xlab = xlabs[8], ylab = ylabs[8], xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, ...)
+  }
+
+  # rtCorrect
+  if (showFig[9]) {
+    plot_beh(resTh = x, figType = "rtcorrect", xlabs = labels, ylab = ylabs[9],
              ylim = ylimRt, xaxt = "n", yaxt = yaxts, xylabPos = xylabPos, ...)
     if (errorBars) addErrorBars(c(1, 2), x$summary$rtCor, x$summary$sdRtCor)
   }
 
   # error rate
-  if (showFig[9]) {
-    plot_beh(resTh = x, figType = "errorrate", xlabs = labels, ylab = ylabs[9],
+  if (showFig[10]) {
+    plot_beh(resTh = x, figType = "errorrate", xlabs = labels, ylab = ylabs[10],
              ylim = ylimErr, xaxt = "n", yaxt = yaxts, xylabPos = xylabPos, ...)
   }
 
   # rtError
-  if (showFig[10]) {
-    plot_beh(resTh = x, figType = "rterrors", xlabs = labels, ylab = ylabs[10],
+  if (showFig[11]) {
+    plot_beh(resTh = x, figType = "rterrors", xlabs = labels, ylab = ylabs[11],
              ylim = ylimRt, xaxt = "n", yaxt = yaxts, xylabPos = xylabPos, ...)
     if (errorBars) addErrorBars(c(1, 2), x$summary$rtErr, x$summary$sdRtErr)
   }
@@ -332,7 +344,7 @@ plot.dmclist <- function(x,
 #' rtErrors, cdf, caf, delta, deltaErrors, all).
 #'
 #' @param x Output from dmcObservedData
-#' @param figType summary, rtCorrect, errorRate, rtErrors, cdf, caf, delta, deltaErrors, all
+#' @param figType summary, rtCorrect, errorRate, rtErrors, cdf, caf, delta, deltaErrors, deltaER, all
 #' @param subject NULL (aggregated data across all subjects) or integer for subject number
 #' @param legend TRUE/FALSE (or FUNCTION) plot legend on each plot
 #' @param labels Condition labels c("Compatible", "Incompatible") default
@@ -424,7 +436,7 @@ plot.dmcob <- function(x,
 
   figType <- tolower(figType)
   figTypes <- c("summary", "all", "rtcorrect", "errorrate", "rterrors", "cdf",
-                "caf", "delta", "deltaerrors")
+                "caf", "delta", "deltaerrors", "deltaer")
   if (length(figType) > 1 || !figType %in% figTypes) {
     stop("figType must be one of:", paste0(figTypes, collapse = ", "))
   }
@@ -453,27 +465,28 @@ plot.dmcob <- function(x,
 
   # x-labels
   if (xlabs) {
-    xlabs          <- rep("", 7)
-    xlabs[c(1, 2)] <- labels
-    xlabs[c(4, 6)] <- c("Time [ms]")
-    xlabs[c(5, 7)] <- c("RT Bin")
+    xlabs            <- rep("", 8)
+    xlabs[c(1, 2)]   <- labels
+    xlabs[c(4, 6:8)] <- c("Time [ms]")
+    xlabs[c(5)]      <- c("RT Bin")
   } else {
-    xlabs <- rep("", 7)
+    xlabs <- rep("", 8)
   }
 
   # y-labels
   if (ylabs) {
     ylabs <- c("RT Correct [ms]", "Error Rate [%]", "RT Error [ms]", "CDF", "CAF",
-               expression(paste(Delta, "RT [ms]")), expression(paste(Delta, "ER [%]")))
+               expression(paste(Delta, "RT [ms]")), expression(paste(Delta, "RT [ms]")),
+               expression(paste(Delta, "ER [%]")))
   } else {
-    ylabs <- rep("", 7)
+    ylabs <- rep("", 8)
   }
 
   # xaxts and yaxts
   xaxts <- ifelse(xaxts, "s", "n")
   yaxts <- ifelse(yaxts, "s", "n")
 
-  showFig <- rep(FALSE, 7)
+  showFig <- rep(FALSE, 8)
   if (figType == "summary") {
     par(mar = c(4, 4, 1, 1), ...)
     layout(matrix(c(1, 4,
@@ -483,9 +496,9 @@ plot.dmcob <- function(x,
     showFig[1:6] <- TRUE
   } else if (figType == "all") {
     par(mar = c(4, 4, 1, 1), mfrow = c(1, 1), ...)
-    showFig[1:7] <- TRUE
+    showFig[1:8] <- TRUE
   } else {
-    showFig[figTypes[3:9] %in% figType] <- TRUE
+    showFig[figTypes[3:10] %in% figType] <- TRUE
   }
 
   # rtCorrect
@@ -521,22 +534,41 @@ plot.dmcob <- function(x,
              xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, cafBinLabels = cafBinLabels, legend = legend, ...)
   }
 
-  # delta/delta Errors
-  if (showFig[6] | showFig[7]) {
-    d <- ifelse(showFig[6], "delta", "deltaErrors")
-    plot_delta(resOb = x, figType = d, xlim = xlimDelta, ylim = ylimDelta, xlab = xlabs[6], ylab = ylabs[6],
+  # delta
+  if (showFig[6]) {
+    plot_delta(resOb = x, figType = "delta", xlim = xlimDelta, ylim = ylimDelta,
+               xlab = xlabs[6], ylab = ylabs[6],
                xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, ...)
     if (errorBars) {
-      if (showFig[6]) {
-        ebc   <- which(grepl(errorBarType, colnames(x$delta)))
-        xdata <- x$delta$meanBin
-        ydata <- x$delta$meanEffect
-      } else {
-        ebc   <- which(grepl(errorBarType, colnames(x$deltaErrors)))
-        xdata <- x$deltaErrors$meanBin
-        ydata <- x$deltaErrors$meanEffect
-      }
-      addErrorBars( xdata, ydata, x$delta[[ebc]], arrowSize = 0.05)
+      ebc   <- which(grepl(errorBarType, colnames(x$delta)))
+      xdata <- x$delta$meanBin
+      ydata <- x$delta$meanEffect
+      addErrorBars(xdata, ydata, x$delta[[ebc]], arrowSize = 0.05)
+    }
+  }
+
+  # delta/delta Errors
+  if (showFig[7]) {
+    plot_delta(resOb = x, figType = "deltaErrors", xlim = xlimDelta, ylim = ylimDelta,
+               xlab = xlabs[7], ylab = ylabs[7],
+               xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, ...)
+    if (errorBars) {
+      ebc   <- which(grepl(errorBarType, colnames(x$deltaErrors)))
+      xdata <- x$deltaErrors$meanBin
+      ydata <- x$deltaErrors$meanEffect
+      addErrorBars(xdata, ydata, x$delta[[ebc]], arrowSize = 0.05)
+    }
+  }
+
+  # deltaER
+  if (showFig[8]) {
+    plot_delta_er(resOb = x, xlim = xlimDelta, ylim = ylimDelta, xlab = xlabs[8], ylab = ylabs[8],
+                  xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, ...)
+    if (errorBars) {
+      ebc   <- which(grepl(errorBarType, colnames(x$caf)))
+      xdata <- x$caf$meanBin
+      ydata <- x$caf$meanEffect
+      addErrorBars(xdata, ydata, x$delta[[ebc]], arrowSize = 0.05)
     }
   }
 
@@ -545,11 +577,11 @@ plot.dmcob <- function(x,
 #' @title plot.dmcobs: Plot combined observed data
 #'
 #' @description Plot delta results from the output of dmcObservedData. The plot
-#' can be an overall rtCorrect, errorRate, rtErrors, cdf, caf, delta, or all
+#' can be an overall rtCorrect, errorRate, rtErrors, cdf, caf, delta, deltaErrors, deltaER, or all
 #' of the previous plots.
 #'
 #' @param x Output from dmcObservedData
-#' @param figType rtCorrect, errorRate, rtErrors, cdf, caf, delta, all
+#' @param figType rtCorrect, errorRate, rtErrors, cdf, caf, delta, deltaErrors, deltaER, all
 #' @param subject NULL (aggregated data across all subjects) or integer for subject number
 #' @param legend TRUE/FALSE (or FUNCTION) plot legend on each plot
 #' @param legendLabels legend labels
@@ -580,7 +612,7 @@ plot.dmcob <- function(x,
 #' \donttest{
 #' # Example 1
 #' dat <- dmcCombineObservedData(flankerData, simonData)  # combine flanker/simon data
-#' plot(dat, figType = "all", xlimDelta = c(200, 700), ylimDelta = c(-20, 80),
+#' plot(dat, figType = "delta", xlimDelta = c(200, 700), ylimDelta = c(-20, 80),
 #'      cols = c("black", "darkgrey"), pchs = c(1, 2), legend = FALSE, resetPar = FALSE)
 #' legend(200, 80, legend = c("Flanker Task", "Simon Task"),
 #'        col = c("black", "darkgrey"), lty = c(1, 1))
@@ -626,7 +658,7 @@ plot.dmcobs <- function(x,
   }
 
   figType <- tolower(figType)
-  figTypes <- c("all", "rtcorrect", "errorrate", "rterrors", "cdf", "caf", "delta")
+  figTypes <- c("all", "rtcorrect", "errorrate", "rterrors", "cdf", "caf", "delta", "deltaerrors", "deltaer")
   if (length(figType) > 1 || !figType %in% figTypes) {
     stop("figType must be one of:", paste0(figTypes, collapse = ", "))
   }
@@ -660,23 +692,23 @@ plot.dmcobs <- function(x,
     }
   }
 
-  showFig <- rep(FALSE, 6)
+  showFig <- rep(FALSE, 8)
 
   # xlabels
   if (xlabs) {
-    xlabs          <- rep("", 6)
+    xlabs          <- rep("", 8)
     xlabs[c(1, 2)] <- labels
     xlabs[c(4, 6)] <- c("Time [ms]")
     xlabs[c(5)]    <- c("RT Bin")
   } else {
-    xlabs <- rep("", 6)
+    xlabs <- rep("", 8)
   }
 
   # ylabels
   if (ylabs) {
     ylabs <- c("RT Correct [ms]", "Error Rate [%]", "RT Error [ms]", "CDF", "CAF", expression(Delta))
   } else {
-    ylabs <- rep("", 6)
+    ylabs <- rep("", 8)
   }
 
   # xaxts and yaxts
@@ -685,9 +717,9 @@ plot.dmcobs <- function(x,
 
   if (figType == "all") {
     par(mar = c(4, 4, 1, 1), mfrow = c(1, 1), ...)
-    showFig[1:6] <- TRUE
+    showFig[1:8] <- TRUE
   } else {
-    showFig[figTypes[2:7] %in% figType] <- TRUE
+    showFig[figTypes[2:9] %in% figType] <- TRUE
   }
 
   # rtCorrect
@@ -836,12 +868,12 @@ plot.dmcobs <- function(x,
   # delta
   if (showFig[6]) {
 
+    # default axis limits
     if (is.null(xlimDelta)) {
       minx  <- min(sapply(x, function(x) min(x$delta$meanBin)))
       maxx  <- max(sapply(x, function(x) max(x$delta$meanBin)))
       xlimDelta <- c(minx - 100, maxx + 100)
     }
-
     if (is.null(ylimDelta)) {
       miny  <- min(sapply(x, function(x) min(x$delta$meanEffect)))
       maxy  <- max(sapply(x, function(x) max(x$delta$meanEffect)))
@@ -864,6 +896,84 @@ plot.dmcobs <- function(x,
         addErrorBars(x[[i]]$delta$meanBin,
                      x[[i]]$delta$meanEffect,
                      x[[i]]$delta[[errorBarCol]],
+                     arrowSize = 0.05)
+      }
+    }
+
+    add_legend(legend, legendLabels, cols, ltys, pchs)
+
+  }
+
+  # deltaErrors
+  if (showFig[7]) {
+
+    # default axis limits
+    if (is.null(xlimDelta)) {
+      minx  <- min(sapply(x, function(x) min(x$deltaErrors$meanBin)))
+      maxx  <- max(sapply(x, function(x) max(x$deltaErrors$meanBin)))
+      xlimDelta <- c(minx - 100, maxx + 100)
+    }
+    if (is.null(ylimDelta)) {
+      miny  <- min(sapply(x, function(x) min(x$deltaErrors$meanEffect)))
+      maxy  <- max(sapply(x, function(x) max(x$deltaErrors$meanEffect)))
+      ylimDelta <- c(miny - 100, maxy + 100)
+    }
+
+    plot(NULL, NULL,
+         ylim = ylimDelta, xlim = xlimDelta,
+         ylab = "", xlab = "",
+         xaxt = xaxts, yaxt = yaxts, ...)
+    title(xlab = xlabs[7], line = xylabPos)
+    title(ylab = ylabs[7], line = xylabPos)
+    axis(side = 1, labels = FALSE)
+    axis(2, labels = FALSE)
+
+    for (i in seq_along(x)) {
+      lines(x[[i]]$deltaErrors$meanBin, x[[i]]$deltaErrors$meanEffect, type = "o", col = cols[i], lty = ltys[i], pch = pchs[i])
+      if (errorBars) {
+        errorBarCol <- which(grepl(errorBarType, colnames(x$deltaErrors)))
+        addErrorBars(x[[i]]$deltaErrors$meanBin,
+                     x[[i]]$deltaErrors$meanEffect,
+                     x[[i]]$deltaErrors[[errorBarCol]],
+                     arrowSize = 0.05)
+      }
+    }
+
+    add_legend(legend, legendLabels, cols, ltys, pchs)
+
+  }
+
+  # deltaER
+  if (showFig[8]) {
+
+    # default axis limits
+    if (is.null(xlimDelta)) {
+      minx  <- min(sapply(x, function(x) min(x$caf$meanBin)))
+      maxx  <- max(sapply(x, function(x) max(x$caf$meanBin)))
+      xlimDelta <- c(minx - 100, maxx + 100)
+    }
+    if (is.null(ylimDelta)) {
+      miny  <- min(sapply(x, function(x) min(x$caf$meanEffect)))
+      maxy  <- max(sapply(x, function(x) max(x$caf$meanEffect)))
+      ylimDelta <- c(miny - 2, maxy + 2)
+    }
+
+    plot(NULL, NULL,
+         ylim = ylimDelta, xlim = xlimDelta,
+         ylab = "", xlab = "",
+         xaxt = xaxts, yaxt = yaxts, ...)
+    title(xlab = xlabs[8], line = xylabPos)
+    title(ylab = ylabs[8], line = xylabPos)
+    axis(side = 1, labels = FALSE)
+    axis(2, labels = FALSE)
+
+    for (i in seq_along(x)) {
+      lines(x[[i]]$caf$meanBin, x[[i]]$caf$meanEffect, type = "o", col = cols[i], lty = ltys[i], pch = pchs[i])
+      if (errorBars) {
+        errorBarCol <- which(grepl(errorBarType, colnames(x$caf)))
+        addErrorBars(x[[i]]$caf$meanBin,
+                     x[[i]]$caf$meanEffect,
+                     x[[i]]$caf[[errorBarCol]],
                      arrowSize = 0.05)
       }
     }
@@ -956,7 +1066,7 @@ plot.dmcfit <- function(x,
   }
 
   figType <- tolower(figType)
-  figTypes <- c("summary", "all", "rtcorrect", "errorrate", "rterrors", "cdf", "caf", "delta")
+  figTypes <- c("summary", "all", "rtcorrect", "errorrate", "rterrors", "cdf", "caf", "delta", "deltaerrors", "deltaer")
   if (length(figType) > 1 || !figType %in% figTypes) {
     stop("figType must be one of:", paste0(figTypes, collapse = ", "))
   }
@@ -990,26 +1100,28 @@ plot.dmcfit <- function(x,
 
   # x-labels
   if (xlabs) {
-    xlabs          <- rep("", 6)
-    xlabs[c(1, 2)] <- c(labels[1], labels[2])
-    xlabs[c(4, 6)] <- c("Time [ms]")
+    xlabs             <- rep("", 8)
+    xlabs[c(1, 2)]    <- c(labels[1], labels[2])
+    xlabs[c(4, 6, 7)] <- c("Time [ms]")
     xlabs[c(5)]    <- c("RT Bin")
   } else {
-    xlabs <- rep("", 6)
+    xlabs <- rep("", 8)
   }
 
   # y-labels
   if (ylabs) {
-    ylabs <- c("RT Correct [ms]", "Error Rate [%]", "RT Error [ms]", "CDF", "CAF", expression(paste(Delta, " RT [ms]")))
+    ylabs <- c("RT Correct [ms]", "Error Rate [%]", "RT Error [ms]", "CDF", "CAF",
+               expression(paste(Delta, " RT [ms]")), expression(paste(Delta, " RT [ms]")),
+               expression(paste(Delta, " ER [%]")))
   } else {
-    ylabs <- rep("", 6)
+    ylabs <- rep("", 8)
   }
 
   # xaxts and yaxts
   xaxts <- ifelse(xaxts, "s", "n")
   yaxts <- ifelse(yaxts, "s", "n")
 
-  showFig <- rep(FALSE, 6)
+  showFig <- rep(FALSE, 8)
   if (figType == "summary") {
     par(mar = c(4, 4, 1, 1), ...)
     layout(matrix(c(1, 4,
@@ -1019,10 +1131,11 @@ plot.dmcfit <- function(x,
     showFig[1:6] <- TRUE
   } else if (figType == "all") {
     par(mar = c(4, 4, 1, 1), mfrow = c(1, 1), ...)
-    showFig[1:6] <- TRUE
+    showFig[1:8] <- TRUE
   } else {
-    showFig[figTypes[3:8] %in% figType] <- TRUE
+    showFig[figTypes[3:10] %in% figType] <- TRUE
   }
+
   # rtCorrect
   if (showFig[1]) {
     plot_beh(resTh = x, resOb = y, figType = "rtcorrect", xlabs = labels[1:2],
@@ -1058,6 +1171,20 @@ plot.dmcfit <- function(x,
     plot_delta(resTh = x, resOb = y, figType = "delta", xlim = xlimDelta, ylim = ylimDelta,
                xlab = xlabs[6], ylab = ylabs[6], xaxt = xaxts, yaxt = yaxts, labels = labels[3:4],
                xylabPos = xylabPos, legend = legend, legend.cex = ifelse(figType == "summary", 0.75, 1), ...)
+  }
+
+  # deltaErrors
+  if (showFig[7]) {
+    plot_delta(resTh = x, resOb = y, figType = "deltaErrors", xlim = xlimDelta, ylim = ylimDelta,
+               xlab = xlabs[7], ylab = ylabs[7], xaxt = xaxts, yaxt = yaxts, labels = labels[3:4],
+               xylabPos = xylabPos, legend = legend, legend.cex = ifelse(figType == "summary", 0.75, 1), ...)
+  }
+
+  # deltaER
+  if (showFig[8]) {
+    plot_delta_er(resTh = x, resOb = y, xlim = xlimDelta, ylim = ylimDelta,
+                  xlab = xlabs[8], ylab = ylabs[8], xaxt = xaxts, yaxt = yaxts, labels = labels[3:4],
+                  xylabPos = xylabPos, legend = legend, legend.cex = ifelse(figType == "summary", 0.75, 1), ...)
   }
 
 }
@@ -1448,6 +1575,7 @@ plot_delta <- function(
   datThX <- NULL
   datThY <- NULL
 
+  figType <- tolower(figType)
   if (figType == "delta") {
     if (!is.null(resTh)) {
       datThX <- resTh$delta$meanBin
@@ -1457,7 +1585,7 @@ plot_delta <- function(
       datObX <- resOb$delta$meanBin
       datObY <- resOb$delta$meanEffect
     }
-  } else if (figType == "deltaErrors") {
+  } else if (figType == "deltaerrors") {
     if (!is.null(resTh)) {
       datThX <- resTh$deltaErrors$meanBin
       datThY <- resTh$deltaErrors$meanEffect
@@ -1504,6 +1632,75 @@ plot_delta <- function(
   }
 
 }
+
+plot_delta_er <- function(
+    resTh = NULL,
+    resOb = NULL,
+    labels = NULL,
+    xlim = NULL,
+    ylim = NULL,
+    xlab = "Time [ms]",
+    ylab = "Delta [%]",
+    xaxts = "s",
+    yaxts = "s",
+    xylabPos = 2,
+    legend = TRUE,
+    legendPosition = "bottomright",
+    legend.cex = 1,
+    ...)
+{
+
+  datObX <- NULL
+  datObY <- NULL
+  datThX <- NULL
+  datThY <- NULL
+
+  if (!is.null(resTh)) {
+     datThX <- resTh$caf$meanBin
+     datThY <- resTh$caf$meanEffect
+  }
+  if (!is.null(resOb)) {
+    datObX <- resOb$caf$meanBin
+    datObY <- resOb$caf$meanEffect
+  }
+
+  if (!is.null(datObX) & !is.null(datThX)) {
+    types <- c("p", "l")
+  } else {
+    types <- c("o", "o")
+  }
+
+  if (is.null(xlim)) {
+    xlim <- c(min(datObX, datThX) - 2, max(datObX, datThX) + 2)
+  }
+  if (is.null(ylim)) {
+    ylim <- c(min(datObY, datThY) - 2, max(datObY, datThY) + 2)
+  }
+
+  if (any(is.na(xlim))) xlim <- NULL
+  if (any(is.na(ylim))) ylim <- NULL
+
+  plot(NULL, NULL,
+       ylim = ylim, xlim = xlim,
+       ylab = "",  xlab = "",
+       xaxt = xaxts, yaxt = yaxts, ...)
+  title(xlab = xlab, ylab = ylab, line = xylabPos)
+  axis(side = 1, labels = FALSE)
+  axis(side = 2, labels = FALSE)
+
+  if (!is.null(datThX)) {
+    lines(datThX, datThY, type = types[2], ...)
+  }
+  if (!is.null(datObX)) {
+    lines(datObX, datObY, type = types[1], ...)
+  }
+
+  if (!is.null(labels)) {
+    add_legend(legend, labels, "black", c(0, 1), c(1, NA), cex = legend.cex)
+  }
+
+}
+
 
 plot_beh <- function(
     resTh = NULL,
@@ -1652,9 +1849,6 @@ add_legend <- function(legend, labels, cols, ltys, pchs, position = "bottomright
     legend(position, legend = labels, col = cols, lty = ltys, pch = pchs, inset = inset, ...)
   }
 }
-
-
-
 
 ########################### ggplot2 #######################################
 plot_theme_ggplot2 <- function() {
@@ -2153,23 +2347,3 @@ plot_beh_ggplot2 <- function(resTh = NULL,
   return(plt)
 
 }
-
-
-
-# TO DO! This should be the CAF difference!
-# plot_delta_errors <- function(x, y, ylim, xlab, ylab, xaxts, yaxts, col, type = "o", ...) {
-#
-#     ylim <- c(min(y) - 5, max(y) + 5)
-#     if (any(is.na(ylim))) {
-#       ylim <- NULL
-#     }
-#   }
-#
-#   plot(x, y, type = type, col = col,
-#     ylim = ylim, ylab = ylab,  xlab = xlab,
-#     xaxt = xaxts, yaxt = yaxts, ...)
-#   axis(side = 1, labels = FALSE)
-#   axis(side = 2, labels = FALSE)
-# }
-
-

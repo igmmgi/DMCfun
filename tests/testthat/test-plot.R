@@ -3,7 +3,7 @@ context("plot")
 test_that("plot.dmcsim", {
 
   # test 1
-  dmc <- dmcSim(fullData = TRUE, printInputArgs = FALSE, printResults = FALSE)
+  dmc <- dmcSim(fullData = TRUE, deltaErrors = TRUE, printInputArgs = FALSE, printResults = FALSE)
 
   # should give error
   testthat::expect_error(plot(dmc, figType = "xxx"))
@@ -63,7 +63,6 @@ test_that("plot.dmcob", {
   testthat::expect_error(plot(DMCfun::flankerData, figType = "cdf"), NA)
   testthat::expect_error(plot(DMCfun::flankerData, figType = "caf"), NA)
   testthat::expect_error(plot(DMCfun::flankerData, figType = "delta"), NA)
-  testthat::expect_error(plot(DMCfun::flankerData, figType = "all"), NA)
   testthat::expect_error(plot(DMCfun::flankerData, figType = "xxx"))
   testthat::expect_error(plot(DMCfun::flankerData, labels = c("a", "b", "c")))
   testthat::expect_error(plot(DMCfun::flankerData, legend = "xxx"))
@@ -83,7 +82,6 @@ test_that("plot.dmcob", {
   testthat::expect_error(plot(DMCfun::simonData, figType = "cdf"), NA)
   testthat::expect_error(plot(DMCfun::simonData, figType = "caf"), NA)
   testthat::expect_error(plot(DMCfun::simonData, figType = "delta"), NA)
-  testthat::expect_error(plot(DMCfun::simonData, figType = "all"), NA)
   testthat::expect_error(plot(DMCfun::simonData, figType = "xxx"))
   testthat::expect_error(plot(DMCfun::simonData, labels = c("a", "b", "c")))
   testthat::expect_error(plot(DMCfun::simonData, legend = "xxx"))

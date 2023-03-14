@@ -553,7 +553,7 @@ calculateCAF <- function(dat,
     dplyr::mutate(Bin = ntile(RT, nCAF)) %>%
     dplyr::group_by(Subject, Comp, Bin) %>%
     dplyr::summarize(accPer  = sum(Error == 0) / n(),
-                     rt = mean(RT),
+                     rt      = mean(RT),
                      .groups = "drop") %>%
     dplyr::group_by(Subject, Comp, Bin) %>%
     dplyr::summarize(accPer  = mean(accPer),

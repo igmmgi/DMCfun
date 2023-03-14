@@ -4,6 +4,7 @@ ui <- shiny::fluidPage(
 )
 
 shiny::shinyApp(
+  options = list(height = 1080),
   ui = shiny::fluidPage(
     shiny::sidebarLayout(
       shiny::sidebarPanel(width = 2, style = "margin: 20px; overflow-y:scroll; max-height: 100%; font-size:18px",
@@ -26,14 +27,12 @@ shiny::shinyApp(
         shiny::checkboxInput("autoaxis", "Auto Axis", FALSE),  shiny::verbatimTextOutput("autoaxis")
 
       ),
-
       shiny::mainPanel(width = 10, position = "center", fluid = TRUE, style = "margin-top:10px",
         shiny::plotOutput("dmcSim", width = "100%", height = "1000px")
       )
     )
   ),
   server = function(input, output) {
-
     output$dmcSim <- shiny::renderPlot({
       fullData <- ifelse(input$plottype == 1, TRUE, FALSE)
       xlimDelta <- NULL
