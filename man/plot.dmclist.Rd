@@ -10,12 +10,17 @@
   xlim = NULL,
   figType = "delta",
   xlab = "Time [ms]",
+  ylab = expression(paste(Delta, "Time [ms]")),
+  xylabPos = 2,
   col = c("black", "lightgrey"),
   lineType = "l",
   legend = TRUE,
   legendPos = "topleft",
   legendLabels = NULL,
   ncol = 1,
+  legend.cex = 1,
+  legend.inset = c(0.05, 0.05),
+  legend.bty = "o",
   ...
 )
 }
@@ -42,7 +47,13 @@
 
 \item{ncol}{number of legend columns}
 
+\item{legend.cex}{legend size}
+
+\item{legend.bty}{legend bty}
+
 \item{...}{pars for legend}
+
+\item{legend.incest}{legend inset}
 }
 \value{
 Plot (no return value)

@@ -35,7 +35,7 @@
 \arguments{
 \item{x}{Output from dmcObservedData}
 
-\item{figType}{rtCorrect, errorRate, rtErrors, cdf, caf, delta, all}
+\item{figType}{rtCorrect, errorRate, rtErrors, cdf, caf, delta, deltaErrors, deltaER, all}
 
 \item{subject}{NULL (aggregated data across all subjects) or integer for subject number}
 
@@ -88,14 +88,14 @@ Plot (no return value)
 }
 \description{
 Plot delta results from the output of dmcObservedData. The plot
-can be an overall rtCorrect, errorRate, rtErrors, cdf, caf, delta, or all
+can be an overall rtCorrect, errorRate, rtErrors, cdf, caf, delta, deltaErrors, deltaER, or all
 of the previous plots.
 }
 \examples{
 \donttest{
 # Example 1
 dat <- dmcCombineObservedData(flankerData, simonData)  # combine flanker/simon data
-plot(dat, figType = "all", xlimDelta = c(200, 700), ylimDelta = c(-20, 80),
+plot(dat, figType = "delta", xlimDelta = c(200, 700), ylimDelta = c(-20, 80),
      cols = c("black", "darkgrey"), pchs = c(1, 2), legend = FALSE, resetPar = FALSE)
 legend(200, 80, legend = c("Flanker Task", "Simon Task"),
        col = c("black", "darkgrey"), lty = c(1, 1))

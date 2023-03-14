@@ -350,9 +350,16 @@ dmcObservedData <- function(dat,
   # quick data check
   problem <- which((datSubject$N < nDelta) | ((datSubject$nCor - datSubject$nOut) < nDelta))
   if (length(problem) > 0) {
-    message(paste0("Subject ",
+    message(strwrap(paste0(
+      "Subject ",
       sprintf(paste0(datSubject$Subject[problem], collapse = ", ")),
-      " potentially too few trials within dataset!"))
+      " -> potentially too few trials within dataset!\n"
+    )))}
+  if (any(is.na(datSubject$rtCor))) {
+    stop(message(strwrap(prefix="\n",
+                         "Problem: NA value(s) for rtCor column calculation.
+    Check subject cell numbers (e.g., number of correct trials, number of outliers within dat in.\n"
+    )))
   }
 
   # aggregate data across subjects

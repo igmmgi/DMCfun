@@ -32,7 +32,7 @@
 \arguments{
 \item{x}{Output from dmcObservedData}
 
-\item{figType}{summary, rtCorrect, errorRate, rtErrors, cdf, caf, delta, deltaErrors, all}
+\item{figType}{summary, rtCorrect, errorRate, rtErrors, cdf, caf, delta, deltaErrors, deltaER, all}
 
 \item{subject}{NULL (aggregated data across all subjects) or integer for subject number}
 

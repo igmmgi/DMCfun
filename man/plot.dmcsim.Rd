@@ -37,7 +37,7 @@
 \item{x}{Output from dmcSim}
 
 \item{figType}{summary1, summary2, summary3, activation, trials, pdf, cdf,
-caf, delta, rtCorrect, rtErrors, errorRate, all}
+caf, delta, deltaErrors, deltaER, rtCorrect, rtErrors, errorRate, all}
 
 \item{xlimActivation}{xlimit for activation plot}
 
