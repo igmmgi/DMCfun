@@ -20,7 +20,6 @@
   xlimDelta = NULL,
   ylimRt = NULL,
   ylimErr = NULL,
-  legend = TRUE,
   labels = c("Compatible", "Incompatible"),
   cols = c("green", "red"),
   errorBars = FALSE,
@@ -30,6 +29,7 @@
   yaxts = TRUE,
   xylabPos = 2,
   resetPar = TRUE,
+  legend = TRUE,
   ...
 )
 }
@@ -65,8 +65,6 @@ caf, delta, deltaErrors, deltaER, rtCorrect, rtErrors, errorRate, all}
 
 \item{ylimErr}{ylimit for er plot}
 
-\item{legend}{TRUE/FALSE (or FUNCTION) plot legend on each plot}
-
 \item{labels}{Condition labels c("Compatible", "Incompatible") default}
 
 \item{cols}{Condition colours c("green", "red") default}
@@ -84,6 +82,8 @@ caf, delta, deltaErrors, deltaER, rtCorrect, rtErrors, errorRate, all}
 \item{xylabPos}{2}
 
 \item{resetPar}{TRUE/FALSE Reset graphical parameters}
+
+\item{legend}{TRUE/FALSE}
 
 \item{...}{additional plot pars}
 }

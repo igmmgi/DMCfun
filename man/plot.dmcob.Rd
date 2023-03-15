@@ -8,7 +8,6 @@
   x,
   figType = "summary",
   subject = NULL,
-  legend = TRUE,
   labels = c("Compatible", "Incompatible"),
   cols = c("green", "red"),
   errorBars = FALSE,
@@ -26,6 +25,7 @@
   yaxts = TRUE,
   xylabPos = 2,
   resetPar = TRUE,
+  legend = TRUE,
   ...
 )
 }
@@ -35,8 +35,6 @@
 \item{figType}{summary, rtCorrect, errorRate, rtErrors, cdf, caf, delta, deltaErrors, deltaER, all}
 
 \item{subject}{NULL (aggregated data across all subjects) or integer for subject number}
-
-\item{legend}{TRUE/FALSE (or FUNCTION) plot legend on each plot}
 
 \item{labels}{Condition labels c("Compatible", "Incompatible") default}
 
@@ -71,6 +69,8 @@
 \item{xylabPos}{2}
 
 \item{resetPar}{TRUE/FALSE Reset graphical parameters}
+
+\item{legend}{TRUE/FALSE (or FUNCTION) plot legend on each plot}
 
 \item{...}{additional plot pars}
 }

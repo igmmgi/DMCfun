@@ -25,7 +25,6 @@
 #' @param xlimDelta xlimit for delta plot (Default is 0 to tmax)
 #' @param ylimRt ylimit for rt plot
 #' @param ylimErr ylimit for er plot
-#' @param legend TRUE/FALSE (or FUNCTION) plot legend on each plot
 #' @param labels Condition labels c("Compatible", "Incompatible") default
 #' @param cols Condition colours c("green", "red") default
 #' @param errorBars TRUE/FALSE
@@ -35,6 +34,7 @@
 #' @param yaxts TRUE/FALSE
 #' @param xylabPos 2
 #' @param resetPar TRUE/FALSE Reset graphical parameters
+#' @param legend TRUE/FALSE
 #' @param ... additional plot pars
 #'
 #' @return Plot (no return value)
@@ -76,7 +76,6 @@ plot.dmcsim <- function(
     xlimDelta = NULL,
     ylimRt = NULL,
     ylimErr = NULL,
-    legend = TRUE,
     labels = c("Compatible", "Incompatible"),
     cols = c("green", "red"),
     errorBars = FALSE,
@@ -86,6 +85,7 @@ plot.dmcsim <- function(
     yaxts = TRUE,
     xylabPos = 2,
     resetPar = TRUE,
+    legend = TRUE,
     ...)
 {
 
@@ -109,9 +109,6 @@ plot.dmcsim <- function(
   }
   if (length(labels) != 2) {
     stop("labels must be length 2")
-  }
-  if (!(is.function(legend)) && !(legend %in% c(TRUE, FALSE))) {
-    stop("legend must be TRUE/FALSE or a function")
   }
 
   # x-labels
@@ -176,33 +173,34 @@ plot.dmcsim <- function(
   # activation
   if (showFig[1]) {
     plot_activation(x, labels, cols, xlabs[1], ylabs[1], xlimActivation, ylimActivation,
-                    legend, xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, ... )
+                    xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, legend=legend, ... )
   }
 
   # individual trials
   if (showFig[2]) {
     plot_trials(x, labels, cols, xlabs[2], ylabs[2], xlimActivation, ylimActivation,
-                legend, xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, ...)
+                xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, legend=legend, ...)
   }
 
   # PDF
   if (showFig[3]) {
     plot_pdf(resTh = x, labels = labels, cols = cols, xlab = xlabs[3], ylab = ylabs[3],
-             xlim = xlimPDF, ylim = ylimPDF, legend = legend, legend.cex = ifelse(figType == "summary1", 0.75, 1),
-             xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, ...)
+             xlim = xlimPDF, ylim = ylimPDF,  xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos,
+             legend = legend, legend.parameters = list(cex=ifelse(figType == "summary1", 0.75, 1)), ...)
   }
 
   # CDF
   if (showFig[4]) {
     plot_cdf(resTh = x, labels = labels, cols = cols, xlab = xlabs[4], ylab = ylabs[4],
-             xlim = xlimCDF, legend = legend, legend.cex = ifelse(figType == "summary1", 0.75, 1),
-             xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, ...)
+             xlim = xlimCDF,  xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos,
+             legend = legend, legend.parameters = list(cex=ifelse(figType == "summary1", 0.75, 1)), ...)
   }
 
   # CAF
   if (showFig[5]) {
     plot_caf(resTh = x, labels = labels, cols = cols, xlab = xlabs[5], ylab = ylabs[5],
-             ylim = ylimCAF, xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, cafBinLabels = cafBinLabels, legend = legend, ...)
+             ylim = ylimCAF, xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, cafBinLabels = cafBinLabels,
+             legend = legend, ...)
   }
 
   # delta/delta errors
@@ -255,16 +253,13 @@ plot.dmcsim <- function(
 #' @param xlim xlimit for delta plot
 #' @param figType delta (default), deltaErrors
 #' @param xlab x-label
+#' @param ylab y-label
+#' @param xylabPos x/y label position
 #' @param col color range start/end color
 #' @param lineType line type ("l", "b", "o") for delta plot
 #' @param legend TRUE/FALSE Show legend
-#' @param legendPos legend position
-#' @param legendLabels Custom legend labels
-#' @param ncol number of legend columns
-#' @param legend.cex legend size
-#' @param legend.incest legend inset
-#' @param legend.bty legend bty
-#' @param ... pars for legend
+#' @param legend.parameters list
+#' @param ... pars for plot
 #'
 #' @return Plot (no return value)
 #'
@@ -273,12 +268,12 @@ plot.dmcsim <- function(
 #' # Example 1
 #' params <- list(amp = seq(20, 30, 2))
 #' dmc <- dmcSims(params)
-#' plot(dmc, ncol = 2, col = c("red", "green"), legendPos = "topright")
+#' plot(dmc, col = c("red", "green"), legend.parameters = list(x = "topright", ncol=2))
 #'
 #' # Example 2
-#' params <- list(amp=c(10, 20), tau = seq(20, 80, 40), drc = seq(0.2, 0.6, 0.2), nTrl = 50000)
+#' params <- list(amp=c(10, 20), tau = c(20, 40), drc = c(0.2, 0.6), nTrl = 50000)
 #' dmc <- dmcSims(params)
-#' plot(dmc, ncol = 2, col=c("green", "blue"), ylim = c(-10, 120))
+#' plot(dmc, col=c("green", "blue"), ylim = c(-10, 120), legend.parameters=list(ncol=2))
 #'
 #' }
 #'
@@ -293,12 +288,7 @@ plot.dmclist <- function(x,
                          col=c("black", "lightgrey"),
                          lineType = "l",
                          legend = TRUE,
-                         legendPos = "topleft",
-                         legendLabels = NULL,
-                         ncol = 1,
-                         legend.cex = 1,
-                         legend.inset = c(0.05, 0.05),
-                         legend.bty = "o",
+                         legend.parameters = list(),
                          ...) {
 
   if (!tolower(figType) %in% c("delta", "deltaerrors")) {
@@ -327,13 +317,17 @@ plot.dmclist <- function(x,
   title(xlab = xlab, ylab = ylab, line = xylabPos, ...)
 
   # legend
-  if (is.null(legendLabels)) {
-    for (i in seq_along(x)) {
-      legendLabels <- c(NULL, legendLabels, paste0(names(x[[i]]$params), "=", x[[1]]$params[i, ], collapse = ", "))
+  if (legend) {
+    if (is.null(legend.parameters$legend)) {
+      legendLabels <- NULL
+      for (i in seq_along(x)) {
+        legendLabels <- c(NULL, legendLabels, paste0(names(x[[i]]$params), "=", x[[1]]$params[i, ], collapse = ", "))
+      }
     }
+    delfault_legend.parameters <- list(legend=legendLabels, x="topleft", col=cols, lty=c(1), pch=c(NA), ncol=1, bty = "o", inset=0.1)
+    legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
+    add_legend(legend.parameters)
   }
-  add_legend(legend, legendLabels, as.vector(cols), c(1), c(NA), position = legendPos,
-             inset = legend.inset, ncol = ncol, cex=legend.cex, bty=legend.bty)
 
 }
 
@@ -346,7 +340,6 @@ plot.dmclist <- function(x,
 #' @param x Output from dmcObservedData
 #' @param figType summary, rtCorrect, errorRate, rtErrors, cdf, caf, delta, deltaErrors, deltaER, all
 #' @param subject NULL (aggregated data across all subjects) or integer for subject number
-#' @param legend TRUE/FALSE (or FUNCTION) plot legend on each plot
 #' @param labels Condition labels c("Compatible", "Incompatible") default
 #' @param cols Condition colours c("green", "red") default
 #' @param errorBars TRUE(default)/FALSE Plot errorbars
@@ -364,6 +357,7 @@ plot.dmclist <- function(x,
 #' @param yaxts TRUE/FALSE
 #' @param xylabPos 2
 #' @param resetPar TRUE/FALSE Reset graphical parameters
+#' @param legend TRUE/FALSE (or FUNCTION) plot legend on each plot
 #' @param ... additional plot pars
 #'
 #' @return Plot (no return value)
@@ -408,7 +402,6 @@ plot.dmclist <- function(x,
 plot.dmcob <- function(x,
                        figType = "summary",
                        subject = NULL,
-                       legend = TRUE,
                        labels = c("Compatible", "Incompatible"),
                        cols = c("green", "red"),
                        errorBars = FALSE,
@@ -426,6 +419,7 @@ plot.dmcob <- function(x,
                        yaxts = TRUE,
                        xylabPos = 2,
                        resetPar = TRUE,
+                       legend = TRUE,
                        ...) {
 
   # original plot par
@@ -442,9 +436,6 @@ plot.dmcob <- function(x,
   }
   if (length(labels) != 2) {
     stop("labels must be length 2")
-  }
-  if (!(is.function(legend)) && !(legend %in% c(TRUE, FALSE))) {
-    stop("legend must be TRUE/FALSE or a function")
   }
 
   if (!is.null(subject)) {
@@ -525,13 +516,15 @@ plot.dmcob <- function(x,
   # CDF
   if (showFig[4]) {
     plot_cdf(resOb = x, labels = labels, cols = cols, xlab = xlabs[4], ylab = ylabs[4], xlim = xlimCDF,
-             xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, legend = legend, legend.cex = ifelse(figType == "summary1", 0.75, 1), ...)
+             xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos,
+             legend = legend, legend.parameters = list(cex = ifelse(figType == "summary1", 0.75, 1)), ...)
   }
 
   # CAF
   if (showFig[5]) {
     plot_caf(resOb = x, labels = labels, cols = cols, xlab = xlabs[5], ylab = ylabs[5], ylim = ylimCAF,
-             xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, cafBinLabels = cafBinLabels, legend = legend, ...)
+             xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, cafBinLabels = cafBinLabels,
+             legend = legend, ...)
   }
 
   # delta
@@ -583,8 +576,6 @@ plot.dmcob <- function(x,
 #' @param x Output from dmcObservedData
 #' @param figType rtCorrect, errorRate, rtErrors, cdf, caf, delta, deltaErrors, deltaER, all
 #' @param subject NULL (aggregated data across all subjects) or integer for subject number
-#' @param legend TRUE/FALSE (or FUNCTION) plot legend on each plot
-#' @param legendLabels legend labels
 #' @param labels Condition labels c("Compatible", "Incompatible") default
 #' @param cols Condition colours c("green", "red") default
 #' @param ltys Linetype see par
@@ -604,6 +595,8 @@ plot.dmcob <- function(x,
 #' @param yaxts TRUE/FALSE
 #' @param xylabPos 2
 #' @param resetPar TRUE/FALSE Reset graphical parameters
+#' @param legend TRUE/FALSE
+#' @param legend.parameters list
 #' @param ... additional plot pars
 #'
 #' @return Plot (no return value)
@@ -613,16 +606,15 @@ plot.dmcob <- function(x,
 #' # Example 1
 #' dat <- dmcCombineObservedData(flankerData, simonData)  # combine flanker/simon data
 #' plot(dat, figType = "delta", xlimDelta = c(200, 700), ylimDelta = c(-20, 80),
-#'      cols = c("black", "darkgrey"), pchs = c(1, 2), legend = FALSE, resetPar = FALSE)
-#' legend(200, 80, legend = c("Flanker Task", "Simon Task"),
-#'        col = c("black", "darkgrey"), lty = c(1, 1))
+#'      cols = c("black", "darkgrey"), pchs = c(1, 2))
+#' plot(dat, figType = "delta", xlimDelta = c(200, 700), ylimDelta = c(-20, 80),
+#'      cols = c("black", "darkgrey"), pchs = c(1, 2), legend = TRUE,
+#'      legend.parameters=list(x="topright", legend=c("Flanker", "Simon")))
 #' }
 #' @export
 plot.dmcobs <- function(x,
                         figType = "all",
                         subject = NULL,
-                        legend = TRUE,
-                        legendLabels = c(),
                         labels = c("Compatible", "Incompatible"),
                         cols = c("black", "gray"),
                         ltys = c(1, 1),
@@ -642,6 +634,8 @@ plot.dmcobs <- function(x,
                         yaxts = TRUE,
                         xylabPos = 2,
                         resetPar = TRUE,
+                        legend = TRUE,
+                        legend.parameters = list(),
                         ...) {
 
   # original plot par
@@ -665,9 +659,6 @@ plot.dmcobs <- function(x,
   if (length(labels) != 2) {
     stop("labels must be length 2")
   }
-  if (!(is.function(legend)) && !(legend %in% c(TRUE, FALSE))) {
-    stop("legend must be TRUE/FALSE or a function")
-  }
 
   if (!is.null(subject)) {
     # select individual subject dataset
@@ -682,9 +673,6 @@ plot.dmcobs <- function(x,
     errorBars <- FALSE
   }
 
-  if (length(legendLabels) == 0) {
-    legendLabels <- paste0("Cond ", seq_along(x))
-  }
 
   if (errorBars) {
     if ((!is.character(errorBarType)) | (!errorBarType %in% c("sd", "se"))) {
@@ -739,7 +727,12 @@ plot.dmcobs <- function(x,
         addErrorBars(c(1, 2), x[[i]]$summary$rtCor, x[[i]]$summary[[paste0(errorBarType, "RtCor")]])
       }
     }
-    add_legend(legend, legendLabels, cols, ltys, pchs)
+
+    if (legend) {
+      delfault_legend.parameters <- list(legend=paste0("Cond ", seq_along(x)), x="bottomright", col=cols, lty=ltys, pch=pchs, inset=0.1)
+      legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
+      add_legend(legend.parameters)
+    }
 
   }
 
@@ -760,7 +753,12 @@ plot.dmcobs <- function(x,
         addErrorBars(c(1, 2), x[[i]]$summary$perErr, x[[i]]$summary[[paste0(errorBarType, "PerErr")]])
       }
     }
-    add_legend(legend, legendLabels, cols, ltys, pchs)
+
+    if (legend) {
+      delfault_legend.parameters <- list(legend=paste0("Cond ", seq_along(x)), x="bottomright", col=cols, lty=ltys, pch=pchs, inset=0.1)
+      legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
+      add_legend(legend.parameters)
+    }
 
   }
 
@@ -781,7 +779,12 @@ plot.dmcobs <- function(x,
         addErrorBars(c(1, 2), x[[i]]$summary$rtErr, x[[i]]$summary[[paste0(errorBarType, "RtErr")]])
       }
     }
-    add_legend(legend, legendLabels, cols, ltys, pchs)
+
+    if (legend) {
+      delfault_legend.parameters <- list(legend=paste0("Cond ", seq_along(x)), x="bottomright", col=cols, lty=ltys, pch=pchs, inset=0.1)
+      legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
+      add_legend(legend.parameters)
+    }
 
   }
 
@@ -818,7 +821,11 @@ plot.dmcobs <- function(x,
       lines(x[[i]]$delta$meanIncomp, ypoints, type = "o", col = tail(cols, 2)[2], ...)
     }
 
-    add_legend(legend, legendLabels, cols, ltys, pchs)
+    if (legend) {
+      delfault_legend.parameters <- list(legend=paste0("Cond ", seq_along(x)), x="bottomright", col=cols, lty=ltys, pch=pchs, inset=0.1)
+      legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
+      add_legend(legend.parameters)
+    }
 
   }
 
@@ -861,7 +868,11 @@ plot.dmcobs <- function(x,
       lines(x[[i]]$caf$accPerIncomp, type = "o", col = tail(cols, 2)[2], lty = ltys[i], pch = pchs[i], ...)
     }
 
-    add_legend(legend, legendLabels, cols, ltys, pchs)
+    if (legend) {
+      delfault_legend.parameters <- list(legend=paste0("Cond ", seq_along(x)), x="bottomright", col=cols, lty=ltys, pch=pchs, inset=0.1)
+      legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
+      add_legend(legend.parameters)
+    }
 
   }
 
@@ -900,7 +911,11 @@ plot.dmcobs <- function(x,
       }
     }
 
-    add_legend(legend, legendLabels, cols, ltys, pchs)
+    if (legend) {
+      delfault_legend.parameters <- list(legend=paste0("Cond ", seq_along(x)), x="bottomright", col=cols, lty=ltys, pch=pchs, inset=0.1)
+      legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
+      add_legend(legend.parameters)
+    }
 
   }
 
@@ -939,7 +954,11 @@ plot.dmcobs <- function(x,
       }
     }
 
-    add_legend(legend, legendLabels, cols, ltys, pchs)
+    if (legend) {
+      delfault_legend.parameters <- list(legend=paste0("Cond ", seq_along(x)), x="bottomright", col=cols, lty=ltys, pch=pchs, inset=0.1)
+      legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
+      add_legend(legend.parameters)
+    }
 
   }
 
@@ -978,7 +997,11 @@ plot.dmcobs <- function(x,
       }
     }
 
-    add_legend(legend, legendLabels, cols, ltys, pchs)
+    if (legend) {
+      delfault_legend.parameters <- list(legend=paste0("Cond ", seq_along(x)), x="bottomright", col=cols, lty=ltys, pch=pchs, inset=0.1)
+      legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
+      add_legend(legend.parameters)
+    }
 
   }
 
@@ -1000,7 +1023,6 @@ plot.dmcobs <- function(x,
 #' @param y Observed data
 #' @param subject NULL (aggregated data across all subjects) or integer for subject number
 #' @param figType summary, rtCorrect, errorRate, rtErrors, cdf, caf, delta, all
-#' @param legend TRUE/FALSE (or FUNCTION) plot legend on each plot
 #' @param labels Condition labels c("Compatible", "Incompatible", "Observed", "Predicted") default
 #' @param cols Condition colours c("green", "red") default
 #' @param ylimRt ylimit for Rt plots
@@ -1016,6 +1038,8 @@ plot.dmcobs <- function(x,
 #' @param yaxts TRUE/FALSE
 #' @param xylabPos 2
 #' @param resetPar TRUE/FALSE Reset graphical parameters
+#' @param legend TRUE/FALSE
+#' @param legend.parameters list
 #' @param ... additional plot pars
 #'
 #' @return Plot (no return value)
@@ -1041,7 +1065,6 @@ plot.dmcfit <- function(x,
                         y,
                         subject = NULL,
                         figType = "summary",
-                        legend = TRUE,
                         labels = c("Compatible", "Incompatible", "Observed", "Predicted"),
                         cols = c("green", "red"),
                         ylimRt = NULL,
@@ -1057,6 +1080,8 @@ plot.dmcfit <- function(x,
                         yaxts = TRUE,
                         xylabPos = 2,
                         resetPar = TRUE,
+                        legend = TRUE,
+                        legend.parameters = list(legend=c("Observed", "Predicted")),
                         ...) {
 
   # original plot par
@@ -1069,9 +1094,6 @@ plot.dmcfit <- function(x,
   figTypes <- c("summary", "all", "rtcorrect", "errorrate", "rterrors", "cdf", "caf", "delta", "deltaerrors", "deltaer")
   if (length(figType) > 1 || !figType %in% figTypes) {
     stop("figType must be one of:", paste0(figTypes, collapse = ", "))
-  }
-  if (!(is.function(legend)) && !(legend %in% c(TRUE, FALSE))) {
-    stop("legend must be TRUE/FALSE or a function")
   }
   if (length(labels) != 4) {
     stop("labels must be length 4")
@@ -1139,52 +1161,58 @@ plot.dmcfit <- function(x,
   # rtCorrect
   if (showFig[1]) {
     plot_beh(resTh = x, resOb = y, figType = "rtcorrect", xlabs = labels[1:2],
-             ylab = ylabs[1], ylim = ylimRt, legend, condLabels = labels[3:4], xylabPos = xylabPos)
+             ylab = ylabs[1], ylim = ylimRt,  xylabPos = xylabPos,
+             legend=legend, legend.parameters = list(legend=labels[3:4]))
   }
 
   # errorRate
   if (showFig[2]) {
     plot_beh(resTh = x, resOb = y, figType = "errorrate", xlabs = labels[1:2],
-             ylab = ylabs[2], ylim = ylimRt, legend, condLabels = labels[3:4], xylabPos = xylabPos)
+             ylab = ylabs[2], ylim = ylimRt, xylabPos = xylabPos,
+             legend=legend, legend.parameters = list(legend=labels[3:4]))
   }
 
   # rt Error
   if (showFig[3]) {
     plot_beh(resTh = x, resOb = y, figType = "rterrors", xlabs = labels[1:2],
-             ylab = ylabs[3], ylim = ylimRt, legend, condLabels = labels[3:4], xylabPos = xylabPos)
+             ylab = ylabs[3], ylim = ylimRt, xylabPos = xylabPos,
+             legend=legend, legend.parameters = list(legend=labels[3:4]))
   }
 
   # CDF
   if (showFig[4]) {
-    plot_cdf(resTh = x, resOb = y, labels = labels, cols = cols, xlab = xlabs[4], ylab = ylabs[4], xlim = xlimCDF,
-             xylabPos = xylabPos, legend = legend, legend.cex = ifelse(figType == "summary", 0.75, 1), ...)
+    plot_cdf(resTh = x, resOb = y, labels = labels, cols = cols, xlab = xlabs[4], ylab = ylabs[4], xlim = xlimCDF, xylabPos = xylabPos,
+             legend = legend, legend.parameters = list(cex = ifelse(figType == "summary", 0.75, 1)), ...)
   }
 
   # CAF
   if (showFig[5]) {
-    plot_caf(resTh = x, resOb = y, labels = labels, cols = cols, xlab = xlabs[5], ylab = ylabs[5], ylim = ylimCAF,
-             xylabPos = xylabPos, legend = legend, legend.cex = ifelse(figType == "summary", 0.75, 1), ...)
+    plot_caf(resTh = x, resOb = y, labels = labels, cols = cols, xlab = xlabs[5], ylab = ylabs[5], ylim = ylimCAF, xylabPos = xylabPos,
+             legend = legend, legend.parameters = list(cex = ifelse(figType == "summary", 0.75, 1)), ...)
   }
 
   # delta
   if (showFig[6]) {
     plot_delta(resTh = x, resOb = y, figType = "delta", xlim = xlimDelta, ylim = ylimDelta,
                xlab = xlabs[6], ylab = ylabs[6], xaxt = xaxts, yaxt = yaxts, labels = labels[3:4],
-               xylabPos = xylabPos, legend = legend, legend.cex = ifelse(figType == "summary", 0.75, 1), ...)
+               xylabPos = xylabPos,
+               legend = legend, legend.parameters = list(cex = ifelse(figType == "summary", 0.75, 1)), ...)
   }
 
   # deltaErrors
   if (showFig[7]) {
     plot_delta(resTh = x, resOb = y, figType = "deltaErrors", xlim = xlimDelta, ylim = ylimDelta,
                xlab = xlabs[7], ylab = ylabs[7], xaxt = xaxts, yaxt = yaxts, labels = labels[3:4],
-               xylabPos = xylabPos, legend = legend, legend.cex = ifelse(figType == "summary", 0.75, 1), ...)
+               xylabPos = xylabPos,
+               legend = legend, legend.parameters = list(cex = ifelse(figType == "summary", 0.75, 1)), ...)
   }
 
   # deltaER
   if (showFig[8]) {
     plot_delta_er(resTh = x, resOb = y, xlim = xlimDelta, ylim = ylimDelta,
                   xlab = xlabs[8], ylab = ylabs[8], xaxt = xaxts, yaxt = yaxts, labels = labels[3:4],
-                  xylabPos = xylabPos, legend = legend, legend.cex = ifelse(figType == "summary", 0.75, 1), ...)
+                  xylabPos = xylabPos,
+                  legend = legend, legend.parameters = list(cex = ifelse(figType == "summary", 0.75, 1)), ...)
   }
 
 }
@@ -1229,11 +1257,11 @@ plot_activation <- function(
     ylab = "E[X(t)]",
     xlim = NULL,
     ylim = NULL,
-    legend = TRUE,
-    legendPosition = "bottomright",
     xaxt = "s",
     yaxt = "s",
     xylabPos = 2,
+    legend = TRUE,
+    legend.parameters = list(),
     ...
 ) {
 
@@ -1249,7 +1277,7 @@ plot_activation <- function(
        ylim = ylim, xlim = xlim,
        xlab = "", ylab = "",
        xaxt = xaxt, yaxt = yaxt, ...)
-  title(xlab = xlab, ylab = ylab, line = xylabPos)
+  title(xlab = xlab, ylab = ylab, line = xylabPos, ...)
   if (xaxt == "n") axis(side = 1, labels = FALSE)  # keep tick marks
   if (yaxt == "n") axis(side = 2, labels = FALSE)  # keep tick marks
 
@@ -1270,9 +1298,13 @@ plot_activation <- function(
   lines(c(1:resTh$prms$tmax), resTh$sim$activation_incomp, col = cols[2], ...)
 
   # bounds
-  abline(h = c(-resTh$prms$bnds, resTh$prms$bnds), col = "darkgrey", xpd = FALSE)
+  abline(h = c(-resTh$prms$bnds, resTh$prms$bnds), col = "darkgrey", xpd = FALSE, ...)
 
-  add_legend(legend, labels, cols, c(1, 1), c(1, 1), legendPosition)
+  if (legend) {
+    delfault_legend.parameters <- list(legend=labels, x="bottomright", col=cols, lty=c(1,1), pch=c(0,0), inset=0.1)
+    legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
+    add_legend(legend.parameters)
+  }
 
 }
 
@@ -1284,11 +1316,11 @@ plot_trials <- function(
     ylab = "X(t)",
     xlim = NULL,
     ylim = NULL,
-    legend = TRUE,
-    legendPosition = "bottomright",
     xaxt = "s",
     yaxt = "s",
     xylabPos = 2,
+    legend = TRUE,
+    legend.parameters = list(),
     ...
 ) {
 
@@ -1318,7 +1350,11 @@ plot_trials <- function(
   # bounds
   abline(h = c(-resTh$prms$bnds, resTh$prms$bnds), col = "darkgrey", xpd = FALSE);
 
-  add_legend(legend, labels, cols, c(1, 1), c(1, 1), legendPosition)
+  if (legend) {
+    delfault_legend.parameters <- list(legend=labels, x="bottomright", col=cols, lty=c(1,1), pch=c(0,0), inset=0.1)
+    legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
+    add_legend(legend.parameters)
+  }
 
 }
 
@@ -1330,12 +1366,11 @@ plot_pdf <- function(
     ylab = "PDF",
     xlim = NULL,
     ylim = NULL,
-    legend = TRUE,
-    legendPosition = "topright",
-    legend.cex = 1,
     xaxt = "s",
     yaxt = "s",
     xylabPos = 2,
+    legend = TRUE,
+    legend.parameters = list(),
     ...
 ) {
 
@@ -1355,7 +1390,12 @@ plot_pdf <- function(
   lines(density(resTh$sim$rts_incomp), col = cols[2], type = "l", ...)
 
   abline(h = 0, col = "darkgrey", lty = 2, xpd = FALSE);
-  add_legend(legend, labels, cols, c(1, 1), c(1, 1), legendPosition, cex = legend.cex)
+
+  if (legend) {
+    delfault_legend.parameters <- list(legend=labels, x="topright", col=cols, lty=c(1,1), pch=c(NA,NA), inset = 0.1)
+    legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
+    add_legend(legend.parameters)
+  }
 
 }
 
@@ -1367,12 +1407,11 @@ plot_cdf <- function(
     xlab = "Time [ms]",
     ylab = "PDF",
     xlim = NULL,
-    legend = TRUE,
-    legendPosition = "bottomright",
-    legend.cex = 1,
     xaxt = "s",
     yaxt = "s",
     xylabPos = 2,
+    legend = TRUE,
+    legend.parameters = list(),
     ...
 ) {
 
@@ -1448,14 +1487,20 @@ plot_cdf <- function(
 
   abline(h = c(0, 1), col = "darkgrey", lty = 2, xpd = FALSE);
 
-  if (length(labels) == 4) {
-    labels <- c(paste(labels[1], labels[3], sep = " "),
-                paste(labels[2], labels[3], sep = " "),
-                paste(labels[1], labels[4], sep = " "),
-                paste(labels[2], labels[4], sep = " "))
-    add_legend(legend, labels, cols, c(0, 0, 1, 1), c(1, 1, NA, NA), legendPosition, cex = legend.cex)
-  } else {
-    add_legend(legend, labels, cols, c(1, 1), c(1, 1), legendPosition, cex = legend.cex)
+  if (legend) {
+    if (length(labels) == 4) {
+      labels <- c(paste(labels[1], labels[3], sep = " "),
+                  paste(labels[2], labels[3], sep = " "),
+                  paste(labels[1], labels[4], sep = " "),
+                  paste(labels[2], labels[4], sep = " "))
+      delfault_legend.parameters <- list(legend=labels, x="bottomright", col=cols, lty=c(0,0,1,1), pch=c(1,1,NA,NA), inset=0.1)
+      legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
+      add_legend(legend.parameters)
+    } else {
+      delfault_legend.parameters <- list(legend=labels, x="bottomright", col=cols, lty=c(1,1), pch=c(NA,NA), inset=0.1)
+      legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
+      add_legend(legend.parameters)
+    }
   }
 
 }
@@ -1474,8 +1519,7 @@ plot_caf <- function(
     xylabPos = 2,
     cafBinLabels = FALSE,
     legend = TRUE,
-    legendPosition = "bottomright",
-    legend.cex = 1,
+    legend.parameters = list(),
     ...) {
 
   datObComp   <- NULL
@@ -1539,14 +1583,20 @@ plot_caf <- function(
     axis(2, at = seq(ylim[1], ylim[2], 0.2), labels = as.character(seq(ylim[1], ylim[2], 0.2)))
   }
 
-  if (length(labels) == 4) {
-    labels <- c(paste(labels[1], labels[3], sep = " "),
-                paste(labels[2], labels[3], sep = " "),
-                paste(labels[1], labels[4], sep = " "),
-                paste(labels[2], labels[4], sep = " "))
-    add_legend(legend, labels, cols, c(0, 0, 1, 1), c(1, 1, NA, NA), legendPosition, cex = legend.cex)
-  } else {
-    add_legend(legend, labels, cols, c(1, 1), c(1, 1), legendPosition)
+  if (legend) {
+    if (length(labels) == 4) {
+      labels <- c(paste(labels[1], labels[3], sep = " "),
+                  paste(labels[2], labels[3], sep = " "),
+                  paste(labels[1], labels[4], sep = " "),
+                  paste(labels[2], labels[4], sep = " "))
+      delfault_legend.parameters <- list(legend=labels, x="bottomright", col=cols, lty=c(0,0,1,1), pch=c(1,1,NA,NA), inset=0.1)
+      legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
+      add_legend(legend.parameters)
+    } else {
+      delfault_legend.parameters <- list(legend=labels, x="bottomright", col=cols, lty=c(1,1), pch=c(1,1), inset=0.1)
+      legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
+      add_legend(legend.parameters)
+    }
   }
 
 }
@@ -1565,8 +1615,7 @@ plot_delta <- function(
     yaxts = "s",
     xylabPos = 2,
     legend = TRUE,
-    legendPosition = "bottomright",
-    legend.cex = 1,
+    legend.parameters = list(),
     ...)
 {
 
@@ -1627,8 +1676,10 @@ plot_delta <- function(
     lines(datObX, datObY, type = types[1], ...)
   }
 
-  if (!is.null(labels)) {
-    add_legend(legend, labels, "black", c(0, 1), c(1, NA), cex = legend.cex)
+  if (!is.null(labels) && legend) {
+    delfault_legend.parameters <- list(legend=labels, x="bottomright", col="black", lty=c(0,1), pch=c(1,NA))
+    legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
+    add_legend(legend.parameters)
   }
 
 }
@@ -1645,8 +1696,7 @@ plot_delta_er <- function(
     yaxts = "s",
     xylabPos = 2,
     legend = TRUE,
-    legendPosition = "bottomright",
-    legend.cex = 1,
+    legend.parameters = list(),
     ...)
 {
 
@@ -1695,8 +1745,10 @@ plot_delta_er <- function(
     lines(datObX, datObY, type = types[1], ...)
   }
 
-  if (!is.null(labels)) {
-    add_legend(legend, labels, "black", c(0, 1), c(1, NA), cex = legend.cex)
+  if (!is.null(labels) && legend) {
+    delfault_legend.parameters <- list(legend=labels, x="bottomright", col="black", lty=c(0,1), pch=c(1,NA))
+    legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
+    add_legend(legend.parameters)
   }
 
 }
@@ -1709,12 +1761,11 @@ plot_beh <- function(
     xlabs = c("Compatible", "Incompatible"),
     ylab = NULL,
     ylim = NULL,
-    legend = TRUE,
-    legendPosition = "bottomright",
-    legend.cex = 1,
     condLabels = NULL,
     yaxt = "s",
     xylabPos = 2,
+    legend = TRUE,
+    legend.parameters = list(),
     ...)
 {
 
@@ -1772,8 +1823,10 @@ plot_beh <- function(
     lines(c(1, 2), datTh, type = "o", col = "black", pch = pchs[2], lty = ltys[2])
   }
 
-  if (!is.null(condLabels)) {
-    add_legend(legend, condLabels, "black", ltys, pchs, legendPosition)
+  if (!is.null(condLabels) & legend) {
+    delfault_legend.parameters <- list(legend=labels, x=legendPosition, col="black", lty=ltys, pch=pchs, inset=0.1)
+    legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
+    add_legend(legend.parameters)
   }
 
 }
@@ -1842,13 +1895,10 @@ plot_distribution <- function(
 
 }
 
-add_legend <- function(legend, labels, cols, ltys, pchs, position = "bottomright", inset=c(0.05, 0.05), ...) {
-  if (is.function(legend)) {
-    legend()
-  } else if (legend == TRUE) {
-    legend(position, legend = labels, col = cols, lty = ltys, pch = pchs, inset = inset, ...)
-  }
+add_legend <- function(legend.parameters) {
+  do.call(legend, legend.parameters)
 }
+
 
 ########################### ggplot2 #######################################
 plot_theme_ggplot2 <- function() {

@@ -477,9 +477,8 @@ dmcObservedData <- function(dat,
 #' # Example 1
 #' dat <- dmcCombineObservedData(flankerData, simonData)  # combine flanker/simon data
 #' plot(dat, figType = "delta", xlimDelta = c(200, 700), ylimDelta = c(-20, 80),
-#'      cols = c("black", "darkgrey"), legend = FALSE, resetPar = FALSE)
-#' legend(200, 80, legend = c("Flanker Task", "Simon Task"),
-#'        col = c("black", "darkgrey"), lty = c(1, 1))
+#'      cols = c("black", "darkgrey"), legend.parameters = list(x=200, y=80,
+#'      legend = c("Flanker Task", "Simon Task")))
 #'
 #' @export
 dmcCombineObservedData <- function(...) {
@@ -610,7 +609,6 @@ calculateCAF <- function(dat,
 #' delta <- calculateDelta(dat, nDelta = 9, columns = c("Subject", "Congruency", "RT"),
 #'                         compCoding = c("cong", "incong"))
 #'
-#'
 #' @export
 calculateDelta <- function(dat,
                            nDelta = 19,
@@ -735,4 +733,3 @@ rtDist <- function(n=10000, gaussMean=600, gaussSD=50, expRate=200) {
 errDist <- function(n=10000, proportion = 10) {
   return(ifelse(runif(n) <= proportion / 100, 1, 0))
 }
-

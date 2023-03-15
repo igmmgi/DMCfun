@@ -515,7 +515,6 @@ dmcFitDE <- function(resOb,
 #' # Code below can exceed CRAN check time limit, hence donttest
 #' # Example 1: Flanker data from Ulrich et al. (2015)
 #' fit <- dmcFitSubject(flankerData, nTrl = 1000, subjects = c(1, 2));
-#' fit <- dmcFitSubject(flankerData, nTrl = 1000, subjects = c(1, 2));
 #' plot(fit, flankerData, subject = 1)
 #' plot(fit, flankerData, subject = 2)
 #' summary(fit)
@@ -1015,16 +1014,32 @@ calculateBinProbabilities <- function(resOb) {
 
   # Some subjects are likely not to have 5+ error trials, esp. in compatible conditions!
   probs <- c(0.1, 0.3, 0.5, 0.7, 0.9)
-  resOb$probSubject <- resOb$data %>%
-    dplyr::filter(outlier == 0) %>%
-    dplyr::group_by(Subject, Comp, Error) %>%
-    dplyr::summarize(
-      nTrials  = n(),
-      prob     = probs,
-      boundary = quantile(RT, probs),
-      .groups  = "drop"
-    ) %>%
-    dplyr::filter(nTrials >= 5)
+
+  # dplyr 1.1.0 reframe replaces functionality from summarize
+  # https://www.tidyverse.org/blog/2023/02/dplyr-1-1-0-pick-reframe-arrange/
+  if (packageVersion("dplyr")>="1.1.0") {
+    resOb$probSubject <- resOb$data %>%
+      dplyr::filter(outlier == 0) %>%
+      dplyr::group_by(Subject, Comp, Error) %>%
+      dplyr::reframe(
+        nTrials  = n(),
+        prob     = probs,
+        boundary = quantile(RT, probs),
+        .groups  = "drop"
+      ) %>%
+      dplyr::filter(nTrials >= 5)
+  } else {
+    resOb$probSubject <- resOb$data %>%
+      dplyr::filter(outlier == 0) %>%
+      dplyr::group_by(Subject, Comp, Error) %>%
+      dplyr::summarize(
+        nTrials  = n(),
+        prob     = probs,
+        boundary = quantile(RT, probs),
+        .groups  = "drop"
+      ) %>%
+      dplyr::filter(nTrials >= 5)
+  }
 
   resOb$prob <- resOb$probSubject %>%
     dplyr::group_by(Comp, Error, prob) %>%
@@ -1037,3 +1052,7 @@ calculateBinProbabilities <- function(resOb) {
 
   return(resOb)
 }
+
+
+
+

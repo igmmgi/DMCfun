@@ -8,8 +8,6 @@
   x,
   figType = "all",
   subject = NULL,
-  legend = TRUE,
-  legendLabels = c(),
   labels = c("Compatible", "Incompatible"),
   cols = c("black", "gray"),
   ltys = c(1, 1),
@@ -29,6 +27,8 @@
   yaxts = TRUE,
   xylabPos = 2,
   resetPar = TRUE,
+  legend = TRUE,
+  legend.parameters = list(),
   ...
 )
 }
@@ -38,10 +38,6 @@
 \item{figType}{rtCorrect, errorRate, rtErrors, cdf, caf, delta, deltaErrors, deltaER, all}
 
 \item{subject}{NULL (aggregated data across all subjects) or integer for subject number}
-
-\item{legend}{TRUE/FALSE (or FUNCTION) plot legend on each plot}
-
-\item{legendLabels}{legend labels}
 
 \item{labels}{Condition labels c("Compatible", "Incompatible") default}
 
@@ -81,6 +77,10 @@
 
 \item{resetPar}{TRUE/FALSE Reset graphical parameters}
 
+\item{legend}{TRUE/FALSE}
+
+\item{legend.parameters}{list}
+
 \item{...}{additional plot pars}
 }
 \value{
@@ -96,8 +96,9 @@ of the previous plots.
 # Example 1
 dat <- dmcCombineObservedData(flankerData, simonData)  # combine flanker/simon data
 plot(dat, figType = "delta", xlimDelta = c(200, 700), ylimDelta = c(-20, 80),
-     cols = c("black", "darkgrey"), pchs = c(1, 2), legend = FALSE, resetPar = FALSE)
-legend(200, 80, legend = c("Flanker Task", "Simon Task"),
-       col = c("black", "darkgrey"), lty = c(1, 1))
+     cols = c("black", "darkgrey"), pchs = c(1, 2))
+plot(dat, figType = "delta", xlimDelta = c(200, 700), ylimDelta = c(-20, 80),
+     cols = c("black", "darkgrey"), pchs = c(1, 2), legend = TRUE,
+     legend.parameters=list(x="topright", legend=c("Flanker", "Simon")))
 }
 }

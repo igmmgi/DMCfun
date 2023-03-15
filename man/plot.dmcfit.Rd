@@ -9,7 +9,6 @@
   y,
   subject = NULL,
   figType = "summary",
-  legend = TRUE,
   labels = c("Compatible", "Incompatible", "Observed", "Predicted"),
   cols = c("green", "red"),
   ylimRt = NULL,
@@ -25,6 +24,8 @@
   yaxts = TRUE,
   xylabPos = 2,
   resetPar = TRUE,
+  legend = TRUE,
+  legend.parameters = list(legend = c("Observed", "Predicted")),
   ...
 )
 }
@@ -36,8 +37,6 @@
 \item{subject}{NULL (aggregated data across all subjects) or integer for subject number}
 
 \item{figType}{summary, rtCorrect, errorRate, rtErrors, cdf, caf, delta, all}
-
-\item{legend}{TRUE/FALSE (or FUNCTION) plot legend on each plot}
 
 \item{labels}{Condition labels c("Compatible", "Incompatible", "Observed", "Predicted") default}
 
@@ -68,6 +67,10 @@
 \item{xylabPos}{2}
 
 \item{resetPar}{TRUE/FALSE Reset graphical parameters}
+
+\item{legend}{TRUE/FALSE}
+
+\item{legend.parameters}{list}
 
 \item{...}{additional plot pars}
 }

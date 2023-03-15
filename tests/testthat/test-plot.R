@@ -44,7 +44,12 @@ test_that("plot.dmcsim", {
   # test 3
   params <- list(amp = seq(20, 30, 2))
   dmc <- dmcSims(params)
-  plot(dmc, ncol = 2, col = c("red", "green"), legendPos = "topright")
+  plot(dmc, col = c("red", "green"))
+
+  # test 4
+  params <- list(amp = seq(20, 30, 2))
+  dmc <- dmcSims(params)
+  plot(dmc, col = c("red", "green"), legend.parameters = list(ncol=2))
 
 
 })
@@ -69,7 +74,6 @@ test_that("plot.dmcob", {
   testthat::expect_error(plot(DMCfun::flankerData, subject = 1), NA)
   testthat::expect_error(plot(DMCfun::flankerData, subject = 999))
   testthat::expect_error(plot(DMCfun::flankerData, xlabs = FALSE, ylabs = FALSE, xaxts = FALSE, yaxts = FALSE), NA)
-  testthat::expect_error(plot(DMCfun::flankerData, legend = function() {}), NA)
   testthat::expect_error(plot(DMCfun::flankerData, cafBinLabels = TRUE), NA)
   testthat::expect_error(plot(DMCfun::simonData), NA)
   testthat::expect_error(plot(DMCfun::simonData, errorBars = TRUE), NA)
@@ -88,7 +92,6 @@ test_that("plot.dmcob", {
   testthat::expect_error(plot(DMCfun::simonData, subject = 1), NA)
   testthat::expect_error(plot(DMCfun::simonData, subject = 999))
   testthat::expect_error(plot(DMCfun::simonData, xlabs = FALSE, ylabs = FALSE, xaxts = FALSE, yaxts = FALSE), NA)
-  testthat::expect_error(plot(DMCfun::simonData, legend = function() {}), NA)
   testthat::expect_error(plot(DMCfun::simonData, cafBinLabels = TRUE), NA)
 
   # simulated datasets

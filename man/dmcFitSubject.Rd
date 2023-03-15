@@ -111,7 +111,6 @@ include squared percentage error ("SPE"), and g-squared statistic ("GS").
 # Code below can exceed CRAN check time limit, hence donttest
 # Example 1: Flanker data from Ulrich et al. (2015)
 fit <- dmcFitSubject(flankerData, nTrl = 1000, subjects = c(1, 2));
-fit <- dmcFitSubject(flankerData, nTrl = 1000, subjects = c(1, 2));
 plot(fit, flankerData, subject = 1)
 plot(fit, flankerData, subject = 2)
 summary(fit)

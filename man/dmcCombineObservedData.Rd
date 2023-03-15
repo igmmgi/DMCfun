@@ -19,8 +19,7 @@ Combine observed datasets
 # Example 1
 dat <- dmcCombineObservedData(flankerData, simonData)  # combine flanker/simon data
 plot(dat, figType = "delta", xlimDelta = c(200, 700), ylimDelta = c(-20, 80),
-     cols = c("black", "darkgrey"), legend = FALSE, resetPar = FALSE)
-legend(200, 80, legend = c("Flanker Task", "Simon Task"),
-       col = c("black", "darkgrey"), lty = c(1, 1))
+     cols = c("black", "darkgrey"), legend.parameters = list(x=200, y=80,
+     legend = c("Flanker Task", "Simon Task")))
 
 }
