@@ -20,6 +20,7 @@
 #' @param spShape starting point (sp) shape parameter
 #' @param spLim starting point (sp) range
 #' @param spBias starting point (sp) bias
+#' @param drOnset drift rate (dr) onset (default=0; must be >= 0)
 #' @param drDist drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)
 #' @param drShape drift rate (dr) shape parameter
 #' @param drLim drift rate (dr) range
@@ -47,7 +48,7 @@
 #' @examples
 #' \donttest{
 #' # Example 1
-#' dmc <- dmcSim(fullData = TRUE)  # fullData only needed for activation/trials (left column plot)
+#' dmc <- dmcSim(fullData = TRUE) # fullData only needed for activation/trials (left column plot)
 #' plot(dmc)
 #' dmc <- dmcSim() # faster!
 #' plot(dmc)
@@ -89,6 +90,7 @@ dmcSim <- function(amp            = 20,
                    spDist         = 0,
                    spLim          = c(-75, 75),
                    spBias         = 0,
+                   drOnset        = 0,
                    drDist         = 0,
                    drShape        = 3,
                    drLim          = c(0.1, 0.7),
@@ -118,7 +120,7 @@ dmcSim <- function(amp            = 20,
       nTrl = nTrl, tmax = tmax, rtMax = rtMax, fullData = fullData, nTrlData = nTrlData,
       nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF,
       spDist = spDist, spLimLow = spLim[1], spLimHigh = spLim[2],
-      drDist = drDist, drShape = drShape, drLimLow = drLim[1], drLimHigh = drLim[2],
+      drOnset = drOnset, drDist = drDist, drShape = drShape, drLimLow = drLim[1], drLimHigh = drLim[2],
       printInputArgs = printInputArgs, printResults = printResults, setSeed = setSeed, seedValue = seedValue)
   )
 
@@ -165,7 +167,7 @@ dmcSim <- function(amp            = 20,
     aaShape = aaShape, spShape = spShape, spBias = spBias, sigm = sigm,
     nTrl = nTrl, nTrlData = nTrlData, tmax = tmax, resDist = resDist,
     spDist = spDist, spLim1 = spLim[1], spLim2 = spLim[2],
-    drDist = drDist, drShape = drShape, drLim1 = drLim[1], drLim2 = drLim[2]
+    drOnset = drOnset, drDist = drDist, drShape = drShape, drLim1 = drLim[1], drLim2 = drLim[2]
     )
 
   class(dmc) <- "dmcsim"

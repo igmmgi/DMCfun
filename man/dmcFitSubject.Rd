@@ -21,6 +21,7 @@ dmcFitSubject(
   deltaErrors = FALSE,
   costFunction = "RMSE",
   spDist = 1,
+  drOnset = 0,
   drDist = 0,
   drShape = 3,
   drLim = c(0.1, 0.7),
@@ -78,6 +79,8 @@ only searches the tau space.}
 squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")}
 
 \item{spDist}{The starting point (sp) distribution (0 = constant, 1 = beta, 2 = uniform)}
+
+\item{drOnset}{The starting point of controlled drift rate (i.e., "target" information) relative to automatic ("distractor" incormation) (> 0 ms)}
 
 \item{drDist}{The drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)}
 

@@ -165,13 +165,15 @@ void run_simulation(Prms &p, std::vector<double> &u_vec,
   for (auto trl = 0u; trl < p.nTrl; trl++) {
     activation_trial = sp[trl];
     for (auto i = 0u; i < p.tmax; i++) {
-      activation_trial += (u_vec[i] + dr[trl] + (p.sigm * snd(rng)));
+      activation_trial += (u_vec[i] + (p.sigm * snd(rng)));
+      if (i >= p.drOnset)
+        activation_trial += dr[trl];
       if (activation_trial > p.bnds) {
-        value = i + residual_distribution[trl] + 1;
+        value = (i + residual_distribution[trl] + 1) - p.drOnset; // RT measured from onset of relevant dimension!
         (value < p.rtMax ? rts : slows).push_back(value);
         break;
       } else if (activation_trial < -p.bnds) {
-        value = i + residual_distribution[trl] + 1;
+        value = (i + residual_distribution[trl] + 1) - p.drOnset;
         (value < p.rtMax ? errs : slows).push_back(value);
         break;
       }
@@ -199,13 +201,15 @@ void run_simulation(Prms &p, std::vector<double> &activation_sum,
     criterion = false;
     activation_trial = sp[trl];
     for (auto i = 0u; i < activation_sum.size(); i++) {
-      activation_trial += u_vec[i] + dr[trl] + (p.sigm * snd(rng));
+      activation_trial += u_vec[i] + (p.sigm * snd(rng));
+      if (i >= p.drOnset)
+        activation_trial += dr[trl];
       if (!criterion && activation_trial > p.bnds) {
-        value = i + residual_distribution[trl] + 1;
+        value = (i + residual_distribution[trl] + 1) - p.drOnset;
         (value < p.rtMax ? rts : slows).push_back(value);
         criterion = true;
       } else if (!criterion && activation_trial < -p.bnds) {
-        value = i + residual_distribution[trl] + 1;
+        value = (i + residual_distribution[trl] + 1) - p.drOnset;
         (value < p.rtMax ? errs : slows).push_back(value);
         criterion = true;
       }

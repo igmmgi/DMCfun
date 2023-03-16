@@ -20,6 +20,7 @@ dmcFit(
   tDelta = 1,
   deltaErrors = FALSE,
   spDist = 1,
+  drOnset = 0,
   drDist = 0,
   drShape = 3,
   drLim = c(0.1, 0.7),
@@ -74,6 +75,8 @@ only searches the tau space.}
 \item{deltaErrors}{TRUE/FALSE Calculate delta bins for error trials}
 
 \item{spDist}{The starting point (sp) distribution (0 = constant, 1 = beta, 2 = uniform)}
+
+\item{drOnset}{The starting point of controlled drift rate (i.e., "target" information) relative to automatic ("distractor" incormation) (> 0 ms)}
 
 \item{drDist}{The drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)}
 

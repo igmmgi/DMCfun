@@ -1272,8 +1272,12 @@ plot_activation <- function(
   if (is.null(xlim)) xlim <- c(0, resTh$prms$tmax)
   if (is.null(ylim)) ylim <- c(-resTh$prms$bnds - 20, resTh$prms$bnds + 20)
 
+  # xaxis <- c(1:(resTh$prms$tmax)) - resTh$prms$drOnset
+  # xlim  <- xlim - resTh$prms$drOnset
+  xaxis <- c(1:(resTh$prms$tmax))
+
   # automatic
-  plot(c(1:resTh$prms$tmax), resTh$sim$eq4, type = "l", lty = 2, col = cols,
+  plot(xaxis, resTh$sim$eq4, type = "l", lty = 2, col = cols,
        ylim = ylim, xlim = xlim,
        xlab = "", ylab = "",
        xaxt = xaxt, yaxt = yaxt, ...)
@@ -1281,7 +1285,7 @@ plot_activation <- function(
   if (xaxt == "n") axis(side = 1, labels = FALSE)  # keep tick marks
   if (yaxt == "n") axis(side = 2, labels = FALSE)  # keep tick marks
 
-  lines(c(1:resTh$prms$tmax), -resTh$sim$eq4, type = "l", lty = 2, col = cols[2], ...)
+  lines(xaxis, -resTh$sim$eq4, type = "l", lty = 2, col = cols[2], ...)
 
   # controlled
   if (resTh$prms$drDist != 0) {
@@ -1291,11 +1295,18 @@ plot_activation <- function(
   }
   dr <- cumsum(rep(dr, resTh$prms$tmax))
   dr <- dr + mean(c(resTh$prms$spLim1, resTh$prms$spLim2))
-  lines(c(1:resTh$prms$tmax), dr, ...)
+
+  # adjust for controlled drift rate onset?
+  if (resTh$prms$drOnset > 0) {
+    dr <- dr - dr[resTh$prms$drOnset]
+    dr[1:resTh$prms$drOnset] <- 0
+  }
+
+  lines(xaxis, dr, ...)
 
   # superimposed automatic + controlled comp/incomp
-  lines(c(1:resTh$prms$tmax), resTh$sim$activation_comp,   col = cols[1], ...)
-  lines(c(1:resTh$prms$tmax), resTh$sim$activation_incomp, col = cols[2], ...)
+  lines(xaxis, resTh$sim$activation_comp,   col = cols[1], ...)
+  lines(xaxis, resTh$sim$activation_incomp, col = cols[2], ...)
 
   # bounds
   abline(h = c(-resTh$prms$bnds, resTh$prms$bnds), col = "darkgrey", xpd = FALSE, ...)

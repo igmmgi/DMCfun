@@ -20,6 +20,7 @@ dmcSim(
   spDist = 0,
   spLim = c(-75, 75),
   spBias = 0,
+  drOnset = 0,
   drDist = 0,
   drShape = 3,
   drLim = c(0.1, 0.7),
@@ -67,6 +68,8 @@ dmcSim(
 \item{spLim}{starting point (sp) range}
 
 \item{spBias}{starting point (sp) bias}
+
+\item{drOnset}{drift rate (dr) onset (default=0; must be >= 0)}
 
 \item{drDist}{drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)}
 
@@ -116,7 +119,7 @@ Cognitive Psychology, 78, 148-174. This function is essentially a wrapper around
 \examples{
 \donttest{
 # Example 1
-dmc <- dmcSim(fullData = TRUE)  # fullData only needed for activation/trials (left column plot)
+dmc <- dmcSim(fullData = TRUE) # fullData only needed for activation/trials (left column plot)
 plot(dmc)
 dmc <- dmcSim() # faster!
 plot(dmc)
