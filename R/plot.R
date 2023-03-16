@@ -1688,7 +1688,7 @@ plot_delta <- function(
   }
 
   if (!is.null(labels) && legend) {
-    delfault_legend.parameters <- list(legend=labels, x="bottomright", col="black", lty=c(0,1), pch=c(1,NA))
+    delfault_legend.parameters <- list(legend=labels, x="bottomright", col="black", lty=c(0,1), pch=c(1,NA), inset=0.1)
     legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
     add_legend(legend.parameters)
   }
@@ -1757,7 +1757,7 @@ plot_delta_er <- function(
   }
 
   if (!is.null(labels) && legend) {
-    delfault_legend.parameters <- list(legend=labels, x="bottomright", col="black", lty=c(0,1), pch=c(1,NA))
+    delfault_legend.parameters <- list(legend=labels, x="bottomright", col="black", lty=c(0,1), pch=c(1,NA), inset=0.1)
     legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
     add_legend(legend.parameters)
   }
