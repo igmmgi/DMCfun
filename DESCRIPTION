@@ -37,10 +37,6 @@ Suggests:
   shiny,
   testthat
 LinkingTo: Rcpp, BH
-<<<<<<< HEAD
 RoxygenNote: 7.2.3
-=======
-RoxygenNote: 7.2.2
->>>>>>> offset
 LazyData: true
 SystemRequirements: C++11
