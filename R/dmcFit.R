@@ -21,6 +21,11 @@
 #' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., fixedFit = list(amp = F, tau = F, drc = F,
 #' bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T))
 #' NB. Value if fixed at startVals.
+#' @param freeCombined If fitting 2+ datasets at once, which parameters are allowed to vary between both
+#' fits (default = all parameters fixed between the two fits e.g. parameter = F).
+#' This is a list with bool values specified individually for
+#' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., freeCombined = list(amp = F,
+#' tau = F, drc = F, bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = F, sigm = F))
 #' @param fitInitialGrid TRUE/FALSE
 #' @param fitInitialGridN 10 linear steps between parameters min/max values (reduce if searching more than ~2/3 initial parameters)
 #' @param fixedGrid Fix parameter for initial grid search. This is a list with bool values specified individually for
@@ -91,7 +96,18 @@
 #' fit <- dmcFit(datOb, nTrl = 5000)
 #' plot(fit, datOb)
 #' summary(fit)
+#'
+#' # Example 5: Fitting 2+ datasets within all common parameters values
+#' fit <- dmcFit(list(flankerData, simonData), nTrl=1000)
+#' plot(fit[[1]], flankerData)
+#' plot(fit[[2]], simonData)
+#' summary(fit)
+#'
+#' # Example 6: Fitting 2+ datasets within some parameters values varying
+#' fit <- dmcFit(list(flankerData, simonData), freeCombined=list(amp=TRUE, tau=TRUE), nTrl=1000)
+#' summary(fit) # NB. amp/tau values different, other parameter values equal
 #' }
+#'
 #'
 #' @export
 dmcFit <- function(resOb,
@@ -100,6 +116,7 @@ dmcFit <- function(resOb,
                    minVals = list(),
                    maxVals = list(),
                    fixedFit = list(),
+                   freeCombined = list(),
                    fitInitialGrid = TRUE,
                    fitInitialGridN = 10, # reduce if grid search 3/4+ parameters
                    fixedGrid = list(), # default only initial search tau
@@ -120,12 +137,17 @@ dmcFit <- function(resOb,
                    optimControl = list(),
                    numCores = 2) {
 
+  if (is(resOb, "dmcob")){
+    resOb <- list(resOb)
+  }
+
   # default parameter space
   defaultStartVals <- list(amp = 20, tau = 200, drc = 0.5, bnds = 75, resMean = 300, resSD = 30, aaShape = 2, spShape = 3, spBias = 0, sigm = 4)
   defaultMinVals <- list(amp = 0, tau = 5, drc = 0.1, bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, spBias = -20, sigm = 1)
   defaultMaxVals <- list(amp = 40, tau = 300, drc = 1.0, bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 20, sigm = 10)
   defaultFixedFit <- list(amp = F, tau = F, drc = F, bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T)
   defaultFixedGrid <- list(amp = T, tau = F, drc = T, bnds = T, resMean = T, resSD = T, aaShape = T, spShape = T, spBias = T, sigm = T)
+  defaultFreeCombined <- list(amp = F, tau = F, drc = F, bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = F, sigm = F)
 
   startVals <- modifyList(defaultStartVals, startVals)
   startVals <- lapply(startVals, function(x) ifelse(x == 0, .Machine$double.xmin, x))
@@ -137,20 +159,23 @@ dmcFit <- function(resOb,
   maxVals <- modifyList(defaultMaxVals, maxVals)
   fixedFit <- modifyList(defaultFixedFit, fixedFit)
   fixedGrid <- modifyList(defaultFixedGrid, fixedGrid)
+  freeCombined <- modifyList(defaultFreeCombined, freeCombined)
 
   parScale <- unlist(startVals) / min(unlist(startVals) + 1)
-  prms <- startVals
+  prms <- replicate(length(resOb), startVals, simplify=FALSE)
 
   # default optim control parameters
-  defaultOptimControl <- list(parscale = parScale[!as.logical(fixedFit)], maxit = 500)
+  defaultOptimControl <- list(parscale = c(parScale[!as.logical(fixedFit)], parScale[as.logical(freeCombined)]), maxit = 500)
   optimControl <- modifyList(defaultOptimControl, optimControl)
 
   # check observed data contains correct number of delta/CAF bins
-  if (nrow(resOb$delta) != nDelta) {
-    stop("Number of delta bins in observed data and nDelta bins are not equal!")
-  }
-  if ((nrow(resOb$caf)) != nCAF) {
-    stop("Number of CAF bins in observed data and nCAF bins are not equal!")
+  for (i in 1:length(resOb)) {
+    if (nrow(resOb[[i]]$delta) != nDelta) {
+      stop(paste0("Number of delta bins in observed data set ", i, "and nDelta bins are not equal!"))
+    }
+    if (nrow(resOb[[i]]$caf) != nCAF) {
+      stop(paste0("Number of CAF bins in observed data set ", i, "and nCAF bins are not equal!"))
+    }
   }
 
   # which cost function?
@@ -159,7 +184,9 @@ dmcFit <- function(resOb,
   if (is.character(costFunction)) {
     if (tolower(costFunction) %in% c("cs", "gs")) {
       # add additional probabilities to observed data required for cs/gs cost functions
-      resOb <- calculateBinProbabilities(resOb)
+      for (i in 1:length(resOb)) {
+        resOb[[i]] <- calculateBinProbabilities(resOb[[i]])
+      }
     }
   }
 
@@ -204,7 +231,11 @@ dmcFit <- function(resOb,
         rtMax = rtMax, nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF,
         printInputArgs = TRUE, printResults = FALSE
       )
-      return(calculateCostValue(resTh, resOb))
+      cost <- 0
+      for (i in 1:length(resOb)) {
+        cost <- cost + calculateCostValue(resTh, resOb[[i]])
+      }
+      return(cost)
     }
 
     cl <- parallel::makeCluster(numCores)
@@ -219,8 +250,9 @@ dmcFit <- function(resOb,
 
   # optimize
   fit <- optim(
-    par = as.numeric(startVals[!as.logical(fixedFit)]), fn = minimizeCostValue,
-    costFunction = calculateCostValue, prms = prms, fixedFit = fixedFit, resOb = resOb,
+    par = as.numeric(c(startVals[!as.logical(fixedFit)], startVals[as.logical(freeCombined)])),
+    fn = minimizeCostValue,
+    costFunction = calculateCostValue, prms = prms, fixedFit = fixedFit, freeCombined=freeCombined, resOb = resOb,
     nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF,
     spDist = spDist, drOnset = drOnset, drDist = drDist, drShape = drShape, drLim = drLim,
     rtMax = rtMax, minVals = minVals, maxVals = maxVals,
@@ -228,42 +260,70 @@ dmcFit <- function(resOb,
     method = "Nelder-Mead", control = optimControl
   )
 
-  prms[!as.logical(fixedFit)] <- fit$par
+  # number of fitted parameters (unique)
+  nParameters <- sum(as.logical(fixedFit)==FALSE)
+
+  for (i in 1:length(resOb)) {
+    prms[[i]][!as.logical(fixedFit)] <- fit$par[c(1:nParameters)]
+  }
+  if(length(resOb)>=2){
+    for (i in 2:length(resOb)) {
+      prms[[i]][as.logical(freeCombined)] <- fit$par[-c(1:nParameters)]
+    }
+  }
 
   # bounds check
-  prms <- pmax(unlist(prms), unlist(minVals))
-  prms <- pmin(unlist(prms), unlist(maxVals))
-  if (any(prms == unlist(minVals)) || any(prms == unlist(maxVals))) {
-    warning("Parameter estimates at minVals/maxVals bounds!")
+  for (i in 1:length(resOb)) {
+    prms[[i]] <- pmax(unlist(prms[[i]]), unlist(minVals))
+    prms[[i]] <- pmin(unlist(prms[[i]]), unlist(maxVals))
+    if (any(prms[[i]] == unlist(minVals)) || any(prms[[i]] == unlist(maxVals))) {
+      warning(paste0("Parameter estimates at minVals/maxVals bounds for data set ", i, "!"))
+    }
   }
-  prms <- as.list(prms)
+  for (i in 1:length(resOb)) {
+    prms[[i]] <- as.list(prms[[i]])
+  }
 
-  dmcfit <- dmcSim(
-    amp = prms$amp, tau = prms$tau, drc = prms$drc, bnds = prms$bnds,
-    resMean = prms$resMean, resSD = prms$resSD, aaShape = prms$aaShape,
-    spDist = spDist, spBias = prms$spBias, spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
-    sigm = prms$sigm, drOnset = drOnset, drDist = drDist, drShape = drShape, drLim = drLim,
-    rtMax = rtMax, nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF,
-    printResults = TRUE
-  )
+  dmcfit <- list()
+  for (i in 1:length(resOb)) {
+    dmcfit[[i]] <- dmcSim(
+      amp = prms[[i]]$amp, tau = prms[[i]]$tau, drc = prms[[i]]$drc, bnds = prms[[i]]$bnds,
+      resMean = prms[[i]]$resMean, resSD = prms[[i]]$resSD, aaShape = prms[[i]]$aaShape,
+      spDist = spDist, spBias = prms[[i]]$spBias, spShape = prms[[i]]$spShape, spLim = c(-prms[[i]]$bnds, prms[[i]]$bnds),
+      sigm = prms[[i]]$sigm, drOnset = drOnset, drDist = drDist, drShape = drShape, drLim = drLim,
+      rtMax = rtMax, nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF,
+      printResults = TRUE
+    )
+  }
 
   # fitted parameters
-  dmcfit$prms <- NULL # TO DO: Would this be useful to keep or is it only redundant?
-  dmcfit$par <- prms
-  dmcfit$par["cost"] <- fit$value
+  for (i in 1:length(resOb)) {
+    dmcfit[[i]]$nDataSets <- length(resOb)
+    dmcfit[[i]]$par <- prms[[i]]
+    dmcfit[[i]]$par["cost"] <- calculateCostValue(dmcfit[[i]], resOb[[i]])
+  }
 
   if (!is.function(costFunction)) {
     if (tolower(costFunction) %in% c("CS", "GS")) {
-      dmcfit$par["df"] <- 2 * (12 - 1) - (sum(unlist(fixedFit) == FALSE)) # 2 conditions with 6 bins - N fitted parameters
+      for (i in 1:length(dmcfit)){
+        dmcfit[[i]]$par["df"] <- 2 * (12 - 1) - (sum(unlist(fixedFit) == FALSE)) # 2 conditions with 6 bins - N fitted parameters
+      }
     }
     if (costFunction == "GS") {
-      dmcfit$par["BIC"] <- fit$value + (sum(unlist(fixedFit) == FALSE)) * log(sum(resOb$data$outlier == 0))
+      for (i in 1:length(dmcfit)){
+        dmcfit$par["BIC"] <- fit$value + (sum(unlist(fixedFit) == FALSE)) * log(sum(resOb$data$outlier == 0))
+      }
     }
   }
 
-  class(dmcfit) <- "dmcfit"
+  dmcfit <- lapply(dmcfit, `class<-`, value="dmcfit")
+  if (length(dmcfit)==1){
+    return(dmcfit[[1]])
+  } else {
+    class(dmcfit) <- "dmcfit"
+    return(dmcfit)
+  }
 
-  return(dmcfit)
 }
 
 
@@ -286,6 +346,11 @@ dmcFit <- function(resOb,
 #' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedFit = list(amp = F,  tau = F, drc = F,
 #' bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T))
 #' NB. Value if fixed at midpoint between minVals and maxVals.
+#' @param freeCombined If fitting 2+ datasets at once, which parameters are allowed to vary between both
+#' fits (default = all parameters fixed between the two fits e.g. parameter = F).
+#' This is a list with bool values specified individually for
+#' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., freeCombined = list(amp = F,
+#' tau = F, drc = F, bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = F, sigm = F))
 #' @param nCAF The number of CAF bins.
 #' @param nDelta The number of delta bins.
 #' @param pDelta An alternative option to nDelta (tDelta = 1 only) by directly specifying required percentile values (vector of values 0-100)
@@ -334,6 +399,7 @@ dmcFitDE <- function(resOb,
                      minVals = list(),
                      maxVals = list(),
                      fixedFit = list(),
+                     freeCombined = list(),
                      nCAF = 5,
                      nDelta = 19,
                      pDelta = vector(),
@@ -349,23 +415,31 @@ dmcFitDE <- function(resOb,
                      deControl = list(),
                      numCores = 2) {
 
+  if (is(resOb, "dmcob")){
+    resOb <- list(resOb)
+  }
+
   # default parameter space
   defaultMinVals <- list(amp = 0, tau = 5, drc = 0.1, bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, spBias = 0, sigm = 4)
   defaultMaxVals <- list(amp = 40, tau = 300, drc = 1.0, bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 0, sigm = 4)
   defaultFixedFit <- list(amp = F, tau = F, drc = F, bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T)
+  defaultFreeCombined <- list(amp = F, tau = F, drc = F, bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = F, sigm = F)
 
   minVals <- modifyList(defaultMinVals, minVals)
   maxVals <- modifyList(defaultMaxVals, maxVals)
   fixedFit <- modifyList(defaultFixedFit, fixedFit)
+  freeCombined <- modifyList(defaultFreeCombined, freeCombined)
 
-  prms <- (unlist(minVals) + unlist(maxVals)) / 2 # start in middle of min/max vals
+  prms <- replicate(length(resOb), (unlist(minVals) + unlist(maxVals)) / 2, simplify = FALSE) # start in middle of min/max vals
 
   # check observed data contains correct number of delta/CAF bins
-  if (nrow(resOb$delta) != nDelta) {
-    stop("Number of delta bins in observed data and nDelta bins are not equal!")
-  }
-  if ((nrow(resOb$caf)) != nCAF) {
-    stop("Number of CAF bins in observed data and nCAF bins are not equal!")
+  for (i in 1:length(resOb)) {
+    if (nrow(resOb[[i]]$delta) != nDelta) {
+      stop(paste0("Number of delta bins in observed data set ", i, "and nDelta bins are not equal!"))
+    }
+    if (nrow(resOb[[i]]$caf) != nCAF) {
+      stop(paste0("Number of CAF bins in observed data set ", i, "and nCAF bins are not equal!"))
+    }
   }
 
   # which cost function?
@@ -374,7 +448,9 @@ dmcFitDE <- function(resOb,
   if (is.character(costFunction)) {
     if (tolower(costFunction) %in% c("cs", "gs")) {
       # add additional probabilities to observed data required for cs/gs cost functions
-      resOb <- calculateBinProbabilities(resOb)
+      for (i in 1:length(resOb)) {
+        resOb[[i]] <- calculateBinProbabilities(resOb[[i]])
+      }
     }
   }
 
@@ -397,11 +473,12 @@ dmcFitDE <- function(resOb,
   # optimize
   fit <- DEoptim::DEoptim(
     fn = minimizeCostValue,
-    lower = unlist(minVals[!as.logical(fixedFit)]),
-    upper = unlist(maxVals[!as.logical(fixedFit)]),
+    lower = c(unlist(minVals[!as.logical(fixedFit)]), unlist(minVals[as.logical(freeCombined)])),
+    upper = c(unlist(maxVals[!as.logical(fixedFit)]), unlist(maxVals[as.logical(freeCombined)])),
     costFunction = calculateCostValue,
     prms = prms,
     fixedFit = fixedFit,
+    freeCombined=freeCombined,
     minVals = minVals,
     maxVals = maxVals,
     resOb = resOb,
@@ -424,43 +501,71 @@ dmcFitDE <- function(resOb,
 
   parallel::stopCluster(cl)
 
-  prms[!as.logical(fixedFit)] <- as.list(fit$optim$bestmem)
+  # number of fitted parameters (unique)
+  nParameters <- sum(as.logical(fixedFit)==FALSE)
+
+  for (i in 1:length(resOb)) {
+    prms[[i]][!as.logical(fixedFit)] <- as.list(fit$optim$bestmem)[c(1:nParameters)]
+  }
+  if(length(resOb)>=2){
+    for (i in 2:length(resOb)) {
+      prms[[i]][as.logical(freeCombined)] <- as.list(fit$optim$bestmem)[-c(1:nParameters)]
+    }
+  }
 
   # bounds check
-  prms <- pmax(unlist(prms), unlist(minVals))
-  prms <- pmin(unlist(prms), unlist(maxVals))
-  if (any(prms[!as.logical(fixedFit)] == unlist(minVals[!as.logical(fixedFit)])) ||
-    any(prms[!as.logical(fixedFit)] == unlist(maxVals[!as.logical(fixedFit)]))) {
-    warning("Parameter estimates at minVals/maxVals bounds!")
+  for (i in 1:length(resOb)) {
+    prms[[i]] <- pmax(unlist(prms[[i]]), unlist(minVals))
+    prms[[i]] <- pmin(unlist(prms[[i]]), unlist(maxVals))
+    if (any(prms[[i]] == unlist(minVals)) || any(prms[[i]] == unlist(maxVals))) {
+      warning(paste0("Parameter estimates at minVals/maxVals bounds for data set ", i, "!"))
+    }
   }
-  prms <- as.list(prms)
+  for (i in 1:length(resOb)) {
+    prms[[i]] <- as.list(prms[[i]])
+  }
 
   cat("\n")
 
-  dmcfit <- dmcSim(
-    amp = prms$amp, tau = prms$tau, drc = prms$drc, bnds = prms$bnds,
-    resMean = prms$resMean, resSD = prms$resSD, aaShape = prms$aaShape,
-    spDist = spDist, spBias = prms$spBias, spShape = prms$spShape, spLim = c(-prms$bnds, prms$bnds),
-    sigm = prms$sigm, drOnset = drOnset, drDist = drDist, drShape = drShape, drLim = drLim,
-    rtMax = rtMax, nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF,
-    printResults = TRUE
-  )
+  dmcfit <- list()
+  for (i in 1:length(resOb)) {
+    dmcfit[[i]] <- dmcSim(
+      amp = prms[[i]]$amp, tau = prms[[i]]$tau, drc = prms[[i]]$drc, bnds = prms[[i]]$bnds,
+      resMean = prms[[i]]$resMean, resSD = prms[[i]]$resSD, aaShape = prms[[i]]$aaShape,
+      spDist = spDist, spBias = prms[[i]]$spBias, spShape = prms[[i]]$spShape, spLim = c(-prms[[i]]$bnds, prms[[i]]$bnds),
+      sigm = prms[[i]]$sigm, drOnset = drOnset, drDist = drDist, drShape = drShape, drLim = drLim,
+      rtMax = rtMax, nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF,
+      printResults = TRUE
+    )
+  }
 
   # fitted parameters
-  dmcfit$prms <- NULL # TO DO: Would this be useful to keep or is it only redundant?
-  dmcfit$par <- prms
-  dmcfit$par["cost"] <- fit$optim$bestval
+  for (i in 1:length(resOb)) {
+    dmcfit[[i]]$nDataSets <- length(resOb)
+    dmcfit[[i]]$par <- prms[[i]]
+    dmcfit[[i]]$par["cost"] <- calculateCostValue(dmcfit[[i]], resOb[[i]])
+  }
 
   if (!is.function(costFunction)) {
     if (tolower(costFunction) %in% c("CS", "GS")) {
-      dmcfit$par["df"] <- 2 * (12 - 1) - (sum(unlist(fixedFit) == FALSE)) # 2 conditions with 6 bins - N fitted parameters
+      for (i in 1:length(dmcfit)){
+        dmcfit[[i]]$par["df"] <- 2 * (12 - 1) - (sum(unlist(fixedFit) == FALSE)) # 2 conditions with 6 bins - N fitted parameters
+      }
     }
     if (costFunction == "GS") {
-      dmcfit$par["BIC"] <- fit$value + (sum(unlist(fixedFit) == FALSE)) * log(sum(resOb$data$outlier == 0))
+      for (i in 1:length(dmcfit)){
+        dmcfit$par["BIC"] <- fit$value + (sum(unlist(fixedFit) == FALSE)) * log(sum(resOb$data$outlier == 0))
+      }
     }
   }
 
-  class(dmcfit) <- "dmcfit"
+  dmcfit <- lapply(dmcfit, `class<-`, value="dmcfit")
+  if (length(dmcfit)==1){
+    return(dmcfit[[1]])
+  } else {
+    class(dmcfit) <- "dmcfit"
+    return(dmcfit)
+  }
 
   return(dmcfit)
 }
@@ -495,6 +600,11 @@ dmcFitDE <- function(resOb,
 #' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., fixedGrid = list(amp = T, tau = F, drc = T,
 #' bnds = T, resMean = T, resSD = T, aaShape = T, spShape = T, spBias = T, sigm = T)). As a default, the initial gridsearch
 #' only searches the tau space.
+#' @param freeCombined If fitting 2+ datasets at once, which parameters are allowed to vary between both
+#' fits (default = all parameters fixed between the two fits e.g. parameter = F).
+#' This is a list with bool values specified individually for
+#' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., freeCombined = list(amp = F,
+#' tau = F, drc = F, bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = F, sigm = F))
 #' @param nCAF Number of CAF bins.
 #' @param nDelta Number of delta bins.
 #' @param pDelta An alternative option to nDelta (tDelta = 1 only) by directly specifying required percentile values (vector of values 0-100)
@@ -539,6 +649,7 @@ dmcFitSubject <- function(resOb,
                           minVals = list(),
                           maxVals = list(),
                           fixedFit = list(),
+                          freeCombined = list(),
                           fitInitialGrid = TRUE,
                           fitInitialGridN = 10, # reduce if grid search 3/4+ parameters
                           fixedGrid = list(), # default only initial tau search
@@ -560,50 +671,59 @@ dmcFitSubject <- function(resOb,
                           optimControl = list(),
                           numCores = 2) {
 
+  if (is(resOb, "dmcob")){
+    resOb <- list(resOb)
+  }
+
   if (length(subjects) == 0) {
-    subjects <- unique(resOb$summarySubject$Subject) # fit all individual subjects in data
+    subjects <- unique(resOb[[1]]$summarySubject$Subject) # fit all individual subjects in data
   }
 
   dmcfit <- vector("list", max(subjects))
   for (subject in subjects) {
-    if (is.null(resOb$data)) {
-      resObSubject <- list(
-        deltaAgg = resOb$deltaSubject[resOb$deltaSubject$Subject == subject, ],
-        cafAgg = resOb$cafSubject[resOb$cafSubject$Subject == subject, ]
-      )
-    } else {
-      resObSubject <- list(
-        data = resOb$data[resOb$data$Subject == subject, ],
-        deltaAgg = resOb$deltaSubject[resOb$deltaSubject$Subject == subject, ],
-        cafAgg = resOb$cafSubject[resOb$cafSubject$Subject == subject, ]
-      )
+
+    resObSubject <- list()
+    for (i in 1:length(resOb)) {
+      if (is.null(resOb[[i]]$data)) {
+        resObSubject[[i]] <- list(
+          deltaAgg = resOb[[i]]$deltaSubject[resOb[[i]]$deltaSubject$Subject == subject, ],
+          cafAgg = resOb[[i]]$cafSubject[resOb[[i]]$cafSubject$Subject == subject, ]
+        )
+      } else {
+        resObSubject[[i]] <- list(
+          data = resOb[[i]]$data[resOb[[i]]$data$Subject == subject, ],
+          deltaAgg = resOb[[i]]$deltaSubject[resOb[[i]]$deltaSubject$Subject == subject, ],
+          cafAgg = resOb[[i]]$cafSubject[resOb[[i]]$cafSubject$Subject == subject, ]
+        )
+      }
     }
 
     dmcfit[[subject]] <- dmcFit(resObSubject,
-      nTrl            = nTrl,
-      startVals       = startVals,
-      minVals         = minVals,
-      maxVals         = maxVals,
-      fixedFit        = fixedFit,
-      fitInitialGrid  = fitInitialGrid,
-      fitInitialGridN = fitInitialGridN, # reduce if grid search 3/4+ parameters
-      fixedGrid       = fixedGrid, # only fit tau
-      nCAF            = nCAF,
-      nDelta          = nDelta,
-      pDelta          = pDelta,
-      tDelta          = tDelta,
-      deltaErrors     = deltaErrors,
-      costFunction    = costFunction,
-      spDist          = spDist,
-      drOnset         = drOnset,
-      drDist          = drDist,
-      drShape         = drShape,
-      drLim           = drLim,
-      rtMax           = rtMax,
-      printInputArgs  = printInputArgs,
-      printResults    = printResults,
-      optimControl    = optimControl,
-      numCores        = numCores
+                                nTrl            = nTrl,
+                                startVals       = startVals,
+                                minVals         = minVals,
+                                maxVals         = maxVals,
+                                fixedFit        = fixedFit,
+                                freeCombined    = freeCombined,
+                                fitInitialGrid  = fitInitialGrid,
+                                fitInitialGridN = fitInitialGridN, # reduce if grid search 3/4+ parameters
+                                fixedGrid       = fixedGrid, # only fit tau
+                                nCAF            = nCAF,
+                                nDelta          = nDelta,
+                                pDelta          = pDelta,
+                                tDelta          = tDelta,
+                                deltaErrors     = deltaErrors,
+                                costFunction    = costFunction,
+                                spDist          = spDist,
+                                drOnset         = drOnset,
+                                drDist          = drDist,
+                                drShape         = drShape,
+                                drLim           = drLim,
+                                rtMax           = rtMax,
+                                printInputArgs  = printInputArgs,
+                                printResults    = printResults,
+                                optimControl    = optimControl,
+                                numCores        = numCores
     )
   }
 
@@ -632,6 +752,11 @@ dmcFitSubject <- function(resOb,
 #' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedFit = list(amp = F,  tau = F, drc = F,
 #' bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T))
 #' NB. Value if fixed at midpoint between minVals and maxVals.
+#' @param freeCombined If fitting 2+ datasets at once, which parameters are allowed to vary between both
+#' fits (default = all parameters fixed between the two fits e.g. parameter = F).
+#' This is a list with bool values specified individually for
+#' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., freeCombined = list(amp = F,
+#' tau = F, drc = F, bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = F, sigm = F))
 #' @param nCAF The number of CAF bins.
 #' @param nDelta The number of delta bins.
 #' @param pDelta An alternative option to nDelta (tDelta = 1 only) by directly specifying required percentile values (vector of values 0-100)
@@ -673,6 +798,7 @@ dmcFitSubjectDE <- function(resOb,
                             minVals = list(),
                             maxVals = list(),
                             fixedFit = list(),
+                            freeCombined = list(),
                             nCAF = 5,
                             nDelta = 19,
                             pDelta = vector(),
@@ -689,23 +815,31 @@ dmcFitSubjectDE <- function(resOb,
                             deControl = list(),
                             numCores = 2) {
 
+  if (is(resOb, "dmcob")){
+    resOb <- list(resOb)
+  }
+
   if (length(subjects) == 0) {
-    subjects <- unique(resOb$summarySubject$Subject) # fit all individual subjects in data
+    subjects <- unique(resOb[[1]]$summarySubject$Subject) # fit all individual subjects in data
   }
 
   dmcfit <- vector("list", max(subjects))
   for (subject in subjects) {
-    if (is.null(resOb$data)) {
-      resObSubject <- list(
-        deltaAgg = resOb$deltaSubject[resOb$deltaSubject$Subject == subject, ],
-        cafAgg = resOb$cafSubject[resOb$cafSubject$Subject == subject, ]
-      )
-    } else {
-      resObSubject <- list(
-        data = resOb$data[resOb$data$Subject == subject, ],
-        deltaAgg = resOb$deltaSubject[resOb$deltaSubject$Subject == subject, ],
-        cafAgg = resOb$cafSubject[resOb$cafSubject$Subject == subject, ]
-      )
+
+    resObSubject <- list()
+    for (i in 1:length(resOb)) {
+      if (is.null(resOb$data)) {
+        resObSubject[[i]] <- list(
+          deltaAgg = resOb[[i]]$deltaSubject[resOb[[i]]$deltaSubject$Subject == subject, ],
+          cafAgg = resOb[[i]]$cafSubject[resOb[[i]]$cafSubject$Subject == subject, ]
+        )
+      } else {
+        resObSubject <- list(
+          data = resOb[[i]]$data[resOb[[i]]$data$Subject == subject, ],
+          deltaAgg = resOb[[i]]$deltaSubject[resOb[[i]]$deltaSubject$Subject == subject, ],
+          cafAgg = resOb[[i]]$cafSubject[resOb[[i]]$cafSubject$Subject == subject, ]
+        )
+      }
     }
 
     dmcfit[[subject]] <- dmcFitDE(resObSubject,
@@ -713,6 +847,7 @@ dmcFitSubjectDE <- function(resOb,
       minVals      = minVals,
       maxVals      = maxVals,
       fixedFit     = fixedFit,
+      freeCombined = freeCombined,
       nCAF         = nCAF,
       nDelta       = nDelta,
       pDelta       = pDelta,
@@ -802,6 +937,7 @@ minimizeCostValue <- function(x,
                               costFunction,
                               prms,
                               fixedFit,
+                              freeCombined,
                               resOb,
                               nTrl,
                               nDelta,
@@ -819,24 +955,41 @@ minimizeCostValue <- function(x,
                               maxVals,
                               printInputArgs,
                               printResults) {
-  prms[!as.logical(fixedFit)] <- x
+
+  nParameters <- sum(as.logical(fixedFit)==FALSE)
+  for (i in 1:length(prms)) {
+    prms[[i]][!as.logical(fixedFit)] <- x[c(1:nParameters)]
+  }
+  if (length(prms)>=2){
+    for (i in 2:length(prms)) {
+      prms[[i]][as.logical(freeCombined)] <- x[-c(1:nParameters)]
+    }
+  }
 
   # implement bounds
-  prms <- as.list(pmax(unlist(prms), unlist(minVals)))
-  prms <- as.list(pmin(unlist(prms), unlist(maxVals)))
+  for (i in 1:length(prms)) {
+    prms[[i]] <- as.list(pmax(unlist(prms[[i]]), unlist(minVals)))
+    prms[[i]] <- as.list(pmin(unlist(prms[[i]]), unlist(maxVals)))
+  }
 
-  resTh <- dmcSim(
-    amp = prms$amp, tau = prms$tau, drc = prms$drc, bnds = prms$bnds,
-    resMean = prms$resMean, resSD = prms$resSD, aaShape = prms$aaShape,
-    spDist = spDist, spShape = prms$spShape, spBias = prms$spBias, sigm = prms$sigm, spLim = c(-prms$bnds, prms$bnds),
-    drOnset = drOnset, drDist = drDist, drShape = drShape, drLim = drLim,
-    rtMax = rtMax, nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF,
-    printInputArgs = printInputArgs, printResults = printResults
-  )
+  resTh <- list()
+  cost <- c()
+  for (i in 1:length(resOb)) {
+    cat(paste0("Data set ", i, ":"))
+    resTh[[i]] <- dmcSim(
+      amp = prms[[i]]$amp, tau = prms[[i]]$tau, drc = prms[[i]]$drc, bnds = prms[[i]]$bnds,
+      resMean = prms[[i]]$resMean, resSD = prms[[i]]$resSD, aaShape = prms[[i]]$aaShape,
+      spDist = spDist, spShape = prms[[i]]$spShape, spBias = prms[[i]]$spBias, sigm = prms[[i]]$sigm, spLim = c(-prms[[i]]$bnds, prms[[i]]$bnds),
+      drOnset = drOnset, drDist = drDist, drShape = drShape, drLim = drLim,
+      rtMax = rtMax, nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF,
+      printInputArgs = printInputArgs, printResults = printResults
+    )
+    cost[i] <- costFunction(resTh[[i]], resOb[[i]])
+    cat(" | cost:", formatC(cost[i], 3, format = "f"), "\n")
+  }
 
-  cost <- costFunction(resTh, resOb)
-  cat(" | cost:", formatC(cost, 3, format = "f"))
-  return(cost)
+  return(sum(cost))
+
 }
 
 #' @title calculateCostValueRMSE

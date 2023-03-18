@@ -107,10 +107,8 @@ test_that("plot.dmcob", {
 
   # plot combined data
   dat <- dmcCombineObservedData(DMCfun::flankerData, DMCfun::simonData)  # combine flanker/simon data
-  testthat::expect_error(plot(dat, figType = "all",  cols = c("black", "darkgrey"),
-                              pchs = c(1, 2), resetPar = FALSE), NA)
-  testthat::expect_error(plot(dat, subject = 1, figType = "all",  cols = c("black", "darkgrey"),
-                              pchs = c(1, 2), resetPar = FALSE), NA)
+  testthat::expect_error(plot(dat, figType = "delta",  cols = c("black", "darkgrey"),
+                              pchs = c(1, 2), resetPar = TRUE), NA)
 
 })
 

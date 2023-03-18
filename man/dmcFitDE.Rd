@@ -10,6 +10,7 @@ dmcFitDE(
   minVals = list(),
   maxVals = list(),
   fixedFit = list(),
+  freeCombined = list(),
   nCAF = 5,
   nDelta = 19,
   pDelta = vector(),
@@ -43,6 +44,12 @@ bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 20, s
 amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedFit = list(amp = F,  tau = F, drc = F,
 bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T))
 NB. Value if fixed at midpoint between minVals and maxVals.}
+
+\item{freeCombined}{If fitting 2+ datasets at once, which parameters are allowed to vary between both
+fits (default = all parameters fixed between the two fits e.g. parameter = F).
+This is a list with bool values specified individually for
+amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., freeCombined = list(amp = F,
+tau = F, drc = F, bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = F, sigm = F))}
 
 \item{nCAF}{The number of CAF bins.}
 

@@ -116,7 +116,7 @@ plot(dmc)
 
 # Example 4
 dmc = dmcSim()
-plot(dmc, figType = "summary3")
+plot(dmc, figType = "all")
 
 }
 

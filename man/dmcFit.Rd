@@ -11,6 +11,7 @@ dmcFit(
   minVals = list(),
   maxVals = list(),
   fixedFit = list(),
+  freeCombined = list(),
   fitInitialGrid = TRUE,
   fitInitialGridN = 10,
   fixedGrid = list(),
@@ -54,6 +55,12 @@ bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 20, s
 amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., fixedFit = list(amp = F, tau = F, drc = F,
 bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T))
 NB. Value if fixed at startVals.}
+
+\item{freeCombined}{If fitting 2+ datasets at once, which parameters are allowed to vary between both
+fits (default = all parameters fixed between the two fits e.g. parameter = F).
+This is a list with bool values specified individually for
+amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., freeCombined = list(amp = F,
+tau = F, drc = F, bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = F, sigm = F))}
 
 \item{fitInitialGrid}{TRUE/FALSE}
 
@@ -150,6 +157,17 @@ plot(datOb)
 fit <- dmcFit(datOb, nTrl = 5000)
 plot(fit, datOb)
 summary(fit)
+
+# Example 5: Fitting 2+ datasets within all common parameters values
+fit <- dmcFit(list(flankerData, simonData), nTrl=1000)
+plot(fit[[1]], flankerData)
+plot(fit[[2]], simonData)
+summary(fit)
+
+# Example 6: Fitting 2+ datasets within some parameters values varying
+fit <- dmcFit(list(flankerData, simonData), freeCombined=list(amp=TRUE, tau=TRUE), nTrl=1000)
+summary(fit) # NB. amp/tau values different, other parameter values equal
 }
+
 
 }

@@ -55,7 +55,7 @@
 #'
 #' # Example 4
 #' dmc = dmcSim()
-#' plot(dmc, figType = "summary3")
+#' plot(dmc, figType = "all")
 #'
 #' }
 #'
@@ -160,24 +160,21 @@ plot.dmcsim <- function(
   } else if (figType == "summary3") {
     par(mar = c(2, 4, 1, 2), mfrow = c(3, 1), ...)
     showFig[9:11] <- TRUE
-  } else if (figType == "all" & length(x) == 7) {
+  } else if (figType == "all") {
     par(mar = c(4, 4, 2, 2), mfrow = c(1, 1), ...)
-    showFig[1:10] <- TRUE
-  } else if (figType == "all" & length(x) == 6) {
-    par(mar = c(4, 4, 2, 2), mfrow = c(1, 1), ...)
-    showFig[4:11] <- TRUE
+    showFig[1:11] <- TRUE
   } else {
     showFig[figTypes[5:15] %in% figType] <- TRUE
   }
 
   # activation
-  if (showFig[1]) {
+  if (showFig[1] & !is.null(x$trials)) {
     plot_activation(x, labels, cols, xlabs[1], ylabs[1], xlimActivation, ylimActivation,
                     xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, legend=legend, ... )
   }
 
   # individual trials
-  if (showFig[2]) {
+  if (showFig[2] & !is.null(x$trials)) {
     plot_trials(x, labels, cols, xlabs[2], ylabs[2], xlimActivation, ylimActivation,
                 xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, legend=legend, ...)
   }
@@ -210,7 +207,7 @@ plot.dmcsim <- function(
   }
 
   # delta/delta errors
-  if (showFig[7]) {
+  if (showFig[7] & !is.null(x$deltaErrors)) {
     plot_delta(resTh = x, figType = "deltaErrors", labels = NULL, xlim = xlimDelta, ylim = ylimDelta,
                xlab = xlabs[7], ylab = ylabs[7], xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, ...)
   }
@@ -1053,7 +1050,7 @@ plot.dmcobs <- function(x,
 #' # Example 2
 #' resTh <- dmcFit(flankerData, nTrl = 5000)
 #' plot(resTh, flankerData)
-#' plot(resTh, flankerData, figType = "all")
+#' plot(resTh, flankerData, figType = "deltaErrors")
 #'
 #' # Example 3
 #' resTh <- dmcFit(simonData, nTrl = 5000)
@@ -1200,7 +1197,7 @@ plot.dmcfit <- function(x,
   }
 
   # deltaErrors
-  if (showFig[7]) {
+  if (showFig[7] & !is.null(x$deltaErrors)) {
     plot_delta(resTh = x, resOb = y, figType = "deltaErrors", xlim = xlimDelta, ylim = ylimDelta,
                xlab = xlabs[7], ylab = ylabs[7], xaxt = xaxts, yaxt = yaxts, labels = labels[3:4],
                xylabPos = xylabPos,

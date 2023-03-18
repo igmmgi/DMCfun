@@ -96,7 +96,7 @@ plot(resTh, flankerData)
 # Example 2
 resTh <- dmcFit(flankerData, nTrl = 5000)
 plot(resTh, flankerData)
-plot(resTh, flankerData, figType = "all")
+plot(resTh, flankerData, figType = "deltaErrors")
 
 # Example 3
 resTh <- dmcFit(simonData, nTrl = 5000)

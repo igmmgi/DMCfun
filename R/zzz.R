@@ -13,6 +13,7 @@
       names(DMCfun::flankerData$caf),
       names(DMCfun::flankerData$cafSubject),
       ".",
+      "DataSet",
       "Effect",
       "N",
       "Parameters",
