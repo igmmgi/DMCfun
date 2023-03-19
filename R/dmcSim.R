@@ -75,38 +75,37 @@
 #' }
 #'
 #' @export
-dmcSim <- function(amp            = 20,
-                   tau            = 30,
-                   drc            = 0.5,
-                   bnds           = 75,
-                   resDist        = 1,
-                   resMean        = 300,
-                   resSD          = 30,
-                   aaShape        = 2,
-                   spShape        = 3,
-                   sigm           = 4,
-                   nTrl           = 100000,
-                   tmax           = 1000,
-                   spDist         = 0,
-                   spLim          = c(-75, 75),
-                   spBias         = 0,
-                   drOnset        = 0,
-                   drDist         = 0,
-                   drShape        = 3,
-                   drLim          = c(0.1, 0.7),
-                   rtMax          = 5000,
-                   fullData       = FALSE,
-                   nTrlData       = 5,
-                   nDelta         = 9,
-                   pDelta         = vector(),
-                   tDelta         = 1,
-                   deltaErrors    = FALSE,
-                   nCAF           = 5,
+dmcSim <- function(amp = 20,
+                   tau = 30,
+                   drc = 0.5,
+                   bnds = 75,
+                   resDist = 1,
+                   resMean = 300,
+                   resSD = 30,
+                   aaShape = 2,
+                   spShape = 3,
+                   sigm = 4,
+                   nTrl = 100000,
+                   tmax = 1000,
+                   spDist = 0,
+                   spLim = c(-75, 75),
+                   spBias = 0,
+                   drOnset = 0,
+                   drDist = 0,
+                   drShape = 3,
+                   drLim = c(0.1, 0.7),
+                   rtMax = 5000,
+                   fullData = FALSE,
+                   nTrlData = 5,
+                   nDelta = 9,
+                   pDelta = vector(),
+                   tDelta = 1,
+                   deltaErrors = FALSE,
+                   nCAF = 5,
                    printInputArgs = TRUE,
-                   printResults   = TRUE,
-                   setSeed        = FALSE,
-                   seedValue      = 1) {
-
+                   printResults = TRUE,
+                   setSeed = FALSE,
+                   seedValue = 1) {
   # change nDelta to length of pDelta if pDelta not empty
   if (length(pDelta) != 0) {
     nDelta <- length(pDelta)
@@ -115,32 +114,38 @@ dmcSim <- function(amp            = 20,
 
   # call to cpp function for the simulation
   dmc <- dmcCppR(
-    r_in = list(amp = amp, tau = tau, drc = drc, bnds = bnds, resDist = resDist, resMean = resMean,
-      resSD = resSD, aaShape = aaShape, spShape = spShape, spBias = spBias, sigm = sigm,
-      nTrl = nTrl, tmax = tmax, rtMax = rtMax, fullData = fullData, nTrlData = nTrlData,
-      nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF,
-      spDist = spDist, spLimLow = spLim[1], spLimHigh = spLim[2],
-      drOnset = drOnset, drDist = drDist, drShape = drShape, drLimLow = drLim[1], drLimHigh = drLim[2],
-      printInputArgs = printInputArgs, printResults = printResults, setSeed = setSeed, seedValue = seedValue)
+    r_in = list(
+      amp = amp, tau = tau, drc = drc, bnds = bnds, resDist = resDist,
+      resMean = resMean, resSD = resSD, aaShape = aaShape, spShape = spShape,
+      spBias = spBias, sigm = sigm, nTrl = nTrl, tmax = tmax, rtMax = rtMax,
+      fullData = fullData, nTrlData = nTrlData, nDelta = nDelta,
+      pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors,
+      nCAF = nCAF, spDist = spDist, spLimLow = spLim[1], spLimHigh = spLim[2],
+      drOnset = drOnset, drDist = drDist, drShape = drShape,
+      drLimLow = drLim[1], drLimHigh = drLim[2],
+      printInputArgs = printInputArgs, printResults = printResults,
+      setSeed = setSeed, seedValue = seedValue
+    )
   )
 
-  summary     <- dmc$summary
+  summary <- dmc$summary
   dmc$summary <- NULL
 
   # means
-  dmc$summary        <- as.data.frame(rbind(summary$comp, summary$incomp))
+  dmc$summary <- as.data.frame(rbind(summary$comp, summary$incomp))
   names(dmc$summary) <- c("rtCor", "sdRtCor", "perErr", "rtErr", "sdRtErr", "perSlow")
-  dmc$summary        <- cbind(Comp = c("comp", "incomp"), dmc$summary)
+  dmc$summary <- cbind(Comp = c("comp", "incomp"), dmc$summary)
 
   # caf
-  dmc$caf <- as.data.frame(cbind(Bin = 1:nCAF,
+  dmc$caf <- as.data.frame(cbind(
+    Bin = 1:nCAF,
     # rtComp       = summary$caf_rt_comp,
-    accPerComp   = summary$caf_comp,
+    accPerComp = summary$caf_comp,
     # rtIncomp     = summary$caf_rt_incomp,
     accPerIncomp = summary$caf_incomp,
-    meanBin      = (summary$caf_rt_comp + summary$caf_rt_incomp) / 2,
-    meanEffect   = ((100 - summary$caf_incomp) - (100 - summary$caf_comp)) * 100)
-  )
+    meanBin = (summary$caf_rt_comp + summary$caf_rt_incomp) / 2,
+    meanEffect = ((100 - summary$caf_incomp) - (100 - summary$caf_comp)) * 100
+  ))
 
   # delta
   dmc$delta <- as.data.frame(cbind(
@@ -148,8 +153,8 @@ dmcSim <- function(amp            = 20,
     meanComp   = summary$delta_correct_comp,
     meanIncomp = summary$delta_correct_incomp,
     meanBin    = summary$delta_correct_mean,
-    meanEffect = summary$delta_correct_delta)
-  )
+    meanEffect = summary$delta_correct_delta
+  ))
 
   if (deltaErrors) {
     dmc$deltaErrors <- as.data.frame(cbind(
@@ -157,23 +162,24 @@ dmcSim <- function(amp            = 20,
       meanComp   = summary$delta_errors_comp,
       meanIncomp = summary$delta_errors_incomp,
       meanBin    = summary$delta_errors_mean,
-      meanEffect = summary$delta_errors_delta)
-    )
+      meanEffect = summary$delta_errors_delta
+    ))
   }
 
   # store parameters used to call function
   dmc$prms <- data.frame(
-    amp = amp, tau = tau, drc = drc, bnds = bnds, resMean = resMean, resSD = resSD,
-    aaShape = aaShape, spShape = spShape, spBias = spBias, sigm = sigm,
-    nTrl = nTrl, nTrlData = nTrlData, tmax = tmax, resDist = resDist,
+    amp = amp, tau = tau, drc = drc, bnds = bnds, resMean = resMean,
+    resSD = resSD, aaShape = aaShape, spShape = spShape, spBias = spBias,
+    sigm = sigm, nTrl = nTrl, nTrlData = nTrlData, tmax = tmax,
+    resDist = resDist,
     spDist = spDist, spLim1 = spLim[1], spLim2 = spLim[2],
-    drOnset = drOnset, drDist = drDist, drShape = drShape, drLim1 = drLim[1], drLim2 = drLim[2]
-    )
+    drOnset = drOnset, drDist = drDist, drShape = drShape,
+    drLim1 = drLim[1], drLim2 = drLim[2]
+  )
 
   class(dmc) <- "dmcsim"
 
   return(dmc)
-
 }
 
 
@@ -192,46 +198,41 @@ dmcSim <- function(amp            = 20,
 #' # Example 1
 #' params <- list(amp = seq(10, 20, 5), tau = c(50, 100, 150), nTrl = 50000)
 #' dmc <- dmcSims(params)
-#' plot(dmc[[1]])    # full combination 1
-#' plot(dmc)         # delta plots for all combinations
+#' plot(dmc[[1]]) # full combination 1
+#' plot(dmc) # delta plots for all combinations
 #' plot(dmc[c(1:3)]) # delta plots for specific combinations
 #'
 #' # Example 2
 #' params <- list(amp = seq(10, 20, 5), tau = seq(20, 40, 20), bnds = seq(50, 100, 25))
 #' dmc <- dmcSims(params)
-#' plot(dmc[[1]])  # combination 1
-#' plot(dmc, ncol = 2)       # delta plots for all combinations
+#' plot(dmc[[1]]) # combination 1
+#' plot(dmc, ncol = 2) # delta plots for all combinations
 #' plot(dmc[c(1:3)]) # delta plots for specific combinations
 #' }
 #'
 #' @export
 dmcSims <- function(params, printInputArgs = FALSE, printResults = FALSE) {
-
-  params  <- expand.grid(params)
+  params <- expand.grid(params)
+  uparams <- params
   if (ncol(params) > 1) {
     uparams <- params[, lengths(lapply(params, unique)) != 1, drop = FALSE]
-  } else {
-    uparams <- params
   }
   params <- setNames(split(params, seq(nrow(params))), rownames(params))
 
   dmc <- vector("list", length(params))
   for (i in seq_along(params)) {
-
     # inputs for each dmcSim call taken from params + add default of not printing individual results
     dmcInputs <- params[[i]]
-    message("DMC ", i, " of ", length(params), ": ", paste0(names(dmcInputs), "=", dmcInputs, sep = "", collapse = ", "))
+    message("DMC ", i, " of ", length(params), ": ", paste0(names(dmcInputs), "=", dmcInputs, collapse = ", "))
     dmcInputs$printInputArgs <- printInputArgs
-    dmcInputs$printResults   <- printResults
+    dmcInputs$printResults <- printResults
 
-    dmc[[i]]        <- do.call(dmcSim, dmcInputs)
+    dmc[[i]] <- do.call(dmcSim, dmcInputs)
     dmc[[i]]$params <- uparams
-
   }
 
   class(dmc) <- "dmclist"
   return(dmc)
-
 }
 
 
@@ -244,5 +245,5 @@ dmcSimApp <- function() {
   if (!requireNamespace("shiny")) {
     stop("This addin requires the 'shiny' package.")
   }
-  shiny::runApp(system.file('dmcSimApp', package = "DMCfun"))
+  shiny::runApp(system.file("dmcSimApp", package = "DMCfun"))
 }
