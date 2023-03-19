@@ -304,14 +304,15 @@ dmcFit <- function(resOb,
   }
 
   if (!is.function(costFunction)) {
-    if (tolower(costFunction) %in% c("CS", "GS")) {
+    nFreeParameters <- sum(unlist(fixedFit==FALSE))
+    if (tolower(costFunction) %in% c("cs", "gs")) {
       for (i in 1:length(dmcfit)){
-        dmcfit[[i]]$par["df"] <- 2 * (12 - 1) - (sum(unlist(fixedFit) == FALSE)) # 2 conditions with 6 bins - N fitted parameters
+        dmcfit[[i]]$par["df"] <- (2 * (12 - 1)) - nFreeParameters # 2 conditions with 6 bins - N fitted parameters
       }
     }
-    if (costFunction == "GS") {
+    if (tolower(costFunction) == "gs") {
       for (i in 1:length(dmcfit)){
-        dmcfit$par["BIC"] <- fit$value + (sum(unlist(fixedFit) == FALSE)) * log(sum(resOb$data$outlier == 0))
+        dmcfit[[i]]$par["BIC"] <- fit$value + (nFreeParameters * log(sum(resOb[[i]]$data$outlier == 0)))
       }
     }
   }
@@ -547,14 +548,15 @@ dmcFitDE <- function(resOb,
   }
 
   if (!is.function(costFunction)) {
-    if (tolower(costFunction) %in% c("CS", "GS")) {
+    nFreeParameters <- sum(unlist(fixedFit==FALSE))
+    if (tolower(costFunction) %in% c("cs", "gs")) {
       for (i in 1:length(dmcfit)){
-        dmcfit[[i]]$par["df"] <- 2 * (12 - 1) - (sum(unlist(fixedFit) == FALSE)) # 2 conditions with 6 bins - N fitted parameters
+        dmcfit[[i]]$par["df"] <- (2 * (12 - 1)) - nFreeParameters # 2 conditions with 6 bins - N fitted parameters
       }
     }
-    if (costFunction == "GS") {
+    if (tolower(costFunction) == "gs") {
       for (i in 1:length(dmcfit)){
-        dmcfit$par["BIC"] <- fit$value + (sum(unlist(fixedFit) == FALSE)) * log(sum(resOb$data$outlier == 0))
+        dmcfit[[i]]$par["BIC"] <- fit$value + (nFreeParameters * log(sum(resOb[[i]]$data$outlier == 0)))
       }
     }
   }
