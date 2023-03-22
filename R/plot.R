@@ -645,7 +645,7 @@ plot.dmcobs <- function(x,
   if (length(x) > 2) {
     cols <- rep(cols, ceiling(length(x)/length(cols)))
     ltys <- rep(ltys, ceiling(length(x)/length(ltys)))
-    pchs <- rep(ltys, ceiling(length(x)/length(pchs)))
+    pchs <- rep(pchs, ceiling(length(x)/length(pchs)))
   }
 
   figType <- tolower(figType)
