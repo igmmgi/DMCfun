@@ -274,9 +274,10 @@ dmcFit <- function(resOb,
 
   # bounds check
   for (i in 1:length(resOb)) {
-    prms[[i]] <- pmax(unlist(prms[[i]]), unlist(minVals))
-    prms[[i]] <- pmin(unlist(prms[[i]]), unlist(maxVals))
-    if (any(prms[[i]] == unlist(minVals)) || any(prms[[i]] == unlist(maxVals))) {
+    tmp_minVals <- unlist(minVals[!as.logical(fixedFit)])
+    tmp_maxVals <- unlist(maxVals[!as.logical(fixedFit)])
+    tmp_prms <- unlist(prms[[i]][!as.logical(fixedFit)])
+    if (any(tmp_prms == tmp_minVals) || any(tmp_prms == tmp_maxVals)) {
       warning(paste0("Parameter estimates at minVals/maxVals bounds for data set ", i, "!"))
     }
   }
@@ -312,7 +313,7 @@ dmcFit <- function(resOb,
     }
     if (tolower(costFunction) == "gs") {
       for (i in 1:length(dmcfit)){
-        dmcfit[[i]]$par["BIC"] <- fit$value + (nFreeParameters * log(sum(resOb[[i]]$data$outlier == 0)))
+        dmcfit[[i]]$par["BIC"] <- dmcfit[[i]]$par$cost + (nFreeParameters * log(sum(resOb[[i]]$data$outlier == 0)))
       }
     }
   }
@@ -516,16 +517,16 @@ dmcFitDE <- function(resOb,
 
   # bounds check
   for (i in 1:length(resOb)) {
-    prms[[i]] <- pmax(unlist(prms[[i]]), unlist(minVals))
-    prms[[i]] <- pmin(unlist(prms[[i]]), unlist(maxVals))
-    if (any(prms[[i]] == unlist(minVals)) || any(prms[[i]] == unlist(maxVals))) {
+    tmp_minVals <- unlist(minVals[!as.logical(fixedFit)])
+    tmp_maxVals <- unlist(maxVals[!as.logical(fixedFit)])
+    tmp_prms <- unlist(prms[[i]][!as.logical(fixedFit)])
+    if (any(tmp_prms == tmp_minVals) || any(tmp_prms == tmp_maxVals)) {
       warning(paste0("Parameter estimates at minVals/maxVals bounds for data set ", i, "!"))
     }
   }
   for (i in 1:length(resOb)) {
     prms[[i]] <- as.list(prms[[i]])
   }
-
   cat("\n")
 
   dmcfit <- list()
@@ -556,7 +557,7 @@ dmcFitDE <- function(resOb,
     }
     if (tolower(costFunction) == "gs") {
       for (i in 1:length(dmcfit)){
-        dmcfit[[i]]$par["BIC"] <- fit$value + (nFreeParameters * log(sum(resOb[[i]]$data$outlier == 0)))
+        dmcfit[[i]]$par["BIC"] <- dmcfit[[i]]$par$cost + (nFreeParameters * log(sum(resOb[[i]]$data$outlier == 0)))
       }
     }
   }
