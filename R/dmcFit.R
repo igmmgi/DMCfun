@@ -831,13 +831,13 @@ dmcFitSubjectDE <- function(resOb,
 
     resObSubject <- list()
     for (i in 1:length(resOb)) {
-      if (is.null(resOb$data)) {
+      if (is.null(resOb[[i]]$data)) {
         resObSubject[[i]] <- list(
           deltaAgg = resOb[[i]]$deltaSubject[resOb[[i]]$deltaSubject$Subject == subject, ],
           cafAgg = resOb[[i]]$cafSubject[resOb[[i]]$cafSubject$Subject == subject, ]
         )
       } else {
-        resObSubject <- list(
+        resObSubject[[i]] <- list(
           data = resOb[[i]]$data[resOb[[i]]$data$Subject == subject, ],
           deltaAgg = resOb[[i]]$deltaSubject[resOb[[i]]$deltaSubject$Subject == subject, ],
           cafAgg = resOb[[i]]$cafSubject[resOb[[i]]$cafSubject$Subject == subject, ]
