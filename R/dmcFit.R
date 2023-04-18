@@ -260,15 +260,16 @@ dmcFit <- function(resOb,
     method = "Nelder-Mead", control = optimControl
   )
 
-  # number of fitted parameters (unique)
-  nParameters <- sum(as.logical(fixedFit)==FALSE)
+  # number of fitted parameters
+  nFreeParametersUnique <- sum(as.logical(fixedFit)==FALSE)
+  nFreeParametersTotal <- sum(as.logical(fixedFit)==FALSE) + sum(as.logical(freeCombined==TRUE))
 
   for (i in 1:length(resOb)) {
-    prms[[i]][!as.logical(fixedFit)] <- fit$par[c(1:nParameters)]
+    prms[[i]][!as.logical(fixedFit)] <- fit$par[c(1:nFreeParametersUnique)]
   }
   if(length(resOb)>=2){
     for (i in 2:length(resOb)) {
-      prms[[i]][as.logical(freeCombined)] <- fit$par[-c(1:nParameters)]
+      prms[[i]][as.logical(freeCombined)] <- fit$par[-c(1:nFreeParametersUnique)]
     }
   }
 
@@ -305,15 +306,14 @@ dmcFit <- function(resOb,
   }
 
   if (!is.function(costFunction)) {
-    nFreeParameters <- sum(unlist(fixedFit==FALSE))
     if (tolower(costFunction) %in% c("cs", "gs")) {
       for (i in 1:length(dmcfit)){
-        dmcfit[[i]]$par["df"] <- (2 * (12 - 1)) - nFreeParameters # 2 conditions with 6 bins - N fitted parameters
+        dmcfit[[i]]$par["df"] <- (2 * (12 - 1)) - nFreeParametersTotal # 2 conditions with 6 bins - N fitted parameters
       }
     }
     if (tolower(costFunction) == "gs") {
       for (i in 1:length(dmcfit)){
-        dmcfit[[i]]$par["BIC"] <- dmcfit[[i]]$par$cost + (nFreeParameters * log(sum(resOb[[i]]$data$outlier == 0)))
+        dmcfit[[i]]$par["BIC"] <- dmcfit[[i]]$par$cost + (nFreeParametersTotal * log(sum(resOb[[i]]$data$outlier == 0)))
       }
     }
   }
@@ -503,15 +503,16 @@ dmcFitDE <- function(resOb,
 
   parallel::stopCluster(cl)
 
-  # number of fitted parameters (unique)
-  nParameters <- sum(as.logical(fixedFit)==FALSE)
+  # number of fitted parameters
+  nFreeParametersUnique <- sum(as.logical(fixedFit)==FALSE)
+  nFreeParametersTotal <- sum(as.logical(fixedFit)==FALSE) + sum(as.logical(freeCombined==TRUE))
 
   for (i in 1:length(resOb)) {
-    prms[[i]][!as.logical(fixedFit)] <- as.list(fit$optim$bestmem)[c(1:nParameters)]
+    prms[[i]][!as.logical(fixedFit)] <- as.list(fit$optim$bestmem)[c(1:nFreeParametersUnique)]
   }
   if(length(resOb)>=2){
     for (i in 2:length(resOb)) {
-      prms[[i]][as.logical(freeCombined)] <- as.list(fit$optim$bestmem)[-c(1:nParameters)]
+      prms[[i]][as.logical(freeCombined)] <- as.list(fit$optim$bestmem)[-c(1:nFreeParametersUnique)]
     }
   }
 
@@ -549,15 +550,14 @@ dmcFitDE <- function(resOb,
   }
 
   if (!is.function(costFunction)) {
-    nFreeParameters <- sum(unlist(fixedFit==FALSE))
     if (tolower(costFunction) %in% c("cs", "gs")) {
       for (i in 1:length(dmcfit)){
-        dmcfit[[i]]$par["df"] <- (2 * (12 - 1)) - nFreeParameters # 2 conditions with 6 bins - N fitted parameters
+        dmcfit[[i]]$par["df"] <- (2 * (12 - 1)) - nFreeParametersTotal # 2 conditions with 6 bins - N fitted parameters
       }
     }
     if (tolower(costFunction) == "gs") {
       for (i in 1:length(dmcfit)){
-        dmcfit[[i]]$par["BIC"] <- dmcfit[[i]]$par$cost + (nFreeParameters * log(sum(resOb[[i]]$data$outlier == 0)))
+        dmcfit[[i]]$par["BIC"] <- dmcfit[[i]]$par$cost + (nFreeParametersTotal * log(sum(resOb[[i]]$data$outlier == 0)))
       }
     }
   }
