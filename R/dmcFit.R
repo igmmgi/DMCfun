@@ -1094,10 +1094,10 @@ calculateCostValueCS <- function(resTh, resOb) {
 
 cs <- function(th, ob) {
   if ((length(th) == 0 | nrow(ob) == 0)) {
-    return(0) # no observations (can happen, esp. for error trials in comp conditions)
+    return(NA) # no observations (can happen, esp. for error trials in comp conditions)
   }
   probE <- c(0.1, 0.2, 0.2, 0.2, 0.2, 0.1) # TO DO hard coded?
-  nBin <- table(factor(.bincode(th, c(0, ob$boundary, Inf)), levels = 1:6))
+  nBin <- table(factor(.bincode(th, breaks = c(0, ob$boundary, Inf), right=TRUE), levels = 1:6))
   pBin <- nBin / sum(nBin) # sum(pBin) == 1
   cs <- sum(ob$nTrials[1] * (pBin - probE)**2 / probE)
   return(cs)
@@ -1138,9 +1138,10 @@ calculateCostValueGS <- function(resTh, resOb) {
   return(costValue)
 }
 
+
 gs <- function(th, ob) {
   if ((length(th) == 0 | nrow(ob) == 0)) {
-    return(0) # no observations (can happen, esp. for error trials in comp conditions)
+    return(NA) # no observations (can happen, esp. for error trials in comp conditions)
   }
   probE <- c(0.1, 0.2, 0.2, 0.2, 0.2, 0.1) # TO DO hard coded?
   nBin <- table(factor(.bincode(th, c(0, ob$boundary, Inf)), levels = 1:6))
@@ -1181,7 +1182,7 @@ costValueFunction <- function(costFunction) {
 #' resOb <- calculateBinProbabilities(resOb)
 #' resOb$prob
 #' @export
-calculateBinProbabilities <- function(resOb) {
+calculateBinProbabilities <- function(resOb, quantileType = 5) {
 
   # Some subjects are likely not to have 5+ error trials, esp. in compatible conditions!
   probs <- c(0.1, 0.3, 0.5, 0.7, 0.9)
@@ -1190,13 +1191,12 @@ calculateBinProbabilities <- function(resOb) {
   # https://www.tidyverse.org/blog/2023/02/dplyr-1-1-0-pick-reframe-arrange/
   if (packageVersion("dplyr")>="1.1.0") {
     resOb$probSubject <- resOb$data %>%
-      dplyr::filter(outlier == 0) %>%
       dplyr::group_by(Subject, Comp, Error) %>%
+      dplyr::filter(outlier == 0) %>%
       dplyr::reframe(
         nTrials  = n(),
         prob     = probs,
-        boundary = quantile(RT, probs),
-        .groups  = "drop"
+        boundary = quantile(RT, probs, quantileType = quantileType),
       ) %>%
       dplyr::filter(nTrials >= 5)
   } else {
@@ -1206,7 +1206,7 @@ calculateBinProbabilities <- function(resOb) {
       dplyr::summarize(
         nTrials  = n(),
         prob     = probs,
-        boundary = quantile(RT, probs),
+        boundary = quantile(RT, probs, quantileType = quantileType),
         .groups  = "drop"
       ) %>%
       dplyr::filter(nTrials >= 5)
