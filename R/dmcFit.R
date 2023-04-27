@@ -168,13 +168,25 @@ dmcFit <- function(resOb,
   defaultOptimControl <- list(parscale = c(parScale[!as.logical(fixedFit)], parScale[as.logical(freeCombined)]), maxit = 500)
   optimControl <- modifyList(defaultOptimControl, optimControl)
 
+  # change nDelta to pDelta if pDelta not empty
+  if (length(pDelta) != 0) {
+    nDelta <- pDelta
+    tDelta <- 1
+  }
+
   # check observed data contains correct number of delta/CAF bins
   for (i in 1:length(resOb)) {
-    if (nrow(resOb[[i]]$delta) != nDelta) {
-      stop(paste0("Number of delta bins in observed data set ", i, "and nDelta bins are not equal!"))
+    if (length(nDelta) == 1) {
+      if (nrow(resOb[[i]]$delta) != nDelta) {
+        stop(paste0("Number of delta bins in observed data set ", i, " and nDelta bins are not equal!"))
+      }
+    } else if (length(nDelta) > 1) {
+      if (nrow(resOb[[i]]$delta) != length(nDelta)) {
+        stop(paste0("Number of delta bins in observed data set ", i, " and nDelta bins are not equal!"))
+      }
     }
     if (nrow(resOb[[i]]$caf) != nCAF) {
-      stop(paste0("Number of CAF bins in observed data set ", i, "and nCAF bins are not equal!"))
+      stop(paste0("Number of CAF bins in observed data set ", i, " and nCAF bins are not equal!"))
     }
   }
 
@@ -434,10 +446,22 @@ dmcFitDE <- function(resOb,
 
   prms <- replicate(length(resOb), (unlist(minVals) + unlist(maxVals)) / 2, simplify = FALSE) # start in middle of min/max vals
 
+  # change nDelta to pDelta if pDelta not empty
+  if (length(pDelta) != 0) {
+    nDelta <- pDelta
+    tDelta <- 1
+  }
+
   # check observed data contains correct number of delta/CAF bins
   for (i in 1:length(resOb)) {
-    if (nrow(resOb[[i]]$delta) != nDelta) {
-      stop(paste0("Number of delta bins in observed data set ", i, "and nDelta bins are not equal!"))
+    if (length(nDelta) == 1) {
+      if (nrow(resOb[[i]]$delta) != nDelta) {
+        stop(paste0("Number of delta bins in observed data set ", i, "and nDelta bins are not equal!"))
+      }
+    } else if (length(nDelta) > 1) {
+      if (nrow(resOb[[i]]$delta) != length(nDelta)) {
+        stop(paste0("Number of delta bins in observed data set ", i, "and nDelta bins are not equal!"))
+      }
     }
     if (nrow(resOb[[i]]$caf) != nCAF) {
       stop(paste0("Number of CAF bins in observed data set ", i, "and nCAF bins are not equal!"))
@@ -1090,7 +1114,7 @@ calculateCostValueCS <- function(resTh, resOb) {
   cs_incomp_error <- cs(resTh$sim$errs_incomp, resOb$prob[resOb$prob$Comp == "incomp" & resOb$prob$Error == 1, ])
 
   return(sum(c(cs_comp_correct, cs_comp_error, cs_incomp_correct, cs_incomp_error), na.rm = TRUE))
-  
+
 }
 
 cs <- function(th, ob) {
@@ -1187,7 +1211,6 @@ calculateBinProbabilities <- function(resOb, quantileType = 5) {
 
   # Some subjects are likely not to have 5+ error trials, esp. in compatible conditions!
   probs <- c(0.1, 0.3, 0.5, 0.7, 0.9)
-  # probs <- c(0.2, 0.4, 0.6, 0.8)
 
   # dplyr 1.1.0 reframe replaces functionality from summarize
   # https://www.tidyverse.org/blog/2023/02/dplyr-1-1-0-pick-reframe-arrange/
