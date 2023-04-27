@@ -1089,7 +1089,8 @@ calculateCostValueCS <- function(resTh, resOb) {
   cs_incomp_correct <- cs(resTh$sim$rts_incomp, resOb$prob[resOb$prob$Comp == "incomp" & resOb$prob$Error == 0, ])
   cs_incomp_error <- cs(resTh$sim$errs_incomp, resOb$prob[resOb$prob$Comp == "incomp" & resOb$prob$Error == 1, ])
 
-  return(cs_comp_correct + cs_comp_error + cs_incomp_correct + cs_incomp_error)
+  return(sum(c(cs_comp_correct, cs_comp_error, cs_incomp_correct, cs_incomp_error), na.rm = TRUE))
+  
 }
 
 cs <- function(th, ob) {
@@ -1097,7 +1098,7 @@ cs <- function(th, ob) {
     return(NA) # no observations (can happen, esp. for error trials in comp conditions)
   }
   probE <- c(0.1, 0.2, 0.2, 0.2, 0.2, 0.1) # TO DO hard coded?
-  nBin <- table(factor(.bincode(th, breaks = c(0, ob$boundary, Inf), right=TRUE), levels = 1:6))
+  nBin <- table(factor(.bincode(th, breaks = c(0, ob$boundary, Inf)), levels = 1:6))
   pBin <- nBin / sum(nBin) # sum(pBin) == 1
   cs <- sum(ob$nTrials[1] * (pBin - probE)**2 / probE)
   return(cs)
@@ -1186,10 +1187,11 @@ calculateBinProbabilities <- function(resOb, quantileType = 5) {
 
   # Some subjects are likely not to have 5+ error trials, esp. in compatible conditions!
   probs <- c(0.1, 0.3, 0.5, 0.7, 0.9)
+  # probs <- c(0.2, 0.4, 0.6, 0.8)
 
   # dplyr 1.1.0 reframe replaces functionality from summarize
   # https://www.tidyverse.org/blog/2023/02/dplyr-1-1-0-pick-reframe-arrange/
-  if (packageVersion("dplyr")>="1.1.0") {
+  if (packageVersion("dplyr") >= "1.1.0") {
     resOb$probSubject <- resOb$data %>%
       dplyr::group_by(Subject, Comp, Error) %>%
       dplyr::filter(outlier == 0) %>%
