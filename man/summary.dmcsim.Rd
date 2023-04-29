@@ -30,12 +30,4 @@ dmc <- dmcSim(tau = 90)
 summary(dmc)
 }
 
-# Example 3
-fit <- dmcFit(flankerData, nTrl=100)
-summary(fit)
-
-# Example 3
-fit <- dmcFitSubject(flankerData, nTrl=100, subjects=c(1,2,3))
-summary(fit)
-
 }

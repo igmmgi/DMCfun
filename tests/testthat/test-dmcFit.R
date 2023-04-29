@@ -23,7 +23,7 @@ test_that("dmcFit", {
   fit <- dmcFitSubject(DMCfun::flankerData, nTrl = 1000, subjects = c(1, 2),
     printInputArgs = FALSE, printResults = FALSE, optimControl = list(maxit = 20))
   testthat::expect_type(fit, "list")
-  testthat::expect_s3_class(fit, "dmcfit")
+  testthat::expect_s3_class(fit, "dmcfit_subject")
   testthat::expect_type(mean(fit), "list")
 
   fit <- dmcFitSubject(DMCfun::flankerData,  nTrl = 1000, subjects = c(1, 2),
@@ -50,7 +50,7 @@ test_that("dmcFit", {
   # dmcFitSubjectDE
   fit <- dmcFitSubjectDE(DMCfun::flankerData, nTrl = 1000, subjects = c(1, 2), deControl = list(itermax = 20))
   testthat::expect_type(fit, "list")
-  testthat::expect_s3_class(fit, "dmcfit")
+  testthat::expect_s3_class(fit, "dmcfit_subject")
 
   # should error
   testthat::expect_error(dmcFitSubjectDE(DMCfun::flankerData, nDelta = 99))

@@ -137,7 +137,7 @@ dmcFit <- function(resOb,
                    optimControl = list(),
                    numCores = 2) {
 
-  if (is(resOb, "dmcob")){
+  if (is(resOb, "dmcob")) {
     resOb <- list(resOb)
   }
 
@@ -162,7 +162,7 @@ dmcFit <- function(resOb,
   freeCombined <- modifyList(defaultFreeCombined, freeCombined)
 
   parScale <- unlist(startVals) / min(unlist(startVals) + 1)
-  prms <- replicate(length(resOb), startVals, simplify=FALSE)
+  prms <- replicate(length(resOb), startVals, simplify = FALSE)
 
   # default optim control parameters
   defaultOptimControl <- list(parscale = c(parScale[!as.logical(fixedFit)], parScale[as.logical(freeCombined)]), maxit = 500)
@@ -264,7 +264,7 @@ dmcFit <- function(resOb,
   fit <- optim(
     par = as.numeric(c(startVals[!as.logical(fixedFit)], startVals[as.logical(freeCombined)])),
     fn = minimizeCostValue,
-    costFunction = calculateCostValue, prms = prms, fixedFit = fixedFit, freeCombined=freeCombined, resOb = resOb,
+    costFunction = calculateCostValue, prms = prms, fixedFit = fixedFit, freeCombined = freeCombined, resOb = resOb,
     nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF,
     spDist = spDist, drOnset = drOnset, drDist = drDist, drShape = drShape, drLim = drLim,
     rtMax = rtMax, minVals = minVals, maxVals = maxVals,
@@ -273,13 +273,13 @@ dmcFit <- function(resOb,
   )
 
   # number of fitted parameters
-  nFreeParametersUnique <- sum(as.logical(fixedFit)==FALSE)
-  nFreeParametersTotal <- sum(as.logical(fixedFit)==FALSE) + sum(as.logical(freeCombined==TRUE))
+  nFreeParametersUnique <- sum(as.logical(fixedFit) == FALSE)
+  nFreeParametersTotal <- sum(as.logical(fixedFit) == FALSE) + sum(as.logical(freeCombined == TRUE))
 
   for (i in 1:length(resOb)) {
     prms[[i]][!as.logical(fixedFit)] <- fit$par[c(1:nFreeParametersUnique)]
   }
-  if(length(resOb)>=2){
+  if (length(resOb) >= 2) {
     for (i in 2:length(resOb)) {
       prms[[i]][as.logical(freeCombined)] <- fit$par[-c(1:nFreeParametersUnique)]
     }
@@ -319,22 +319,22 @@ dmcFit <- function(resOb,
 
   if (!is.function(costFunction)) {
     if (tolower(costFunction) %in% c("cs", "gs")) {
-      for (i in 1:length(dmcfit)){
+      for (i in 1:length(dmcfit)) {
         dmcfit[[i]]$par["df"] <- (2 * (12 - 1)) - nFreeParametersTotal # 2 conditions with 6 bins - N fitted parameters
       }
     }
     if (tolower(costFunction) == "gs") {
-      for (i in 1:length(dmcfit)){
+      for (i in 1:length(dmcfit)) {
         dmcfit[[i]]$par["BIC"] <- dmcfit[[i]]$par$cost + (nFreeParametersTotal * log(sum(resOb[[i]]$data$outlier == 0)))
       }
     }
   }
 
-  dmcfit <- lapply(dmcfit, `class<-`, value="dmcfit")
-  if (length(dmcfit)==1){
+  dmcfit <- lapply(dmcfit, `class<-`, value = "dmcfit")
+  if (length(dmcfit) == 1) {
     return(dmcfit[[1]])
   } else {
-    class(dmcfit) <- "dmcfit"
+    class(dmcfit) <- "dmcfits"
     return(dmcfit)
   }
 
@@ -429,7 +429,7 @@ dmcFitDE <- function(resOb,
                      deControl = list(),
                      numCores = 2) {
 
-  if (is(resOb, "dmcob")){
+  if (is(resOb, "dmcob")) {
     resOb <- list(resOb)
   }
 
@@ -504,7 +504,7 @@ dmcFitDE <- function(resOb,
     costFunction = calculateCostValue,
     prms = prms,
     fixedFit = fixedFit,
-    freeCombined=freeCombined,
+    freeCombined = freeCombined,
     minVals = minVals,
     maxVals = maxVals,
     resOb = resOb,
@@ -528,13 +528,13 @@ dmcFitDE <- function(resOb,
   parallel::stopCluster(cl)
 
   # number of fitted parameters
-  nFreeParametersUnique <- sum(as.logical(fixedFit)==FALSE)
-  nFreeParametersTotal <- sum(as.logical(fixedFit)==FALSE) + sum(as.logical(freeCombined==TRUE))
+  nFreeParametersUnique <- sum(as.logical(fixedFit) == FALSE)
+  nFreeParametersTotal <- sum(as.logical(fixedFit) == FALSE) + sum(as.logical(freeCombined == TRUE))
 
   for (i in 1:length(resOb)) {
     prms[[i]][!as.logical(fixedFit)] <- as.list(fit$optim$bestmem)[c(1:nFreeParametersUnique)]
   }
-  if(length(resOb)>=2){
+  if (length(resOb) >= 2) {
     for (i in 2:length(resOb)) {
       prms[[i]][as.logical(freeCombined)] <- as.list(fit$optim$bestmem)[-c(1:nFreeParametersUnique)]
     }
@@ -575,22 +575,22 @@ dmcFitDE <- function(resOb,
 
   if (!is.function(costFunction)) {
     if (tolower(costFunction) %in% c("cs", "gs")) {
-      for (i in 1:length(dmcfit)){
+      for (i in 1:length(dmcfit)) {
         dmcfit[[i]]$par["df"] <- (2 * (12 - 1)) - nFreeParametersTotal # 2 conditions with 6 bins - N fitted parameters
       }
     }
     if (tolower(costFunction) == "gs") {
-      for (i in 1:length(dmcfit)){
+      for (i in 1:length(dmcfit)) {
         dmcfit[[i]]$par["BIC"] <- dmcfit[[i]]$par$cost + (nFreeParametersTotal * log(sum(resOb[[i]]$data$outlier == 0)))
       }
     }
   }
 
-  dmcfit <- lapply(dmcfit, `class<-`, value="dmcfit")
-  if (length(dmcfit)==1){
+  dmcfit <- lapply(dmcfit, `class<-`, value = "dmcfit")
+  if (length(dmcfit) == 1) {
     return(dmcfit[[1]])
   } else {
-    class(dmcfit) <- "dmcfit"
+    class(dmcfit) <- "dmcfits"
     return(dmcfit)
   }
 
@@ -698,7 +698,7 @@ dmcFitSubject <- function(resOb,
                           optimControl = list(),
                           numCores = 2) {
 
-  if (is(resOb, "dmcob")){
+  if (is(resOb, "dmcob")) {
     resOb <- list(resOb)
   }
 
@@ -754,7 +754,11 @@ dmcFitSubject <- function(resOb,
     )
   }
 
-  class(dmcfit) <- "dmcfit"
+  if (length(resOb) == 1) {
+    class(dmcfit) <- "dmcfit_subject"
+  } else {
+    class(dmcfit) <- "dmcfits_subject"
+  }
 
   return(dmcfit)
 }
@@ -842,7 +846,7 @@ dmcFitSubjectDE <- function(resOb,
                             deControl = list(),
                             numCores = 2) {
 
-  if (is(resOb, "dmcob")){
+  if (is(resOb, "dmcob")) {
     resOb <- list(resOb)
   }
 
@@ -892,7 +896,11 @@ dmcFitSubjectDE <- function(resOb,
     )
   }
 
-  class(dmcfit) <- "dmcfit"
+  if (length(resOb) == 1) {
+    class(dmcfit) <- "dmcfit_subject"
+  } else {
+    class(dmcfit) <- "dmcfits_subject"
+  }
 
   return(dmcfit)
 }
@@ -921,10 +929,7 @@ dmcFitSubjectDE <- function(resOb,
 #' }
 #'
 #' @export
-mean.dmcfit <- function(x, ...) {
-  if ("sim" %in% names(x)) { # aggregated fit
-    stop("No individual data to aggregate!")
-  }
+mean.dmcfit_subject <- function(x, ...) {
 
   mergeLists <- function(lists, name) {
     return(lapply(c(name), function(x) do.call(rbind, lapply(lists, `[[`, x)))[[1]])
@@ -983,11 +988,11 @@ minimizeCostValue <- function(x,
                               printInputArgs,
                               printResults) {
 
-  nParameters <- sum(as.logical(fixedFit)==FALSE)
+  nParameters <- sum(as.logical(fixedFit) == FALSE)
   for (i in 1:length(prms)) {
     prms[[i]][!as.logical(fixedFit)] <- x[c(1:nParameters)]
   }
-  if (length(prms)>=2){
+  if (length(prms) >= 2) {
     for (i in 2:length(prms)) {
       prms[[i]][as.logical(freeCombined)] <- x[-c(1:nParameters)]
     }
@@ -1198,6 +1203,7 @@ costValueFunction <- function(costFunction) {
 #' @description Calculate bin probabilities in observed data
 #'
 #' @param resOb Observed data (see dmcObservedData)
+#' @param quantileType Argument (1-9) from R function quantile specifying the algorithm (?quantile)
 #'
 #' @return resOb Observed data with additional $probSubject/$prob table
 #'

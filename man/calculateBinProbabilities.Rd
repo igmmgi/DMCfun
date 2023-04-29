@@ -4,10 +4,12 @@
 \alias{calculateBinProbabilities}
 \title{calculateBinProbabilities}
 \usage{
-calculateBinProbabilities(resOb)
+calculateBinProbabilities(resOb, quantileType = 5)
 }
 \arguments{
 \item{resOb}{Observed data (see dmcObservedData)}
+
+\item{quantileType}{Argument (1-9) from R function quantile specifying the algorithm (?quantile)}
 }
 \value{
 resOb Observed data with additional $probSubject/$prob table
