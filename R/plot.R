@@ -321,7 +321,7 @@ plot.dmclist <- function(x,
         legendLabels <- c(NULL, legendLabels, paste0(names(x[[i]]$params), "=", x[[1]]$params[i, ], collapse = ", "))
       }
     }
-    delfault_legend.parameters <- list(legend = legendLabels, x = "topleft", col = cols, 
+    delfault_legend.parameters <- list(legend = legendLabels, x = "topleft", col = cols,
                                        lty = c(1), pch = c(NA), ncol = 1, bty = "o", inset = 0.1)
     legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
     add_legend(legend.parameters)
@@ -727,7 +727,7 @@ plot.dmcobs <- function(x,
     }
 
     if (legend) {
-      delfault_legend.parameters <- list(legend = paste0("Cond ", seq_along(x)), x = "bottomright", 
+      delfault_legend.parameters <- list(legend = paste0("Cond ", seq_along(x)), x = "bottomright",
                                          col = cols, lty = ltys, pch = pchs, inset = 0.1)
       legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
       add_legend(legend.parameters)
@@ -754,7 +754,7 @@ plot.dmcobs <- function(x,
     }
 
     if (legend) {
-      delfault_legend.parameters <- list(legend = paste0("Cond ", seq_along(x)), x = "bottomright", 
+      delfault_legend.parameters <- list(legend = paste0("Cond ", seq_along(x)), x = "bottomright",
                                          col = cols, lty = ltys, pch = pchs, inset = 0.1)
       legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
       add_legend(legend.parameters)
@@ -781,7 +781,7 @@ plot.dmcobs <- function(x,
     }
 
     if (legend) {
-      delfault_legend.parameters <- list(legend = paste0("Cond ", seq_along(x)), x = "bottomright", 
+      delfault_legend.parameters <- list(legend = paste0("Cond ", seq_along(x)), x = "bottomright",
                                          col = cols, lty = ltys, pch = pchs, inset = 0.1)
       legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
       add_legend(legend.parameters)
@@ -823,7 +823,7 @@ plot.dmcobs <- function(x,
     }
 
     if (legend) {
-      delfault_legend.parameters <- list(legend = paste0("Cond ", seq_along(x)), x = "bottomright", 
+      delfault_legend.parameters <- list(legend = paste0("Cond ", seq_along(x)), x = "bottomright",
                                          col = cols, lty = ltys, pch = pchs, inset = 0.1)
       legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
       add_legend(legend.parameters)
@@ -871,7 +871,7 @@ plot.dmcobs <- function(x,
     }
 
     if (legend) {
-      delfault_legend.parameters <- list(legend = paste0("Cond ", seq_along(x)), 
+      delfault_legend.parameters <- list(legend = paste0("Cond ", seq_along(x)),
                                          x = "bottomright", col = cols, lty = ltys, pch = pchs, inset = 0.1)
       legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
       add_legend(legend.parameters)
@@ -915,7 +915,7 @@ plot.dmcobs <- function(x,
     }
 
     if (legend) {
-      delfault_legend.parameters <- list(legend = paste0("Cond ", seq_along(x)), 
+      delfault_legend.parameters <- list(legend = paste0("Cond ", seq_along(x)),
                                          x = "bottomright", col = cols, lty = ltys, pch = pchs, inset = 0.1)
       legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
       add_legend(legend.parameters)
@@ -959,7 +959,7 @@ plot.dmcobs <- function(x,
     }
 
     if (legend) {
-      delfault_legend.parameters <- list(legend = paste0("Cond ", seq_along(x)), 
+      delfault_legend.parameters <- list(legend = paste0("Cond ", seq_along(x)),
                                          x = "bottomright", col = cols, lty = ltys, pch = pchs, inset = 0.1)
       legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
       add_legend(legend.parameters)
@@ -1003,7 +1003,7 @@ plot.dmcobs <- function(x,
     }
 
     if (legend) {
-      delfault_legend.parameters <- list(legend = paste0("Cond ", seq_along(x)), x = "bottomright", 
+      delfault_legend.parameters <- list(legend = paste0("Cond ", seq_along(x)), x = "bottomright",
                                          col = cols, lty = ltys, pch = pchs, inset = 0.1)
       legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
       add_legend(legend.parameters)
@@ -1280,7 +1280,7 @@ plot.dmcfit_subject <- function(x,
     x <- mean(x)
 
   } else {
-    
+
     subjects <- which(!unlist(lapply(x, is.null)))
     if (!subject %in% subjects) {
       stop("datOb (y) does not contain requested subject number!")
@@ -1296,7 +1296,7 @@ plot.dmcfit_subject <- function(x,
     y$caf     <- y$cafSubject[y$cafSubject$Subject == subject, ]
 
   }
-    
+
   plot(x, y,
        figType = figType,
        labels = labels,
@@ -1317,7 +1317,7 @@ plot.dmcfit_subject <- function(x,
        legend = legend,
        legend.parameters = legend.parameters,
        ...)
-  
+
 }
 
 
@@ -1395,13 +1395,13 @@ plot.dmcfits <- function(x,
                          legend = TRUE,
                          legend.parameters = list(legend = c("Observed", "Predicted")),
                          ...) {
-  
+
   if (length(x) != length(y)) {
     stop("length(x) != length(y)!")
   }
-  
+
   for (plt in 1:length(x)) {
-    plot(x[[plt]], 
+    plot(x[[plt]],
          y[[plt]],
          figType           = figType,
          labels            = labels,
@@ -1501,11 +1501,11 @@ plot.dmcfits_subject <- function(x,
                          legend = TRUE,
                          legend.parameters = list(legend = c("Observed", "Predicted")),
                          ...) {
- 
-  if (!is.null(subject)) { 
+
+  if (!is.null(subject)) {
     # each data set for specific subject
     for (dataset in 1:length(y)) {
-      plot(x[[subject]][[dataset]], y[[dataset]], 
+      plot(x[[subject]][[dataset]], y[[dataset]],
            figType = figType,
            labels = labels,
            cols = cols,
@@ -1535,7 +1535,7 @@ plot.dmcfits_subject <- function(x,
         subjects[[subject]] <- x[[subject]][[dataset]]
       }
       class(subjects) <- "dmcfit_subject"
-      plot(mean(subjects), y[[dataset]], 
+      plot(mean(subjects), y[[dataset]],
            figType = figType,
            labels = labels,
            cols = cols,
@@ -1655,7 +1655,7 @@ plot_activation <- function(
   abline(h = c(-resTh$prms$bnds, resTh$prms$bnds), col = "darkgrey", xpd = FALSE, ...)
 
   if (legend) {
-    delfault_legend.parameters <- list(legend = labels, x = "bottomright", 
+    delfault_legend.parameters <- list(legend = labels, x = "bottomright",
                                        col = cols, lty = c(1,1), pch = c(0,0), inset = 0.1)
     legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
     add_legend(legend.parameters)
@@ -1706,7 +1706,7 @@ plot_trials <- function(
   abline(h = c(-resTh$prms$bnds, resTh$prms$bnds), col = "darkgrey", xpd = FALSE);
 
   if (legend) {
-    delfault_legend.parameters <- list(legend = labels, x = "bottomright", 
+    delfault_legend.parameters <- list(legend = labels, x = "bottomright",
                                        col = cols, lty = c(1,1), pch = c(0,0), inset = 0.1)
     legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
     add_legend(legend.parameters)
@@ -1748,7 +1748,7 @@ plot_pdf <- function(
   abline(h = 0, col = "darkgrey", lty = 2, xpd = FALSE);
 
   if (legend) {
-    delfault_legend.parameters <- list(legend = labels, x = "topright", 
+    delfault_legend.parameters <- list(legend = labels, x = "topright",
                                        col = cols, lty = c(1,1), pch = c(NA,NA), inset = 0.1)
     legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
     add_legend(legend.parameters)
@@ -1850,12 +1850,12 @@ plot_cdf <- function(
                   paste(labels[2], labels[3], sep = " "),
                   paste(labels[1], labels[4], sep = " "),
                   paste(labels[2], labels[4], sep = " "))
-      delfault_legend.parameters <- list(legend = labels, x = "bottomright", 
+      delfault_legend.parameters <- list(legend = labels, x = "bottomright",
                                          col = cols, lty = c(0,0,1,1), pch = c(1,1,NA,NA), inset = 0.1)
       legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
       add_legend(legend.parameters)
     } else {
-      delfault_legend.parameters <- list(legend = labels, x = "bottomright", 
+      delfault_legend.parameters <- list(legend = labels, x = "bottomright",
                                          col = cols, lty = c(1,1), pch = c(NA,NA), inset = 0.1)
       legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
       add_legend(legend.parameters)
@@ -1948,12 +1948,12 @@ plot_caf <- function(
                   paste(labels[2], labels[3], sep = " "),
                   paste(labels[1], labels[4], sep = " "),
                   paste(labels[2], labels[4], sep = " "))
-      delfault_legend.parameters <- list(legend = labels, x = "bottomright", 
+      delfault_legend.parameters <- list(legend = labels, x = "bottomright",
                                          col = cols, lty = c(0,0,1,1), pch = c(1,1,NA,NA), inset = 0.1)
       legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
       add_legend(legend.parameters)
     } else {
-      delfault_legend.parameters <- list(legend = labels, x = "bottomright", 
+      delfault_legend.parameters <- list(legend = labels, x = "bottomright",
                                          col = cols, lty = c(1,1), pch = c(1,1), inset = 0.1)
       legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
       add_legend(legend.parameters)
@@ -2038,7 +2038,7 @@ plot_delta <- function(
   }
 
   if (!is.null(labels) && legend) {
-    delfault_legend.parameters <- list(legend = labels, x = "bottomright", 
+    delfault_legend.parameters <- list(legend = labels, x = "bottomright",
                                        col = "black", lty = c(0,1), pch = c(1,NA), inset = 0.1)
     legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
     add_legend(legend.parameters)
@@ -2108,7 +2108,7 @@ plot_delta_er <- function(
   }
 
   if (!is.null(labels) && legend) {
-    delfault_legend.parameters <- list(legend = labels, x = "bottomright", 
+    delfault_legend.parameters <- list(legend = labels, x = "bottomright",
                                        col = "black", lty = c(0,1), pch = c(1,NA), inset = 0.1)
     legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
     add_legend(legend.parameters)
@@ -2187,7 +2187,7 @@ plot_beh <- function(
   }
 
   if (!is.null(condLabels) & legend) {
-    delfault_legend.parameters <- list(legend = labels, x = legendPosition, 
+    delfault_legend.parameters <- list(legend = labels, x = legendPosition,
                                        col = "black", lty = ltys, pch = pchs, inset = 0.1)
     legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
     add_legend(legend.parameters)
