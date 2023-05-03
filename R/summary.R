@@ -50,7 +50,7 @@ summary.dmcfit <- function(object, digits = 2, ...) {
   return(round(do.call(cbind.data.frame, object$par), digits))
 }
 
-#' @title summary.dmcfit: dmc fit aggregate summary (2+ data sets)
+#' @title summary.dmcfits: dmc fit aggregate summary (2+ data sets)
 #'
 #' @description Summary of the simulation results from dmcFit
 #'
@@ -78,7 +78,7 @@ summary.dmcfits <- function(object, digits = 2, ...) {
 }
 
 
-#' @title summary.dmcfit_subject: dmcfit individual subject 
+#' @title summary.dmcfit_subject: dmcfit individual subject
 #'
 #' @description Summary of the simulation results from dmcFitSubjectX
 #'
