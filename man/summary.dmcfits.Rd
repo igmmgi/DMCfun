@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary.R
 \name{summary.dmcfits}
 \alias{summary.dmcfits}
-\title{summary.dmcfit: dmc fit aggregate summary (2+ data sets)}
+\title{summary.dmcfits: dmc fit aggregate summary (2+ data sets)}
 \usage{
 \method{summary}{dmcfits}(object, digits = 2, ...)
 }

@@ -286,6 +286,10 @@ dmcFit <- function(resOb,
   }
 
   # bounds check
+  for (i in 1:length(prms)) {
+    prms[[i]] <- pmax(unlist(prms[[i]]), unlist(minVals))
+    prms[[i]] <- pmin(unlist(prms[[i]]), unlist(maxVals))
+  }
   for (i in 1:length(resOb)) {
     tmp_minVals <- unlist(minVals[!as.logical(fixedFit)])
     tmp_maxVals <- unlist(maxVals[!as.logical(fixedFit)])
@@ -539,8 +543,12 @@ dmcFitDE <- function(resOb,
       prms[[i]][as.logical(freeCombined)] <- as.list(fit$optim$bestmem)[-c(1:nFreeParametersUnique)]
     }
   }
-
-  # bounds check
+  
+  # bounds check# bounds check
+  for (i in 1:length(prms)) {
+    prms[[i]] <- pmax(unlist(prms[[i]]), unlist(minVals))
+    prms[[i]] <- pmin(unlist(prms[[i]]), unlist(maxVals))
+  }
   for (i in 1:length(resOb)) {
     tmp_minVals <- unlist(minVals[!as.logical(fixedFit)])
     tmp_maxVals <- unlist(maxVals[!as.logical(fixedFit)])
