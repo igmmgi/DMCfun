@@ -32,6 +32,8 @@
 #' @param tDelta type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)
 #' @param deltaErrors TRUE/FALSE Calculate delta bins for error trials
 #' @param nCAF Number of CAF bins
+#' @param bnds_rate
+#' @param bnds_saturation
 #' @param printInputArgs TRUE/FALSE
 #' @param printResults TRUE/FALSE
 #' @param setSeed TRUE/FALSE If true, set seed to seed value
@@ -102,6 +104,8 @@ dmcSim <- function(amp = 20,
                    tDelta = 1,
                    deltaErrors = FALSE,
                    nCAF = 5,
+                   bnds_rate=0,
+                   bnds_saturation=0,
                    printInputArgs = TRUE,
                    printResults = TRUE,
                    setSeed = FALSE,
@@ -122,7 +126,7 @@ dmcSim <- function(amp = 20,
       pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors,
       nCAF = nCAF, spDist = spDist, spLimLow = spLim[1], spLimHigh = spLim[2],
       drOnset = drOnset, drDist = drDist, drShape = drShape,
-      drLimLow = drLim[1], drLimHigh = drLim[2],
+      drLimLow = drLim[1], drLimHigh = drLim[2], bnds_rate=bnds_rate, bnds_saturation=bnds_saturation,
       printInputArgs = printInputArgs, printResults = printResults,
       setSeed = setSeed, seedValue = seedValue
     )

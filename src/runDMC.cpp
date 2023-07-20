@@ -80,16 +80,22 @@ void run_dmc_sim_ci(
   if (p.spDist != 0)
     variable_starting_point(p, sp, rng);
 
+  // collapsing bounds
+  std::vector<double> bnds(p.tmax, p.bnds);
+  if (p.bnds_rate != 0) {
+    collapsing_bnds(p, bnds);
+  }
+
   // run simulation and store rts for correct/incorrect trials
   if (p.fullData) {
-    run_simulation(p, activation_sum, trl_mat, u_vec, sp, dr, rts, errs, slows,
-                   rng);
+    run_simulation(p, activation_sum, trl_mat, u_vec, sp, dr, bnds, rts, errs, slows, rng);
     trials[comp] = trl_mat;
   } else {
-    run_simulation(p, u_vec, sp, dr, rts, errs, slows, rng);
+    run_simulation(p, u_vec, sp, dr, rts, bnds, errs, slows, rng);
   }
 
   m.lock();
+  rsim["bnds"] = bnds;
   rsim["activation_" + comp] = activation_sum;
   rsim["rts_" + comp] = rts;
   rsim["errs_" + comp] = errs;
@@ -132,8 +138,14 @@ void variable_starting_point(Prms &p, std::vector<double> &sp, RNG &rng) {
   }
 }
 
-void residual_rt(Prms &p, std::vector<double> &residual_distribution,
-                 RNG &rng) {
+
+void collapsing_bnds(Prms &p, std::vector<double> &bnds) {
+  for (unsigned int i = 0; i < p.tmax; i++) {
+    bnds[i] = bnds[i] * (1-(p.bnds_rate * (i/(i+p.bnds_saturation))));
+  }
+}
+
+void residual_rt(Prms &p, std::vector<double> &residual_distribution, RNG &rng) {
   if (p.resDist == 1) {
     // Standard normal distribution with mean + sd (NB make sure no -ve)
     boost::random::normal_distribution<double> dist(p.resMean, p.resSD);
@@ -151,6 +163,7 @@ void residual_rt(Prms &p, std::vector<double> &residual_distribution,
 
 void run_simulation(Prms &p, std::vector<double> &u_vec,
                     std::vector<double> &sp, std::vector<double> &dr,
+                    std::vector<double> &bnds,
                     std::vector<double> &rts, std::vector<double> &errs,
                     std::vector<double> &slows, RNG rng) {
 
@@ -168,11 +181,13 @@ void run_simulation(Prms &p, std::vector<double> &u_vec,
       activation_trial += (u_vec[i] + (p.sigm * snd(rng)));
       if (i >= p.drOnset)
         activation_trial += dr[trl];
-      if (activation_trial > p.bnds) {
+      //if (activation_trial > p.bnds) {
+      if (activation_trial > bnds[i]) {
         value = (i + residual_distribution[trl] + 1) - p.drOnset; // RT measured from onset of relevant dimension!
         (value < p.rtMax ? rts : slows).push_back(value);
         break;
-      } else if (activation_trial < -p.bnds) {
+      //} else if (activation_trial < -p.bnds) {
+      } else if (activation_trial < -bnds[i]) {
         value = (i + residual_distribution[trl] + 1) - p.drOnset;
         (value < p.rtMax ? errs : slows).push_back(value);
         break;
@@ -184,7 +199,9 @@ void run_simulation(Prms &p, std::vector<double> &u_vec,
 void run_simulation(Prms &p, std::vector<double> &activation_sum,
                     std::vector<std::vector<double>> &trial_matrix,
                     std::vector<double> &u_vec, std::vector<double> &sp,
-                    std::vector<double> &dr, std::vector<double> &rts,
+                    std::vector<double> &dr,
+                    std::vector<double> &bnds,
+                    std::vector<double> &rts,
                     std::vector<double> &errs, std::vector<double> &slows,
                     RNG rng) {
 
@@ -204,11 +221,13 @@ void run_simulation(Prms &p, std::vector<double> &activation_sum,
       activation_trial += u_vec[i] + (p.sigm * snd(rng));
       if (i >= p.drOnset)
         activation_trial += dr[trl];
-      if (!criterion && activation_trial > p.bnds) {
+      //if (!criterion && activation_trial > p.bnds) {
+      if (!criterion && activation_trial > bnds[i]) {
         value = (i + residual_distribution[trl] + 1) - p.drOnset;
         (value < p.rtMax ? rts : slows).push_back(value);
         criterion = true;
-      } else if (!criterion && activation_trial < -p.bnds) {
+      //} else if (!criterion && activation_trial < -p.bnds) {
+      } else if (!criterion && activation_trial < -bnds[i]) {
         value = (i + residual_distribution[trl] + 1) - p.drOnset;
         (value < p.rtMax ? errs : slows).push_back(value);
         criterion = true;

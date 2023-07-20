@@ -1652,7 +1652,8 @@ plot_activation <- function(
   lines(xaxis, resTh$sim$activation_incomp, col = cols[2], ...)
 
   # bounds
-  abline(h = c(-resTh$prms$bnds, resTh$prms$bnds), col = "darkgrey", xpd = FALSE, ...)
+  lines(xaxis, resTh$sim$bnds, col = "darkgrey", xpd = FALSE, ...)
+  lines(xaxis, -resTh$sim$bnds, col = "darkgrey", xpd = FALSE, ...)
 
   if (legend) {
     delfault_legend.parameters <- list(legend = labels, x = "bottomright",
@@ -1696,14 +1697,15 @@ plot_trials <- function(
 
   # individual trials until bounds
   for (trl in c(1:resTh$prms$nTrlData)) {
-    idx <- min(which(abs(resTh$trials$comp[[trl]]) >= resTh$prms$bnds)[1], length(resTh$trials$comp[[trl]]), na.rm = TRUE)
+    idx <- min(which(abs(resTh$trials$comp[[trl]]) >= resTh$sim$bnds)[1], length(resTh$trials$comp[[trl]]), na.rm = TRUE)
     lines(resTh$trials$comp[[trl]][1:idx], type = "l", col = cols[1], ...)
-    idx <- min(which(abs(resTh$trials$incomp[[trl]]) >= resTh$prms$bnds)[1], length(resTh$trials$incomp[[trl]]), na.rm = TRUE)
+    idx <- min(which(abs(resTh$trials$incomp[[trl]]) >= resTh$sim$bnds)[1], length(resTh$trials$incomp[[trl]]), na.rm = TRUE)
     lines(resTh$trials$incomp[[trl]][1:idx], type = "l", col = cols[2], ...)
   }
 
   # bounds
-  abline(h = c(-resTh$prms$bnds, resTh$prms$bnds), col = "darkgrey", xpd = FALSE);
+  lines(resTh$sim$bnds, col = "darkgrey", xpd = FALSE, ...)
+  lines(-resTh$sim$bnds, col = "darkgrey", xpd = FALSE, ...)
 
   if (legend) {
     delfault_legend.parameters <- list(legend = labels, x = "bottomright",
