@@ -10,27 +10,27 @@
 #' @param nTrl Number of trials to use within dmcSim.
 #' @param startVals Starting values for the to-be estimated parameters. This is a list with values specified individually
 #' for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., startVals = list(amp = 20, tau = 200,
-#' drc = 0.5, bnds = 75, resMean = 300, resSD = 30, aaShape = 2, spShape = 3, spBias = 0, sigm = 4)).
+#' drc = 0.5, bnds = 75, resMean = 300, resSD = 30, aaShape = 2, spShape = 3, spBias = 0, sigm = 4, bnds_rate=0, bnds_saturation=0)).
 #' @param minVals Minimum values for the to-be estimated parameters. This is a list with values specified individually
 #' for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., minVals = list(amp = 0, tau = 5, drc = 0.1,
-#' bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, spBias = -20, sigm = 1)).
+#' bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, spBias = -20, sigm = 1, bnds_rate=0, bnds_saturation=0)).
 #' @param maxVals Maximum values for the to-be estimated parameters. This is a list with values specified individually
 #' for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., maxVals = list(amp = 40, tau = 300, drc = 1.0,
-#' bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 20, sigm = 10))
+#' bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 20, sigm = 10, bnds_rate=1, bnds_saturation=500))
 #' @param fixedFit Fix parameter to starting value. This is a list with bool values specified individually for
 #' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., fixedFit = list(amp = F, tau = F, drc = F,
-#' bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T))
+#' bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T, bnds_rate=T, bnds_saturation=T))
 #' NB. Value if fixed at startVals.
 #' @param freeCombined If fitting 2+ datasets at once, which parameters are allowed to vary between both
 #' fits (default = all parameters fixed between the two fits e.g. parameter = F).
 #' This is a list with bool values specified individually for
 #' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., freeCombined = list(amp = F,
-#' tau = F, drc = F, bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = F, sigm = F))
+#' tau = F, drc = F, bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = F, sigm = F, bnds_rate=F, bnds_saturation=F))
 #' @param fitInitialGrid TRUE/FALSE
 #' @param fitInitialGridN 10 linear steps between parameters min/max values (reduce if searching more than ~2/3 initial parameters)
 #' @param fixedGrid Fix parameter for initial grid search. This is a list with bool values specified individually for
 #' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., fixedGrid = list(amp = T, tau = F, drc = T,
-#' bnds = T, resMean = T, resSD = T, aaShape = T, spShape = T, spBias = T, sigm = T)). As a default, the initial gridsearch
+#' bnds = T, resMean = T, resSD = T, aaShape = T, spShape = T, spBias = T, sigm = T, bnds_rate=T, bnds_saturation=T)). As a default, the initial gridsearch
 #' only searches the tau space.
 #' @param nCAF The number of CAF bins.
 #' @param nDelta The number of delta bins.
@@ -130,6 +130,8 @@ dmcFit <- function(resOb,
                    drDist = 0,
                    drShape = 3,
                    drLim = c(0.1, 0.7),
+                   bnds_rate = 0,
+                   bnds_saturation = 0,
                    rtMax = 5000,
                    costFunction = "RMSE",
                    printInputArgs = TRUE,
@@ -142,12 +144,12 @@ dmcFit <- function(resOb,
   }
 
   # default parameter space
-  defaultStartVals <- list(amp = 20, tau = 200, drc = 0.5, bnds = 75, resMean = 300, resSD = 30, aaShape = 2, spShape = 3, spBias = 0, sigm = 4)
-  defaultMinVals <- list(amp = 0, tau = 5, drc = 0.1, bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, spBias = -20, sigm = 1)
-  defaultMaxVals <- list(amp = 40, tau = 300, drc = 1.0, bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 20, sigm = 10)
-  defaultFixedFit <- list(amp = F, tau = F, drc = F, bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T)
-  defaultFixedGrid <- list(amp = T, tau = F, drc = T, bnds = T, resMean = T, resSD = T, aaShape = T, spShape = T, spBias = T, sigm = T)
-  defaultFreeCombined <- list(amp = F, tau = F, drc = F, bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = F, sigm = F)
+  defaultStartVals <- list(amp = 20, tau = 200, drc = 0.5, bnds = 75, resMean = 300, resSD = 30, aaShape = 2, spShape = 3, spBias = 0, sigm = 4, bnds_rate=0, bnds_saturation=0)
+  defaultMinVals <- list(amp = 0, tau = 5, drc = 0.1, bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, spBias = -20, sigm = 1, bnds_rate=0, bnds_saturation=0)
+  defaultMaxVals <- list(amp = 40, tau = 300, drc = 1.0, bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 20, sigm = 10, bnds_rate=1, bnds_saturation=500)
+  defaultFixedFit <- list(amp = F, tau = F, drc = F, bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T, bnds_rate=T, bnds_saturation=T)
+  defaultFixedGrid <- list(amp = T, tau = F, drc = T, bnds = T, resMean = T, resSD = T, aaShape = T, spShape = T, spBias = T, sigm = T, bnds_rate=T, bnds_saturation=T)
+  defaultFreeCombined <- list(amp = F, tau = F, drc = F, bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = F, sigm = F, bnds_rate=F, bnds_saturation=F)
 
   startVals <- modifyList(defaultStartVals, startVals)
   startVals <- lapply(startVals, function(x) ifelse(x == 0, .Machine$double.xmin, x))
@@ -238,8 +240,8 @@ dmcFit <- function(resOb,
         amp = startValsGrid$amp[i], tau = startValsGrid$tau[i], drc = startValsGrid$drc[i], bnds = startValsGrid$bnds[i],
         resMean = startValsGrid$resMean[i], resSD = startValsGrid$resSD[i], aaShape = startValsGrid$aaShape[i],
         spShape = startValsGrid$spShape[i], spBias = startValsGrid$spBias[i], sigm = startValsGrid$sigm[i],
-        spLim = c(-startValsGrid$bnds[i], startValsGrid$bnds[i]), spDist = spDist,
-        drOnset = drOnset, drDist = drDist, drShape = drShape, drLim = drLim,
+        spLim = c(-startValsGrid$bnds[i], startValsGrid$bnds[i]), spDist = spDist, bnds_rate = startValsGrid$bnds_rate[i],
+        bnds_saturation = startValsGrid$bnds_saturation[i], drOnset = drOnset, drDist = drDist, drShape = drShape, drLim = drLim,
         rtMax = rtMax, nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF,
         printInputArgs = TRUE, printResults = FALSE
       )
@@ -266,8 +268,8 @@ dmcFit <- function(resOb,
     fn = minimizeCostValue,
     costFunction = calculateCostValue, prms = prms, fixedFit = fixedFit, freeCombined = freeCombined, resOb = resOb,
     nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF,
-    spDist = spDist, drOnset = drOnset, drDist = drDist, drShape = drShape, drLim = drLim,
-    rtMax = rtMax, minVals = minVals, maxVals = maxVals,
+    spDist = spDist, drOnset = drOnset, drDist = drDist,
+    drShape = drShape, drLim = drLim, rtMax = rtMax, minVals = minVals, maxVals = maxVals,
     printInputArgs = printInputArgs, printResults = printResults,
     method = "Nelder-Mead", control = optimControl
   )
@@ -308,9 +310,9 @@ dmcFit <- function(resOb,
       amp = prms[[i]]$amp, tau = prms[[i]]$tau, drc = prms[[i]]$drc, bnds = prms[[i]]$bnds,
       resMean = prms[[i]]$resMean, resSD = prms[[i]]$resSD, aaShape = prms[[i]]$aaShape,
       spDist = spDist, spBias = prms[[i]]$spBias, spShape = prms[[i]]$spShape, spLim = c(-prms[[i]]$bnds, prms[[i]]$bnds),
-      sigm = prms[[i]]$sigm, drOnset = drOnset, drDist = drDist, drShape = drShape, drLim = drLim,
-      rtMax = rtMax, nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF,
-      printResults = TRUE
+      sigm = prms[[i]]$sigm, bnds_rate = prms[[i]]$bnds_rate, bnds_saturation = prms[[i]]$bnds_saturation, drOnset = drOnset,
+      drDist = drDist, drShape = drShape, drLim = drLim, rtMax = rtMax, nTrl = nTrl, nDelta = nDelta, pDelta = pDelta,
+      tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF, printResults = TRUE
     )
   }
 
@@ -356,19 +358,19 @@ dmcFit <- function(resOb,
 #' @param nTrl The number of trials to use within dmcSim.
 #' @param minVals Minimum values for the to-be estimated parameters. This is a list with values specified individually
 #' for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., minVals = list(amp = 10, tau = 5, drc = 0.1,
-#' bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, spBias = -20, sigm = 1)).
+#' bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, spBias = -20, sigm = 1, bnds_rate=0, bnds_saturation=0)).
 #' @param maxVals Maximum values for the to-be estimated parameters. This is a list with values specified individually
 #' for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., maxVals = list(amp = 40, tau = 300, drc = 1.0,
-#' bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 20, sigm = 10))
+#' bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 20, sigm = 10, bnds_rate=1, bnds_saturation=500))
 #' @param fixedFit Fix parameter to starting value. This is a list with bool values specified individually for
 #' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedFit = list(amp = F,  tau = F, drc = F,
-#' bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T))
+#' bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T, bnds_rate=T, bnds_saturation=T))
 #' NB. Value if fixed at midpoint between minVals and maxVals.
 #' @param freeCombined If fitting 2+ datasets at once, which parameters are allowed to vary between both
 #' fits (default = all parameters fixed between the two fits e.g. parameter = F).
 #' This is a list with bool values specified individually for
 #' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., freeCombined = list(amp = F,
-#' tau = F, drc = F, bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = F, sigm = F))
+#' tau = F, drc = F, bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = F, sigm = F, bnds_rate=F, bnds_saturation=F))
 #' @param nCAF The number of CAF bins.
 #' @param nDelta The number of delta bins.
 #' @param pDelta An alternative option to nDelta (tDelta = 1 only) by directly specifying required percentile values (vector of values 0-100)
@@ -376,6 +378,8 @@ dmcFit <- function(resOb,
 #' @param deltaErrors TRUE/FALSE Calculate delta bins for error trials
 #' @param costFunction The cost function to minimise: root mean square error ("RMSE": default),
 #' squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")
+#' @param bnds_rate 0 (default) = fixed bnds
+#' @param bnds_saturation
 #' @param rtMax The limit on simulated RT (decision + non-decisional components)
 #' @param spDist The starting point distribution (0 = constant, 1 = beta, 2 = uniform)
 #' @param drOnset The starting point of controlled drift rate (i.e., "target" information) relative to automatic ("distractor" incormation) (> 0 ms)
@@ -429,6 +433,8 @@ dmcFitDE <- function(resOb,
                      drDist = 0,
                      drShape = 3,
                      drLim = c(0.1, 0.7),
+                     bnds_rate = 0,
+                     bnds_saturation = 0,
                      rtMax = 5000,
                      deControl = list(),
                      numCores = 2) {
@@ -438,10 +444,10 @@ dmcFitDE <- function(resOb,
   }
 
   # default parameter space
-  defaultMinVals <- list(amp = 0, tau = 5, drc = 0.1, bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, spBias = 0, sigm = 4)
-  defaultMaxVals <- list(amp = 40, tau = 300, drc = 1.0, bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 0, sigm = 4)
-  defaultFixedFit <- list(amp = F, tau = F, drc = F, bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T)
-  defaultFreeCombined <- list(amp = F, tau = F, drc = F, bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = F, sigm = F)
+  defaultMinVals <- list(amp = 0, tau = 5, drc = 0.1, bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, spBias = 0, sigm = 4, bnds_rate=0, bnds_saturation=0)
+  defaultMaxVals <- list(amp = 40, tau = 300, drc = 1.0, bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 0, sigm = 4, bnds_rate=0, bnds_saturation=500)
+  defaultFixedFit <- list(amp = F, tau = F, drc = F, bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T, bnds_rate=T, bnds_saturation=T)
+  defaultFreeCombined <- list(amp = F, tau = F, drc = F, bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = F, sigm = F, bnds_rate=F, bnds_saturation=F)
 
   minVals <- modifyList(defaultMinVals, minVals)
   maxVals <- modifyList(defaultMaxVals, maxVals)
@@ -543,7 +549,7 @@ dmcFitDE <- function(resOb,
       prms[[i]][as.logical(freeCombined)] <- as.list(fit$optim$bestmem)[-c(1:nFreeParametersUnique)]
     }
   }
-  
+
   # bounds check# bounds check
   for (i in 1:length(prms)) {
     prms[[i]] <- pmax(unlist(prms[[i]]), unlist(minVals))
@@ -568,8 +574,9 @@ dmcFitDE <- function(resOb,
       amp = prms[[i]]$amp, tau = prms[[i]]$tau, drc = prms[[i]]$drc, bnds = prms[[i]]$bnds,
       resMean = prms[[i]]$resMean, resSD = prms[[i]]$resSD, aaShape = prms[[i]]$aaShape,
       spDist = spDist, spBias = prms[[i]]$spBias, spShape = prms[[i]]$spShape, spLim = c(-prms[[i]]$bnds, prms[[i]]$bnds),
-      sigm = prms[[i]]$sigm, drOnset = drOnset, drDist = drDist, drShape = drShape, drLim = drLim,
-      rtMax = rtMax, nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF,
+      sigm = prms[[i]]$sigm, drOnset = drOnset, bnds_rate = bnds_rate, bnds_saturation = bnds_saturation,
+      drDist = drDist, drShape = drShape, drLim = drLim, rtMax = rtMax, nTrl = nTrl, nDelta = nDelta,
+      pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF,
       printResults = TRUE
     )
   }
@@ -618,28 +625,22 @@ dmcFitDE <- function(resOb,
 #' @param nTrl Number of trials to use within dmcSim.
 #' @param startVals Starting values for the to-be estimated parameters. This is a list with values specified individually
 #' for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., startVals = list(amp = 20, tau = 200,
-#' drc = 0.5, bnds = 75, resMean = 300, resSD = 30, aaShape = 2, spShape = 3, spBias = 0, sigm = 4)).
+#' drc = 0.5, bnds = 75, resMean = 300, resSD = 30, aaShape = 2, spShape = 3, spBias = 0, sigm = 4, bnds_rate=0, bnds_saturation=0)).
 #' @param minVals Minimum values for the to-be estimated parameters. This is a list with values specified individually
-#' for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., minVals = list(amp = 10, tau = 5, drc = 0.1,
-#' bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, spBias = -20, sigm = 1)).
+#' for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., minVals = list(amp = 0, tau = 5, drc = 0.1,
+#' bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, spBias = -20, sigm = 1, bnds_rate=0, bnds_saturation=0)).
 #' @param maxVals Maximum values for the to-be estimated parameters. This is a list with values specified individually
 #' for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., maxVals = list(amp = 40, tau = 300, drc = 1.0,
-#' bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 20, sigm = 10))
+#' bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 20, sigm = 10, bnds_rate=1, bnds_saturation=500))
 #' @param fixedFit Fix parameter to starting value. This is a list with bool values specified individually for
 #' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., fixedFit = list(amp = F, tau = F, drc = F,
-#' bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T))
+#' bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T, bnds_rate=T, bnds_saturation=T))
 #' NB. Value if fixed at startVals.
-#' @param fitInitialGrid TRUE/FALSE
-#' @param fitInitialGridN 10 linear steps between parameters min/max values (reduce if searching more than ~2/3 initial parameters)
-#' @param fixedGrid Fix parameter for initial grid search. This is a list with bool values specified individually for
-#' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., fixedGrid = list(amp = T, tau = F, drc = T,
-#' bnds = T, resMean = T, resSD = T, aaShape = T, spShape = T, spBias = T, sigm = T)). As a default, the initial gridsearch
-#' only searches the tau space.
 #' @param freeCombined If fitting 2+ datasets at once, which parameters are allowed to vary between both
 #' fits (default = all parameters fixed between the two fits e.g. parameter = F).
 #' This is a list with bool values specified individually for
 #' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., freeCombined = list(amp = F,
-#' tau = F, drc = F, bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = F, sigm = F))
+#' tau = F, drc = F, bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = F, sigm = F, bnds_rate=F, bnds_saturation=F))'
 #' @param nCAF Number of CAF bins.
 #' @param nDelta Number of delta bins.
 #' @param pDelta An alternative option to nDelta (tDelta = 1 only) by directly specifying required percentile values (vector of values 0-100)
@@ -652,6 +653,8 @@ dmcFitDE <- function(resOb,
 #' @param drDist The drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)
 #' @param drShape The drift rate (dr) shape parameter
 #' @param drLim The drift rate (dr) range
+#' @param bnds_rate 0 (default) = fixed bnds
+#' @param bnds_saturation
 #' @param rtMax The limit on simulated RT (decision + non-decisional components)
 #' @param subjects NULL (aggregated data across all subjects) or integer for subject number
 #' @param printInputArgs TRUE (default) /FALSE
@@ -699,6 +702,8 @@ dmcFitSubject <- function(resOb,
                           drDist = 0,
                           drShape = 3,
                           drLim = c(0.1, 0.7),
+                          bnds_rate = 0,
+                          bnds_saturation = 0,
                           rtMax = 5000,
                           subjects = c(),
                           printInputArgs = TRUE,
@@ -783,19 +788,19 @@ dmcFitSubject <- function(resOb,
 #' @param nTrl The number of trials to use within dmcSim.
 #' @param minVals Minimum values for the to-be estimated parameters. This is a list with values specified individually
 #' for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., minVals = list(amp = 10, tau = 5, drc = 0.1,
-#' bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, spBias = -20, sigm = 1)).
+#' bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, spBias = -20, sigm = 1, bnds_rate=0, bnds_saturation=0)).
 #' @param maxVals Maximum values for the to-be estimated parameters. This is a list with values specified individually
 #' for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., maxVals = list(amp = 40, tau = 300, drc = 1.0,
-#' bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 20, sigm = 10))
+#' bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 20, sigm = 10, bnds_rate=1, bnds_saturation=500))
 #' @param fixedFit Fix parameter to starting value. This is a list with bool values specified individually for
 #' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedFit = list(amp = F,  tau = F, drc = F,
-#' bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T))
+#' bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T, bnds_rate=T, bnds_saturation=T))
 #' NB. Value if fixed at midpoint between minVals and maxVals.
 #' @param freeCombined If fitting 2+ datasets at once, which parameters are allowed to vary between both
 #' fits (default = all parameters fixed between the two fits e.g. parameter = F).
 #' This is a list with bool values specified individually for
 #' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., freeCombined = list(amp = F,
-#' tau = F, drc = F, bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = F, sigm = F))
+#' tau = F, drc = F, bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = F, sigm = F, bnds_rate=F, bnds_saturation=F))
 #' @param nCAF The number of CAF bins.
 #' @param nDelta The number of delta bins.
 #' @param pDelta An alternative option to nDelta (tDelta = 1 only) by directly specifying required percentile values (vector of values 0-100)
@@ -803,7 +808,11 @@ dmcFitSubject <- function(resOb,
 #' @param deltaErrors TRUE/FALSE Calculate delta bins for error trials
 #' @param costFunction The cost function to minimise: root mean square error ("RMSE": default),
 #' squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")
+#' @param bnds_rate 0 (default) = fixed bnds
+#' @param bnds_saturation
 #' @param rtMax The limit on simulated RT (decision + non-decisional components)
+#' @param bnds_rate 0 (default) = fixed bnds
+#' @param bnds_saturation
 #' @param spDist The starting point distribution (0 = constant, 1 = beta, 2 = uniform)
 #' @param drOnset The starting point of controlled drift rate (i.e., "target" information) relative to automatic ("distractor" incormation) (> 0 ms)
 #' @param drDist The drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)
@@ -849,6 +858,8 @@ dmcFitSubjectDE <- function(resOb,
                             drDist = 0,
                             drShape = 3,
                             drLim = c(0.1, 0.7),
+                            bnds_rate = 0,
+                            bnds_saturation = 0,
                             rtMax = 5000,
                             subjects = c(),
                             deControl = list(),
