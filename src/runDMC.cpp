@@ -91,7 +91,7 @@ void run_dmc_sim_ci(
     run_simulation(p, activation_sum, trl_mat, u_vec, sp, dr, bnds, rts, errs, slows, rng);
     trials[comp] = trl_mat;
   } else {
-    run_simulation(p, u_vec, sp, dr, rts, bnds, errs, slows, rng);
+    run_simulation(p, u_vec, sp, dr, bnds, rts, errs, slows, rng);
   }
 
   m.lock();
