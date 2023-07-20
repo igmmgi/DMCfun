@@ -32,7 +32,7 @@
 #' @param tDelta type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)
 #' @param deltaErrors TRUE/FALSE Calculate delta bins for error trials
 #' @param nCAF Number of CAF bins
-#' @param bnds_rate
+#' @param bnds_rate 0 (default) = fixed bnds
 #' @param bnds_saturation
 #' @param printInputArgs TRUE/FALSE
 #' @param printResults TRUE/FALSE
@@ -136,19 +136,17 @@ dmcSim <- function(amp = 20,
   dmc$summary <- NULL
 
   # means
-  dmc$summary <- as.data.frame(rbind(summary$comp, summary$incomp))
+  dmc$summary        <- as.data.frame(rbind(summary$comp, summary$incomp))
   names(dmc$summary) <- c("rtCor", "sdRtCor", "perErr", "rtErr", "sdRtErr", "perSlow")
-  dmc$summary <- cbind(Comp = c("comp", "incomp"), dmc$summary)
+  dmc$summary        <- cbind(Comp = c("comp", "incomp"), dmc$summary)
 
   # caf
   dmc$caf <- as.data.frame(cbind(
-    Bin = 1:nCAF,
-    # rtComp       = summary$caf_rt_comp,
-    accPerComp = summary$caf_comp,
-    # rtIncomp     = summary$caf_rt_incomp,
+    Bin          = 1:nCAF,
+    accPerComp   = summary$caf_comp,
     accPerIncomp = summary$caf_incomp,
-    meanBin = (summary$caf_rt_comp + summary$caf_rt_incomp) / 2,
-    meanEffect = ((100 - summary$caf_incomp) - (100 - summary$caf_comp)) * 100
+    meanBin      = (summary$caf_rt_comp + summary$caf_rt_incomp) / 2,
+    meanEffect   = ((100 - summary$caf_incomp) - (100 - summary$caf_comp)) * 100
   ))
 
   # delta
@@ -175,8 +173,7 @@ dmcSim <- function(amp = 20,
     amp = amp, tau = tau, drc = drc, bnds = bnds, resMean = resMean,
     resSD = resSD, aaShape = aaShape, spShape = spShape, spBias = spBias,
     sigm = sigm, nTrl = nTrl, nTrlData = nTrlData, tmax = tmax,
-    resDist = resDist,
-    spDist = spDist, spLim1 = spLim[1], spLim2 = spLim[2],
+    resDist = resDist, spDist = spDist, spLim1 = spLim[1], spLim2 = spLim[2],
     drOnset = drOnset, drDist = drDist, drShape = drShape,
     drLim1 = drLim[1], drLim2 = drLim[2]
   )
