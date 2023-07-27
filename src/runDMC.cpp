@@ -82,9 +82,7 @@ void run_dmc_sim_ci(
 
   // collapsing bounds
   std::vector<double> bnds(p.tmax, p.bnds);
-  if (p.bnds_rate != 0) {
-    collapsing_bnds(p, bnds);
-  }
+  collapsing_bnds(p, bnds);
 
   // run simulation and store rts for correct/incorrect trials
   if (p.fullData) {
@@ -141,7 +139,7 @@ void variable_starting_point(Prms &p, std::vector<double> &sp, RNG &rng) {
 
 void collapsing_bnds(Prms &p, std::vector<double> &bnds) {
   for (unsigned int i = 0; i < p.tmax; i++) {
-    bnds[i] = bnds[i] * (1-(p.bnds_rate * (i/(i+p.bnds_saturation))));
+    bnds[i] = bnds[i] * (1-(p.bndsRate * (i/(i+p.bndsSaturation))));
   }
 }
 

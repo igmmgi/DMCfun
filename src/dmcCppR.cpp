@@ -44,9 +44,8 @@ List dmcCppR(List r_in) {
   if (r_in.containsElementNamed("tDelta"))          p.tDelta          = as<unsigned int>(r_in["tDelta"]);
   if (r_in.containsElementNamed("deltaErrors"))     p.deltaErrors     = as<bool>(r_in["deltaErrors"]);
   if (r_in.containsElementNamed("nCAF"))            p.nCAF            = as<double>(r_in["nCAF"]);
-  if (r_in.containsElementNamed("collapsing_bnds")) p.collapsing_bnds = as<bool>(r_in["collapsing_bnds"]);
-  if (r_in.containsElementNamed("bnds_rate"))       p.bnds_rate       = as<double>(r_in["bnds_rate"]);
-  if (r_in.containsElementNamed("bnds_saturation")) p.bnds_saturation = as<double>(r_in["bnds_saturation"]);
+  if (r_in.containsElementNamed("bndsRate"))        p.bndsRate        = as<double>(r_in["bndsRate"]);
+  if (r_in.containsElementNamed("bndsSaturation"))  p.bndsSaturation  = as<double>(r_in["bndsSaturation"]);
   if (r_in.containsElementNamed("printInputArgs"))  p.printInputArgs  = as<bool>(r_in["printInputArgs"]);
   if (r_in.containsElementNamed("printResults"))    p.printResults    = as<bool>(r_in["printResults"]);
   if (r_in.containsElementNamed("setSeed"))         p.setSeed         = as<bool>(r_in["setSeed"]);

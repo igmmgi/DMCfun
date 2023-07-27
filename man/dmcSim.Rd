@@ -32,8 +32,8 @@ dmcSim(
   tDelta = 1,
   deltaErrors = FALSE,
   nCAF = 5,
-  bnds_rate = 0,
-  bnds_saturation = 0,
+  bndsRate = 0,
+  bndsSaturation = 0,
   printInputArgs = TRUE,
   printResults = TRUE,
   setSeed = FALSE,
@@ -96,7 +96,9 @@ function and/or individual trials}
 
 \item{nCAF}{Number of CAF bins}
 
-\item{bnds_rate}{0 (default) = fixed bnds}
+\item{bndsRate}{0 (default) = fixed bnds}
+
+\item{bndsSaturation}{bndsSaturatoin}
 
 \item{printInputArgs}{TRUE/FALSE}
 

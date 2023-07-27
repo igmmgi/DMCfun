@@ -22,8 +22,8 @@ dmcFitDE(
   drDist = 0,
   drShape = 3,
   drLim = c(0.1, 0.7),
-  bnds_rate = 0,
-  bnds_saturation = 0,
+  bndsRate = 0,
+  bndsSaturation = 0,
   rtMax = 5000,
   deControl = list(),
   numCores = 2
@@ -36,22 +36,22 @@ dmcFitDE(
 
 \item{minVals}{Minimum values for the to-be estimated parameters. This is a list with values specified individually
 for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., minVals = list(amp = 10, tau = 5, drc = 0.1,
-bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, spBias = -20, sigm = 1, bnds_rate=0, bnds_saturation=0)).}
+bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, spBias = -20, sigm = 1, bndsRate=0, bndsSaturation=0)).}
 
 \item{maxVals}{Maximum values for the to-be estimated parameters. This is a list with values specified individually
 for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., maxVals = list(amp = 40, tau = 300, drc = 1.0,
-bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 20, sigm = 10, bnds_rate=1, bnds_saturation=500))}
+bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 20, sigm = 10, bndsRate=1, bndsSaturation=500))}
 
 \item{fixedFit}{Fix parameter to starting value. This is a list with bool values specified individually for
 amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedFit = list(amp = F,  tau = F, drc = F,
-bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T, bnds_rate=T, bnds_saturation=T))
+bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T, bndsRate=T, bndsSaturation=T))
 NB. Value if fixed at midpoint between minVals and maxVals.}
 
 \item{freeCombined}{If fitting 2+ datasets at once, which parameters are allowed to vary between both
 fits (default = all parameters fixed between the two fits e.g. parameter = F).
 This is a list with bool values specified individually for
 amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., freeCombined = list(amp = F,
-tau = F, drc = F, bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = F, sigm = F, bnds_rate=F, bnds_saturation=F))}
+tau = F, drc = F, bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = F, sigm = F, bndsRate=F, bndsSaturation=F))}
 
 \item{nCAF}{The number of CAF bins.}
 
@@ -76,7 +76,9 @@ squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS"
 
 \item{drLim}{The drift rate (dr) range}
 
-\item{bnds_rate}{0 (default) = fixed bnds}
+\item{bndsRate}{0 (default) = fixed bnds}
+
+\item{bndsSaturation}{bndsSaturation}
 
 \item{rtMax}{The limit on simulated RT (decision + non-decisional components)}
 

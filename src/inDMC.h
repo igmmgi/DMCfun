@@ -33,9 +33,8 @@ struct Prms {
   std::vector<double> pDelta;
   std::vector<double> vDelta;
   int nCAF = 5;
-  bool collapsing_bnds = false;
-  double bnds_rate = 0;
-  double bnds_saturation = 0;
+  double bndsRate = 0;
+  double bndsSaturation = 0;
   std::vector<double> vCAF;
   bool printInputArgs = true;
   bool printResults = true;
