@@ -79,7 +79,7 @@ squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS"
 
 \item{bndsRate}{0 (default) = fixed bnds}
 
-\item{bndsSaturation}{bndsSaturation}
+\item{bndsSaturation}{Collapsing bounds saturation}
 
 \item{rtMax}{The limit on simulated RT (decision + non-decisional components)}
 

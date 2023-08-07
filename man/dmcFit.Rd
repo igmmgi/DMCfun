@@ -93,6 +93,10 @@ only searches the tau space.}
 
 \item{drLim}{The drift rate (dr) range}
 
+\item{bndsRate}{Collapsing bounds rate. 0 (default) = fixed bounds}
+
+\item{bndsSaturation}{Collapsing bounds saturation}
+
 \item{rtMax}{The limit on simulated RT (decision + non-decisional components)}
 
 \item{costFunction}{The cost function to minimise: root mean square error ("RMSE": default),

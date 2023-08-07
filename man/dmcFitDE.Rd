@@ -76,9 +76,9 @@ squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS"
 
 \item{drLim}{The drift rate (dr) range}
 
-\item{bndsRate}{0 (default) = fixed bnds}
+\item{bndsRate}{Collapsing bounds rate. 0 (default) = fixed bounds}
 
-\item{bndsSaturation}{bndsSaturation}
+\item{bndsSaturation}{Collapsing bounds saturation}
 
 \item{rtMax}{The limit on simulated RT (decision + non-decisional components)}
 

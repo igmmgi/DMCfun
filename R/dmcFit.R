@@ -45,6 +45,8 @@
 #' @param drDist The drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)
 #' @param drShape The drift rate (dr) shape parameter
 #' @param drLim The drift rate (dr) range
+#' @param bndsRate Collapsing bounds rate. 0 (default) = fixed bounds
+#' @param bndsSaturation Collapsing bounds saturation
 #' @param printInputArgs TRUE (default) /FALSE
 #' @param printResults TRUE/FALSE (default)
 #' @param optimControl Additional control parameters passed to optim (see optim details section)
@@ -386,6 +388,8 @@ dmcFit <- function(resOb,
 #' @param drDist The drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)
 #' @param drShape The drift rate (dr) shape parameter
 #' @param drLim The drift rate (dr) range
+#' @param bndsRate Collapsing bounds rate. 0 (default) = fixed bounds
+#' @param bndsSaturation Collapsing bounds saturation
 #' @param deControl Additional control parameters passed to DEoptim (see DEoptim.control)
 #' @param numCores Number of cores to use
 #'
@@ -636,6 +640,12 @@ dmcFitDE <- function(resOb,
 #' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., fixedFit = list(amp = F, tau = F, drc = F,
 #' bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T, bndsRate=T, bndsSaturation=T))
 #' NB. Value if fixed at startVals.
+#' @param fitInitialGrid TRUE/FALSE
+#' @param fitInitialGridN 10 linear steps between parameters min/max values (reduce if searching more than ~2/3 initial parameters)
+#' @param fixedGrid Fix parameter for initial grid search. This is a list with bool values specified individually for
+#' amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., fixedGrid = list(amp = T, tau = F, drc = T,
+#' bnds = T, resMean = T, resSD = T, aaShape = T, spShape = T, spBias = T, sigm = T, bndsRate=T, bndsSaturation=T)). As a default, the initial gridsearch
+#' only searches the tau space.
 #' @param freeCombined If fitting 2+ datasets at once, which parameters are allowed to vary between both
 #' fits (default = all parameters fixed between the two fits e.g. parameter = F).
 #' This is a list with bool values specified individually for
@@ -653,8 +663,8 @@ dmcFitDE <- function(resOb,
 #' @param drDist The drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)
 #' @param drShape The drift rate (dr) shape parameter
 #' @param drLim The drift rate (dr) range
-#' @param bndsRate 0 (default) = fixed bnds
-#' @param bndsSaturation bndsSaturation
+#' @param bndsRate Collapsing bounds rate. 0 (default) = fixed bounds
+#' @param bndsSaturation Collapsing bounds saturation
 #' @param rtMax The limit on simulated RT (decision + non-decisional components)
 #' @param subjects NULL (aggregated data across all subjects) or integer for subject number
 #' @param printInputArgs TRUE (default) /FALSE
@@ -808,8 +818,8 @@ dmcFitSubject <- function(resOb,
 #' @param deltaErrors TRUE/FALSE Calculate delta bins for error trials
 #' @param costFunction The cost function to minimise: root mean square error ("RMSE": default),
 #' squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")
-#' @param bndsRate 0 (default) = fixed bnds
-#' @param bndsSaturation bndsSaturation
+#' @param bndsRate Collapsing bounds rate. 0 (default) = fixed bounds
+#' @param bndsSaturation Collapsing bounds saturation
 #' @param rtMax The limit on simulated RT (decision + non-decisional components)
 #' @param bndsRate 0 (default) = fixed bnds
 #' @param spDist The starting point distribution (0 = constant, 1 = beta, 2 = uniform)

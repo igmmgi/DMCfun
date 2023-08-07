@@ -65,6 +65,15 @@ This is a list with bool values specified individually for
 amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., freeCombined = list(amp = F,
 tau = F, drc = F, bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = F, sigm = F, bndsRate=F, bndsSaturation=F))'}
 
+\item{fitInitialGrid}{TRUE/FALSE}
+
+\item{fitInitialGridN}{10 linear steps between parameters min/max values (reduce if searching more than ~2/3 initial parameters)}
+
+\item{fixedGrid}{Fix parameter for initial grid search. This is a list with bool values specified individually for
+amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., fixedGrid = list(amp = T, tau = F, drc = T,
+bnds = T, resMean = T, resSD = T, aaShape = T, spShape = T, spBias = T, sigm = T, bndsRate=T, bndsSaturation=T)). As a default, the initial gridsearch
+only searches the tau space.}
+
 \item{nCAF}{Number of CAF bins.}
 
 \item{nDelta}{Number of delta bins.}
@@ -88,9 +97,9 @@ squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS"
 
 \item{drLim}{The drift rate (dr) range}
 
-\item{bndsRate}{0 (default) = fixed bnds}
+\item{bndsRate}{Collapsing bounds rate. 0 (default) = fixed bounds}
 
-\item{bndsSaturation}{bndsSaturation}
+\item{bndsSaturation}{Collapsing bounds saturation}
 
 \item{rtMax}{The limit on simulated RT (decision + non-decisional components)}
 
