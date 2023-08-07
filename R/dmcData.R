@@ -565,7 +565,7 @@ calculateCAF <- function(dat,
                      rt = mean(rt),
                      .groups = "drop")  %>%
     tidyr::pivot_wider(., id_cols = c("Subject", "Bin"), names_from = "Comp", values_from = c("rt", "accPer"))  %>%
-    dplyr::mutate(meanBin = (rt_comp + rt_comp) / 2,
+    dplyr::mutate(meanBin = (rt_comp + rt_incomp) / 2,
                   effect = ((100 - accPer_incomp) - (100 - accPer_comp)) * 100) %>%
     dplyr::select(-c("rt_comp", "rt_incomp")) %>%
     dplyr::rename(comp = accPer_comp, incomp = accPer_incomp)
