@@ -109,7 +109,18 @@ dmcSim <- function(amp = 20,
                    printInputArgs = TRUE,
                    printResults = TRUE,
                    setSeed = FALSE,
-                   seedValue = 1) {
+                   seedValue = 1
+                   ) {
+
+
+  # default parameter space
+  defaultStartVals    <- list(amp = 20, tau = 200, drc = 0.5, bnds = 75,  bndsRate=0, bndsSaturation=0,   resMean = 300, resSD = 30,  aaShape = 2, spShape = 3, spBias = 0,   sigm = 4)
+  defaultMinVals      <- list(amp = 0,  tau = 5,   drc = 0.1, bnds = 20,  bndsRate=0, bndsSaturation=0,   resMean = 200, resSD = 5,   aaShape = 1, spShape = 2, spBias = -20, sigm = 1)
+  defaultMaxVals      <- list(amp = 40, tau = 300, drc = 1.0, bnds = 150, bndsRate=1, bndsSaturation=500, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 20,  sigm = 10)
+  defaultFixedFit     <- list(amp = F,  tau = F,   drc = F,   bnds = F,   bndsRate=T, bndsSaturation=T,   resMean = F,   resSD = F,   aaShape = F, spShape = F, spBias = T,   sigm = T)
+  defaultFixedGrid    <- list(amp = T,  tau = F,   drc = T,   bnds = T,   bndsRate=T, bndsSaturation=T,   resMean = T,   resSD = T,   aaShape = T, spShape = T, spBias = T,   sigm = T)
+  defaultFreeCombined <- list(amp = F,  tau = F,   drc = F,   bnds = F,   bndsRate=F, bndsSaturation=F,   resMean = F,   resSD = F,   aaShape = F, spShape = F, spBias = F,   sigm = F)
+
   # change nDelta to length of pDelta if pDelta not empty
   if (length(pDelta) != 0) {
     nDelta <- length(pDelta)
@@ -172,7 +183,8 @@ dmcSim <- function(amp = 20,
   dmc$prms <- data.frame(
     amp = amp, tau = tau, drc = drc, bnds = bnds, resMean = resMean,
     resSD = resSD, aaShape = aaShape, spShape = spShape, spBias = spBias,
-    sigm = sigm, nTrl = nTrl, nTrlData = nTrlData, tmax = tmax,
+    sigm = sigm, bndsRate = bndsRate, bndsSaturation = bndsSaturation,
+    nTrl = nTrl, nTrlData = nTrlData, tmax = tmax,
     resDist = resDist, spDist = spDist, spLim1 = spLim[1], spLim2 = spLim[2],
     drOnset = drOnset, drDist = drDist, drShape = drShape,
     drLim1 = drLim[1], drLim2 = drLim[2]

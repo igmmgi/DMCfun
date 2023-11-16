@@ -41,7 +41,7 @@ void variable_drift_rate(Prms &p, std::vector<double> &dr, RNG &rng);
 
 void variable_starting_point(Prms &p, std::vector<double> &sp, RNG &rng);
 
-void collapsing_bnds(Prms &p, std::vector<double> &bnds);
+void boundary(Prms &p, std::vector<double> &bnds);
 
 void residual_rt(Prms &p, std::vector<double> &residual_distribution, RNG &rng);
 

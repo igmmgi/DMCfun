@@ -51,6 +51,8 @@ List dmcCppR(List r_in) {
   if (r_in.containsElementNamed("setSeed"))         p.setSeed         = as<bool>(r_in["setSeed"]);
   if (r_in.containsElementNamed("seedValue"))       p.seedValue       = as<unsigned int>(r_in["seedValue"]);
 
+
+
   // values for delta/CAF
   if (!p.pDelta.empty()) {
     p.vDelta = p.pDelta; // take specific values

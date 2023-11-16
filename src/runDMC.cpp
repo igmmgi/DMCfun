@@ -72,17 +72,20 @@ void run_dmc_sim_ci(
     u_vec[i] =
         sign * rsim.at("eq4")[i] * ((p.aaShape - 1) / (i + 1.0) - 1 / p.tau);
 
-  // variable drift rate/starting point?
+  // variable drift rate?
   std::vector<double> dr(p.nTrl, p.drc);
   if (p.drDist != 0)
     variable_drift_rate(p, dr, rng);
+
+  // variable starting point?
   std::vector<double> sp(p.nTrl, p.spBias);
   if (p.spDist != 0)
     variable_starting_point(p, sp, rng);
 
-  // collapsing bounds
+  // boundary
   std::vector<double> bnds(p.tmax, p.bnds);
-  collapsing_bnds(p, bnds);
+  //if (p.bndsRate != 0)
+  boundary(p, bnds);
 
   // run simulation and store rts for correct/incorrect trials
   if (p.fullData) {
@@ -116,8 +119,7 @@ void variable_drift_rate(Prms &p, std::vector<double> &dr, RNG &rng) {
     for (auto &i : dr)
       i = bdDR(rng) * (p.drLimHigh - p.drLimLow) + p.drLimLow;
   } else if (p.drDist == 2) {
-    boost::random::uniform_real_distribution<double> unDR(p.drLimLow,
-                                                          p.drLimHigh);
+    boost::random::uniform_real_distribution<double> unDR(p.drLimLow, p.drLimHigh);
     for (auto &i : dr)
       i = unDR(rng);
   }
@@ -129,15 +131,14 @@ void variable_starting_point(Prms &p, std::vector<double> &sp, RNG &rng) {
     for (auto &i : sp)
       i = (bdSP(rng) * (p.spLimHigh - p.spLimLow) + p.spLimLow) + p.spBias;
   } else if (p.spDist == 2) {
-    boost::random::uniform_real_distribution<double> unSP(p.spLimLow,
-                                                          p.spLimHigh);
+    boost::random::uniform_real_distribution<double> unSP(p.spLimLow, p.spLimHigh);
     for (auto &i : sp)
       i = unSP(rng) + p.spBias;
   }
 }
 
 
-void collapsing_bnds(Prms &p, std::vector<double> &bnds) {
+void boundary(Prms &p, std::vector<double> &bnds) {
   for (unsigned int i = 0; i < p.tmax; i++) {
     bnds[i] = bnds[i] * (1-(p.bndsRate * (i/(i+p.bndsSaturation))));
   }
@@ -152,8 +153,7 @@ void residual_rt(Prms &p, std::vector<double> &residual_distribution, RNG &rng) 
   } else if (p.resDist == 2) {
     // Standard uniform distribution with mean + sd
     double range = std::max(0.01, sqrt((p.resSD * p.resSD / (1.0 / 12.0))) / 2);
-    boost::random::uniform_real_distribution<double> dist(p.resMean - range,
-                                                          p.resMean + range);
+    boost::random::uniform_real_distribution<double> dist(p.resMean - range, p.resMean + range);
     for (auto &i : residual_distribution)
       i = std::max(0.0, dist(rng));
   }
