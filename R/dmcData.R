@@ -71,6 +71,7 @@ createDF <- function(nSubjects = 20,
 
   dat <-  data.frame(expand.grid(modifyList(design, list(Subject = c(1:nSubjects), Trial = c(1:nTrl)))))
   dat <- dat[order(dat$Subject), ]
+  row.names(dat) <- NULL
 
   return(dat[c("Subject", names(design))])
 
@@ -562,7 +563,7 @@ calculateCAF <- function(dat,
                      .groups = "drop") %>%
     dplyr::group_by(Subject, Comp, Bin) %>%
     dplyr::summarize(accPer  = mean(accPer),
-                     rt = mean(rt),
+                     rt      = mean(rt),
                      .groups = "drop")  %>%
     tidyr::pivot_wider(., id_cols = c("Subject", "Bin"), names_from = "Comp", values_from = c("rt", "accPer"))  %>%
     dplyr::mutate(meanBin = (rt_comp + rt_incomp) / 2,

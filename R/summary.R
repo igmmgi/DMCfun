@@ -91,7 +91,7 @@ summary.dmcfits <- function(object, digits = 2, ...) {
 #' @examples
 #' \donttest{
 #' # Example 1
-#' fitSubject <- dmcFitSubject(flankerData, nTrl = 1000)
+#' fitSubject <- dmcFitSubject(flankerData, nTrl = 1000, subjects = c(1:3))
 #' summary(fitSubject)
 #' }
 #'
@@ -122,7 +122,7 @@ summary.dmcfit_subject <- function(object, digits = 2, ...) {
 #' @examples
 #' \donttest{
 #' # Example 1
-#' fitsSubject <- dmcFitSubject(list(flankerData, simonData), nTrl = 1000)
+#' fitsSubject <- dmcFitSubject(list(flankerData, simonData), nTrl = 1000, subjects = c(1:3))
 #' summary(fitsSubject)
 #' }
 #'

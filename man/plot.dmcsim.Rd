@@ -111,7 +111,7 @@ dmc = dmcSim()
 plot(dmc)
 
 # Example 3
-dmc = dmcSim()
+dmc = dmcSim(tau = 120)
 plot(dmc)
 
 # Example 4

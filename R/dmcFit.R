@@ -413,12 +413,12 @@ dmcFit <- function(resOb,
 #' # the code takes approx 5 minutes.
 #'
 #' # Example 1: Flanker data from Ulrich et al. (2015)
-#' fit <- dmcFitDE(flankerData);
+#' fit <- dmcFitDE(flankerData, nTrl = 1000);
 #' plot(fit, flankerData)
 #' summary(fit)
 #'
 #' # Example 2: Simon data from Ulrich et al. (2015)
-#' fit <- dmcFitDE(simonData, nTrl = 20000)
+#' fit <- dmcFitDE(simonData, nTrl = 5000, deControl = list(itermax=30))
 #' plot(fit, simonData)
 #' summary(fit)
 #' }
@@ -687,11 +687,6 @@ dmcFitDE <- function(resOb,
 #' plot(fit, flankerData, subject = 2)
 #' summary(fit)
 #'
-#' # Example 2: Simon data from Ulrich et al. (2015)
-#' fit <- dmcFitSubject(simonData, nTrl = 1000, subject = c(1, 2))
-#' plot(fit, simonData, subject = 1)
-#' plot(fit, simonData, subject = 2)
-#' summary(fit)
 #' }
 #'
 #' @export
@@ -841,16 +836,11 @@ dmcFitSubject <- function(resOb,
 #' \donttest{
 #' # Code below can exceed CRAN check time limit, hence donttest
 #' # Example 1: Flanker data from Ulrich et al. (2015)
-#' fit <- dmcFitSubjectDE(flankerData, nTrl = 1000, subjects = c(1, 2))
+#' fit <- dmcFitSubjectDE(flankerData, nTrl = 1000, subjects = c(1, 2), deControl = list(itermax=30))
 #' plot(fit, flankerData, subject = 1)
 #' plot(fit, flankerData, subject = 2)
 #' summary(fit)
 #'
-#' # Example 2: Simon data from Ulrich et al. (2015)
-#' fit <- dmcFitSubjectDE(simonData, nTrl = 1000, subject = c(1, 2))
-#' plot(fit, simonData, subject = 1)
-#' plot(fit, simonData, subject = 2)
-#' summary(fit)
 #' }
 #'
 #' @export

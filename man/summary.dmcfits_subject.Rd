@@ -22,7 +22,7 @@ Summary of the simulation results from dmcFitAgg
 \examples{
 \donttest{
 # Example 1
-fitsSubject <- dmcFitSubject(list(flankerData, simonData), nTrl = 1000)
+fitsSubject <- dmcFitSubject(list(flankerData, simonData), nTrl = 1000, subjects = c(1:3))
 summary(fitsSubject)
 }
 

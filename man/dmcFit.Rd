@@ -47,22 +47,22 @@ drc = 0.5, bnds = 75, resMean = 300, resSD = 30, aaShape = 2, spShape = 3, spBia
 
 \item{minVals}{Minimum values for the to-be estimated parameters. This is a list with values specified individually
 for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., minVals = list(amp = 0, tau = 5, drc = 0.1,
-bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, spBias = -20, sigm = 1, bndsRate=0, bndsSaturation=0)).}
+bnds = 20, bndsRate=0, bndsSaturation=0, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, spBias = -20, sigm = 1)).}
 
 \item{maxVals}{Maximum values for the to-be estimated parameters. This is a list with values specified individually
 for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., maxVals = list(amp = 40, tau = 300, drc = 1.0,
-bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 20, sigm = 10, bndsRate=1, bndsSaturation=500))}
+bnds = 150, bndsRate=1, bndsSaturation=500, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 20, sigm = 10))}
 
 \item{fixedFit}{Fix parameter to starting value. This is a list with bool values specified individually for
 amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., fixedFit = list(amp = F, tau = F, drc = F,
-bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T, bndsRate=T, bndsSaturation=T))
+bnds = F, bndsRate=T, bndsSaturation=T, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T))
 NB. Value if fixed at startVals.}
 
 \item{freeCombined}{If fitting 2+ datasets at once, which parameters are allowed to vary between both
 fits (default = all parameters fixed between the two fits e.g. parameter = F).
 This is a list with bool values specified individually for
 amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., freeCombined = list(amp = F,
-tau = F, drc = F, bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = F, sigm = F, bndsRate=F, bndsSaturation=F))}
+tau = F, drc = F, bnds = F, bndsRate=F, bndsSaturation=F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = F, sigm = F))}
 
 \item{fitInitialGrid}{TRUE/FALSE}
 
@@ -70,7 +70,7 @@ tau = F, drc = F, bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, sp
 
 \item{fixedGrid}{Fix parameter for initial grid search. This is a list with bool values specified individually for
 amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., fixedGrid = list(amp = T, tau = F, drc = T,
-bnds = T, resMean = T, resSD = T, aaShape = T, spShape = T, spBias = T, sigm = T, bndsRate=T, bndsSaturation=T)). As a default, the initial gridsearch
+bnds = T, bndsRate=T, bndsSaturation=T, resMean = T, resSD = T, aaShape = T, spShape = T, spBias = T, sigm = T)). As a default, the initial gridsearch
 only searches the tau space.}
 
 \item{nCAF}{The number of CAF bins.}

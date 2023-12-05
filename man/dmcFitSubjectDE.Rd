@@ -41,18 +41,18 @@ bnds = 20, resMean = 200, resSD = 5, aaShape = 1, spShape = 2, spBias = -20, sig
 
 \item{maxVals}{Maximum values for the to-be estimated parameters. This is a list with values specified individually
 for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., maxVals = list(amp = 40, tau = 300, drc = 1.0,
-bnds = 150, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 20, sigm = 10, bndsRate=1, bndsSaturation=500))}
+bnds = 150, bndsRate=1, bndsSaturation=500, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 20, sigm = 10))}
 
 \item{fixedFit}{Fix parameter to starting value. This is a list with bool values specified individually for
 amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., fixedFit = list(amp = F,  tau = F, drc = F,
-bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T, bndsRate=T, bndsSaturation=T))
+bnds = F, bndsRate=T, bndsSaturation=T, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T, bndsRate=T, bndsSaturation=T))
 NB. Value if fixed at midpoint between minVals and maxVals.}
 
 \item{freeCombined}{If fitting 2+ datasets at once, which parameters are allowed to vary between both
 fits (default = all parameters fixed between the two fits e.g. parameter = F).
 This is a list with bool values specified individually for
 amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., freeCombined = list(amp = F,
-tau = F, drc = F, bnds = F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = F, sigm = F, bndsRate=F, bndsSaturation=F))}
+tau = F, drc = F, bnds = F, bndsRate=F, bndsSaturation=F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = F, sigm = F))}
 
 \item{nCAF}{The number of CAF bins.}
 
@@ -102,16 +102,11 @@ include squared percentage error ("SPE"), and g-squared statistic ("GS").
 \donttest{
 # Code below can exceed CRAN check time limit, hence donttest
 # Example 1: Flanker data from Ulrich et al. (2015)
-fit <- dmcFitSubjectDE(flankerData, nTrl = 1000, subjects = c(1, 2))
+fit <- dmcFitSubjectDE(flankerData, nTrl = 1000, subjects = c(1, 2), deControl = list(itermax=30))
 plot(fit, flankerData, subject = 1)
 plot(fit, flankerData, subject = 2)
 summary(fit)
 
-# Example 2: Simon data from Ulrich et al. (2015)
-fit <- dmcFitSubjectDE(simonData, nTrl = 1000, subject = c(1, 2))
-plot(fit, simonData, subject = 1)
-plot(fit, simonData, subject = 2)
-summary(fit)
 }
 
 }
