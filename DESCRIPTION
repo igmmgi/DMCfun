@@ -2,7 +2,7 @@ Package: DMCfun
 Type: Package
 Title: Diffusion Model of Conflict (DMC) in Reaction Time Tasks
 Version: 3.5.2
-Date: 2023-10-16
+Date: 2024-01-08
 Authors@R: c(
     person(given = "Ian G.", family = "Mackenzie", email="ian.mackenzie@uni-tuebingen.de", role = c("cre", "aut")),
     person(given = "Carolin", family = "Dudschig", email="carolin.dudschig@uni-tuebingen.de", role = c("aut"))
@@ -23,7 +23,7 @@ Description:
 URL: https://github.com/igmmgi/DMCfun, https://CRAN.R-project.org/package=DMCfun, https://www.sciencedirect.com/science/article/pii/S259026012100031X  
 License: MIT + file LICENSE
 Encoding: UTF-8
-Depends: R (>= 3.5.0)
+Depends: R (>= 4.0.0)
 Imports:
   DEoptim,
   Rcpp (>= 0.12.16),
@@ -40,4 +40,3 @@ Suggests:
 LinkingTo: Rcpp, BH
 RoxygenNote: 7.2.3
 LazyData: true
-SystemRequirements: C++11
