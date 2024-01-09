@@ -130,9 +130,9 @@ plot.dmcsim <- function(
     ylabs <- rep("", 11)
   }
 
-  # x-axts and y-axts
-  xaxts <- ifelse(xaxts, "s", "n")
-  yaxts <- ifelse(yaxts, "s", "n")
+  # x-axts and y-axtsA
+  xaxt <- ifelse(xaxts, "s", "n")
+  yaxt <- ifelse(yaxts, "s", "n")
 
   showFig <- rep(FALSE, 11)
   if (figType == "summary1") {
@@ -170,71 +170,71 @@ plot.dmcsim <- function(
   # activation
   if (showFig[1] & !is.null(x$trials)) {
     plot_activation(x, labels, cols, xlabs[1], ylabs[1], xlimActivation, ylimActivation,
-                    xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, legend = legend, ... )
+                    xaxt = xaxt, yaxt = yaxt, xylabPos = xylabPos, legend = legend, ... )
   }
 
   # individual trials
   if (showFig[2] & !is.null(x$trials)) {
     plot_trials(x, labels, cols, xlabs[2], ylabs[2], xlimActivation, ylimActivation,
-                xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, legend = legend, ...)
+                xaxt = xaxt, yaxt = yaxt, xylabPos = xylabPos, legend = legend, ...)
   }
 
   # PDF
   if (showFig[3]) {
     plot_pdf(resTh = x, labels = labels, cols = cols, xlab = xlabs[3], ylab = ylabs[3],
-             xlim = xlimPDF, ylim = ylimPDF,  xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos,
+             xlim = xlimPDF, ylim = ylimPDF,  xaxt = xaxt, yaxt = yaxt, xylabPos = xylabPos,
              legend = legend, legend.parameters = list(cex = ifelse(figType == "summary1", 0.75, 1)), ...)
   }
 
   # CDF
   if (showFig[4]) {
     plot_cdf(resTh = x, labels = labels, cols = cols, xlab = xlabs[4], ylab = ylabs[4],
-             xlim = xlimCDF,  xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos,
+             xlim = xlimCDF,  xaxt = xaxt, yaxt = yaxt, xylabPos = xylabPos,
              legend = legend, legend.parameters = list(cex = ifelse(figType == "summary1", 0.75, 1)), ...)
   }
 
   # CAF
   if (showFig[5]) {
     plot_caf(resTh = x, labels = labels, cols = cols, xlab = xlabs[5], ylab = ylabs[5],
-             ylim = ylimCAF, xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, cafBinLabels = cafBinLabels,
+             ylim = ylimCAF, xaxt = xaxt, yaxt = yaxt, xylabPos = xylabPos, cafBinLabels = cafBinLabels,
              legend = legend, ...)
   }
 
   # delta/delta errors
   if (showFig[6]) {
     plot_delta(resTh = x, figType = "delta", labels = NULL, xlim = xlimDelta, ylim = ylimDelta,
-               xlab = xlabs[6], ylab = ylabs[6], xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, ...)
+               xlab = xlabs[6], ylab = ylabs[6], xaxt = xaxt, yaxt = yaxt, xylabPos = xylabPos, ...)
   }
 
   # delta/delta errors
   if (showFig[7] & !is.null(x$deltaErrors)) {
     plot_delta(resTh = x, figType = "deltaErrors", labels = NULL, xlim = xlimDelta, ylim = ylimDelta,
-               xlab = xlabs[7], ylab = ylabs[7], xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, ...)
+               xlab = xlabs[7], ylab = ylabs[7], xaxt = xaxt, yaxt = yaxt, xylabPos = xylabPos, ...)
   }
 
   # deltaER
   if (showFig[8]) {
     plot_delta_er(resTh = x, labels = NULL, xlim = xlimDelta, ylim = ylimDelta,
-               xlab = xlabs[8], ylab = ylabs[8], xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, ...)
+               xlab = xlabs[8], ylab = ylabs[8], xaxt = xaxt, yaxt = yaxt, xylabPos = xylabPos, ...)
   }
 
   # rtCorrect
   if (showFig[9]) {
     plot_beh(resTh = x, figType = "rtcorrect", xlabs = labels, ylab = ylabs[9],
-             ylim = ylimRt, xaxt = "n", yaxt = yaxts, xylabPos = xylabPos, ...)
+             ylim = ylimRt, xaxt = "n", yaxt = yaxt, xylabPos = xylabPos, ...)
     if (errorBars) addErrorBars(c(1, 2), x$summary$rtCor, x$summary$sdRtCor)
   }
 
   # error rate
   if (showFig[10]) {
     plot_beh(resTh = x, figType = "errorrate", xlabs = labels, ylab = ylabs[10],
-             ylim = ylimErr, xaxt = "n", yaxt = yaxts, xylabPos = xylabPos, ...)
+             ylim = ylimErr, xaxt = "n", yaxt = yaxt, xylabPos = xylabPos, ...)
   }
 
   # rtError
   if (showFig[11]) {
     plot_beh(resTh = x, figType = "rterrors", xlabs = labels, ylab = ylabs[11],
-             ylim = ylimRt, xaxt = "n", yaxt = yaxts, xylabPos = xylabPos, ...)
+             ylim = ylimRt, xaxt = "n", yaxt = yaxt, xylabPos = xylabPos, ...)
     if (errorBars) addErrorBars(c(1, 2), x$summary$rtErr, x$summary$sdRtErr)
   }
 
@@ -472,8 +472,8 @@ plot.dmcob <- function(x,
   }
 
   # xaxts and yaxts
-  xaxts <- ifelse(xaxts, "s", "n")
-  yaxts <- ifelse(yaxts, "s", "n")
+  xaxt <- ifelse(xaxts, "s", "n")
+  yaxt <- ifelse(yaxts, "s", "n")
 
   showFig <- rep(FALSE, 8)
   if (figType == "summary") {
@@ -493,35 +493,35 @@ plot.dmcob <- function(x,
   # rtCorrect
   if (showFig[1]) {
     plot_beh(resOb = x, figType = "rtcorrect", xlabs = labels, ylab = ylabs[1], ylim = ylimRt,
-             xaxt = "n", yaxt = yaxts, xylabPos = xylabPos, ...)
+             xaxt = "n", yaxt = yaxt, xylabPos = xylabPos, ...)
     if (errorBars) addErrorBars(c(1, 2), x$summary$rtCor, x$summary[[paste0(errorBarType, "RtCor")]])
   }
 
   # errorRate
   if (showFig[2]) {
     plot_beh(resOb = x, figType = "errorrate", xlabs = labels, ylab = ylabs[2], ylim = ylimErr,
-             xaxt = "n", yaxt = yaxts, xylabPos = xylabPos, ...)
+             xaxt = "n", yaxt = yaxt, xylabPos = xylabPos, ...)
     if (errorBars) addErrorBars(c(1, 2), x$summary$perErr, x$summary[[paste0(errorBarType, "PerErr")]])
   }
 
   # rtError
   if (showFig[3]) {
     plot_beh(resOb = x, figType = "rterrors", xlabs = labels, ylab = ylabs[3], ylim = ylimErr,
-             xaxt = "n", yaxt = yaxts, xylabPos = xylabPos, ...)
+             xaxt = "n", yaxt = yaxt, xylabPos = xylabPos, ...)
     if (errorBars) addErrorBars(c(1, 2), x$summary$rtErr, x$summary[[paste0(errorBarType, "RtErr")]])
   }
 
   # CDF
   if (showFig[4]) {
     plot_cdf(resOb = x, labels = labels, cols = cols, xlab = xlabs[4], ylab = ylabs[4], xlim = xlimCDF,
-             xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos,
+             xaxt = xaxt, yaxt = yaxt, xylabPos = xylabPos,
              legend = legend, legend.parameters = list(cex = ifelse(figType == "summary1", 0.75, 1)), ...)
   }
 
   # CAF
   if (showFig[5]) {
     plot_caf(resOb = x, labels = labels, cols = cols, xlab = xlabs[5], ylab = ylabs[5], ylim = ylimCAF,
-             xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, cafBinLabels = cafBinLabels,
+             xaxt = xaxt, yaxt = yaxt, xylabPos = xylabPos, cafBinLabels = cafBinLabels,
              legend = legend, ...)
   }
 
@@ -529,7 +529,7 @@ plot.dmcob <- function(x,
   if (showFig[6]) {
     plot_delta(resOb = x, figType = "delta", xlim = xlimDelta, ylim = ylimDelta,
                xlab = xlabs[6], ylab = ylabs[6],
-               xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, ...)
+               xaxt = xaxt, yaxt = yaxt, xylabPos = xylabPos, ...)
     if (errorBars) {
       ebc   <- which(grepl(errorBarType, colnames(x$delta)))
       xdata <- x$delta$meanBin
@@ -542,7 +542,7 @@ plot.dmcob <- function(x,
   if (showFig[7]) {
     plot_delta(resOb = x, figType = "deltaErrors", xlim = xlimDelta, ylim = ylimDelta,
                xlab = xlabs[7], ylab = ylabs[7],
-               xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, ...)
+               xaxt = xaxt, yaxt = yaxt, xylabPos = xylabPos, ...)
     if (errorBars) {
       ebc   <- which(grepl(errorBarType, colnames(x$deltaErrors)))
       xdata <- x$deltaErrors$meanBin
@@ -554,7 +554,7 @@ plot.dmcob <- function(x,
   # deltaER
   if (showFig[8]) {
     plot_delta_er(resOb = x, xlim = xlimDelta, ylim = ylimDelta, xlab = xlabs[8], ylab = ylabs[8],
-                  xaxt = xaxts, yaxt = yaxts, xylabPos = xylabPos, ...)
+                  xaxt = xaxt, yaxt = yaxt, xylabPos = xylabPos, ...)
     if (errorBars) {
       ebc   <- which(grepl(errorBarType, colnames(x$caf)))
       xdata <- x$caf$meanBin
@@ -698,8 +698,8 @@ plot.dmcobs <- function(x,
   }
 
   # xaxts and yaxts
-  xaxts <- ifelse(xaxts, "s", "n")
-  yaxts <- ifelse(yaxts, "s", "n")
+  xaxt <- ifelse(xaxts, "s", "n")
+  yaxt <- ifelse(yaxts, "s", "n")
 
   if (figType == "all") {
     par(mar = c(4, 4, 1, 1), mfrow = c(1, 1), ...)
@@ -801,11 +801,11 @@ plot.dmcobs <- function(x,
     plot(NULL, NULL,
          ylim = c(0, 1), xlim = xlimCDF,
          ylab = "", xlab = "",
-         xaxt = xaxts, yaxt = "n", ...)
+         xaxt = xaxt, yaxt = "n", ...)
     title(xlab = xlabs[4], line = xylabPos)
     title(ylab = ylabs[4], line = xylabPos)
-    if (xaxts == "n") axis(side = 1, labels = FALSE)  # keep tick marks
-    if (yaxts == "n") {
+    if (xaxt == "n") axis(side = 1, labels = FALSE)  # keep tick marks
+    if (yaxt == "n") {
       axis(side = 2, labels = FALSE)  # keep tick marks
     } else if (yaxts ==  "s") {
       axis(2, at = seq(0, 1, 0.25), labels = as.character(seq(0, 1, 0.25)))
@@ -818,7 +818,7 @@ plot.dmcobs <- function(x,
             ylim = c(0, 1), xlim = c(200, 1000),
             ylab = ylabs[4], xlab = xlabs[4],
             col = tail(cols, 2)[1], lty = ltys[i], pch = pchs[i],
-            xaxt = xaxts, yaxt = "n", ...)
+            xaxt = xaxt, yaxt = "n", ...)
       lines(x[[i]]$delta$meanIncomp, ypoints, type = "o", col = tail(cols, 2)[2], ...)
     }
 
@@ -847,7 +847,7 @@ plot.dmcobs <- function(x,
     title(ylab = ylabs[5], line = xylabPos)
     if (xaxts == "n") {
       axis(side = 1, labels = FALSE)  # keep tick marks
-    } else if (xaxts == "s" | cafBinLabels) {
+    } else if (xaxt == "s" | cafBinLabels) {
       if (cafBinLabels) {
         stepCAF <- 100 / nCAF
         cafLabels <- paste0(paste(seq(0, 100 - stepCAF, stepCAF), seq(stepCAF, 100, stepCAF), sep = "-"), "%")
@@ -859,9 +859,9 @@ plot.dmcobs <- function(x,
       axis(side = 1, labels = FALSE)
     }
 
-    if (yaxts == "n") {
+    if (yaxt == "n") {
       axis(side = 2, labels = FALSE)  # keep tick marks
-    } else if (yaxts == "s") {
+    } else if (yaxt == "s") {
       axis(2, at = seq(0, 1, 0.2), labels = as.character(seq(0, 1, 0.2)), ...)
     }
 
@@ -897,7 +897,7 @@ plot.dmcobs <- function(x,
     plot(NULL, NULL,
          ylim = ylimDelta, xlim = xlimDelta,
          ylab = "", xlab = "",
-         xaxt = xaxts, yaxt = yaxts, ...)
+         xaxt = xaxt, yaxt = yaxt, ...)
     title(xlab = xlabs[6], line = xylabPos)
     title(ylab = ylabs[6], line = xylabPos)
     axis(side = 1, labels = FALSE)
@@ -941,7 +941,7 @@ plot.dmcobs <- function(x,
     plot(NULL, NULL,
          ylim = ylimDelta, xlim = xlimDelta,
          ylab = "", xlab = "",
-         xaxt = xaxts, yaxt = yaxts, ...)
+         xaxt = xaxt, yaxt = yaxt, ...)
     title(xlab = xlabs[7], line = xylabPos)
     title(ylab = ylabs[7], line = xylabPos)
     axis(side = 1, labels = FALSE)
@@ -985,7 +985,7 @@ plot.dmcobs <- function(x,
     plot(NULL, NULL,
          ylim = ylimDelta, xlim = xlimDelta,
          ylab = "", xlab = "",
-         xaxt = xaxts, yaxt = yaxts, ...)
+         xaxt = xaxt, yaxt = yaxt, ...)
     title(xlab = xlabs[8], line = xylabPos)
     title(ylab = ylabs[8], line = xylabPos)
     axis(side = 1, labels = FALSE)
@@ -1119,8 +1119,8 @@ plot.dmcfit <- function(x,
   }
 
   # xaxts and yaxts
-  xaxts <- ifelse(xaxts, "s", "n")
-  yaxts <- ifelse(yaxts, "s", "n")
+  xaxt <- ifelse(xaxts, "s", "n")
+  yaxt <- ifelse(yaxts, "s", "n")
 
   showFig <- rep(FALSE, 8)
   if (figType == "summary") {
@@ -1173,7 +1173,7 @@ plot.dmcfit <- function(x,
   # delta
   if (showFig[6]) {
     plot_delta(resTh = x, resOb = y, figType = "delta", xlim = xlimDelta, ylim = ylimDelta,
-               xlab = xlabs[6], ylab = ylabs[6], xaxt = xaxts, yaxt = yaxts, labels = labels[3:4],
+               xlab = xlabs[6], ylab = ylabs[6], xaxt = xaxt, yaxt = yaxt, labels = labels[3:4],
                xylabPos = xylabPos,
                legend = legend, legend.parameters = list(cex = ifelse(figType == "summary", 0.75, 1)), ...)
   }
@@ -1181,7 +1181,7 @@ plot.dmcfit <- function(x,
   # deltaErrors
   if (showFig[7] & !is.null(x$deltaErrors)) {
     plot_delta(resTh = x, resOb = y, figType = "deltaErrors", xlim = xlimDelta, ylim = ylimDelta,
-               xlab = xlabs[7], ylab = ylabs[7], xaxt = xaxts, yaxt = yaxts, labels = labels[3:4],
+               xlab = xlabs[7], ylab = ylabs[7], xaxt = xaxt, yaxt = yaxt, labels = labels[3:4],
                xylabPos = xylabPos,
                legend = legend, legend.parameters = list(cex = ifelse(figType == "summary", 0.75, 1)), ...)
   }
@@ -1189,7 +1189,7 @@ plot.dmcfit <- function(x,
   # deltaER
   if (showFig[8]) {
     plot_delta_er(resTh = x, resOb = y, xlim = xlimDelta, ylim = ylimDelta,
-                  xlab = xlabs[8], ylab = ylabs[8], xaxt = xaxts, yaxt = yaxts, labels = labels[3:4],
+                  xlab = xlabs[8], ylab = ylabs[8], xaxt = xaxt, yaxt = yaxt, labels = labels[3:4],
                   xylabPos = xylabPos,
                   legend = legend, legend.parameters = list(cex = ifelse(figType == "summary", 0.75, 1)), ...)
   }
@@ -1859,8 +1859,8 @@ plot_caf <- function(
     xlab = "RT Bin",
     ylab = "CAF",
     ylim = NULL,
-    xaxts = "s",
-    yaxts = "s",
+    xaxt = "s",
+    yaxt = "s",
     xylabPos = 2,
     cafBinLabels = FALSE,
     legend = TRUE,
@@ -1908,9 +1908,9 @@ plot_caf <- function(
     lines(datThIncomp, type = types[2], col = cols[2], ...)
   }
 
-  if (xaxts == "n") {
+  if (xaxt == "n") {
     axis(side = 1, labels = FALSE)  # keep tick marks
-  } else if (xaxts == "s" | cafBinLabels) {
+  } else if (xaxt == "s" | cafBinLabels) {
     if (cafBinLabels) {
       stepCAF <- 100 / nCAF
       cafLabels <- paste0(paste(seq(0, 100 - stepCAF, stepCAF), seq(stepCAF, 100, stepCAF), sep = "-"), "%")
@@ -1922,9 +1922,9 @@ plot_caf <- function(
     axis(side = 1, labels = F)
   }
 
-  if (yaxts == "n") {
+  if (yaxt == "n") {
     axis(side = 2, labels = FALSE)  # keep tick marks
-  } else if (yaxts == "s") {
+  } else if (yaxt == "s") {
     axis(2, at = seq(ylim[1], ylim[2], 0.2), labels = as.character(seq(ylim[1], ylim[2], 0.2)))
   }
 
@@ -1958,8 +1958,8 @@ plot_delta <- function(
     ylim = NULL,
     xlab = "Time [ms]",
     ylab = "Delta [ms]",
-    xaxts = "s",
-    yaxts = "s",
+    xaxt = "s",
+    yaxt = "s",
     xylabPos = 2,
     legend = TRUE,
     legend.parameters = list(),
@@ -2011,7 +2011,7 @@ plot_delta <- function(
   plot(NULL, NULL,
        ylim = ylim, xlim = xlim,
        ylab = "",  xlab = "",
-       xaxt = xaxts, yaxt = yaxts, ...)
+       xaxt = xaxt, yaxt = yaxt, ...)
   title(xlab = xlab, ylab = ylab, line = xylabPos)
   axis(side = 1, labels = FALSE)
   axis(side = 2, labels = FALSE)
@@ -2040,8 +2040,8 @@ plot_delta_er <- function(
     ylim = NULL,
     xlab = "Time [ms]",
     ylab = "Delta [%]",
-    xaxts = "s",
-    yaxts = "s",
+    xaxt = "s",
+    yaxt = "s",
     xylabPos = 2,
     legend = TRUE,
     legend.parameters = list(),
@@ -2081,7 +2081,7 @@ plot_delta_er <- function(
   plot(NULL, NULL,
        ylim = ylim, xlim = xlim,
        ylab = "",  xlab = "",
-       xaxt = xaxts, yaxt = yaxts, ...)
+       xaxt = xaxt, yaxt = yaxt, ...)
   title(xlab = xlab, ylab = ylab, line = xylabPos)
   axis(side = 1, labels = FALSE)
   axis(side = 2, labels = FALSE)
