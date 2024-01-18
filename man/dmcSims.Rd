@@ -27,6 +27,7 @@ dmc <- dmcSims(params)
 plot(dmc[[1]]) # full combination 1
 plot(dmc) # delta plots for all combinations
 plot(dmc[c(1:3)]) # delta plots for specific combinations
+plot(dmc[c(1, 3)]) # delta plots for specific combinations
 
 # Example 2
 params <- list(amp = seq(10, 20, 5), tau = seq(20, 40, 20), bnds = seq(50, 100, 25))
