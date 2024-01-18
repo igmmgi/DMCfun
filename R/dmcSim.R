@@ -214,6 +214,7 @@ dmcSim <- function(amp = 20,
 #' plot(dmc[[1]]) # full combination 1
 #' plot(dmc) # delta plots for all combinations
 #' plot(dmc[c(1:3)]) # delta plots for specific combinations
+#' plot(dmc[c(1, 3)]) # delta plots for specific combinations
 #'
 #' # Example 2
 #' params <- list(amp = seq(10, 20, 5), tau = seq(20, 40, 20), bnds = seq(50, 100, 25))
@@ -225,12 +226,9 @@ dmcSim <- function(amp = 20,
 #'
 #' @export
 dmcSims <- function(params, printInputArgs = FALSE, printResults = FALSE) {
-  params <- expand.grid(params)
+  params  <- expand.grid(params)
   uparams <- params
-  if (ncol(params) > 1) {
-    uparams <- params[, lengths(lapply(params, unique)) != 1, drop = FALSE]
-  }
-  params <- setNames(split(params, seq(nrow(params))), rownames(params))
+  params  <- setNames(split(params, seq(nrow(params))), rownames(params))
 
   dmc <- vector("list", length(params))
   for (i in seq_along(params)) {
@@ -240,8 +238,8 @@ dmcSims <- function(params, printInputArgs = FALSE, printResults = FALSE) {
     dmcInputs$printInputArgs <- printInputArgs
     dmcInputs$printResults <- printResults
 
-    dmc[[i]] <- do.call(dmcSim, dmcInputs)
-    dmc[[i]]$params <- uparams
+    dmc[[i]]        <- do.call(dmcSim, dmcInputs)
+    dmc[[i]]$params <- params[[i]][lengths(lapply(uparams, unique)) != 1]
   }
 
   class(dmc) <- "dmclist"

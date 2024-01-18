@@ -318,7 +318,7 @@ plot.dmclist <- function(x,
     if (is.null(legend.parameters$legend)) {
       legendLabels <- NULL
       for (i in seq_along(x)) {
-        legendLabels <- c(NULL, legendLabels, paste0(names(x[[i]]$params), "=", x[[1]]$params[i, ], collapse = ", "))
+        legendLabels <- c(NULL, legendLabels, paste0(names(x[[i]]$params), "=", x[[i]]$params, collapse = ", "))
       }
     }
     delfault_legend.parameters <- list(legend = legendLabels, x = "topleft", col = cols,
