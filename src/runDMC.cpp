@@ -84,12 +84,12 @@ void run_dmc_sim_ci(
 
   // boundary
   std::vector<double> bnds(p.tmax, p.bnds);
-  //if (p.bndsRate != 0)
   boundary(p, bnds);
 
   // run simulation and store rts for correct/incorrect trials
   if (p.fullData) {
-    run_simulation(p, activation_sum, trl_mat, u_vec, sp, dr, bnds, rts, errs, slows, rng);
+    run_simulation(p, activation_sum, trl_mat, u_vec, sp, dr, bnds, rts, errs,
+                   slows, rng);
     trials[comp] = trl_mat;
   } else {
     run_simulation(p, u_vec, sp, dr, bnds, rts, errs, slows, rng);
@@ -109,6 +109,7 @@ void run_dmc_sim_ci(
         calculate_percentile(p.vDelta, errs, p.tDelta);
   }
   rsum["caf_" + comp] = calculate_caf(rts, errs, p.nCAF);
+  rts.insert(rts.end(), errs.begin(), errs.end());
   rsum["caf_rt_" + comp] = calculate_percentile(p.vCAF, rts, 2);
   m.unlock();
 }
@@ -119,7 +120,8 @@ void variable_drift_rate(Prms &p, std::vector<double> &dr, RNG &rng) {
     for (auto &i : dr)
       i = bdDR(rng) * (p.drLimHigh - p.drLimLow) + p.drLimLow;
   } else if (p.drDist == 2) {
-    boost::random::uniform_real_distribution<double> unDR(p.drLimLow, p.drLimHigh);
+    boost::random::uniform_real_distribution<double> unDR(p.drLimLow,
+                                                          p.drLimHigh);
     for (auto &i : dr)
       i = unDR(rng);
   }
@@ -131,20 +133,21 @@ void variable_starting_point(Prms &p, std::vector<double> &sp, RNG &rng) {
     for (auto &i : sp)
       i = (bdSP(rng) * (p.spLimHigh - p.spLimLow) + p.spLimLow) + p.spBias;
   } else if (p.spDist == 2) {
-    boost::random::uniform_real_distribution<double> unSP(p.spLimLow, p.spLimHigh);
+    boost::random::uniform_real_distribution<double> unSP(p.spLimLow,
+                                                          p.spLimHigh);
     for (auto &i : sp)
       i = unSP(rng) + p.spBias;
   }
 }
 
-
 void boundary(Prms &p, std::vector<double> &bnds) {
   for (unsigned int i = 0; i < p.tmax; i++) {
-    bnds[i] = bnds[i] * (1-(p.bndsRate * (i/(i+p.bndsSaturation))));
+    bnds[i] = bnds[i] * (1 - (p.bndsRate * (i / (i + p.bndsSaturation))));
   }
 }
 
-void residual_rt(Prms &p, std::vector<double> &residual_distribution, RNG &rng) {
+void residual_rt(Prms &p, std::vector<double> &residual_distribution,
+                 RNG &rng) {
   if (p.resDist == 1) {
     // Standard normal distribution with mean + sd (NB make sure no -ve)
     boost::random::normal_distribution<double> dist(p.resMean, p.resSD);
@@ -153,7 +156,8 @@ void residual_rt(Prms &p, std::vector<double> &residual_distribution, RNG &rng) 
   } else if (p.resDist == 2) {
     // Standard uniform distribution with mean + sd
     double range = std::max(0.01, sqrt((p.resSD * p.resSD / (1.0 / 12.0))) / 2);
-    boost::random::uniform_real_distribution<double> dist(p.resMean - range, p.resMean + range);
+    boost::random::uniform_real_distribution<double> dist(p.resMean - range,
+                                                          p.resMean + range);
     for (auto &i : residual_distribution)
       i = std::max(0.0, dist(rng));
   }
@@ -161,9 +165,9 @@ void residual_rt(Prms &p, std::vector<double> &residual_distribution, RNG &rng) 
 
 void run_simulation(Prms &p, std::vector<double> &u_vec,
                     std::vector<double> &sp, std::vector<double> &dr,
-                    std::vector<double> &bnds,
-                    std::vector<double> &rts, std::vector<double> &errs,
-                    std::vector<double> &slows, RNG rng) {
+                    std::vector<double> &bnds, std::vector<double> &rts,
+                    std::vector<double> &errs, std::vector<double> &slows,
+                    RNG rng) {
 
   boost::random::normal_distribution<double> snd(0.0, 1.0);
 
@@ -180,7 +184,8 @@ void run_simulation(Prms &p, std::vector<double> &u_vec,
       if (i >= p.drOnset)
         activation_trial += dr[trl];
       if (activation_trial > bnds[i]) {
-        value = (i + residual_distribution[trl] + 1) - p.drOnset; // RT measured from onset of relevant dimension!
+        value = (i + residual_distribution[trl] + 1) -
+                p.drOnset; // RT measured from onset of relevant dimension!
         (value < p.rtMax ? rts : slows).push_back(value);
         break;
       } else if (activation_trial < -bnds[i]) {
@@ -195,11 +200,9 @@ void run_simulation(Prms &p, std::vector<double> &u_vec,
 void run_simulation(Prms &p, std::vector<double> &activation_sum,
                     std::vector<std::vector<double>> &trial_matrix,
                     std::vector<double> &u_vec, std::vector<double> &sp,
-                    std::vector<double> &dr,
-                    std::vector<double> &bnds,
-                    std::vector<double> &rts,
-                    std::vector<double> &errs, std::vector<double> &slows,
-                    RNG rng) {
+                    std::vector<double> &dr, std::vector<double> &bnds,
+                    std::vector<double> &rts, std::vector<double> &errs,
+                    std::vector<double> &slows, RNG rng) {
 
   boost::random::normal_distribution<double> snd(0.0, 1.0);
 
@@ -324,7 +327,6 @@ std::vector<double> calculate_caf(std::vector<double> &rts,
 
     std::vector<std::pair<double, bool>> comb;
     comb.reserve(rts.size() + errs.size());
-
     for (double &rt : rts)
       comb.emplace_back(std::make_pair(rt, false));
     for (double &err : errs)
