@@ -387,7 +387,7 @@ dmcFit <- function(resOb,
 #' @param bndsSaturation bndsSaturation
 #' @param rtMax The limit on simulated RT (decision + non-decisional components)
 #' @param spDist The starting point distribution (0 = constant, 1 = beta, 2 = uniform)
-#' @param drOnset The starting point of controlled drift rate (i.e., "target" information) relative to automatic ("distractor" incormation) (> 0 ms)
+#' @param drOnset The starting point of controlled drift rate (i.e., "target" information) relative to automatic ("distractor" information) (> 0 ms)
 #' @param drDist The drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)
 #' @param drShape The drift rate (dr) shape parameter
 #' @param drLim The drift rate (dr) range
@@ -1245,8 +1245,8 @@ calculateBinProbabilities <- function(resOb, quantileType = 5) {
   # https://www.tidyverse.org/blog/2023/02/dplyr-1-1-0-pick-reframe-arrange/
   if (packageVersion("dplyr") >= "1.1.0") {
     resOb$probSubject <- resOb$data %>%
-      dplyr::group_by(Subject, Comp, Error) %>%
       dplyr::filter(outlier == 0) %>%
+      dplyr::group_by(Subject, Comp, Error) %>%
       dplyr::reframe(
         nTrials  = n(),
         prob     = probs,
