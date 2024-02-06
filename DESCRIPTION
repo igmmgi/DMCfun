@@ -2,7 +2,7 @@ Package: DMCfun
 Type: Package
 Title: Diffusion Model of Conflict (DMC) in Reaction Time Tasks
 Version: 3.5.4
-Date: 2024-01-22
+Date: 2024-02-06
 Authors@R: c(
     person(given = "Ian G.", family = "Mackenzie", email="ian.mackenzie@uni-tuebingen.de", role = c("cre", "aut")),
     person(given = "Carolin", family = "Dudschig", email="carolin.dudschig@uni-tuebingen.de", role = c("aut"))
@@ -38,5 +38,5 @@ Suggests:
   shiny,
   testthat
 LinkingTo: Rcpp, BH
-RoxygenNote: 7.3.0
+RoxygenNote: 7.3.1
 LazyData: true
