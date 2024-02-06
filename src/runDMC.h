@@ -7,6 +7,7 @@
 
 typedef boost::random::mt19937_64 RNG;
 
+
 void run_dmc_sim(
     Prms &p,
     std::map<std::string, std::vector<double>> &rsum,
@@ -15,18 +16,22 @@ void run_dmc_sim(
   );
 
 void run_dmc_sim_ci(
-    Prms &p,
+    const Prms &p,
     std::map<std::string, std::vector<double>> &rsum,
     std::map<std::string, std::vector<double>> &rsim,
     std::map<std::string, std::vector<std::vector<double>>> &trials,
-    std::string comp, int sign
+    const std::string comp,
+    const int sign
   );
 
+const std::vector<double> automatic_activation(const Prms &p);
+const std::vector<double> time_dependent_drift(const Prms &p, int sign, std::vector<double> &automatic_activation);
+
 std::vector<double> calculate_summary(
-    std::vector<double> &rts,
-    std::vector<double> &errs,
-    std::vector<double> &slows,
-    unsigned long nTrl
+    const std::vector<double> &rts,
+    const std::vector<double> &errs,
+    const std::vector<double> &slows,
+    const unsigned long nTrl
   );
 
 std::vector<double> calculate_percentile(
@@ -37,28 +42,25 @@ std::vector<double> calculate_percentile(
 
 void calculate_delta(std::map<std::string, std::vector<double>> &rdelta);
 
-void variable_drift_rate(Prms &p, std::vector<double> &dr, RNG &rng);
-
-void variable_starting_point(Prms &p, std::vector<double> &sp, RNG &rng);
-
-void boundary(Prms &p, std::vector<double> &bnds);
-
-void residual_rt(Prms &p, std::vector<double> &residual_distribution, RNG &rng);
+const std::vector<double> drift_rate(const Prms &p, RNG &rng);
+const std::vector<double> starting_point(const Prms &p, RNG &rng);
+const std::vector<double> boundary(const Prms &p);
+const std::vector<double> residual_rt(const Prms &p,  RNG &rng);
 
 std::vector<double> calculate_caf(
-    std::vector<double> &rts,
-    std::vector<double> &errs,
-    int nBins
+    const std::vector<double> &rts,
+    const std::vector<double> &errs,
+    const int nBins
   );
 
 void run_simulation(
-    Prms &p,
+    const Prms &p,
     std::vector<double> &activation_sum,
     std::vector<std::vector<double>> &trial_matrix,
-    std::vector<double> &u_vec,
-    std::vector<double> &sp,
-    std::vector<double> &dr,
-    std::vector<double> &bnds,
+    const std::vector<double> &u_vec,
+    const std::vector<double> &sp,
+    const std::vector<double> &dr,
+    const std::vector<double> &bnds,
     std::vector<double> &rts,
     std::vector<double> &errs,
     std::vector<double> &slows,
@@ -66,11 +68,11 @@ void run_simulation(
   );
 
 void run_simulation(
-    Prms &p,
-    std::vector<double> &u_vec,
-    std::vector<double> &sp,
-    std::vector<double> &dr,
-    std::vector<double> &bnds,
+    const Prms &p,
+    const std::vector<double> &u_vec,
+    const std::vector<double> &sp,
+    const std::vector<double> &dr,
+    const std::vector<double> &bnds,
     std::vector<double> &rts,
     std::vector<double> &errs,
     std::vector<double> &slows,
