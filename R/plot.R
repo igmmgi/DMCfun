@@ -1104,7 +1104,7 @@ plot.dmcfit <- function(x,
     xlabs             <- rep("", 8)
     xlabs[c(1, 2)]    <- c(labels[1], labels[2])
     xlabs[c(4, 6, 7)] <- c("Time [ms]")
-    xlabs[c(5)]    <- c("RT Bin")
+    xlabs[c(5)]       <- c("RT Bin")
   } else {
     xlabs <- rep("", 8)
   }
@@ -1141,32 +1141,32 @@ plot.dmcfit <- function(x,
   if (showFig[1]) {
     plot_beh(resTh = x, resOb = y, figType = "rtcorrect", xlabs = labels[1:2],
              ylab = ylabs[1], ylim = ylimRt,  xylabPos = xylabPos,
-             legend = legend, legend.parameters = list(legend = labels[3:4]))
+             legend = legend, legend.parameters = list(legend = labels[3:4]), ...)
   }
 
   # errorRate
   if (showFig[2]) {
     plot_beh(resTh = x, resOb = y, figType = "errorrate", xlabs = labels[1:2],
              ylab = ylabs[2], ylim = ylimRt, xylabPos = xylabPos,
-             legend = legend, legend.parameters = list(legend = labels[3:4]))
+             legend = legend, legend.parameters = list(legend = labels[3:4]), ...)
   }
 
   # rt Error
   if (showFig[3]) {
     plot_beh(resTh = x, resOb = y, figType = "rterrors", xlabs = labels[1:2],
              ylab = ylabs[3], ylim = ylimRt, xylabPos = xylabPos,
-             legend = legend, legend.parameters = list(legend = labels[3:4]))
+             legend = legend, legend.parameters = list(legend = labels[3:4]), ...)
   }
 
   # CDF
   if (showFig[4]) {
-    plot_cdf(resTh = x, resOb = y, labels = labels, cols = cols, xlab = xlabs[4], ylab = ylabs[4], xlim = xlimCDF, xylabPos = xylabPos,
+    plot_cdf(resTh = x, resOb = y, labels = labels, cols = cols, xlab = xlabs[4], ylab = ylabs[4], xaxt = xaxt, yaxt = yaxt, xlim = xlimCDF, xylabPos = xylabPos,
              legend = legend, legend.parameters = list(cex = ifelse(figType == "summary", 0.75, 1)), ...)
   }
 
   # CAF
   if (showFig[5]) {
-    plot_caf(resTh = x, resOb = y, labels = labels, cols = cols, xlab = xlabs[5], ylab = ylabs[5], ylim = ylimCAF, xylabPos = xylabPos,
+    plot_caf(resTh = x, resOb = y, labels = labels, cols = cols, xlab = xlabs[5], ylab = ylabs[5], xaxt = xaxt, yaxt = yaxt, ylim = ylimCAF, xylabPos = xylabPos,
              legend = legend, legend.parameters = list(cex = ifelse(figType == "summary", 0.75, 1)), ...)
   }
 
@@ -1811,8 +1811,8 @@ plot_cdf <- function(
   plot(NULL, NULL,
        ylab = "", xlab = "",
        ylim = c(0, 1), xlim = xlim,
-       xaxt = xaxt, yaxt = "n")
-  title(xlab = xlab, ylab = ylab, line = xylabPos)
+       xaxt = xaxt, yaxt = "n", ...)
+  title(xlab = xlab, ylab = ylab, line = xylabPos, ...)
 
   if (!is.null(datThCompX)) {
     lines(datThCompX,   datThCompY,   type = types[1], col = cols[1], ...)
@@ -1824,9 +1824,9 @@ plot_cdf <- function(
     lines(datObIncompX, datObIncompY, type = types[2], col = cols[2], ...)
   }
 
-  if (xaxt == "n") axis(side = 1, labels = FALSE)  # keep tick marks
-  if (yaxt == "n") axis(side = 2, labels = FALSE)  # keep tick marks
-  if (yaxt == "s") axis(side = 2, at = seq(0, 1, 0.5), labels = as.character(seq(0, 1, 0.5)))
+  if (xaxt == "n") axis(side = 1, labels = FALSE, ...)  # keep tick marks
+  if (yaxt == "n") axis(side = 2, labels = FALSE, ...)  # keep tick marks
+  if (yaxt == "s") axis(side = 2, at = seq(0, 1, 0.5), labels = as.character(seq(0, 1, 0.5)), ...)
 
   abline(h = c(0, 1), col = "darkgrey", lty = 2, xpd = FALSE);
 
@@ -1897,7 +1897,7 @@ plot_caf <- function(
        ylab = "",  xlab = "",
        xaxt = "n",  yaxt = "n",
        col = cols[1], ...)
-  title(xlab = xlab, ylab = ylab, line = xylabPos)
+  title(xlab = xlab, ylab = ylab, line = xylabPos, ...)
 
   if (!is.null(datObComp)) {
     lines(datObComp,   type = types[1], col = cols[1], ...)
@@ -1914,18 +1914,18 @@ plot_caf <- function(
     if (cafBinLabels) {
       stepCAF <- 100 / nCAF
       cafLabels <- paste0(paste(seq(0, 100 - stepCAF, stepCAF), seq(stepCAF, 100, stepCAF), sep = "-"), "%")
-      axis(1, at = seq(1, nCAF, 1), labels = cafLabels)
+      axis(1, at = seq(1, nCAF, 1), labels = cafLabels, ...)
     } else {
-      axis(1, at = seq(1, nCAF, 1))
+      axis(1, at = seq(1, nCAF, 1), ...)
     }
   } else {
-    axis(side = 1, labels = F)
+    axis(side = 1, labels = F, ...)
   }
 
   if (yaxt == "n") {
-    axis(side = 2, labels = FALSE)  # keep tick marks
+    axis(side = 2, labels = FALSE, ...)  # keep tick marks
   } else if (yaxt == "s") {
-    axis(2, at = seq(ylim[1], ylim[2], 0.2), labels = as.character(seq(ylim[1], ylim[2], 0.2)))
+    axis(2, at = seq(ylim[1], ylim[2], 0.2), labels = as.character(seq(ylim[1], ylim[2], 0.2)), ...)
   }
 
   if (legend) {
@@ -2012,9 +2012,9 @@ plot_delta <- function(
        ylim = ylim, xlim = xlim,
        ylab = "",  xlab = "",
        xaxt = xaxt, yaxt = yaxt, ...)
-  title(xlab = xlab, ylab = ylab, line = xylabPos)
-  axis(side = 1, labels = FALSE)
-  axis(side = 2, labels = FALSE)
+  title(xlab = xlab, ylab = ylab, line = xylabPos, ...)
+  axis(side = 1, labels = FALSE,)
+  axis(side = 2, labels = FALSE,)
 
   if (!is.null(datThX)) {
     lines(datThX, datThY, type = types[2], ...)
@@ -2082,9 +2082,9 @@ plot_delta_er <- function(
        ylim = ylim, xlim = xlim,
        ylab = "",  xlab = "",
        xaxt = xaxt, yaxt = yaxt, ...)
-  title(xlab = xlab, ylab = ylab, line = xylabPos)
-  axis(side = 1, labels = FALSE)
-  axis(side = 2, labels = FALSE)
+  title(xlab = xlab, ylab = ylab, line = xylabPos, ...)
+  axis(side = 1, labels = FALSE, ...)
+  axis(side = 2, labels = FALSE, ...)
 
   if (!is.null(datThX)) {
     lines(datThX, datThY, type = types[2], ...)
@@ -2158,8 +2158,8 @@ plot_beh <- function(
        ylab = "", xlab = "",
        xaxt = "n",  yaxt = yaxt, ...)
   title(ylab = ylab, line = xylabPos)
-  axis(1, at = c(1, 2), labels = xlabs)
-  axis(2, labels = FALSE)
+  axis(1, at = c(1, 2), labels = xlabs, ...)
+  axis(2, labels = FALSE, ...)
 
   ltys <- c(1, 2)
   pchs <- c(1, 1)
@@ -2211,14 +2211,14 @@ plot_distribution <- function(
   hist(comp_correct,
        xlim = xlim, ylim = c(0, y),
        xaxt = "n", col = scales::alpha(cols[1], .5), border = FALSE,
-       breaks = 100, main = "", yaxt = "n", xlab = "", ylab = "")
+       breaks = 100, main = "", yaxt = "n", xlab = "", ylab = "", ...)
   abline(v = mean(comp_correct), col = cols[1], lwd = 2, xpd = FALSE)
   legend("topright", labels, fill = cols, bty = "n", cex = 2)
 
   hist(incomp_correct,  add = TRUE,
        xlim = xlim, ylim = c(0, y),
        xaxt = "n", col = scales::alpha(cols[2], .5),
-       border = FALSE, breaks = 100, main = "", xlab = "", ylab = "")
+       border = FALSE, breaks = 100, main = "", xlab = "", ylab = "", ...)
   abline(v = mean(incomp_correct), col = cols[2], lwd = 2, xpd = FALSE)
 
   # Error RTs
