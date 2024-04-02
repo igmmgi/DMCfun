@@ -1235,8 +1235,8 @@ plot.dmcfit <- function(x,
 #' @examples
 #' \donttest{
 #' # Example 1
-#' resTh <- dmcFit(flankerData, nTrl = 5000)
-#' plot(resTh, flankerData)
+#' resTh <- dmcFitSubject(flankerData, nTrl = 5000, subject = c(1,3))
+#' plot(resTh, flankerData, subject = c(1,3))
 #' plot(resTh, flankerData, figType = "deltaErrors")
 #'
 #' # Example 2
@@ -1275,7 +1275,7 @@ plot.dmcfit_subject <- function(x,
 
     subjects <- which(!unlist(lapply(x, is.null)))
     if (!subject %in% subjects) {
-      stop("datOb (y) does not contain requested subject number!")
+      stop("datTh (x) does not contain requested subject number!")
     }
 
     x <- x[[subject]]
