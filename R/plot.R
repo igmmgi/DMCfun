@@ -1236,12 +1236,7 @@ plot.dmcfit <- function(x,
 #' \donttest{
 #' # Example 1
 #' resTh <- dmcFitSubject(flankerData, nTrl = 5000, subject = c(1,3))
-#' plot(resTh, flankerData, subject = c(1,3))
-#' plot(resTh, flankerData, figType = "deltaErrors")
-#'
-#' # Example 2
-#' resTh <- dmcFit(simonData, nTrl = 5000)
-#' plot(resTh, simonData)
+#' plot(resTh, flankerData, subject = 3)
 #' }
 #'
 #' @export
@@ -2186,7 +2181,8 @@ plot_distribution <- function(
     labels = c("Compatible", "Incompatible"),
     cols = c("green", "red"),
     xlab = "Time [ms]",
-    xlim = NULL
+    xlim = NULL,
+    ...
 ) {
 
   # keep original user par and reset later
