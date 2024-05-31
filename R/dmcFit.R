@@ -172,7 +172,7 @@ dmcFit <- function(resOb,
   prms <- replicate(length(resOb), startVals, simplify = FALSE)
 
   # default optim control parameters
-  defaultOptimControl <- list(parscale = c(parScale[!as.logical(fixedFit)], parScale[as.logical(freeCombined)]), maxit = 500)
+  defaultOptimControl <- list(parscale = c(parScale[!as.logical(fixedFit)], rep(parScale[as.logical(freeCombined)], length(resOb)-1)), maxit = 500)
   optimControl <- modifyList(defaultOptimControl, optimControl)
 
   # change nDelta to pDelta if pDelta not empty
@@ -258,7 +258,7 @@ dmcFit <- function(resOb,
     }
 
     cl <- parallel::makeCluster(numCores)
-    invisible(parallel::clusterExport(cl = cl, varlist = c("dmcSim", "calculateCostValue"), envir = environment()))
+    invisible(parallel::clusterExport(cl = cl, varlist = c("dmcSim", "calculateCostValue", "cs", "gs"), envir = environment()))
 
     # calculate initial cost values across grid starting values and find min
     costValue <- pbapply::pblapply(cl = cl, X = 1:nrow(startValsGrid), FUN = pCostValue)
@@ -269,7 +269,7 @@ dmcFit <- function(resOb,
 
   # optimize
   fit <- optim(
-    par = as.numeric(c(startVals[!as.logical(fixedFit)], startVals[as.logical(freeCombined)])),
+    par = as.numeric(c(startVals[!as.logical(fixedFit)], rep(startVals[as.logical(freeCombined)], length(resOb)-1))),
     fn = minimizeCostValue,
     costFunction = calculateCostValue, prms = prms, fixedFit = fixedFit, freeCombined = freeCombined, resOb = resOb,
     nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF,
@@ -280,15 +280,18 @@ dmcFit <- function(resOb,
   )
 
   # number of fitted parameters
-  nFreeParametersUnique <- sum(as.logical(fixedFit) == FALSE)
-  nFreeParametersTotal <- sum(as.logical(fixedFit) == FALSE) + sum(as.logical(freeCombined == TRUE))
+  nFreeParametersSingle <- sum(as.logical(fixedFit) == FALSE)
+  nFreeParametersTotal  <- sum(as.logical(fixedFit) == FALSE) + (sum(as.logical(freeCombined == TRUE)) * (length(resOb)-1))
 
   for (i in 1:length(resOb)) {
-    prms[[i]][!as.logical(fixedFit)] <- fit$par[c(1:nFreeParametersUnique)]
+    prms[[i]][!as.logical(fixedFit)] <- fit$par[c(1:nFreeParametersSingle)]
   }
   if (length(resOb) >= 2) {
+    startPos      <- nFreeParametersSingle + 1
+    nFreePerResOb <- (nFreeParametersTotal - nFreeParametersSingle) / (length(resOb)-1)
     for (i in 2:length(resOb)) {
-      prms[[i]][as.logical(freeCombined)] <- fit$par[-c(1:nFreeParametersUnique)]
+      prms[[i]][as.logical(freeCombined)] <- fit$par[startPos:(startPos+(nFreePerResOb-1))]
+      startPos <- startPos + nFreePerResOb
     }
   }
 
@@ -509,7 +512,7 @@ dmcFitDE <- function(resOb,
   # }
 
   cl <- parallel::makeCluster(numCores)
-  invisible(parallel::clusterExport(cl = cl, varlist = c("dmcSim", "calculateCostValue"), envir = environment()))
+  invisible(parallel::clusterExport(cl = cl, varlist = c("dmcSim", "calculateCostValue", "cs", "gs"), envir = environment()))
 
   defaultControl <- list(VTR = 0, strategy = 1, NP = 100, itermax = 200, trace = 1, cluster = cl)
   deControl <- modifyList(defaultControl, deControl)
@@ -517,8 +520,8 @@ dmcFitDE <- function(resOb,
   # optimize
   fit <- DEoptim::DEoptim(
     fn = minimizeCostValue,
-    lower = c(unlist(minVals[!as.logical(fixedFit)]), unlist(minVals[as.logical(freeCombined)])),
-    upper = c(unlist(maxVals[!as.logical(fixedFit)]), unlist(maxVals[as.logical(freeCombined)])),
+    lower = c(unlist(minVals[!as.logical(fixedFit)]), rep(unlist(minVals[as.logical(freeCombined)]), length(resOb)-1)),
+    upper = c(unlist(maxVals[!as.logical(fixedFit)]), rep(unlist(maxVals[as.logical(freeCombined)]), length(resOb)-1)),
     costFunction = calculateCostValue,
     prms = prms,
     fixedFit = fixedFit,
@@ -546,15 +549,19 @@ dmcFitDE <- function(resOb,
   parallel::stopCluster(cl)
 
   # number of fitted parameters
-  nFreeParametersUnique <- sum(as.logical(fixedFit) == FALSE)
-  nFreeParametersTotal <- sum(as.logical(fixedFit) == FALSE) + sum(as.logical(freeCombined == TRUE))
+  nFreeParametersSingle <- sum(as.logical(fixedFit) == FALSE)
+  nFreeParametersTotal  <- sum(as.logical(fixedFit) == FALSE) + (sum(as.logical(freeCombined == TRUE)) * (length(resOb)-1))
 
   for (i in 1:length(resOb)) {
-    prms[[i]][!as.logical(fixedFit)] <- as.list(fit$optim$bestmem)[c(1:nFreeParametersUnique)]
+    prms[[i]][!as.logical(fixedFit)] <- as.list(fit$optim$bestmem)[c(1:nFreeParametersSingle)]
   }
   if (length(resOb) >= 2) {
+    startPos      <- nFreeParametersSingle + 1
+    nFreePerResOb <- (nFreeParametersTotal - nFreeParametersSingle) / (length(resOb)-1)
     for (i in 2:length(resOb)) {
-      prms[[i]][as.logical(freeCombined)] <- as.list(fit$optim$bestmem)[-c(1:nFreeParametersUnique)]
+      prms[[i]][as.logical(freeCombined)] <- as.list(fit$optim$bestmem)[startPos:(startPos+(nFreePerResOb-1))]
+      startPos <- startPos + nFreePerResOb
+      message(startPos)
     }
   }
 
@@ -1015,8 +1022,11 @@ minimizeCostValue <- function(x,
     prms[[i]][!as.logical(fixedFit)] <- x[c(1:nParameters)]
   }
   if (length(prms) >= 2) {
+    nFreeCombined <- sum(freeCombined == TRUE)
+    start <- 1
     for (i in 2:length(prms)) {
-      prms[[i]][as.logical(freeCombined)] <- x[-c(1:nParameters)]
+      prms[[i]][as.logical(freeCombined)] <- x[-c(1:nParameters)][start:start+nFreeCombined-1]
+      start <- start + nFreeCombined
     }
   }
 
@@ -1133,13 +1143,13 @@ calculateCostValueSPE <- function(resTh, resOb) {
 #' resTh <- dmcSim()
 #' resOb <- flankerData
 #' resOb <- calculateBinProbabilities(resOb)
-#' cost <- calculateCostValueCS(resTh, resOb)
+#' cost  <- calculateCostValueCS(resTh, resOb)
 #' @export
 calculateCostValueCS <- function(resTh, resOb) {
-  cs_comp_correct <- cs(resTh$sim$rts_comp, resOb$prob[resOb$prob$Comp == "comp" & resOb$prob$Error == 0, ])
-  cs_comp_error <- cs(resTh$sim$errs_comp, resOb$prob[resOb$prob$Comp == "comp" & resOb$prob$Error == 1, ])
-  cs_incomp_correct <- cs(resTh$sim$rts_incomp, resOb$prob[resOb$prob$Comp == "incomp" & resOb$prob$Error == 0, ])
-  cs_incomp_error <- cs(resTh$sim$errs_incomp, resOb$prob[resOb$prob$Comp == "incomp" & resOb$prob$Error == 1, ])
+  cs_comp_correct   <- cs(resTh$sim$rts_comp,    resOb$prob[resOb$prob$Comp == "comp"   & resOb$prob$Error == 0, ])
+  cs_comp_error     <- cs(resTh$sim$errs_comp,   resOb$prob[resOb$prob$Comp == "comp"   & resOb$prob$Error == 1, ])
+  cs_incomp_correct <- cs(resTh$sim$rts_incomp,  resOb$prob[resOb$prob$Comp == "incomp" & resOb$prob$Error == 0, ])
+  cs_incomp_error   <- cs(resTh$sim$errs_incomp, resOb$prob[resOb$prob$Comp == "incomp" & resOb$prob$Error == 1, ])
 
   return(sum(c(cs_comp_correct, cs_comp_error, cs_incomp_correct, cs_incomp_error), na.rm = TRUE))
 
