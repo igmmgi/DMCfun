@@ -90,13 +90,8 @@ that dmcSim is run with fullData = TRUE.
 \examples{
 \donttest{
 # Example 1
-resTh <- dmcFit(flankerData, nTrl = 5000)
-plot(resTh, flankerData)
-plot(resTh, flankerData, figType = "deltaErrors")
-
-# Example 2
-resTh <- dmcFit(simonData, nTrl = 5000)
-plot(resTh, simonData)
+resTh <- dmcFitSubject(flankerData, nTrl = 5000, subject = c(1,3))
+plot(resTh, flankerData, subject = 3)
 }
 
 }

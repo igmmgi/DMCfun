@@ -561,7 +561,6 @@ dmcFitDE <- function(resOb,
     for (i in 2:length(resOb)) {
       prms[[i]][as.logical(freeCombined)] <- as.list(fit$optim$bestmem)[startPos:(startPos+(nFreePerResOb-1))]
       startPos <- startPos + nFreePerResOb
-      message(startPos)
     }
   }
 
@@ -1156,13 +1155,19 @@ calculateCostValueCS <- function(resTh, resOb) {
 }
 
 cs <- function(th, ob) {
-  if ((length(th) == 0 | nrow(ob) == 0)) {
-    return(NA) # no observations (can happen, esp. for error trials in comp conditions)
+  # What to do if 0 trials in theoretical/observed?
+  # Can happen in comp error conditions
+  if (length(th) == 0 & nrow(ob) > 0) {
+    return(ob$nTrialsToral[1])
+  }  else if (length(th) > 0 & nrow(ob) == 0) {
+    return(length(th))
+  } else if (length(th) == 0 & nrow(ob) == 0) {
+    return(0) # zero trials predicted and zero observed so return 0
   }
   probE <- c(0.1, 0.2, 0.2, 0.2, 0.2, 0.1) # TO DO hard coded?
   nBin <- table(factor(.bincode(th, breaks = c(0, ob$boundary, Inf)), levels = 1:6))
   pBin <- nBin / sum(nBin) # sum(pBin) == 1
-  cs <- sum(ob$nTrials[1] * (pBin - probE)**2 / probE)
+  cs <- sum(ob$nTrialsTotal[1] * (pBin - probE)**2 / probE)
   return(cs)
 }
 
@@ -1186,15 +1191,19 @@ cs <- function(th, ob) {
 #' cost  <- calculateCostValueGS(resTh, resOb)
 #' @export
 calculateCostValueGS <- function(resTh, resOb) {
-  nComp <- nrow(resOb$data[resOb$data$Comp == "comp" & resOb$data$outlier == 0, ])
-  gsCompCorrect <- gs(resTh$sim$rts_comp, resOb$prob[resOb$prob$Comp == "comp" & resOb$prob$Error == 0, ])
-  gsCompError <- gs(resTh$sim$errs_comp, resOb$prob[resOb$prob$Comp == "comp" & resOb$prob$Error == 1, ])
-  gsComp <- nComp * (sum(gsCompCorrect, na.rm = TRUE) + sum(gsCompError, na.rm = TRUE))
 
-  nIncomp <- nrow(resOb$data[resOb$data$Comp == "incomp" & resOb$data$outlier == 0, ])
-  gsIncompCorrect <- gs(resTh$sim$rts_incomp, resOb$prob[resOb$prob$Comp == "incomp" & resOb$prob$Error == 0, ])
-  gsIncompError <- gs(resTh$sim$errs_incomp, resOb$prob[resOb$prob$Comp == "incomp" & resOb$prob$Error == 1, ])
-  gsIncomp <- nIncomp * (sum(gsIncompCorrect, na.rm = TRUE) + sum(gsIncompError, na.rm = TRUE))
+  nCompCorrect  <- resOb$prob$nTrialsMean[resOb$prob$Comp == "comp" & resOb$prob$Error == 0][1]
+  nCompError    <- resOb$prob$nTrialsMean[resOb$prob$Comp == "comp" & resOb$prob$Error == 1][1]
+  gsCompCorrect <- gs(resTh$sim$rts_comp,  resOb$prob[resOb$prob$Comp == "comp" & resOb$prob$Error == 0, ])
+  gsCompError   <- gs(resTh$sim$errs_comp, resOb$prob[resOb$prob$Comp == "comp" & resOb$prob$Error == 1, ])
+
+  nIncompCorrect  <- resOb$prob$nTrialsMean[resOb$prob$Comp == "incomp" & resOb$prob$Error == 0][1]
+  nIncompError    <- resOb$prob$nTrialsMean[resOb$prob$Comp == "incomp" & resOb$prob$Error == 1][1]
+  gsIncompCorrect <- gs(resTh$sim$rts_incomp,  resOb$prob[resOb$prob$Comp == "incomp" & resOb$prob$Error == 0, ])
+  gsIncompError   <- gs(resTh$sim$errs_incomp, resOb$prob[resOb$prob$Comp == "incomp" & resOb$prob$Error == 1, ])
+
+  gsComp    <- (nCompCorrect + nCompError)     * (sum(gsCompCorrect,   na.rm = TRUE) + sum(gsCompError,   na.rm = TRUE))
+  gsIncomp  <- (nIncompCorrect + nIncompError) * (sum(gsIncompCorrect, na.rm = TRUE) + sum(gsIncompError, na.rm = TRUE))
 
   costValue <- 2 * (gsComp + gsIncomp)
 
@@ -1203,13 +1212,19 @@ calculateCostValueGS <- function(resTh, resOb) {
 
 
 gs <- function(th, ob) {
-  if ((length(th) == 0 | nrow(ob) == 0)) {
-    return(NA) # no observations (can happen, esp. for error trials in comp conditions)
+  # What to do if 0 trials in theoretical/observed?
+  # Can happen in comp error conditions
+  if (length(th) == 0 & nrow(ob) > 0) {
+    return(ob$nTrialsMean[1])
+  }  else if (length(th) > 0 & nrow(ob) == 0) {
+    return(length(th))
+  } else if (length(th) == 0 & nrow(ob) == 0) {
+    return(0) # zero trials predicted and zero observed so return 0
   }
   probE <- c(0.1, 0.2, 0.2, 0.2, 0.2, 0.1) # TO DO hard coded?
-  nBin <- table(factor(.bincode(th, c(0, ob$boundary, Inf)), levels = 1:6))
-  pBin <- nBin / sum(nBin) # sum(pBin) == 1
-  gs <- pBin * log(pBin / probE)
+  nBin  <- table(factor(.bincode(th, c(0, ob$boundary, Inf)), levels = 1:6))
+  pBin  <- nBin / sum(nBin) # sum(pBin) == 1
+  gs    <- abs(pBin * log(pBin / probE))
   return(gs)
 }
 
@@ -1279,10 +1294,11 @@ calculateBinProbabilities <- function(resOb, quantileType = 5) {
   resOb$prob <- resOb$probSubject %>%
     dplyr::group_by(Comp, Error, prob) %>%
     dplyr::summarize(
-      nSubjects = n(),
-      nTrials   = sum(nTrials),
-      boundary  = mean(boundary),
-      .groups   = "drop"
+      nSubjects    = n(),
+      nTrialsTotal = sum(nTrials),
+      nTrialsMean  = mean(nTrials),
+      boundary     = mean(boundary),
+      .groups      = "drop"
     )
 
   return(resOb)

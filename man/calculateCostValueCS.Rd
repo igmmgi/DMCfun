@@ -23,5 +23,5 @@ Calculate cost value (fit) using chi-square (CS) from correct and incorrect RT d
 resTh <- dmcSim()
 resOb <- flankerData
 resOb <- calculateBinProbabilities(resOb)
-cost <- calculateCostValueCS(resTh, resOb)
+cost  <- calculateCostValueCS(resTh, resOb)
 }
