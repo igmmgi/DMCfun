@@ -1221,10 +1221,8 @@ gs <- function(th, ob) {
   # What to do if 0 trials in theoretical/observed?
   # Can happen in comp error conditions
   if (length(th) == 0 & nrow(ob) > 0) {
-    message("here1")
     return(ob$nTrialsMean[1])
   }  else if (length(th) > 0 & nrow(ob) == 0) {
-    message("here2")
     return(length(th))
   } else if (length(th) == 0 & nrow(ob) == 0) {
     return(0) # zero trials predicted and zero observed so return 0
