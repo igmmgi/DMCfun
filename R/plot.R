@@ -1379,9 +1379,9 @@ plot.dmcfits <- function(x,
                          legend.parameters = list(legend = c("Observed", "Predicted")),
                          ...) {
 
-  if (length(x) != length(y)) {
-    stop("length(x) != length(y)!")
-  }
+  # if (length(x) != length(y)) {
+  #   stop("length(x) != length(y)!")
+  # }
 
   for (plt in 1:length(x)) {
     plot(x[[plt]],

@@ -1193,12 +1193,18 @@ cs <- function(th, ob) {
 calculateCostValueGS <- function(resTh, resOb) {
 
   nCompCorrect  <- resOb$prob$nTrialsMean[resOb$prob$Comp == "comp" & resOb$prob$Error == 0][1]
+  if (is.na(nCompCorrect)) { nCompCorrect <- 0 }
   nCompError    <- resOb$prob$nTrialsMean[resOb$prob$Comp == "comp" & resOb$prob$Error == 1][1]
+  if (is.na(nCompError)) { nCompError <- 0 }
+
   gsCompCorrect <- gs(resTh$sim$rts_comp,  resOb$prob[resOb$prob$Comp == "comp" & resOb$prob$Error == 0, ])
   gsCompError   <- gs(resTh$sim$errs_comp, resOb$prob[resOb$prob$Comp == "comp" & resOb$prob$Error == 1, ])
 
   nIncompCorrect  <- resOb$prob$nTrialsMean[resOb$prob$Comp == "incomp" & resOb$prob$Error == 0][1]
+  if (is.na(nIncompCorrect)) { nIncompCorrect <- 0 }
   nIncompError    <- resOb$prob$nTrialsMean[resOb$prob$Comp == "incomp" & resOb$prob$Error == 1][1]
+  if (is.na(nIncompError)) { nIncompError <- 0 }
+
   gsIncompCorrect <- gs(resTh$sim$rts_incomp,  resOb$prob[resOb$prob$Comp == "incomp" & resOb$prob$Error == 0, ])
   gsIncompError   <- gs(resTh$sim$errs_incomp, resOb$prob[resOb$prob$Comp == "incomp" & resOb$prob$Error == 1, ])
 
@@ -1215,8 +1221,10 @@ gs <- function(th, ob) {
   # What to do if 0 trials in theoretical/observed?
   # Can happen in comp error conditions
   if (length(th) == 0 & nrow(ob) > 0) {
+    message("here1")
     return(ob$nTrialsMean[1])
   }  else if (length(th) > 0 & nrow(ob) == 0) {
+    message("here2")
     return(length(th))
   } else if (length(th) == 0 & nrow(ob) == 0) {
     return(0) # zero trials predicted and zero observed so return 0
