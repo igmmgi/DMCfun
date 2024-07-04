@@ -45,8 +45,6 @@
 #' @param drDist The drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)
 #' @param drShape The drift rate (dr) shape parameter
 #' @param drLim The drift rate (dr) range
-#' @param bndsRate Collapsing bounds rate. 0 (default) = fixed bounds
-#' @param bndsSaturation Collapsing bounds saturation
 #' @param printInputArgs TRUE (default) /FALSE
 #' @param printResults TRUE/FALSE (default)
 #' @param optimControl Additional control parameters passed to optim (see optim details section)
@@ -132,8 +130,6 @@ dmcFit <- function(resOb,
                    drDist = 0,
                    drShape = 3,
                    drLim = c(0.1, 0.7),
-                   bndsRate = 0,
-                   bndsSaturation = 0,
                    rtMax = 5000,
                    costFunction = "RMSE",
                    printInputArgs = TRUE,
@@ -394,8 +390,6 @@ dmcFit <- function(resOb,
 #' @param drDist The drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)
 #' @param drShape The drift rate (dr) shape parameter
 #' @param drLim The drift rate (dr) range
-#' @param bndsRate Collapsing bounds rate. 0 (default) = fixed bounds
-#' @param bndsSaturation Collapsing bounds saturation
 #' @param deControl Additional control parameters passed to DEoptim (see DEoptim.control)
 #' @param numCores Number of cores to use
 #'
@@ -443,8 +437,6 @@ dmcFitDE <- function(resOb,
                      drDist = 0,
                      drShape = 3,
                      drLim = c(0.1, 0.7),
-                     bndsRate = 0,
-                     bndsSaturation = 0,
                      rtMax = 5000,
                      deControl = list(),
                      numCores = 2) {
@@ -673,8 +665,6 @@ dmcFitDE <- function(resOb,
 #' @param drDist The drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)
 #' @param drShape The drift rate (dr) shape parameter
 #' @param drLim The drift rate (dr) range
-#' @param bndsRate Collapsing bounds rate. 0 (default) = fixed bounds
-#' @param bndsSaturation Collapsing bounds saturation
 #' @param rtMax The limit on simulated RT (decision + non-decisional components)
 #' @param subjects NULL (aggregated data across all subjects) or integer for subject number
 #' @param printInputArgs TRUE (default) /FALSE
@@ -717,8 +707,6 @@ dmcFitSubject <- function(resOb,
                           drDist = 0,
                           drShape = 3,
                           drLim = c(0.1, 0.7),
-                          bndsRate = 0,
-                          bndsSaturation = 0,
                           rtMax = 5000,
                           subjects = c(),
                           printInputArgs = TRUE,
@@ -823,10 +811,7 @@ dmcFitSubject <- function(resOb,
 #' @param deltaErrors TRUE/FALSE Calculate delta bins for error trials
 #' @param costFunction The cost function to minimise: root mean square error ("RMSE": default),
 #' squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")
-#' @param bndsRate Collapsing bounds rate. 0 (default) = fixed bounds
-#' @param bndsSaturation Collapsing bounds saturation
 #' @param rtMax The limit on simulated RT (decision + non-decisional components)
-#' @param bndsRate 0 (default) = fixed bnds
 #' @param spDist The starting point distribution (0 = constant, 1 = beta, 2 = uniform)
 #' @param drOnset The starting point of controlled drift rate (i.e., "target" information) relative to automatic ("distractor" incormation) (> 0 ms)
 #' @param drDist The drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)
@@ -867,8 +852,6 @@ dmcFitSubjectDE <- function(resOb,
                             drDist = 0,
                             drShape = 3,
                             drLim = c(0.1, 0.7),
-                            bndsRate = 0,
-                            bndsSaturation = 0,
                             rtMax = 5000,
                             subjects = c(),
                             deControl = list(),
@@ -1082,9 +1065,9 @@ calculateCostValueRMSE <- function(resTh, resOb) {
   n_rt <- nrow(resTh$delta) * 2
   n_err <- nrow(resTh$caf) * 2
 
-  costCAF <- sqrt((1 / n_err) * sum((resTh$caf[c("accPerComp", "accPerIncomp")] - resOb$caf[c("accPerComp", "accPerIncomp")])**2))
-  costRT <- sqrt((1 / n_rt) * sum((resTh$delta[c("meanComp", "meanIncomp")] - resOb$delta[c("meanComp", "meanIncomp")])**2))
-  weightRT <- n_rt / (n_rt + n_err)
+  costCAF   <- sqrt((1 / n_err) * sum((resTh$caf[c("accPerComp", "accPerIncomp")] - resOb$caf[c("accPerComp", "accPerIncomp")])**2))
+  costRT    <- sqrt((1 / n_rt) * sum((resTh$delta[c("meanComp", "meanIncomp")] - resOb$delta[c("meanComp", "meanIncomp")])**2))
+  weightRT  <- n_rt / (n_rt + n_err)
   weightCAF <- (1 - weightRT) * 1500
 
   costValue <- (weightCAF * costCAF) + (weightRT * costRT)
