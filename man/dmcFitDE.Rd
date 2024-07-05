@@ -22,8 +22,6 @@ dmcFitDE(
   drDist = 0,
   drShape = 3,
   drLim = c(0.1, 0.7),
-  bndsRate = 0,
-  bndsSaturation = 0,
   rtMax = 5000,
   deControl = list(),
   numCores = 2
@@ -76,15 +74,15 @@ squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS"
 
 \item{drLim}{The drift rate (dr) range}
 
-\item{bndsRate}{Collapsing bounds rate. 0 (default) = fixed bounds}
-
-\item{bndsSaturation}{Collapsing bounds saturation}
-
 \item{rtMax}{The limit on simulated RT (decision + non-decisional components)}
 
 \item{deControl}{Additional control parameters passed to DEoptim (see DEoptim.control)}
 
 \item{numCores}{Number of cores to use}
+
+\item{bndsRate}{0 (default) = fixed bnds}
+
+\item{bndsSaturation}{bndsSaturation}
 }
 \value{
 dmcfit returns an object of class "dmcfit" with the following components:

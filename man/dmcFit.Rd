@@ -25,8 +25,6 @@ dmcFit(
   drDist = 0,
   drShape = 3,
   drLim = c(0.1, 0.7),
-  bndsRate = 0,
-  bndsSaturation = 0,
   rtMax = 5000,
   costFunction = "RMSE",
   printInputArgs = TRUE,
@@ -92,10 +90,6 @@ only searches the tau space.}
 \item{drShape}{The drift rate (dr) shape parameter}
 
 \item{drLim}{The drift rate (dr) range}
-
-\item{bndsRate}{Collapsing bounds rate. 0 (default) = fixed bounds}
-
-\item{bndsSaturation}{Collapsing bounds saturation}
 
 \item{rtMax}{The limit on simulated RT (decision + non-decisional components)}
 
