@@ -16,13 +16,13 @@ dmcFitDE(
   pDelta = vector(),
   tDelta = 1,
   deltaErrors = FALSE,
-  costFunction = "RMSE",
   spDist = 1,
   drOnset = 0,
   drDist = 0,
   drShape = 3,
   drLim = c(0.1, 0.7),
   rtMax = 5000,
+  costFunction = "RMSE",
   deControl = list(),
   numCores = 2
 )
@@ -61,9 +61,6 @@ tau = F, drc = F, bnds = F, bndsRate=F, bndsSaturation=F, resMean = F, resSD = F
 
 \item{deltaErrors}{TRUE/FALSE Calculate delta bins for error trials}
 
-\item{costFunction}{The cost function to minimise: root mean square error ("RMSE": default),
-squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")}
-
 \item{spDist}{The starting point distribution (0 = constant, 1 = beta, 2 = uniform)}
 
 \item{drOnset}{The starting point of controlled drift rate (i.e., "target" information) relative to automatic ("distractor" information) (> 0 ms)}
@@ -76,13 +73,12 @@ squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS"
 
 \item{rtMax}{The limit on simulated RT (decision + non-decisional components)}
 
+\item{costFunction}{The cost function to minimise: root mean square error ("RMSE": default),
+squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")}
+
 \item{deControl}{Additional control parameters passed to DEoptim (see DEoptim.control)}
 
 \item{numCores}{Number of cores to use}
-
-\item{bndsRate}{0 (default) = fixed bnds}
-
-\item{bndsSaturation}{bndsSaturation}
 }
 \value{
 dmcfit returns an object of class "dmcfit" with the following components:

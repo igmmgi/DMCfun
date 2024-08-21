@@ -37,14 +37,14 @@
 #' @param pDelta An alternative option to nDelta (tDelta = 1 only) by directly specifying required percentile values (vector of values 0-100)
 #' @param tDelta The type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)
 #' @param deltaErrors TRUE/FALSE Calculate delta bins for error trials
-#' @param costFunction The cost function to minimise: root mean square error ("RMSE": default),
-#' squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")
-#' @param rtMax The limit on simulated RT (decision + non-decisional components)
 #' @param spDist The starting point (sp) distribution (0 = constant, 1 = beta, 2 = uniform)
 #' @param drOnset The starting point of controlled drift rate (i.e., "target" information) relative to automatic ("distractor" incormation) (> 0 ms)
 #' @param drDist The drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)
 #' @param drShape The drift rate (dr) shape parameter
 #' @param drLim The drift rate (dr) range
+#' @param rtMax The limit on simulated RT (decision + non-decisional components)
+#' @param costFunction The cost function to minimise: root mean square error ("RMSE": default),
+#' squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")
 #' @param printInputArgs TRUE (default) /FALSE
 #' @param printResults TRUE/FALSE (default)
 #' @param optimControl Additional control parameters passed to optim (see optim details section)
@@ -111,31 +111,31 @@
 #'
 #' @export
 dmcFit <- function(resOb,
-                   nTrl = 100000,
-                   startVals = list(),
-                   minVals = list(),
-                   maxVals = list(),
-                   fixedFit = list(),
-                   freeCombined = list(),
-                   fitInitialGrid = TRUE,
+                   nTrl            = 100000,
+                   startVals       = list(),
+                   minVals         = list(),
+                   maxVals         = list(),
+                   fixedFit        = list(),
+                   freeCombined    = list(),
+                   fitInitialGrid  = TRUE,
                    fitInitialGridN = 10, # reduce if grid search 3/4+ parameters
-                   fixedGrid = list(), # default only initial search tau
-                   nCAF = 5,
-                   nDelta = 19,
-                   pDelta = vector(),
-                   tDelta = 1,
-                   deltaErrors = FALSE,
-                   spDist = 1,
-                   drOnset = 0,
-                   drDist = 0,
-                   drShape = 3,
-                   drLim = c(0.1, 0.7),
-                   rtMax = 5000,
-                   costFunction = "RMSE",
-                   printInputArgs = TRUE,
-                   printResults = FALSE,
-                   optimControl = list(),
-                   numCores = 2) {
+                   fixedGrid       = list(), # default only initial search tau
+                   nCAF            = 5,
+                   nDelta          = 19,
+                   pDelta          = vector(),
+                   tDelta          = 1,
+                   deltaErrors     = FALSE,
+                   spDist          = 1,
+                   drOnset         = 0,
+                   drDist          = 0,
+                   drShape         = 3,
+                   drLim           = c(0.1, 0.7),
+                   rtMax           = 5000,
+                   costFunction    = "RMSE",
+                   printInputArgs  = TRUE,
+                   printResults    = FALSE,
+                   optimControl    = list(),
+                   numCores        = 2) {
 
   if (is(resOb, "dmcob")) {
     resOb <- list(resOb)
@@ -380,16 +380,14 @@ dmcFit <- function(resOb,
 #' @param pDelta An alternative option to nDelta (tDelta = 1 only) by directly specifying required percentile values (vector of values 0-100)
 #' @param tDelta The type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)
 #' @param deltaErrors TRUE/FALSE Calculate delta bins for error trials
-#' @param costFunction The cost function to minimise: root mean square error ("RMSE": default),
-#' squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")
-#' @param bndsRate 0 (default) = fixed bnds
-#' @param bndsSaturation bndsSaturation
-#' @param rtMax The limit on simulated RT (decision + non-decisional components)
 #' @param spDist The starting point distribution (0 = constant, 1 = beta, 2 = uniform)
 #' @param drOnset The starting point of controlled drift rate (i.e., "target" information) relative to automatic ("distractor" information) (> 0 ms)
 #' @param drDist The drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)
 #' @param drShape The drift rate (dr) shape parameter
 #' @param drLim The drift rate (dr) range
+#' @param rtMax The limit on simulated RT (decision + non-decisional components)
+#' @param costFunction The cost function to minimise: root mean square error ("RMSE": default),
+#' squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")
 #' @param deControl Additional control parameters passed to DEoptim (see DEoptim.control)
 #' @param numCores Number of cores to use
 #'
@@ -421,25 +419,25 @@ dmcFit <- function(resOb,
 #' }
 #' @export
 dmcFitDE <- function(resOb,
-                     nTrl = 100000,
-                     minVals = list(),
-                     maxVals = list(),
-                     fixedFit = list(),
+                     nTrl         = 100000,
+                     minVals      = list(),
+                     maxVals      = list(),
+                     fixedFit     = list(),
                      freeCombined = list(),
-                     nCAF = 5,
-                     nDelta = 19,
-                     pDelta = vector(),
-                     tDelta = 1,
-                     deltaErrors = FALSE,
+                     nCAF         = 5,
+                     nDelta       = 19,
+                     pDelta       = vector(),
+                     tDelta       = 1,
+                     deltaErrors  = FALSE,
+                     spDist       = 1,
+                     drOnset      = 0,
+                     drDist       = 0,
+                     drShape      = 3,
+                     drLim        = c(0.1, 0.7),
+                     rtMax        = 5000,
                      costFunction = "RMSE",
-                     spDist = 1,
-                     drOnset = 0,
-                     drDist = 0,
-                     drShape = 3,
-                     drLim = c(0.1, 0.7),
-                     rtMax = 5000,
-                     deControl = list(),
-                     numCores = 2) {
+                     deControl    = list(),
+                     numCores     = 2) {
 
   if (is(resOb, "dmcob")) {
     resOb <- list(resOb)
@@ -511,31 +509,31 @@ dmcFitDE <- function(resOb,
 
   # optimize
   fit <- DEoptim::DEoptim(
-    fn = minimizeCostValue,
-    lower = c(unlist(minVals[!as.logical(fixedFit)]), rep(unlist(minVals[as.logical(freeCombined)]), length(resOb)-1)),
-    upper = c(unlist(maxVals[!as.logical(fixedFit)]), rep(unlist(maxVals[as.logical(freeCombined)]), length(resOb)-1)),
-    costFunction = calculateCostValue,
-    prms = prms,
-    fixedFit = fixedFit,
-    freeCombined = freeCombined,
-    minVals = minVals,
-    maxVals = maxVals,
-    resOb = resOb,
-    nTrl = nTrl,
-    nDelta = nDelta,
-    nCAF = nCAF,
-    pDelta = pDelta,
-    tDelta = tDelta,
-    deltaErrors = deltaErrors,
-    spDist = spDist,
-    drOnset = drOnset,
-    drDist = drDist,
-    drShape = drShape,
-    drLim = drLim,
-    rtMax = rtMax,
+    fn             = minimizeCostValue,
+    lower          = c(unlist(minVals[!as.logical(fixedFit)]), rep(unlist(minVals[as.logical(freeCombined)]), length(resOb)-1)),
+    upper          = c(unlist(maxVals[!as.logical(fixedFit)]), rep(unlist(maxVals[as.logical(freeCombined)]), length(resOb)-1)),
+    costFunction   = calculateCostValue,
+    prms           = prms,
+    fixedFit       = fixedFit,
+    freeCombined   = freeCombined,
+    minVals        = minVals,
+    maxVals        = maxVals,
+    resOb          = resOb,
+    nTrl           = nTrl,
+    nDelta         = nDelta,
+    nCAF           = nCAF,
+    pDelta         = pDelta,
+    tDelta         = tDelta,
+    deltaErrors    = deltaErrors,
+    spDist         = spDist,
+    drOnset        = drOnset,
+    drDist         = drDist,
+    drShape        = drShape,
+    drLim          = drLim,
+    rtMax          = rtMax,
     printInputArgs = FALSE,
-    printResults = FALSE,
-    control = deControl
+    printResults   = FALSE,
+    control        = deControl
   )
 
   parallel::stopCluster(cl)
@@ -586,6 +584,8 @@ dmcFitDE <- function(resOb,
       printResults = TRUE
     )
   }
+
+  dmcfit[[1]]$sim$errs_comp
 
   # fitted parameters
   for (i in 1:length(resOb)) {
@@ -658,14 +658,14 @@ dmcFitDE <- function(resOb,
 #' @param pDelta An alternative option to nDelta (tDelta = 1 only) by directly specifying required percentile values (vector of values 0-100)
 #' @param tDelta The type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)
 #' @param deltaErrors TRUE/FALSE Calculate delta bins for error trials
-#' @param costFunction The cost function to minimise: root mean square error ("RMSE": default),
-#' squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")
 #' @param spDist The starting point (sp) distribution (0 = constant, 1 = beta, 2 = uniform)
 #' @param drOnset The starting point of controlled drift rate (i.e., "target" information) relative to automatic ("distractor" incormation) (> 0 ms)
 #' @param drDist The drift rate (dr) distribution type (0 = constant, 1 = beta, 2 = uniform)
 #' @param drShape The drift rate (dr) shape parameter
 #' @param drLim The drift rate (dr) range
 #' @param rtMax The limit on simulated RT (decision + non-decisional components)
+#' @param costFunction The cost function to minimise: root mean square error ("RMSE": default),
+#' squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")
 #' @param subjects NULL (aggregated data across all subjects) or integer for subject number
 #' @param printInputArgs TRUE (default) /FALSE
 #' @param printResults TRUE/FALSE (default)
@@ -687,32 +687,32 @@ dmcFitDE <- function(resOb,
 #'
 #' @export
 dmcFitSubject <- function(resOb,
-                          nTrl = 100000,
-                          startVals = list(),
-                          minVals = list(),
-                          maxVals = list(),
-                          fixedFit = list(),
-                          freeCombined = list(),
-                          fitInitialGrid = TRUE,
+                          nTrl            = 100000,
+                          startVals       = list(),
+                          minVals         = list(),
+                          maxVals         = list(),
+                          fixedFit        = list(),
+                          fitInitialGrid  = TRUE,
                           fitInitialGridN = 10, # reduce if grid search 3/4+ parameters
-                          fixedGrid = list(), # default only initial tau search
-                          nCAF = 5,
-                          nDelta = 19,
-                          pDelta = vector(),
-                          tDelta = 1,
-                          deltaErrors = FALSE,
-                          costFunction = "RMSE",
-                          spDist = 1,
-                          drOnset = 0,
-                          drDist = 0,
-                          drShape = 3,
-                          drLim = c(0.1, 0.7),
-                          rtMax = 5000,
-                          subjects = c(),
-                          printInputArgs = TRUE,
-                          printResults = FALSE,
-                          optimControl = list(),
-                          numCores = 2) {
+                          fixedGrid       = list(), # default only initial tau search
+                          freeCombined    = list(),
+                          nCAF            = 5,
+                          nDelta          = 19,
+                          pDelta          = vector(),
+                          tDelta          = 1,
+                          deltaErrors     = FALSE,
+                          spDist          = 1,
+                          drOnset         = 0,
+                          drDist          = 0,
+                          drShape         = 3,
+                          drLim           = c(0.1, 0.7),
+                          rtMax           = 5000,
+                          costFunction    = "RMSE",
+                          subjects        = c(),
+                          printInputArgs  = TRUE,
+                          printResults    = FALSE,
+                          optimControl    = list(),
+                          numCores        = 2) {
 
   if (is(resOb, "dmcob")) {
     resOb <- list(resOb)
@@ -836,26 +836,26 @@ dmcFitSubject <- function(resOb,
 #'
 #' @export
 dmcFitSubjectDE <- function(resOb,
-                            nTrl = 100000,
-                            minVals = list(),
-                            maxVals = list(),
-                            fixedFit = list(),
+                            nTrl         = 100000,
+                            minVals      = list(),
+                            maxVals      = list(),
+                            fixedFit     = list(),
                             freeCombined = list(),
-                            nCAF = 5,
-                            nDelta = 19,
-                            pDelta = vector(),
-                            tDelta = 1,
-                            deltaErrors = FALSE,
+                            nCAF         = 5,
+                            nDelta       = 19,
+                            pDelta       = vector(),
+                            tDelta       = 1,
+                            deltaErrors  = FALSE,
                             costFunction = "RMSE",
-                            spDist = 1,
-                            drOnset = 0,
-                            drDist = 0,
-                            drShape = 3,
-                            drLim = c(0.1, 0.7),
-                            rtMax = 5000,
-                            subjects = c(),
-                            deControl = list(),
-                            numCores = 2) {
+                            spDist       = 1,
+                            drOnset      = 0,
+                            drDist       = 0,
+                            drShape      = 3,
+                            drLim        = c(0.1, 0.7),
+                            rtMax        = 5000,
+                            subjects     = c(),
+                            deControl    = list(),
+                            numCores     = 2) {
 
   if (is(resOb, "dmcob")) {
     resOb <- list(resOb)
@@ -1062,7 +1062,7 @@ minimizeCostValue <- function(x,
 #' cost <- calculateCostValueRMSE(resTh, resOb)
 #' @export
 calculateCostValueRMSE <- function(resTh, resOb) {
-  n_rt <- nrow(resTh$delta) * 2
+  n_rt  <- nrow(resTh$delta) * 2
   n_err <- nrow(resTh$caf) * 2
 
   costCAF   <- sqrt((1 / n_err) * sum((resTh$caf[c("accPerComp", "accPerIncomp")] - resOb$caf[c("accPerComp", "accPerIncomp")])**2))
@@ -1128,29 +1128,62 @@ calculateCostValueSPE <- function(resTh, resOb) {
 #' cost  <- calculateCostValueCS(resTh, resOb)
 #' @export
 calculateCostValueCS <- function(resTh, resOb) {
-  cs_comp_correct   <- cs(resTh$sim$rts_comp,    resOb$prob[resOb$prob$Comp == "comp"   & resOb$prob$Error == 0, ])
-  cs_comp_error     <- cs(resTh$sim$errs_comp,   resOb$prob[resOb$prob$Comp == "comp"   & resOb$prob$Error == 1, ])
-  cs_incomp_correct <- cs(resTh$sim$rts_incomp,  resOb$prob[resOb$prob$Comp == "incomp" & resOb$prob$Error == 0, ])
-  cs_incomp_error   <- cs(resTh$sim$errs_incomp, resOb$prob[resOb$prob$Comp == "incomp" & resOb$prob$Error == 1, ])
+
+  nCompCorrectOb <- resOb$prob$nTrials[resOb$prob$Comp == "comp" & resOb$prob$Error == 0][1]
+  if (is.na(nCompCorrectOb)) { nCompCorrectOb <- 0 }
+  nCompCorrectTh  <- length(resTh$sim$rts_comp)
+  nCompErrorOb <- resOb$prob$nTrials[resOb$prob$Comp == "comp" & resOb$prob$Error == 1][1]
+  if (is.na(nCompErrorOb)) { nCompError <- 0 }
+  nCompErrorTh <- length(resTh$sim$errs_comp)
+  nCompTotalOb <- nCompCorrectOb + nCompErrorOb
+  nCompTotalTh <- nCompCorrectTh + nCompErrorTh
+
+  cs_comp_correct <- cs(resTh$sim$rts_comp, resOb$prob[resOb$prob$Comp == "comp"   & resOb$prob$Error == 0, ], nCompCorrectOb/nCompTotalOb, nCompCorrectTh/nCompTotalTh)
+  if (nCompCorrectOb != 0) {
+    cs_comp_correct <- cs_comp_correct * nCompCorrectOb
+  }
+  cs_comp_error   <- cs(resTh$sim$errs_comp, resOb$prob[resOb$prob$Comp == "comp"   & resOb$prob$Error == 1, ], nCompErrorOb/nCompTotalOb, nCompErrorTh/nCompErrorTh)
+  if (nCompErrorOb != 0) {
+    cs_comp_error <- cs_comp_error * nCompErrorOb
+  }
+
+  nIncompCorrectOb <- resOb$prob$nTrials[resOb$prob$Comp == "incomp" & resOb$prob$Error == 0][1]
+  if (is.na(nIncompCorrectOb)) { nIncompCorrectOb <- 0 }
+  nIncompCorrectTh  <- length(resTh$sim$rts_incomp)
+  nIncompErrorOb <- resOb$prob$nTrials[resOb$prob$Comp == "incomp" & resOb$prob$Error == 1][1]
+  if (is.na(nIncompErrorOb)) { nIncompErrorOb <- 0 }
+  nIncompErrorTh <- length(resTh$sim$errs_incomp)
+  nIncompTotalOb <- nIncompCorrectOb + nIncompErrorOb
+  nIncompTotalTh <- nIncompCorrectTh + nIncompErrorTh
+
+  cs_incomp_correct <- cs(resTh$sim$rts_incomp,  resOb$prob[resOb$prob$Comp == "incomp" & resOb$prob$Error == 0, ], nIncompCorrectOb/nIncompTotalOb, nIncompCorrectTh/nIncompTotalTh)
+  if (nIncompCorrectOb != 0) {
+    cs_incomp_correct <- cs_incomp_correct * nIncompCorrectOb
+  }
+  cs_incomp_error   <- cs(resTh$sim$errs_incomp, resOb$prob[resOb$prob$Comp == "incomp" & resOb$prob$Error == 1, ], nIncompErrorOb/nIncompTotalOb, nIncompErrorTh/nIncompTotalTh)
+  if (nIncompErrorOb != 0) {
+    cs_incomp_error <- cs_incomp_error * nIncompErrorOb
+  }
 
   return(sum(c(cs_comp_correct, cs_comp_error, cs_incomp_correct, cs_incomp_error), na.rm = TRUE))
 
 }
 
-cs <- function(th, ob) {
+cs <- function(th, ob, trialPropOb, trialPropTh) {
   # What to do if 0 trials in theoretical/observed?
   # Can happen in comp error conditions
   if (length(th) == 0 & nrow(ob) > 0) {
-    return(ob$nTrialsToral[1])
-  }  else if (length(th) > 0 & nrow(ob) == 0) {
-    return(length(th))
+    return(trialPropOb)
+  } else if (length(th) > 0 & nrow(ob) == 0) {
+    return(trialPropTh)
   } else if (length(th) == 0 & nrow(ob) == 0) {
     return(0) # zero trials predicted and zero observed so return 0
   }
-  probE <- c(0.1, 0.2, 0.2, 0.2, 0.2, 0.1) # TO DO hard coded?
-  nBin <- table(factor(.bincode(th, breaks = c(0, ob$boundary, Inf)), levels = 1:6))
-  pBin <- nBin / sum(nBin) # sum(pBin) == 1
-  cs <- sum(ob$nTrialsTotal[1] * (pBin - probE)**2 / probE)
+  probE <- c(0.1, 0.2, 0.2, 0.2, 0.2, 0.1) * trialPropOb # TO DO hard coded?
+  nBin  <- table(factor(.bincode(th, breaks = c(0, ob$boundary, Inf)), levels = 1:6))
+  pBin  <- (nBin / sum(nBin)) * trialPropTh # sum(pBin) == 1
+  pBin[pBin == 0] = 0.0001 # avoid / 0
+  cs    <- ((probE - pBin)**2 / pBin)
   return(cs)
 }
 
@@ -1175,24 +1208,32 @@ cs <- function(th, ob) {
 #' @export
 calculateCostValueGS <- function(resTh, resOb) {
 
-  nCompCorrect  <- resOb$prob$nTrialsMean[resOb$prob$Comp == "comp" & resOb$prob$Error == 0][1]
-  if (is.na(nCompCorrect)) { nCompCorrect <- 0 }
-  nCompError    <- resOb$prob$nTrialsMean[resOb$prob$Comp == "comp" & resOb$prob$Error == 1][1]
-  if (is.na(nCompError)) { nCompError <- 0 }
+  nCompCorrectOb  <- resOb$prob$nTrials[resOb$prob$Comp == "comp" & resOb$prob$Error == 0][1]
+  if (is.na(nCompCorrectOb)) { nCompCorrectOb <- 0 }
+  nCompCorrectTh  <- length(resTh$sim$rts_comp)
+  nCompErrorOb    <- resOb$prob$nTrials[resOb$prob$Comp == "comp" & resOb$prob$Error == 1][1]
+  if (is.na(nCompErrorOb)) { nCompErrorOb <- 0 }
+  nCompErrorTh    <- length(resTh$sim$errs_comp)
+  nCompTotalOb    <- nCompCorrectOb + nCompErrorOb
+  nCompTotalTh    <- nCompCorrectTh + nCompErrorTh
 
-  gsCompCorrect <- gs(resTh$sim$rts_comp,  resOb$prob[resOb$prob$Comp == "comp" & resOb$prob$Error == 0, ])
-  gsCompError   <- gs(resTh$sim$errs_comp, resOb$prob[resOb$prob$Comp == "comp" & resOb$prob$Error == 1, ])
+  gsCompCorrect <- gs(resTh$sim$rts_comp,  resOb$prob[resOb$prob$Comp == "comp" & resOb$prob$Error == 0, ], nCompCorrectOb/nCompTotalOb, nCompCorrectTh/nCompTotalTh)
+  gsCompError   <- gs(resTh$sim$errs_comp, resOb$prob[resOb$prob$Comp == "comp" & resOb$prob$Error == 1, ], nCompErrorOb/nCompTotalOb, nCompErrorTh/nCompTotalTh)
 
-  nIncompCorrect  <- resOb$prob$nTrialsMean[resOb$prob$Comp == "incomp" & resOb$prob$Error == 0][1]
-  if (is.na(nIncompCorrect)) { nIncompCorrect <- 0 }
-  nIncompError    <- resOb$prob$nTrialsMean[resOb$prob$Comp == "incomp" & resOb$prob$Error == 1][1]
-  if (is.na(nIncompError)) { nIncompError <- 0 }
+  nIncompCorrectOb <- resOb$prob$nTrials[resOb$prob$Comp == "incomp" & resOb$prob$Error == 0][1]
+  if (is.na(nIncompCorrectOb)) { nIncompCorrectOb <- 0 }
+  nIncompCorrectTh <- length(resTh$sim$rts_incomp)
+  nIncompErrorOb   <- resOb$prob$nTrials[resOb$prob$Comp == "incomp" & resOb$prob$Error == 1][1]
+  if (is.na(nIncompErrorOb)) { nIncompErrorOb <- 0 }
+  nIncompErrorTh   <- length(resTh$sim$errs_incomp)
+  nIncompTotalOb   <- nIncompCorrectOb + nIncompErrorOb
+  nIncompTotalTh   <- nIncompCorrectTh + nIncompErrorTh
 
-  gsIncompCorrect <- gs(resTh$sim$rts_incomp,  resOb$prob[resOb$prob$Comp == "incomp" & resOb$prob$Error == 0, ])
-  gsIncompError   <- gs(resTh$sim$errs_incomp, resOb$prob[resOb$prob$Comp == "incomp" & resOb$prob$Error == 1, ])
+  gsIncompCorrect <- gs(resTh$sim$rts_incomp,  resOb$prob[resOb$prob$Comp == "incomp" & resOb$prob$Error == 0, ], nIncompCorrectOb/nIncompTotalOb, nIncompCorrectTh/nIncompTotalTh)
+  gsIncompError   <- gs(resTh$sim$errs_incomp, resOb$prob[resOb$prob$Comp == "incomp" & resOb$prob$Error == 1, ], nIncompErrorOb/nIncompTotalOb,   nIncompErrorTh/nIncompTotalTh)
 
-  gsComp    <- (nCompCorrect + nCompError)     * (sum(gsCompCorrect,   na.rm = TRUE) + sum(gsCompError,   na.rm = TRUE))
-  gsIncomp  <- (nIncompCorrect + nIncompError) * (sum(gsIncompCorrect, na.rm = TRUE) + sum(gsIncompError, na.rm = TRUE))
+  gsComp    <- nCompTotalOb   * (sum(gsCompCorrect)   + sum(gsCompError))
+  gsIncomp  <- nIncompTotalOb * (sum(gsIncompCorrect) + sum(gsIncompError))
 
   costValue <- 2 * (gsComp + gsIncomp)
 
@@ -1200,20 +1241,22 @@ calculateCostValueGS <- function(resTh, resOb) {
 }
 
 
-gs <- function(th, ob) {
+gs <- function(th, ob, trialPropOb, trialPropTh) {
   # What to do if 0 trials in theoretical/observed?
   # Can happen in comp error conditions
   if (length(th) == 0 & nrow(ob) > 0) {
-    return(ob$nTrialsMean[1])
+    return(trialPropOb)
   }  else if (length(th) > 0 & nrow(ob) == 0) {
-    return(length(th))
+    return(trialPropTh)
   } else if (length(th) == 0 & nrow(ob) == 0) {
     return(0) # zero trials predicted and zero observed so return 0
   }
-  probE <- c(0.1, 0.2, 0.2, 0.2, 0.2, 0.1) # TO DO hard coded?
+  probE <- c(0.1, 0.2, 0.2, 0.2, 0.2, 0.1) * trialPropOb # TO DO hard coded?
+
   nBin  <- table(factor(.bincode(th, c(0, ob$boundary, Inf)), levels = 1:6))
-  pBin  <- nBin / sum(nBin) # sum(pBin) == 1
-  gs    <- abs(pBin * log(pBin / probE))
+  pBin  <- (nBin / sum(nBin)) * trialPropTh # sum(pBin) == 1
+  pBin[pBin == 0] = 0.0001 # avoid /0
+  gs    <- abs(probE * log(probE / pBin))
   return(gs)
 }
 
@@ -1280,19 +1323,18 @@ calculateBinProbabilities <- function(resOb, quantileType = 5) {
       dplyr::filter(nTrials >= 5)
   }
 
+  nTotal <- length(unique(resOb$probSubject$Subject))
+
   resOb$prob <- resOb$probSubject %>%
     dplyr::group_by(Comp, Error, prob) %>%
     dplyr::summarize(
-      nSubjects    = n(),
-      nTrialsTotal = sum(nTrials),
-      nTrialsMean  = mean(nTrials),
-      boundary     = mean(boundary),
-      .groups      = "drop"
+      nSubjectsTotal = nTotal,
+      nSubjectsGroup = n(),
+      # nTrials        = mean(nTrials),
+      nTrials        = sum(nTrials)/nTotal,
+      boundary       = mean(boundary),
+      .groups        = "drop"
     )
 
   return(resOb)
 }
-
-
-
-

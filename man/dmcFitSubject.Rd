@@ -11,22 +11,22 @@ dmcFitSubject(
   minVals = list(),
   maxVals = list(),
   fixedFit = list(),
-  freeCombined = list(),
   fitInitialGrid = TRUE,
   fitInitialGridN = 10,
   fixedGrid = list(),
+  freeCombined = list(),
   nCAF = 5,
   nDelta = 19,
   pDelta = vector(),
   tDelta = 1,
   deltaErrors = FALSE,
-  costFunction = "RMSE",
   spDist = 1,
   drOnset = 0,
   drDist = 0,
   drShape = 3,
   drLim = c(0.1, 0.7),
   rtMax = 5000,
+  costFunction = "RMSE",
   subjects = c(),
   printInputArgs = TRUE,
   printResults = FALSE,
@@ -57,12 +57,6 @@ amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., fixed
 bnds = F, bndsRate=T, bndsSaturation=T, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T))
 NB. Value if fixed at startVals.}
 
-\item{freeCombined}{If fitting 2+ datasets at once, which parameters are allowed to vary between both
-fits (default = all parameters fixed between the two fits e.g. parameter = F).
-This is a list with bool values specified individually for
-amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., freeCombined = list(amp = F,
-tau = F, drc = F, bnds = F, bndsRate=F, bndsSaturation=F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = F, sigm = F))}
-
 \item{fitInitialGrid}{TRUE/FALSE}
 
 \item{fitInitialGridN}{10 linear steps between parameters min/max values (reduce if searching more than ~2/3 initial parameters)}
@@ -71,6 +65,12 @@ tau = F, drc = F, bnds = F, bndsRate=F, bndsSaturation=F, resMean = F, resSD = F
 amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., fixedGrid = list(amp = T, tau = F, drc = T,
 bnds = T, bndsRate=T, bndsSaturation=T, resMean = T, resSD = T, aaShape = T, spShape = T, spBias = T, sigm = T)). As a default,
 the initial gridsearch only searches the tau space.}
+
+\item{freeCombined}{If fitting 2+ datasets at once, which parameters are allowed to vary between both
+fits (default = all parameters fixed between the two fits e.g. parameter = F).
+This is a list with bool values specified individually for
+amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., freeCombined = list(amp = F,
+tau = F, drc = F, bnds = F, bndsRate=F, bndsSaturation=F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = F, sigm = F))}
 
 \item{nCAF}{Number of CAF bins.}
 
@@ -81,9 +81,6 @@ the initial gridsearch only searches the tau space.}
 \item{tDelta}{The type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)}
 
 \item{deltaErrors}{TRUE/FALSE Calculate delta bins for error trials}
-
-\item{costFunction}{The cost function to minimise: root mean square error ("RMSE": default),
-squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")}
 
 \item{spDist}{The starting point (sp) distribution (0 = constant, 1 = beta, 2 = uniform)}
 
@@ -96,6 +93,9 @@ squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS"
 \item{drLim}{The drift rate (dr) range}
 
 \item{rtMax}{The limit on simulated RT (decision + non-decisional components)}
+
+\item{costFunction}{The cost function to minimise: root mean square error ("RMSE": default),
+squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")}
 
 \item{subjects}{NULL (aggregated data across all subjects) or integer for subject number}
 
