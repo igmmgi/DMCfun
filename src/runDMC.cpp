@@ -143,8 +143,10 @@ const std::vector<double> starting_point(const Prms &p, RNG &rng) {
 
 const std::vector<double>boundary (const Prms &p) {
   std::vector<double> bnds(p.tmax, p.bnds);
-  for (unsigned int i = 0; i < p.tmax; i++) {
-    bnds[i] = bnds[i] * (1 - (p.bndsRate * (i / (i + p.bndsSaturation))));
+  if (p.bndsRate != 0) {
+    for (unsigned int i = 0; i < p.tmax; i++) {
+      bnds[i] = bnds[i] * (1 - (p.bndsRate * (i / (i + p.bndsSaturation))));
+    }
   }
   return bnds;
 }
