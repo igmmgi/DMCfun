@@ -2153,14 +2153,14 @@ plot_beh <- function(
        ylab = "", xlab = "",
        xaxt = "n",  yaxt = yaxt, ...)
   title(ylab = ylab, line = xylabPos)
-  axis(1, at = c(1, 2), labels = xlabs, ...)
-  axis(2, labels = FALSE, ...)
+  axis(1, at = c(1, 2), labels = xlabs)
+  axis(2, labels = FALSE, yaxt = "s")
 
   ltys <- c(1, 2)
   pchs <- c(1, 1)
 
   if (!is.null(datOb)) {
-    lines(c(1, 2), datOb, type = "o", col = "black", pch = pchs[1], lty = ltys[1])
+    lines(c(1, 2), datOb, type = "o", col = "black", pch = pchs[1], lty = ltys[1], xaxt="n")
   }
 
   if (!is.null(datTh)) {
