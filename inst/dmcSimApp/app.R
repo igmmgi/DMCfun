@@ -10,7 +10,7 @@ shiny::shinyApp(
       shiny::sidebarPanel(width = 2, style = "margin: 10px; overflow-y:scroll; max-height: 10%; font-size:14px",
 
         shiny::sliderInput(inputId = "amp",             label = "amp",             min =     0,    max =    100,  value =     20,   ticks = FALSE, step = 1,    width = 200),
-        shiny::sliderInput(inputId = "tau",             label = "tau",             min =     1,    max =    200,  value =     30,   ticks = FALSE, step = 1,    width = 200),
+        shiny::sliderInput(inputId = "tau",             label = "tau",             min =     1,    max =   1000,  value =     30,   ticks = FALSE, step = 1,    width = 200),
         shiny::sliderInput(inputId = "drc",             label = "drc",             min =     0.1,  max =      1,  value =      0.5, ticks = FALSE, step = 0.01, width = 200),
         shiny::sliderInput(inputId = "bnds",            label = "bnds",            min =     20,   max =    350,  value =     75,   ticks = FALSE, step = 5,    width = 200),
         shiny::sliderInput(inputId = "resMean",         label = "resMean",         min =     100,  max =    800,  value =    300,   ticks = FALSE, step = 5,    width = 200),
