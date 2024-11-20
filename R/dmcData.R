@@ -684,6 +684,88 @@ calculateDelta <- function(dat,
 
 
 
+#' @title calculateDeltaFactorialLong
+#'
+#' @description Top-Level Function to use calculateDelta with a factorial design. Use factorNames to provide one or multiple factors to calculate delta plots for. Calculate delta plot. Here RTs are split into n bins (Default: 5) for compatible and
+#' incompatible trials separately. Mean RT is calculated for each condition in each bin then
+#' subtracted (incompatible - compatible) to give a compatibility effect (delta) at each bin.
+#'
+#' @param dataFrame DataFrame with columns containing the participant number, condition
+#' compatibility, and RT data (in ms).
+#' @param factorNames Name Vector of the factors that should be used to calculate individual delta dfs.
+#' @param nDelta The number of delta bins.
+#' @param tDelta type of delta calculation (1=direct percentiles points, 2=percentile bounds (tile) averaging)
+#' @param columns Name of required columns Default: c("Subject", "Comp", "RT")
+#' @param compCoding Coding for compatibility Default: c("comp", "incomp")
+#' @param quantileType Argument (1-9) from R function quantile specifying the algorithm (?quantile)
+#'
+#' @return calculateDeltaFactorialLong returns a DataFrame with distributional delta analysis data (Bin, comp, incomp, meanBin, Effect) in long format. Subject and Bin will be used as ids and type hold the information whether the value is incomp, meanBin, Effect. The provided factors will be available as well.  
+#'
+#' @examples
+#' #Example 
+#' dat <- createDF(nSubjects = 1, nTrl = 10000, design = list("Comp" = c("comp", "incomp")))
+#' dat <- addDataDF(dat,
+#'                  RT = list("Comp_comp"   = c(500, 80, 100),
+#'                            "Comp_incomp" = c(600, 80, 140)))
+#' dat$factor <- sample(c("Test","Experiment"),nrow(dat),replace = T)
+#' delta <- calculateDeltaFactorialLong(dat, factorNames = c("factor"))
+#'
+#' @export
+calculateDeltaFactorialLong <- function(dataFrame = df, 
+                                        factorNames = c("factor"),
+                                        nDelta = 19,
+                                        tDelta = 1,
+                                        columns = c("Subject", "Comp", "RT"),
+                                        compCoding = c("comp", "incomp"),
+                                        quantileType = 5 )
+{
+  #Parse Factor Names as Syms
+  .factorNames<- rlang::syms(factorNames)
+  
+  #Generate Combined Factor for all possible combinations of the provided factors
+  dataFrame <- dataFrame %>%  dplyr::mutate(combinedFactor =  paste(!!!.factorNames, sep = "_" ))
+  
+  # Use empty tibble to store data from following loop
+  wideTable <- dplyr::tibble() 
+  for(factorLevel in unique(dataFrame$combinedFactor))
+  {
+    #Calculate wideData for individual factor level combination
+    tempDF <- dataFrame %>% 
+      dplyr::filter (combinedFactor == factorLevel) %>%
+      DMCfun::calculateDelta(
+        .,
+        nDelta = nDelta,
+        tDelta = tDelta,
+        columns = columns,
+        compCoding = compCoding,
+        quantileType = quantileType
+      )
+    
+    #Update names to match underlying factor combination
+    names(tempDF)[3:length(names(tempDF))] <- paste(names(tempDF)[3:length(names(tempDF))], factorLevel, sep="_") 
+    
+    # Adding initial Bin levels on first loop call
+    if(ncol(wideTable) == 0 ) { 
+      wideTable <- dplyr::tibble(Subject=tempDF$Subject, Bin=tempDF$Bin)
+    }
+    
+    # Join wideTable DF with the generated wideData from calculateDelta per factor level
+    wideTable <- dplyr::left_join(wideTable,y = tempDF,by =c("Subject","Bin") )
+  }
+  
+  # Extending the regEx for pivot_longer based on number of factors
+  additionalRegExGroups <- rep("_(.*)",length(factorNames)-1)
+  namesPatternRegEx <- paste0(c("(.*)",additionalRegExGroups,"_(.*)"),collapse = "")
+  
+  # Use pivot_longer to convert the generated wideTable to a ggplot-friendly long-format
+  longTable <- tidyr::pivot_longer(wideTable,
+                            cols = 3:ncol(wideTable),
+                            names_to = c("type",factorNames ),
+                            names_pattern = namesPatternRegEx ) %>% 
+    dplyr::select(dplyr::all_of(c("Subject","Bin", "type",factorNames,"value")))
+  return(longTable)
+}
+
 #' @title rtDist
 #'
 #' @description Returns value(s) from a distribution appropriate to simulate reaction times.
