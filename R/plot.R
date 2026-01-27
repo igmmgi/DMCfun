@@ -1484,6 +1484,14 @@ plot.dmcfits_subject <- function(x,
   if (!is.null(subject)) {
     # each data set for specific subject
     for (dataset in 1:length(y)) {
+      
+        if (!subject %in% y[[dataset]]$summarySubject$Subject) {
+          stop("datOb does not contain requested subject number!")
+        }
+        y[[dataset]]$summary <- y[[dataset]]$summarySubject[y[[dataset]]$summarySubject$Subject == subject, ]
+        y[[dataset]]$delta   <- y[[dataset]]$deltaSubject[y[[dataset]]$deltaSubject$Subject == subject, ]
+        y[[dataset]]$caf     <- y[[dataset]]$cafSubject[y[[dataset]]$cafSubject$Subject == subject, ]
+      
       plot(x[[subject]][[dataset]], y[[dataset]],
            figType = figType,
            labels = labels,
@@ -1513,6 +1521,8 @@ plot.dmcfits_subject <- function(x,
       for (subject in 1:length(x)) {
         subjects[[subject]] <- x[[subject]][[dataset]]
       }
+      
+     
       class(subjects) <- "dmcfit_subject"
       plot(mean(subjects), y[[dataset]],
            figType = figType,
