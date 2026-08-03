@@ -49,6 +49,8 @@
 #' @param printResults TRUE/FALSE (default)
 #' @param optimControl Additional control parameters passed to optim (see optim details section)
 #' @param numCores Number of cores to use
+#' @param setSeed TRUE/FALSE (default = TRUE) Lock the random seed for deterministic simulations.
+#' @param seedValue (default = 1234) The seed value used if setSeed is TRUE.
 #'
 #' @return dmcfit returns an object of class "dmcfit" with the following components:
 #'
@@ -394,8 +396,8 @@ dmcFit <- function(resOb,
 #' squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")
 #' @param deControl Additional control parameters passed to DEoptim (see DEoptim.control)
 #' @param numCores Number of cores to use
-#' @param setSeed TRUE/FALSE
-#' @param seedValue seed value
+#' @param setSeed TRUE/FALSE (default = TRUE) Lock the random seed for deterministic simulations.
+#' @param seedValue (default = 1234) The seed value used if setSeed is TRUE.
 #'
 #' @return dmcfit returns an object of class "dmcfit" with the following components:
 #'
@@ -682,8 +684,8 @@ dmcFitDE <- function(resOb,
 #' @param printResults TRUE/FALSE (default)
 #' @param optimControl Additional control parameters passed to optim (see optim details section)
 #' @param numCores Number of cores to use
-#' @param setSeed TRUE/FALSE
-#' @param seedValue seed value
+#' @param setSeed TRUE/FALSE (default = TRUE) Lock the random seed for deterministic simulations.
+#' @param seedValue (default = 1234) The seed value used if setSeed is TRUE.
 #'
 #' @return dmcFitSubject returns a list of objects of class "dmcfit"
 #'
@@ -835,6 +837,8 @@ dmcFitSubject <- function(resOb,
 #' @param subjects NULL (aggregated data across all subjects) or integer for subject number
 #' @param deControl Additional control parameters passed to DEoptim (see DEoptim.control)
 #' @param numCores Number of cores to use
+#' @param setSeed TRUE/FALSE (default = TRUE) Lock the random seed for deterministic simulations.
+#' @param seedValue (default = 1234) The seed value used if setSeed is TRUE.
 #'
 #' @return dmcFitSubjectDE returns a list of objects of class "dmcfit"
 #'

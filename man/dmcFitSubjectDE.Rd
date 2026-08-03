@@ -82,6 +82,10 @@ squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS"
 \item{deControl}{Additional control parameters passed to DEoptim (see DEoptim.control)}
 
 \item{numCores}{Number of cores to use}
+
+\item{setSeed}{TRUE/FALSE (default = TRUE) Lock the random seed for deterministic simulations.}
+
+\item{seedValue}{(default = 1234) The seed value used if setSeed is TRUE.}
 }
 \value{
 dmcFitSubjectDE returns a list of objects of class "dmcfit"

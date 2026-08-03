@@ -82,9 +82,9 @@ squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS"
 
 \item{numCores}{Number of cores to use}
 
-\item{setSeed}{TRUE/FALSE}
+\item{setSeed}{TRUE/FALSE (default = TRUE) Lock the random seed for deterministic simulations.}
 
-\item{seedValue}{seed value}
+\item{seedValue}{(default = 1234) The seed value used if setSeed is TRUE.}
 }
 \value{
 dmcfit returns an object of class "dmcfit" with the following components:
