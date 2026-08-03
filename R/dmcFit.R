@@ -977,6 +977,49 @@ mean.dmcfit_subject <- function(x, ...) {
   return(meanfit)
 }
 
+#' @title mean.dmcfits
+#'
+#' @description Aggregate simulation results across multiple datasets (models)
+#'
+#' @param x Output from dmcFit (class dmcfits)
+#' @param ... pars
+#'
+#' @return an object of class "dmcfit"
+#'
+#' @export
+mean.dmcfits <- function(x, ...) {
+  # The structure of dmcfits (list of dataset fits) is identical 
+  # to dmcfit_subject (list of subject fits) for the purposes of aggregation.
+  return(mean.dmcfit_subject(x, ...))
+}
+
+#' @title mean.dmcfits_subject
+#'
+#' @description Aggregate simulation results across datasets and subjects
+#'
+#' @param x Output from dmcFitSubject (class dmcfits_subject)
+#' @param ... pars
+#'
+#' @return an object of class "dmcfit"
+#'
+#' @export
+mean.dmcfits_subject <- function(x, ...) {
+  
+  # 1. Aggregate across models/datasets for each participant
+  subject_means <- lapply(x, function(subj_fits) {
+    # Handle NULL subjects (missing data/failed fits)
+    if (is.null(subj_fits)) return(NULL)
+    return(mean.dmcfits(subj_fits, ...))
+  })
+  
+  # Strip out any NULL subjects before across-participant aggregation
+  subject_means <- subject_means[!sapply(subject_means, is.null)]
+  
+  # 2. Aggregate across participants
+  class(subject_means) <- "dmcfit_subject"
+  return(mean.dmcfit_subject(subject_means, ...))
+}
+
 # function to minimise
 minimizeCostValue <- function(x,
                               costFunction,

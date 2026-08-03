@@ -487,6 +487,55 @@ dmcCombineObservedData <- function(...) {
   return(dat)
 }
 
+#' @title mean.dmcobs
+#'
+#' @description Aggregate observed data across multiple datasets
+#'
+#' @param x Output from dmcCombineObservedData (class dmcobs)
+#' @param ... pars
+#'
+#' @return an object of class "dmcob"
+#'
+#' @export
+mean.dmcobs <- function(x, ...) {
+  mergeLists <- function(lists, name) {
+    return(lapply(c(name), function(x) do.call(rbind, lapply(lists, `[[`, x)))[[1]])
+  }
+
+  meanob <- list()
+  
+  if (!is.null(x[[1]]$summary)) {
+    meanob$summary <- mergeLists(x, "summary") %>%
+      dplyr::group_by(Comp) %>%
+      dplyr::summarise_all(mean)
+      
+    meanob$delta <- mergeLists(x, "delta") %>%
+      dplyr::group_by(Bin) %>%
+      dplyr::summarize_all(mean)
+      
+    meanob$caf <- mergeLists(x, "caf") %>%
+      dplyr::group_by(Bin) %>%
+      dplyr::summarize_all(mean)
+  }
+  
+  if (!is.null(x[[1]]$summarySubject)) {
+    meanob$summarySubject <- mergeLists(x, "summarySubject") %>%
+      dplyr::group_by(Subject, Comp) %>%
+      dplyr::summarise_all(mean)
+      
+    meanob$deltaSubject <- mergeLists(x, "deltaSubject") %>%
+      dplyr::group_by(Subject, Bin) %>%
+      dplyr::summarize_all(mean)
+      
+    meanob$cafSubject <- mergeLists(x, "cafSubject") %>%
+      dplyr::group_by(Subject, Bin) %>%
+      dplyr::summarize_all(mean)
+  }
+  
+  class(meanob) <- "dmcob"
+  return(meanob)
+}
+
 
 #' @title calculateCAF
 #'

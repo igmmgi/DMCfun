@@ -68,11 +68,14 @@ summary.dmcfit <- function(object, digits = 2, ...) {
 #' }
 #'
 #' @export
-summary.dmcfits <- function(object, digits = 2, ...) {
+summary.dmcfits <- function(object, digits = 2, dataset = NULL, ...) {
   # aggregated participant fit 2+ data sets
   out <- NULL
   for (i in 1:length(object)) {
     out <- rbind(out, cbind(DataSet = i, round(do.call(cbind.data.frame, object[[i]]$par), digits)))
+  }
+  if (!is.null(dataset)) {
+    out <- out[out$DataSet == dataset, ]
   }
   return(out)
 }
@@ -96,15 +99,19 @@ summary.dmcfits <- function(object, digits = 2, ...) {
 #' }
 #'
 #' @export
-summary.dmcfit_subject <- function(object, digits = 2, ...) {
+summary.dmcfit_subject <- function(object, digits = 2, subject = NULL, ...) {
   # individual participant fit 1 data set
   subjects <- which(!unlist(lapply(object, is.null)))
   outSubject <- NULL
-  for (subject in subjects) {
-    outSubject <- rbind(outSubject, cbind(subject, as.data.frame(object[[subject]]$par)))
+  for (sub in subjects) {
+    outSubject <- rbind(outSubject, cbind(subject = sub, as.data.frame(object[[sub]]$par)))
   }
   outSubject <- round(outSubject, digits)
   outAvg     <- round(as.data.frame(t(colMeans(data.matrix(outSubject[, 2:(length(outSubject))])))), digits)
+  
+  if (!is.null(subject)) {
+    outSubject <- outSubject[outSubject$subject == subject, ]
+  }
   return(list(outSubject, outAvg))
 }
 
@@ -127,21 +134,29 @@ summary.dmcfit_subject <- function(object, digits = 2, ...) {
 #' }
 #'
 #' @export
-summary.dmcfits_subject <- function(object, digits = 2, ...) {
+summary.dmcfits_subject <- function(object, digits = 2, subject = NULL, dataset = NULL, ...) {
 
   # individual participant fits 2+ data sets
   subjects <- which(!unlist(lapply(object, is.null)))
   outSubject <- NULL
-  for (subject in subjects) {
-    for (dataset in 1:lengths(object)[subject]) {
-      outSubject <- round(rbind(outSubject, cbind(DataSet = dataset, subject = subject,
-                                                  do.call(cbind.data.frame, object[[subject]][[dataset]]$par))), digits)
+  for (sub in subjects) {
+    for (dset in 1:lengths(object)[sub]) {
+      outSubject <- round(rbind(outSubject, cbind(DataSet = dset, subject = sub,
+                                                  do.call(cbind.data.frame, object[[sub]][[dset]]$par))), digits)
     }
   }
   outAvg <- outSubject %>%
     dplyr::group_by(DataSet) %>%
     dplyr::summarize_all(mean) %>%
     dplyr::select(-subject)
+    
+  if (!is.null(dataset)) {
+    outSubject <- outSubject[outSubject$DataSet == dataset, ]
+    outAvg <- outAvg[outAvg$DataSet == dataset, ]
+  }
+  if (!is.null(subject)) {
+    outSubject <- outSubject[outSubject$subject == subject, ]
+  }
   return(list(outSubject, outAvg))
 
 }

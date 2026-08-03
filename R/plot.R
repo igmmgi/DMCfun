@@ -611,14 +611,10 @@ plot.dmcob <- function(x,
 #' }
 #' @export
 plot.dmcobs <- function(x,
-                        figType = "all",
-                        subject = NULL,
+                        dataset = NULL,
+                        figType = "summary",
                         labels = c("Compatible", "Incompatible"),
-                        cols = c("black", "gray"),
-                        ltys = c(1, 1),
-                        pchs = c(1, 1),
-                        errorBars = FALSE,
-                        errorBarType = "sd",
+                        cols = c("green", "red"),
                         ylimRt = NULL,
                         ylimErr = NULL,
                         xlimCDF = NULL,
@@ -632,385 +628,12 @@ plot.dmcobs <- function(x,
                         yaxts = TRUE,
                         xylabPos = 2,
                         resetPar = TRUE,
-                        legend = TRUE,
-                        legend.parameters = list(),
                         ...) {
-
-  # original plot par
-  if (resetPar) {
-    opar <- par(no.readonly = TRUE)
-    on.exit(par(opar))
-  }
-
-  # cycle
-  if (length(x) > 2) {
-    cols <- rep(cols, ceiling(length(x)/length(cols)))
-    ltys <- rep(ltys, ceiling(length(x)/length(ltys)))
-    pchs <- rep(pchs, ceiling(length(x)/length(pchs)))
-  }
-
-  figType <- tolower(figType)
-  figTypes <- c("all", "rtcorrect", "errorrate", "rterrors", "cdf", "caf", "delta", "deltaerrors", "deltaer")
-  if (length(figType) > 1 || !figType %in% figTypes) {
-    stop("figType must be one of:", paste0(figTypes, collapse = ", "))
-  }
-  if (length(labels) != 2) {
-    stop("labels must be length 2")
-  }
-
-  if (!is.null(subject)) {
-    # select individual subject dataset
-    for (i in 1:length(x)) {
-      if (!subject %in% x[[i]]$summarySubject$Subject) {
-        stop("datOb does not contain requested subject number!")
-      }
-      x[[i]]$summary <- x[[i]]$summarySubject[x[[i]]$summarySubject$Subject == subject, ]
-      x[[i]]$delta   <- x[[i]]$deltaSubject[x[[i]]$deltaSubject$Subject == subject, ]
-      x[[i]]$caf     <- x[[i]]$cafSubject[x[[i]]$cafSubject$Subject == subject, ]
-    }
-    errorBars <- FALSE
-  }
-
-
-  if (errorBars) {
-    if ((!is.character(errorBarType)) | (!errorBarType %in% c("sd", "se"))) {
-      stop("errorBar must be either \"sd\", or \"se\"!")
-    }
-  }
-
-  showFig <- rep(FALSE, 8)
-
-  # xlabels
-  if (xlabs) {
-    xlabs          <- rep("", 8)
-    xlabs[c(1, 2)] <- labels
-    xlabs[c(4, 6)] <- c("Time [ms]")
-    xlabs[c(5)]    <- c("RT Bin")
+  if (is.null(dataset)) {
+    plot(mean(x), figType = figType, labels = labels, cols = cols, ylimRt = ylimRt, ylimErr = ylimErr, xlimCDF = xlimCDF, ylimCAF = ylimCAF, cafBinLabels = cafBinLabels, ylimDelta = ylimDelta, xlimDelta = xlimDelta, xlabs = xlabs, ylabs = ylabs, xaxts = xaxts, yaxts = yaxts, xylabPos = xylabPos, resetPar = resetPar, ...)
   } else {
-    xlabs <- rep("", 8)
+    plot(x[[dataset]], figType = figType, labels = labels, cols = cols, ylimRt = ylimRt, ylimErr = ylimErr, xlimCDF = xlimCDF, ylimCAF = ylimCAF, cafBinLabels = cafBinLabels, ylimDelta = ylimDelta, xlimDelta = xlimDelta, xlabs = xlabs, ylabs = ylabs, xaxts = xaxts, yaxts = yaxts, xylabPos = xylabPos, resetPar = resetPar, ...)
   }
-
-  # ylabels
-  if (ylabs) {
-    ylabs <- c("RT Correct [ms]", "Error Rate [%]", "RT Error [ms]", "CDF", "CAF", expression(Delta))
-  } else {
-    ylabs <- rep("", 8)
-  }
-
-  # xaxts and yaxts
-  xaxt <- ifelse(xaxts, "s", "n")
-  yaxt <- ifelse(yaxts, "s", "n")
-
-  if (figType == "all") {
-    par(mar = c(4, 4, 1, 1), mfrow = c(1, 1), ...)
-    showFig[1:8] <- TRUE
-  } else {
-    showFig[figTypes[2:9] %in% figType] <- TRUE
-  }
-
-  # rtCorrect
-  if (showFig[1]) {
-
-    if (is.null(ylimRt)) {
-      minx <- min(sapply(x, function(x) min(x$summary$rtCor)))
-      maxx <- max(sapply(x, function(x) max(x$summary$rtCor)))
-      ylimRt <- c(minx - 100, maxx + 100)
-    }
-
-    plot_beh(resTh = NULL, resOb = NULL, figType = "rtcorrect", xlabs = labels,
-             ylab = ylabs[1], ylim = ylimRt, xylabPos = xylabPos, ...)
-    for (i in seq_along(x)) {
-      lines(c(1, 2), x[[i]]$summary$rtCor, type = "o", col = cols[i], lty = ltys[i], pch = pchs[i], ...)
-      if (errorBars) {
-        addErrorBars(c(1, 2), x[[i]]$summary$rtCor, x[[i]]$summary[[paste0(errorBarType, "RtCor")]])
-      }
-    }
-
-    if (legend) {
-      delfault_legend.parameters <- list(legend = paste0("Cond ", seq_along(x)), x = "bottomright",
-                                         col = cols, lty = ltys, pch = pchs, inset = 0)
-      legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
-      add_legend(legend.parameters)
-    }
-
-  }
-
-  # errorRate
-  if (showFig[2]) {
-
-    if (is.null(ylimErr)) {
-      miny    <- min(sapply(x, function(x) min(x$summary$perErr)))
-      maxy    <- max(sapply(x, function(x) max(x$summary$perErr)))
-      ylimErr <- c(0, maxy + 10)
-    }
-
-    plot_beh(resTh = NULL, resOb = NULL, figType = "errorrate", xlabs = labels,
-             ylab = ylabs[2], ylim = ylimErr, xylabPos = xylabPos, ...)
-    for (i in seq_along(x)) {
-      lines(c(1, 2), x[[i]]$summary$perErr, type = "o", col = cols[i], lty = ltys[i], pch = pchs[i], ...)
-      if (errorBars) {
-        addErrorBars(c(1, 2), x[[i]]$summary$perErr, x[[i]]$summary[[paste0(errorBarType, "PerErr")]])
-      }
-    }
-
-    if (legend) {
-      delfault_legend.parameters <- list(legend = paste0("Cond ", seq_along(x)), x = "bottomright",
-                                         col = cols, lty = ltys, pch = pchs, inset = 0)
-      legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
-      add_legend(legend.parameters)
-    }
-
-  }
-
-  # rtError
-  if (showFig[3]) {
-
-    if (is.null(ylimRt)) {
-      miny  <- min(sapply(x, function(x) min(x$summary$rtErr)))
-      maxy  <- max(sapply(x, function(x) max(x$summary$rtErr)))
-      ylimRt <- c(miny - 100, maxy + 100)
-    }
-
-    plot_beh(resTh = NULL, resOb = NULL, figType = "rterrors", xlabs = labels,
-             ylab = ylabs[3], ylim = ylimRt, xylabPos = xylabPos, ...)
-    for (i in seq_along(x)) {
-      lines(c(1, 2), x[[i]]$summary$rtErr, type = "o", col = cols[i], lty = ltys[i], pch = pchs[i], ...)
-      if (errorBars) {
-        addErrorBars(c(1, 2), x[[i]]$summary$rtErr, x[[i]]$summary[[paste0(errorBarType, "RtErr")]])
-      }
-    }
-
-    if (legend) {
-      delfault_legend.parameters <- list(legend = paste0("Cond ", seq_along(x)), x = "bottomright",
-                                         col = cols, lty = ltys, pch = pchs, inset = 0)
-      legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
-      add_legend(legend.parameters)
-    }
-
-  }
-
-  # CDF
-  if (showFig[4]) {
-
-    if (is.null(xlimCDF)) {
-      minx  <- min(sapply(x, function(x) min(x$delta$meanBin)))
-      maxx  <- max(sapply(x, function(x) max(x$delta$meanBin)))
-      xlimCDF <- c(minx - 100, maxx + 100)
-    }
-
-    plot(NULL, NULL,
-         ylim = c(0, 1), xlim = xlimCDF,
-         ylab = "", xlab = "",
-         xaxt = xaxt, yaxt = "n", ...)
-    title(xlab = xlabs[4], line = xylabPos)
-    title(ylab = ylabs[4], line = xylabPos)
-    if (xaxt == "n") axis(side = 1, labels = FALSE)  # keep tick marks
-    if (yaxt == "n") {
-      axis(side = 2, labels = FALSE)  # keep tick marks
-    } else if (yaxts ==  "s") {
-      axis(2, at = seq(0, 1, 0.25), labels = as.character(seq(0, 1, 0.25)))
-    }
-
-    ndelta <- nrow(x[[1]]$delta)
-    ypoints <- seq(0, 1, length.out = ndelta + 2)[2:(ndelta + 1)]
-    for (i in seq_along(x)) {
-      lines(x[[i]]$delta$meanComp, ypoints, type = "o",
-            ylim = c(0, 1), xlim = c(200, 1000),
-            ylab = ylabs[4], xlab = xlabs[4],
-            col = tail(cols, 2)[1], lty = ltys[i], pch = pchs[i],
-            xaxt = xaxt, yaxt = "n", ...)
-      lines(x[[i]]$delta$meanIncomp, ypoints, type = "o", col = tail(cols, 2)[2], ...)
-    }
-
-    if (legend) {
-      delfault_legend.parameters <- list(legend = paste0("Cond ", seq_along(x)), x = "bottomright",
-                                         col = cols, lty = ltys, pch = pchs, inset = 0)
-      legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
-      add_legend(legend.parameters)
-    }
-
-  }
-
-  # CAF
-  if (showFig[5]) {
-
-    if (is.null(ylimCAF)) {
-      ylimCAF <- c(0, 1)
-    }
-
-    nCAF <- length(x[[1]]$caf$Bin)
-    plot(NULL, NULL,
-         ylim = ylimCAF,
-         ylab = "", xlab = "", xlim = c(0.5, nCAF + 0.5),
-         xaxt = "n", yaxt = "n", ...)
-    title(xlab = xlabs[5], line = xylabPos)
-    title(ylab = ylabs[5], line = xylabPos)
-    if (xaxts == "n") {
-      axis(side = 1, labels = FALSE)  # keep tick marks
-    } else if (xaxt == "s" | cafBinLabels) {
-      if (cafBinLabels) {
-        stepCAF <- 100 / nCAF
-        cafLabels <- paste0(paste(seq(0, 100 - stepCAF, stepCAF), seq(stepCAF, 100, stepCAF), sep = "-"), "%")
-        axis(1, at = seq(1, nCAF, 1), labels = cafLabels, ...)
-      } else {
-        axis(1, at = seq(1, nCAF, 1), ...)
-      }
-    } else {
-      axis(side = 1, labels = FALSE)
-    }
-
-    if (yaxt == "n") {
-      axis(side = 2, labels = FALSE)  # keep tick marks
-    } else if (yaxt == "s") {
-      axis(2, at = seq(0, 1, 0.2), labels = as.character(seq(0, 1, 0.2)), ...)
-    }
-
-    for (i in seq_along(x)) {
-      lines(x[[i]]$caf$accPerComp,   type = "o", col = tail(cols, 2)[1], lty = ltys[i], pch = pchs[i], ...)
-      lines(x[[i]]$caf$accPerIncomp, type = "o", col = tail(cols, 2)[2], lty = ltys[i], pch = pchs[i], ...)
-    }
-
-    if (legend) {
-      delfault_legend.parameters <- list(legend = paste0("Cond ", seq_along(x)),
-                                         x = "bottomright", col = cols, lty = ltys, pch = pchs, inset = 0)
-      legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
-      add_legend(legend.parameters)
-    }
-
-  }
-
-  # delta
-  if (showFig[6]) {
-
-    # default axis limits
-    if (is.null(xlimDelta)) {
-      minx  <- min(sapply(x, function(x) min(x$delta$meanBin)))
-      maxx  <- max(sapply(x, function(x) max(x$delta$meanBin)))
-      xlimDelta <- c(minx - 100, maxx + 100)
-    }
-    if (is.null(ylimDelta)) {
-      miny  <- min(sapply(x, function(x) min(x$delta$meanEffect)))
-      maxy  <- max(sapply(x, function(x) max(x$delta$meanEffect)))
-      ylimDelta <- c(miny - 100, maxy + 100)
-    }
-
-    plot(NULL, NULL,
-         ylim = ylimDelta, xlim = xlimDelta,
-         ylab = "", xlab = "",
-         xaxt = xaxt, yaxt = yaxt, ...)
-    title(xlab = xlabs[6], line = xylabPos)
-    title(ylab = ylabs[6], line = xylabPos)
-    axis(side = 1, labels = FALSE)
-    axis(2, labels = FALSE)
-
-    for (i in seq_along(x)) {
-      lines(x[[i]]$delta$meanBin, x[[i]]$delta$meanEffect, type = "o", col = cols[i], lty = ltys[i], pch = pchs[i])
-      if (errorBars) {
-        errorBarCol <- which(grepl(errorBarType, colnames(x$delta)))
-        addErrorBars(x[[i]]$delta$meanBin,
-                     x[[i]]$delta$meanEffect,
-                     x[[i]]$delta[[errorBarCol]],
-                     arrowSize = 0.05)
-      }
-    }
-
-    if (legend) {
-      delfault_legend.parameters <- list(legend = paste0("Cond ", seq_along(x)),
-                                         x = "bottomright", col = cols, lty = ltys, pch = pchs, inset = 0)
-      legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
-      add_legend(legend.parameters)
-    }
-
-  }
-
-  # deltaErrors
-  if (showFig[7]) {
-
-    # default axis limits
-    if (is.null(xlimDelta)) {
-      minx  <- min(sapply(x, function(x) min(x$deltaErrors$meanBin)))
-      maxx  <- max(sapply(x, function(x) max(x$deltaErrors$meanBin)))
-      xlimDelta <- c(minx - 100, maxx + 100)
-    }
-    if (is.null(ylimDelta)) {
-      miny  <- min(sapply(x, function(x) min(x$deltaErrors$meanEffect)))
-      maxy  <- max(sapply(x, function(x) max(x$deltaErrors$meanEffect)))
-      ylimDelta <- c(miny - 100, maxy + 100)
-    }
-
-    plot(NULL, NULL,
-         ylim = ylimDelta, xlim = xlimDelta,
-         ylab = "", xlab = "",
-         xaxt = xaxt, yaxt = yaxt, ...)
-    title(xlab = xlabs[7], line = xylabPos)
-    title(ylab = ylabs[7], line = xylabPos)
-    axis(side = 1, labels = FALSE)
-    axis(2, labels = FALSE)
-
-    for (i in seq_along(x)) {
-      lines(x[[i]]$deltaErrors$meanBin, x[[i]]$deltaErrors$meanEffect, type = "o", col = cols[i], lty = ltys[i], pch = pchs[i])
-      if (errorBars) {
-        errorBarCol <- which(grepl(errorBarType, colnames(x$deltaErrors)))
-        addErrorBars(x[[i]]$deltaErrors$meanBin,
-                     x[[i]]$deltaErrors$meanEffect,
-                     x[[i]]$deltaErrors[[errorBarCol]],
-                     arrowSize = 0.05)
-      }
-    }
-
-    if (legend) {
-      delfault_legend.parameters <- list(legend = paste0("Cond ", seq_along(x)),
-                                         x = "bottomright", col = cols, lty = ltys, pch = pchs, inset = 0)
-      legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
-      add_legend(legend.parameters)
-    }
-
-  }
-
-  # deltaER
-  if (showFig[8]) {
-
-    # default axis limits
-    if (is.null(xlimDelta)) {
-      minx  <- min(sapply(x, function(x) min(x$caf$meanBin)))
-      maxx  <- max(sapply(x, function(x) max(x$caf$meanBin)))
-      xlimDelta <- c(minx - 100, maxx + 100)
-    }
-    if (is.null(ylimDelta)) {
-      miny  <- min(sapply(x, function(x) min(x$caf$meanEffect)))
-      maxy  <- max(sapply(x, function(x) max(x$caf$meanEffect)))
-      ylimDelta <- c(miny - 2, maxy + 2)
-    }
-
-    plot(NULL, NULL,
-         ylim = ylimDelta, xlim = xlimDelta,
-         ylab = "", xlab = "",
-         xaxt = xaxt, yaxt = yaxt, ...)
-    title(xlab = xlabs[8], line = xylabPos)
-    title(ylab = ylabs[8], line = xylabPos)
-    axis(side = 1, labels = FALSE)
-    axis(2, labels = FALSE)
-
-    for (i in seq_along(x)) {
-      lines(x[[i]]$caf$meanBin, x[[i]]$caf$meanEffect, type = "o", col = cols[i], lty = ltys[i], pch = pchs[i])
-      if (errorBars) {
-        errorBarCol <- which(grepl(errorBarType, colnames(x$caf)))
-        addErrorBars(x[[i]]$caf$meanBin,
-                     x[[i]]$caf$meanEffect,
-                     x[[i]]$caf[[errorBarCol]],
-                     arrowSize = 0.05)
-      }
-    }
-
-    if (legend) {
-      delfault_legend.parameters <- list(legend = paste0("Cond ", seq_along(x)), x = "bottomright",
-                                         col = cols, lty = ltys, pch = pchs, inset = 0)
-      legend.parameters <- modifyList(delfault_legend.parameters, legend.parameters)
-      add_legend(legend.parameters)
-    }
-
-  }
-
 }
 
 
@@ -1262,49 +885,20 @@ plot.dmcfit_subject <- function(x,
                                 legend = TRUE,
                                 legend.parameters = list(legend = c("Observed", "Predicted")),
                                 ...) {
-
   if (is.null(subject)) {
-    x <- mean(x)
-
+    plot(mean(x), y, figType = figType, labels = labels, cols = cols, ylimRt = ylimRt, ylimErr = ylimErr, xlimCDF = xlimCDF, ylimCAF = ylimCAF, cafBinLabels = cafBinLabels, ylimDelta = ylimDelta, xlimDelta = xlimDelta, xlabs = xlabs, ylabs = ylabs, xaxts = xaxts, yaxts = yaxts, xylabPos = xylabPos, resetPar = resetPar, legend = legend, legend.parameters = legend.parameters, ...)
   } else {
-
-    subjects <- which(!unlist(lapply(x, is.null)))
-    if (!subject %in% subjects) {
-      stop("datTh (x) does not contain requested subject number!")
+    # Extract data for specific subject
+    if (!subject %in% y$summarySubject$Subject) {
+      stop("datOb does not contain requested subject number!")
     }
-
-    x <- x[[subject]]
-    if (is.null(x)) {
-      stop("datTh (x) does not contain individual fits!")
-    }
-
-    y$summary <- y$summarySubject[y$summarySubject$Subject == subject, ]
-    y$delta   <- y$deltaSubject[y$deltaSubject$Subject == subject, ]
-    y$caf     <- y$cafSubject[y$cafSubject$Subject == subject, ]
-
+    y_subj <- y
+    y_subj$summary <- y$summarySubject[y$summarySubject$Subject == subject, ]
+    y_subj$delta   <- y$deltaSubject[y$deltaSubject$Subject == subject, ]
+    y_subj$caf     <- y$cafSubject[y$cafSubject$Subject == subject, ]
+    
+    plot(x[[subject]], y_subj, figType = figType, labels = labels, cols = cols, ylimRt = ylimRt, ylimErr = ylimErr, xlimCDF = xlimCDF, ylimCAF = ylimCAF, cafBinLabels = cafBinLabels, ylimDelta = ylimDelta, xlimDelta = xlimDelta, xlabs = xlabs, ylabs = ylabs, xaxts = xaxts, yaxts = yaxts, xylabPos = xylabPos, resetPar = resetPar, legend = legend, legend.parameters = legend.parameters, ...)
   }
-
-  plot(x, y,
-       figType = figType,
-       labels = labels,
-       cols = cols,
-       ylimRt = ylimRt,
-       ylimErr = ylimErr,
-       xlimCDF = xlimCDF,
-       ylimCAF = ylimCAF,
-       cafBinLabels = cafBinLabels,
-       ylimDelta = ylimDelta,
-       xlimDelta = xlimDelta,
-       xlabs = xlabs,
-       ylabs = ylabs,
-       xaxts = xaxts,
-       yaxts = yaxts,
-       xylabPos = xylabPos,
-       resetPar = resetPar,
-       legend = legend,
-       legend.parameters = legend.parameters,
-       ...)
-
 }
 
 
@@ -1359,6 +953,7 @@ plot.dmcfit_subject <- function(x,
 #' @export
 plot.dmcfits <- function(x,
                          y,
+                         dataset = NULL,
                          figType = "summary",
                          labels = c("Compatible", "Incompatible", "Observed", "Predicted"),
                          cols = c("green", "red"),
@@ -1378,35 +973,14 @@ plot.dmcfits <- function(x,
                          legend = TRUE,
                          legend.parameters = list(legend = c("Observed", "Predicted")),
                          ...) {
-
   if (length(x) != length(y)) {
     stop("length(x) != length(y)!")
   }
-
-  for (plt in 1:length(x)) {
-    plot(x[[plt]],
-         y[[plt]],
-         figType           = figType,
-         labels            = labels,
-         cols              = cols,
-         ylimRt            = ylimRt,
-         ylimErr           = ylimErr,
-         xlimCDF           = xlimCDF,
-         ylimCAF           = ylimCAF,
-         cafBinLabels      = cafBinLabels,
-         ylimDelta         = ylimDelta,
-         xlimDelta         = xlimDelta,
-         xlabs             = xlabs,
-         ylabs             = ylabs,
-         xaxts             = xaxts,
-         yaxts             = yaxts,
-         xylabPos          = xylabPos,
-         resetPar          = resetPar,
-         legend            = legend,
-         legend.parameters = legend.parameters,
-         ...)
+  if (is.null(dataset)) {
+    plot(mean(x), mean(y), figType = figType, labels = labels, cols = cols, ylimRt = ylimRt, ylimErr = ylimErr, xlimCDF = xlimCDF, ylimCAF = ylimCAF, cafBinLabels = cafBinLabels, ylimDelta = ylimDelta, xlimDelta = xlimDelta, xlabs = xlabs, ylabs = ylabs, xaxts = xaxts, yaxts = yaxts, xylabPos = xylabPos, resetPar = resetPar, legend = legend, legend.parameters = legend.parameters, ...)
+  } else {
+    plot(x[[dataset]], y[[dataset]], figType = figType, labels = labels, cols = cols, ylimRt = ylimRt, ylimErr = ylimErr, xlimCDF = xlimCDF, ylimCAF = ylimCAF, cafBinLabels = cafBinLabels, ylimDelta = ylimDelta, xlimDelta = xlimDelta, xlabs = xlabs, ylabs = ylabs, xaxts = xaxts, yaxts = yaxts, xylabPos = xylabPos, resetPar = resetPar, legend = legend, legend.parameters = legend.parameters, ...)
   }
-
 }
 
 #' @title plot.dmcfits_subject: Plot observed + fitted data
@@ -1461,6 +1035,7 @@ plot.dmcfits <- function(x,
 plot.dmcfits_subject <- function(x,
                          y,
                          subject = NULL,
+                         dataset = NULL,
                          figType = "summary",
                          labels = c("Compatible", "Incompatible", "Observed", "Predicted"),
                          cols = c("green", "red"),
@@ -1480,73 +1055,17 @@ plot.dmcfits_subject <- function(x,
                          legend = TRUE,
                          legend.parameters = list(legend = c("Observed", "Predicted")),
                          ...) {
-
-  if (!is.null(subject)) {
-    # each data set for specific subject
-    for (dataset in 1:length(y)) {
-      
-        if (!subject %in% y[[dataset]]$summarySubject$Subject) {
-          stop("datOb does not contain requested subject number!")
-        }
-        y[[dataset]]$summary <- y[[dataset]]$summarySubject[y[[dataset]]$summarySubject$Subject == subject, ]
-        y[[dataset]]$delta   <- y[[dataset]]$deltaSubject[y[[dataset]]$deltaSubject$Subject == subject, ]
-        y[[dataset]]$caf     <- y[[dataset]]$cafSubject[y[[dataset]]$cafSubject$Subject == subject, ]
-      
-      plot(x[[subject]][[dataset]], y[[dataset]],
-           figType = figType,
-           labels = labels,
-           cols = cols,
-           ylimRt = ylimRt,
-           ylimErr = ylimErr,
-           xlimCDF = xlimCDF,
-           ylimCAF = ylimCAF,
-           cafBinLabels = cafBinLabels,
-           ylimDelta = ylimDelta,
-           xlimDelta = xlimDelta,
-           xlabs = xlabs,
-           ylabs = ylabs,
-           xaxts = xaxts,
-           yaxts = yaxts,
-           xylabPos = xylabPos,
-           resetPar = resetPar,
-           legend = legend,
-           legend.parameters = legend.parameters,
-           ...
-      )
-    }
+  if (is.null(subject) && is.null(dataset)) {
+    plot(mean(x), mean(y), figType = figType, labels = labels, cols = cols, ylimRt = ylimRt, ylimErr = ylimErr, xlimCDF = xlimCDF, ylimCAF = ylimCAF, cafBinLabels = cafBinLabels, ylimDelta = ylimDelta, xlimDelta = xlimDelta, xlabs = xlabs, ylabs = ylabs, xaxts = xaxts, yaxts = yaxts, xylabPos = xylabPos, resetPar = resetPar, legend = legend, legend.parameters = legend.parameters, ...)
+  } else if (is.null(subject) && !is.null(dataset)) {
+    x_dataset <- lapply(x, function(s) s[[dataset]])
+    class(x_dataset) <- "dmcfit_subject"
+    plot(x_dataset, y[[dataset]], figType = figType, labels = labels, cols = cols, ylimRt = ylimRt, ylimErr = ylimErr, xlimCDF = xlimCDF, ylimCAF = ylimCAF, cafBinLabels = cafBinLabels, ylimDelta = ylimDelta, xlimDelta = xlimDelta, xlabs = xlabs, ylabs = ylabs, xaxts = xaxts, yaxts = yaxts, xylabPos = xylabPos, resetPar = resetPar, legend = legend, legend.parameters = legend.parameters, ...)
+  } else if (!is.null(subject) && is.null(dataset)) {
+    plot(x[[subject]], y, figType = figType, labels = labels, cols = cols, ylimRt = ylimRt, ylimErr = ylimErr, xlimCDF = xlimCDF, ylimCAF = ylimCAF, cafBinLabels = cafBinLabels, ylimDelta = ylimDelta, xlimDelta = xlimDelta, xlabs = xlabs, ylabs = ylabs, xaxts = xaxts, yaxts = yaxts, xylabPos = xylabPos, resetPar = resetPar, legend = legend, legend.parameters = legend.parameters, ...)
   } else {
-    subjects = list()
-    # each data set for mean across all subjects
-    for (dataset in 1:length(y)) {
-      for (subject in 1:length(x)) {
-        subjects[[subject]] <- x[[subject]][[dataset]]
-      }
-      
-     
-      class(subjects) <- "dmcfit_subject"
-      plot(mean(subjects), y[[dataset]],
-           figType = figType,
-           labels = labels,
-           cols = cols,
-           ylimRt = ylimRt,
-           ylimErr = ylimErr,
-           xlimCDF = xlimCDF,
-           ylimCAF = ylimCAF,
-           cafBinLabels = cafBinLabels,
-           ylimDelta = ylimDelta,
-           xlimDelta = xlimDelta,
-           xlabs = xlabs,
-           ylabs = ylabs,
-           xaxts = xaxts,
-           yaxts = yaxts,
-           xylabPos = xylabPos,
-           resetPar = resetPar,
-           legend = legend,
-           legend.parameters = legend.parameters,
-           ...)
-    }
+    plot(x[[subject]][[dataset]], y[[dataset]], subject = subject, figType = figType, labels = labels, cols = cols, ylimRt = ylimRt, ylimErr = ylimErr, xlimCDF = xlimCDF, ylimCAF = ylimCAF, cafBinLabels = cafBinLabels, ylimDelta = ylimDelta, xlimDelta = xlimDelta, xlabs = xlabs, ylabs = ylabs, xaxts = xaxts, yaxts = yaxts, xylabPos = xylabPos, resetPar = resetPar, legend = legend, legend.parameters = legend.parameters, ...)
   }
-
 }
 
 
