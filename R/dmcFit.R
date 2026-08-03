@@ -1057,10 +1057,24 @@ minimizeCostValue <- function(x,
     }
   }
 
-  # implement bounds
+  # implement bounds penalty
+  penalty <- 0
   for (i in 1:length(prms)) {
-    prms[[i]] <- as.list(pmax(unlist(prms[[i]]), unlist(minVals)))
-    prms[[i]] <- as.list(pmin(unlist(prms[[i]]), unlist(maxVals)))
+    prms_vals <- unlist(prms[[i]])
+    min_vals <- unlist(minVals)
+    max_vals <- unlist(maxVals)
+    
+    out_of_bounds <- pmax(0, min_vals - prms_vals) + pmax(0, prms_vals - max_vals)
+    if (sum(out_of_bounds) > 0) {
+      penalty <- penalty + 1e6 + sum(out_of_bounds) * 1e6
+    }
+    
+    prms[[i]] <- as.list(pmax(prms_vals, min_vals))
+    prms[[i]] <- as.list(pmin(unlist(prms[[i]]), max_vals))
+  }
+  
+  if (penalty > 0) {
+    return(penalty)
   }
 
   resTh <- list()
@@ -1107,17 +1121,7 @@ minimizeCostValue <- function(x,
 #' cost <- calculateCostValueRMSE(resTh, resOb)
 #' @export
 calculateCostValueRMSE <- function(resTh, resOb) {
-  n_rt  <- nrow(resTh$delta) * 2
-  n_err <- nrow(resTh$caf) * 2
-
-  costCAF   <- sqrt((1 / n_err) * sum((resTh$caf[c("accPerComp", "accPerIncomp")] - resOb$caf[c("accPerComp", "accPerIncomp")])**2))
-  costRT    <- sqrt((1 / n_rt) * sum((resTh$delta[c("meanComp", "meanIncomp")] - resOb$delta[c("meanComp", "meanIncomp")])**2))
-  weightRT  <- n_rt / (n_rt + n_err)
-  weightCAF <- (1 - weightRT) * 1500
-
-  costValue <- (weightCAF * costCAF) + (weightRT * costRT)
-
-  return(costValue)
+  return(calculateCostValueRMSE_cpp(resTh, resOb))
 }
 
 #' @title calculateCostValueSPE
@@ -1143,15 +1147,7 @@ calculateCostValueRMSE <- function(resTh, resOb) {
 #' cost <- calculateCostValueSPE(resTh, resOb)
 #' @export
 calculateCostValueSPE <- function(resTh, resOb) {
-  costCAF <- sum(((resOb$caf[, c("accPerComp", "accPerIncomp")] -
-    resTh$caf[, c("accPerComp", "accPerIncomp")]) / resOb$caf[, c("accPerComp", "accPerIncomp")])**2)
-
-  costRT <- sum(((resOb$delta[, c("meanComp", "meanIncomp", "meanBin")] -
-    resTh$delta[, c("meanComp", "meanIncomp", "meanBin")]) / resOb$delta[, c("meanComp", "meanIncomp", "meanBin")])**2)
-
-  costValue <- costRT + costCAF
-
-  return(costValue)
+  return(calculateCostValueSPE_cpp(resTh, resOb))
 }
 
 
@@ -1173,63 +1169,7 @@ calculateCostValueSPE <- function(resTh, resOb) {
 #' cost  <- calculateCostValueCS(resTh, resOb)
 #' @export
 calculateCostValueCS <- function(resTh, resOb) {
-
-  nCompCorrectOb <- resOb$prob$nTrials[resOb$prob$Comp == "comp" & resOb$prob$Error == 0][1]
-  if (is.na(nCompCorrectOb)) { nCompCorrectOb <- 0 }
-  nCompCorrectTh  <- length(resTh$sim$rts_comp)
-  nCompErrorOb <- resOb$prob$nTrials[resOb$prob$Comp == "comp" & resOb$prob$Error == 1][1]
-  if (is.na(nCompErrorOb)) { nCompError <- 0 }
-  nCompErrorTh <- length(resTh$sim$errs_comp)
-  nCompTotalOb <- nCompCorrectOb + nCompErrorOb
-  nCompTotalTh <- nCompCorrectTh + nCompErrorTh
-
-  cs_comp_correct <- cs(resTh$sim$rts_comp, resOb$prob[resOb$prob$Comp == "comp"   & resOb$prob$Error == 0, ], nCompCorrectOb/nCompTotalOb, nCompCorrectTh/nCompTotalTh)
-  if (nCompCorrectOb != 0) {
-    cs_comp_correct <- cs_comp_correct * nCompCorrectOb
-  }
-  cs_comp_error   <- cs(resTh$sim$errs_comp, resOb$prob[resOb$prob$Comp == "comp"   & resOb$prob$Error == 1, ], nCompErrorOb/nCompTotalOb, nCompErrorTh/nCompErrorTh)
-  if (nCompErrorOb != 0) {
-    cs_comp_error <- cs_comp_error * nCompErrorOb
-  }
-
-  nIncompCorrectOb <- resOb$prob$nTrials[resOb$prob$Comp == "incomp" & resOb$prob$Error == 0][1]
-  if (is.na(nIncompCorrectOb)) { nIncompCorrectOb <- 0 }
-  nIncompCorrectTh  <- length(resTh$sim$rts_incomp)
-  nIncompErrorOb <- resOb$prob$nTrials[resOb$prob$Comp == "incomp" & resOb$prob$Error == 1][1]
-  if (is.na(nIncompErrorOb)) { nIncompErrorOb <- 0 }
-  nIncompErrorTh <- length(resTh$sim$errs_incomp)
-  nIncompTotalOb <- nIncompCorrectOb + nIncompErrorOb
-  nIncompTotalTh <- nIncompCorrectTh + nIncompErrorTh
-
-  cs_incomp_correct <- cs(resTh$sim$rts_incomp,  resOb$prob[resOb$prob$Comp == "incomp" & resOb$prob$Error == 0, ], nIncompCorrectOb/nIncompTotalOb, nIncompCorrectTh/nIncompTotalTh)
-  if (nIncompCorrectOb != 0) {
-    cs_incomp_correct <- cs_incomp_correct * nIncompCorrectOb
-  }
-  cs_incomp_error   <- cs(resTh$sim$errs_incomp, resOb$prob[resOb$prob$Comp == "incomp" & resOb$prob$Error == 1, ], nIncompErrorOb/nIncompTotalOb, nIncompErrorTh/nIncompTotalTh)
-  if (nIncompErrorOb != 0) {
-    cs_incomp_error <- cs_incomp_error * nIncompErrorOb
-  }
-
-  return(sum(c(cs_comp_correct, cs_comp_error, cs_incomp_correct, cs_incomp_error), na.rm = TRUE))
-
-}
-
-cs <- function(th, ob, trialPropOb, trialPropTh) {
-  # What to do if 0 trials in theoretical/observed?
-  # Can happen in comp error conditions
-  if (length(th) == 0 & nrow(ob) > 0) {
-    return(trialPropOb)
-  } else if (length(th) > 0 & nrow(ob) == 0) {
-    return(trialPropTh)
-  } else if (length(th) == 0 & nrow(ob) == 0) {
-    return(0) # zero trials predicted and zero observed so return 0
-  }
-  probE <- c(0.1, 0.2, 0.2, 0.2, 0.2, 0.1) * trialPropOb # TO DO hard coded?
-  nBin  <- table(factor(.bincode(th, breaks = c(0, ob$boundary, Inf)), levels = 1:6))
-  pBin  <- (nBin / sum(nBin)) * trialPropTh # sum(pBin) == 1
-  pBin[pBin == 0] = 0.0001 # avoid / 0
-  cs    <- ((probE - pBin)**2 / pBin)
-  return(cs)
+  return(calculateCostValueCS_cpp(resTh, resOb))
 }
 
 
@@ -1252,57 +1192,7 @@ cs <- function(th, ob, trialPropOb, trialPropTh) {
 #' cost  <- calculateCostValueGS(resTh, resOb)
 #' @export
 calculateCostValueGS <- function(resTh, resOb) {
-
-  nCompCorrectOb  <- resOb$prob$nTrials[resOb$prob$Comp == "comp" & resOb$prob$Error == 0][1]
-  if (is.na(nCompCorrectOb)) { nCompCorrectOb <- 0 }
-  nCompCorrectTh  <- length(resTh$sim$rts_comp)
-  nCompErrorOb    <- resOb$prob$nTrials[resOb$prob$Comp == "comp" & resOb$prob$Error == 1][1]
-  if (is.na(nCompErrorOb)) { nCompErrorOb <- 0 }
-  nCompErrorTh    <- length(resTh$sim$errs_comp)
-  nCompTotalOb    <- nCompCorrectOb + nCompErrorOb
-  nCompTotalTh    <- nCompCorrectTh + nCompErrorTh
-
-  gsCompCorrect <- gs(resTh$sim$rts_comp,  resOb$prob[resOb$prob$Comp == "comp" & resOb$prob$Error == 0, ], nCompCorrectOb/nCompTotalOb, nCompCorrectTh/nCompTotalTh)
-  gsCompError   <- gs(resTh$sim$errs_comp, resOb$prob[resOb$prob$Comp == "comp" & resOb$prob$Error == 1, ], nCompErrorOb/nCompTotalOb, nCompErrorTh/nCompTotalTh)
-
-  nIncompCorrectOb <- resOb$prob$nTrials[resOb$prob$Comp == "incomp" & resOb$prob$Error == 0][1]
-  if (is.na(nIncompCorrectOb)) { nIncompCorrectOb <- 0 }
-  nIncompCorrectTh <- length(resTh$sim$rts_incomp)
-  nIncompErrorOb   <- resOb$prob$nTrials[resOb$prob$Comp == "incomp" & resOb$prob$Error == 1][1]
-  if (is.na(nIncompErrorOb)) { nIncompErrorOb <- 0 }
-  nIncompErrorTh   <- length(resTh$sim$errs_incomp)
-  nIncompTotalOb   <- nIncompCorrectOb + nIncompErrorOb
-  nIncompTotalTh   <- nIncompCorrectTh + nIncompErrorTh
-
-  gsIncompCorrect <- gs(resTh$sim$rts_incomp,  resOb$prob[resOb$prob$Comp == "incomp" & resOb$prob$Error == 0, ], nIncompCorrectOb/nIncompTotalOb, nIncompCorrectTh/nIncompTotalTh)
-  gsIncompError   <- gs(resTh$sim$errs_incomp, resOb$prob[resOb$prob$Comp == "incomp" & resOb$prob$Error == 1, ], nIncompErrorOb/nIncompTotalOb,   nIncompErrorTh/nIncompTotalTh)
-
-  gsComp    <- nCompTotalOb   * (sum(gsCompCorrect)   + sum(gsCompError))
-  gsIncomp  <- nIncompTotalOb * (sum(gsIncompCorrect) + sum(gsIncompError))
-
-  costValue <- 2 * (gsComp + gsIncomp)
-
-  return(costValue)
-}
-
-
-gs <- function(th, ob, trialPropOb, trialPropTh) {
-  # What to do if 0 trials in theoretical/observed?
-  # Can happen in comp error conditions
-  if (length(th) == 0 & nrow(ob) > 0) {
-    return(trialPropOb)
-  }  else if (length(th) > 0 & nrow(ob) == 0) {
-    return(trialPropTh)
-  } else if (length(th) == 0 & nrow(ob) == 0) {
-    return(0) # zero trials predicted and zero observed so return 0
-  }
-  probE <- c(0.1, 0.2, 0.2, 0.2, 0.2, 0.1) * trialPropOb # TO DO hard coded?
-
-  nBin  <- table(factor(.bincode(th, c(0, ob$boundary, Inf)), levels = 1:6))
-  pBin  <- (nBin / sum(nBin)) * trialPropTh # sum(pBin) == 1
-  pBin[pBin == 0] = 0.0001 # avoid /0
-  gs    <- abs(probE * log(probE / pBin))
-  return(gs)
+  return(calculateCostValueGS_cpp(resTh, resOb))
 }
 
 
