@@ -258,8 +258,9 @@ dmcFit <- function(resOb,
     }
 
     cl <- parallel::makeCluster(numCores)
+    parallel::clusterEvalQ(cl, require("DMCfun"))
     on.exit({ try(parallel::stopCluster(cl), silent = TRUE) }, add = TRUE)
-    invisible(parallel::clusterExport(cl = cl, varlist = c("dmcSim", "calculateCostValue", "cs", "gs"), envir = environment()))
+    invisible(parallel::clusterExport(cl = cl, varlist = c("dmcSim", "calculateCostValue", "calculateCostValueRMSE_cpp", "calculateCostValueSPE_cpp", "calculateCostValueCS_cpp", "calculateCostValueGS_cpp"), envir = environment()))
 
     # calculate initial cost values across grid starting values and find min
     costValue <- pbapply::pblapply(cl = cl, X = 1:nrow(startValsGrid), FUN = pCostValue)
@@ -512,10 +513,12 @@ dmcFitDE <- function(resOb,
   # }
 
   cl <- parallel::makeCluster(numCores)
+    parallel::clusterEvalQ(cl, require("DMCfun"))
     on.exit({ try(parallel::stopCluster(cl), silent = TRUE) }, add = TRUE)
-  invisible(parallel::clusterExport(cl = cl, varlist = c("dmcSim", "calculateCostValue", "cs", "gs"), envir = environment()))
+  invisible(parallel::clusterExport(cl = cl, varlist = c("dmcSim", "calculateCostValue", "calculateCostValueRMSE_cpp", "calculateCostValueSPE_cpp", "calculateCostValueCS_cpp", "calculateCostValueGS_cpp"), envir = environment()))
 
-  defaultControl <- list(VTR = 0, strategy = 1, NP = 100, itermax = 200, trace = 1, cluster = cl)
+  nParameters <- length(c(unlist(minVals[!as.logical(fixedFit)]), rep(unlist(minVals[as.logical(freeCombined)]), length(resOb)-1)))
+  defaultControl <- list(VTR = 0, strategy = 1, NP = max(50, 10 * nParameters), itermax = 200, reltol = 1e-4, steptol = 20, trace = 1, cluster = cl)
   deControl <- modifyList(defaultControl, deControl)
 
   # optimize
