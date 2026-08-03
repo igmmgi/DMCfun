@@ -46,7 +46,7 @@ void run_dmc_sim(
 }
 
 
-const std::vector<double> automatic_activation(const Prms &p) {
+std::vector<double> automatic_activation(const Prms &p) {
   std::vector<double> aa(p.tmax);
   for (unsigned int i = 0; i < p.tmax; i++)
     aa[i] = p.amp * exp(-(i + 1.0) / p.tau) * pow((exp(1.0) * (i + 1.0) / (p.aaShape - 1) / p.tau), p.aaShape - 1);
@@ -65,6 +65,9 @@ void run_dmc_sim_ci(const Prms &p,
   std::vector<double> rts;
   std::vector<double> errs;
   std::vector<double> slows;
+  rts.reserve(p.nTrl);
+  errs.reserve(p.nTrl);
+  slows.reserve(p.nTrl);
   std::vector<double> activation_sum(p.tmax);
   std::vector<std::vector<double>> trl_mat( p.nTrlData, std::vector<double>(p.tmax)); // needed if plotting individual trials
 
@@ -106,7 +109,7 @@ void run_dmc_sim_ci(const Prms &p,
 }
 
 
-const std::vector<double> time_dependent_drift(const Prms &p, int sign, std::vector<double> &automatic_activation) {
+std::vector<double> time_dependent_drift(const Prms &p, int sign, const std::vector<double> &automatic_activation) {
   std::vector<double> tdd(p.tmax);
   for (auto i = 0u; i < tdd.size(); i++)
     tdd[i] = sign * automatic_activation[i] * ((p.aaShape - 1) / (i + 1.0) - 1 / p.tau);
@@ -115,7 +118,7 @@ const std::vector<double> time_dependent_drift(const Prms &p, int sign, std::vec
 }
 
 
-const std::vector<double> drift_rate(const Prms &p, RNG &rng) {
+std::vector<double> drift_rate(const Prms &p, RNG &rng) {
   std::vector<double> dr(p.nTrl, p.drc);
   if (p.drDist == 1) {
     boost::random::beta_distribution<double> bdDR(p.drShape, p.drShape);
@@ -128,7 +131,7 @@ const std::vector<double> drift_rate(const Prms &p, RNG &rng) {
 }
 
 
-const std::vector<double> starting_point(const Prms &p, RNG &rng) {
+std::vector<double> starting_point(const Prms &p, RNG &rng) {
   std::vector<double> sp(p.nTrl, p.spBias);
   if (p.spDist == 1) {
     boost::random::beta_distribution<double> bdSP(p.spShape, p.spShape);
@@ -141,7 +144,7 @@ const std::vector<double> starting_point(const Prms &p, RNG &rng) {
 }
 
 
-const std::vector<double>boundary (const Prms &p) {
+std::vector<double> boundary (const Prms &p) {
   std::vector<double> bnds(p.tmax, p.bnds);
   if (p.bndsRate != 0) {
     for (unsigned int i = 0; i < p.tmax; i++) {
@@ -152,7 +155,7 @@ const std::vector<double>boundary (const Prms &p) {
 }
 
 
-const std::vector<double> residual_rt(const Prms &p, RNG &rng) {
+std::vector<double> residual_rt(const Prms &p, RNG &rng) {
   std::vector<double> residual_distribution(p.nTrl);
   if (p.resDist == 1) {
     // Standard normal distribution with mean + sd (NB make sure no -ve)

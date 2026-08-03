@@ -4,8 +4,9 @@
 #include <boost/random.hpp>
 #include <map>
 #include "inDMC.h"
+#include "pcg32.h"
 
-typedef boost::random::mt19937_64 RNG;
+typedef pcg32 RNG;
 
 
 void run_dmc_sim(
@@ -24,8 +25,8 @@ void run_dmc_sim_ci(
     const int sign
   );
 
-const std::vector<double> automatic_activation(const Prms &p);
-const std::vector<double> time_dependent_drift(const Prms &p, int sign, std::vector<double> &automatic_activation);
+std::vector<double> automatic_activation(const Prms &p);
+std::vector<double> time_dependent_drift(const Prms &p, int sign, const std::vector<double> &automatic_activation);
 
 std::vector<double> calculate_summary(
     const std::vector<double> &rts,
@@ -42,10 +43,10 @@ std::vector<double> calculate_percentile(
 
 void calculate_delta(std::map<std::string, std::vector<double>> &rdelta);
 
-const std::vector<double> drift_rate(const Prms &p, RNG &rng);
-const std::vector<double> starting_point(const Prms &p, RNG &rng);
-const std::vector<double> boundary(const Prms &p);
-const std::vector<double> residual_rt(const Prms &p,  RNG &rng);
+std::vector<double> drift_rate(const Prms &p, RNG &rng);
+std::vector<double> starting_point(const Prms &p, RNG &rng);
+std::vector<double> boundary(const Prms &p);
+std::vector<double> residual_rt(const Prms &p,  RNG &rng);
 
 std::vector<double> calculate_caf(
     const std::vector<double> &rts,
