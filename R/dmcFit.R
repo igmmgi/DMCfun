@@ -172,7 +172,7 @@ dmcFit <- function(resOb,
   prms <- replicate(length(resOb), startVals, simplify = FALSE)
 
   # default optim control parameters
-  defaultOptimControl <- list(parscale = c(parScale[!as.logical(fixedFit)], rep(parScale[as.logical(freeCombined)], length(resOb)-1)), maxit = 500)
+  defaultOptimControl <- list(parscale = c(parScale[!as.logical(fixedFit)], rep(parScale[as.logical(freeCombined)], length(resOb)-1)), maxit = 500, reltol = 1e-4)
   optimControl <- modifyList(defaultOptimControl, optimControl)
 
   # change nDelta to pDelta if pDelta not empty
