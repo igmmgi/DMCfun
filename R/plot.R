@@ -1924,7 +1924,7 @@ plot_caf <- function(
       axis(1, at = seq(1, nCAF, 1), ...)
     }
   } else {
-    axis(side = 1, labels = F, ...)
+    axis(side = 1, labels = FALSE, ...)
   }
 
   if (yaxt == "n") {

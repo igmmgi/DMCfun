@@ -117,9 +117,9 @@ dmcSim <- function(amp = 20,
   defaultStartVals    <- list(amp = 20, tau = 200, drc = 0.5, bnds = 75,  bndsRate=0, bndsSaturation=0,   resMean = 300, resSD = 30,  aaShape = 2, spShape = 3, spBias = 0,   sigm = 4)
   defaultMinVals      <- list(amp = 0,  tau = 5,   drc = 0.1, bnds = 20,  bndsRate=0, bndsSaturation=0,   resMean = 200, resSD = 5,   aaShape = 1, spShape = 2, spBias = -20, sigm = 1)
   defaultMaxVals      <- list(amp = 40, tau = 300, drc = 1.0, bnds = 150, bndsRate=1, bndsSaturation=500, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 20,  sigm = 10)
-  defaultFixedFit     <- list(amp = F,  tau = F,   drc = F,   bnds = F,   bndsRate=T, bndsSaturation=T,   resMean = F,   resSD = F,   aaShape = F, spShape = F, spBias = T,   sigm = T)
-  defaultFixedGrid    <- list(amp = T,  tau = F,   drc = T,   bnds = T,   bndsRate=T, bndsSaturation=T,   resMean = T,   resSD = T,   aaShape = T, spShape = T, spBias = T,   sigm = T)
-  defaultFreeCombined <- list(amp = F,  tau = F,   drc = F,   bnds = F,   bndsRate=F, bndsSaturation=F,   resMean = F,   resSD = F,   aaShape = F, spShape = F, spBias = F,   sigm = F)
+  defaultFixedFit     <- list(amp = FALSE,  tau = FALSE,   drc = FALSE,   bnds = FALSE,   bndsRate=TRUE, bndsSaturation=TRUE,   resMean = FALSE,   resSD = FALSE,   aaShape = FALSE, spShape = FALSE, spBias = TRUE,   sigm = TRUE)
+  defaultFixedGrid    <- list(amp = TRUE,  tau = FALSE,   drc = TRUE,   bnds = TRUE,   bndsRate=TRUE, bndsSaturation=TRUE,   resMean = TRUE,   resSD = TRUE,   aaShape = TRUE, spShape = TRUE, spBias = TRUE,   sigm = TRUE)
+  defaultFreeCombined <- list(amp = FALSE,  tau = FALSE,   drc = FALSE,   bnds = FALSE,   bndsRate=FALSE, bndsSaturation=FALSE,   resMean = FALSE,   resSD = FALSE,   aaShape = FALSE, spShape = FALSE, spBias = FALSE,   sigm = FALSE)
 
   # change nDelta to length of pDelta if pDelta not empty
   if (length(pDelta) != 0) {
@@ -157,7 +157,7 @@ dmcSim <- function(amp = 20,
     accPerComp   = summary$caf_comp,
     accPerIncomp = summary$caf_incomp,
     meanBin      = (summary$caf_rt_comp + summary$caf_rt_incomp) / 2,
-    meanEffect   = ((100 - summary$caf_incomp) - (100 - summary$caf_comp)) * 100
+    meanEffect   = (summary$caf_comp - summary$caf_incomp) * 100
   ))
 
   # delta
