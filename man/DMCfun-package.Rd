@@ -8,6 +8,19 @@
 \description{
 DMC model simulation detailed in Ulrich, R., Schroeter, H., Leuthold, H., & Birngruber, T. (2015). Automatic and controlled stimulus processing in conflict tasks: Superimposed diffusion processes and delta functions. Cognitive Psychology, 78, 148-174. Ulrich et al. (2015) \doi{10.1016/j.cogpsych.2015.02.005}. Decision processes within choice reaction-time (CRT) tasks are often modelled using evidence accumulation models (EAMs), a variation of which is the Diffusion Decision Model (DDM, for a review, see Ratcliff & McKoon, 2008). Ulrich et al. (2015) introduced a Diffusion Model for Conflict tasks (DMC). The DMC model combines common features from within standard diffusion models with the addition of superimposed controlled and automatic activation. The DMC model is used to explain distributional reaction time (and error rate) patterns in common behavioural conflict-like tasks (e.g., Flanker task, Simon task). This R-package implements the DMC model and provides functionality to fit the model to observed data. Further details are provided in the following paper: Mackenzie, I.G., & Dudschig, C. (2021). DMCfun: An R package for fitting Diffusion Model of Conflict (DMC) to reaction time and error rate data. Methods in Psychology, 100074. \doi{10.1016/j.metip.2021.100074}.
 }
+\details{
+\strong{Data Structures}
+
+The package has 6 distinct classes of data that can be plotted or summarized:
+\itemize{
+  \item \strong{dmcob}: A single observed dataset (e.g., Flanker).
+  \item \strong{dmcobs}: Multiple observed datasets (e.g., Flanker + Simon).
+  \item \strong{dmcfit}: A single model fit to a single dataset.
+  \item \strong{dmcfits}: A single model fit across multiple datasets simultaneously.
+  \item \strong{dmcfit_subject}: A single model fit across multiple subjects (contains individual subject data).
+  \item \strong{dmcfits_subject}: A single model fit across multiple datasets AND multiple subjects.
+}
+}
 \seealso{
 Useful links:
 \itemize{
@@ -22,6 +35,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Ian G. Mackenzie \email{ian.mackenzie@uni-tuebingen.de}
   \item Carolin Dudschig \email{carolin.dudschig@uni-tuebingen.de}
 }
 

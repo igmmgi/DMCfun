@@ -24,6 +24,18 @@ devtools::install_github("igmmgi/DMCfun")
 ```
 
 ---
+## Data Structures
+
+The package relies on 6 distinct classes of data that can be plotted or summarized natively:
+
+- **`dmcob`**: A single observed dataset (e.g., Flanker).
+- **`dmcobs`**: Multiple observed datasets (e.g., Flanker + Simon).
+- **`dmcfit`**: A single model fit to a single dataset.
+- **`dmcfits`**: A single model fit across multiple datasets simultaneously.
+- **`dmcfit_subject`**: A single model fit across multiple subjects (contains individual subject data).
+- **`dmcfits_subject`**: A single model fit across multiple datasets AND multiple subjects.
+
+---
 ## Basic Examples DMC Simulation
 ``` r
 dmc <- dmcSim(fullData = TRUE)

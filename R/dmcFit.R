@@ -135,7 +135,9 @@ dmcFit <- function(resOb,
                    printInputArgs  = TRUE,
                    printResults    = FALSE,
                    optimControl    = list(),
-                   numCores        = 2) {
+                   numCores        = 2,
+                   setSeed         = TRUE,
+                   seedValue       = 1234) {
 
   if (inherits(resOb, "dmcob")) {
     resOb <- list(resOb)
@@ -273,6 +275,7 @@ dmcFit <- function(resOb,
     spDist = spDist, drOnset = drOnset, drDist = drDist,
     drShape = drShape, drLim = drLim, rtMax = rtMax, minVals = minVals, maxVals = maxVals,
     printInputArgs = printInputArgs, printResults = printResults,
+    setSeed = setSeed, seedValue = seedValue,
     method = "Nelder-Mead", control = optimControl
   )
 
@@ -391,6 +394,8 @@ dmcFit <- function(resOb,
 #' squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")
 #' @param deControl Additional control parameters passed to DEoptim (see DEoptim.control)
 #' @param numCores Number of cores to use
+#' @param setSeed TRUE/FALSE
+#' @param seedValue seed value
 #'
 #' @return dmcfit returns an object of class "dmcfit" with the following components:
 #'
@@ -438,7 +443,9 @@ dmcFitDE <- function(resOb,
                      rtMax        = 5000,
                      costFunction = "RMSE",
                      deControl    = list(),
-                     numCores     = 2) {
+                     numCores     = 2,
+                     setSeed      = TRUE,
+                     seedValue    = 1234) {
 
   if (inherits(resOb, "dmcob")) {
     resOb <- list(resOb)
@@ -533,6 +540,8 @@ dmcFitDE <- function(resOb,
     drShape        = drShape,
     drLim          = drLim,
     rtMax          = rtMax,
+    setSeed        = setSeed,
+    seedValue      = seedValue,
     printInputArgs = FALSE,
     printResults   = FALSE,
     control        = deControl
@@ -673,6 +682,8 @@ dmcFitDE <- function(resOb,
 #' @param printResults TRUE/FALSE (default)
 #' @param optimControl Additional control parameters passed to optim (see optim details section)
 #' @param numCores Number of cores to use
+#' @param setSeed TRUE/FALSE
+#' @param seedValue seed value
 #'
 #' @return dmcFitSubject returns a list of objects of class "dmcfit"
 #'
@@ -714,7 +725,9 @@ dmcFitSubject <- function(resOb,
                           printInputArgs  = TRUE,
                           printResults    = FALSE,
                           optimControl    = list(),
-                          numCores        = 2) {
+                          numCores        = 2,
+                          setSeed         = TRUE,
+                          seedValue       = 1234) {
 
   if (inherits(resOb, "dmcob")) {
     resOb <- list(resOb)
@@ -1042,7 +1055,9 @@ minimizeCostValue <- function(x,
                               minVals,
                               maxVals,
                               printInputArgs,
-                              printResults) {
+                              printResults,
+                              setSeed = FALSE,
+                              seedValue = 1) {
 
   nParameters <- sum(as.logical(fixedFit) == FALSE)
   for (i in 1:length(prms)) {
@@ -1088,7 +1103,8 @@ minimizeCostValue <- function(x,
       bndsRate = prms[[i]]$bndsRate,  bndsSaturation = prms[[i]]$bndsSaturation,
       drOnset = drOnset, drDist = drDist, drShape = drShape, drLim = drLim,
       rtMax = rtMax, nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF,
-      printInputArgs = printInputArgs, printResults = printResults
+      printInputArgs = printInputArgs, printResults = printResults,
+      setSeed = setSeed, seedValue = seedValue
     )
     cost[i] <- costFunction(resTh[[i]], resOb[[i]])
     cat(" | cost:", formatC(cost[i], 3, format = "f"), "\n")

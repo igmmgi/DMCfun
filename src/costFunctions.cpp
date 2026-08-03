@@ -91,9 +91,11 @@ double calculate_cs_cpp_helper(const NumericVector& th, const NumericVector& bou
   }
   
   std::vector<int> counts(6, 0);
-  for (int i = 0; i < th.size(); ++i) {
-    double val = th[i];
-    if (NumericVector::is_na(val)) continue;
+  const double* th_ptr = REAL(th);
+  int n = th.size();
+  for (int i = 0; i < n; ++i) {
+    double val = th_ptr[i];
+    if (std::isnan(val)) continue;
     int bin = 0;
     while (bin < boundary.size() && val > boundary[bin]) {
       bin++;
@@ -130,9 +132,11 @@ double calculate_gs_cpp_helper(const NumericVector& th, const NumericVector& bou
   }
   
   std::vector<int> counts(6, 0);
-  for (int i = 0; i < th.size(); ++i) {
-    double val = th[i];
-    if (NumericVector::is_na(val)) continue;
+  const double* th_ptr = REAL(th);
+  int n = th.size();
+  for (int i = 0; i < n; ++i) {
+    double val = th_ptr[i];
+    if (std::isnan(val)) continue;
     int bin = 0;
     while (bin < boundary.size() && val > boundary[bin]) {
       bin++;

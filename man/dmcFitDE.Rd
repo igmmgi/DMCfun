@@ -24,7 +24,9 @@ dmcFitDE(
   rtMax = 5000,
   costFunction = "RMSE",
   deControl = list(),
-  numCores = 2
+  numCores = 2,
+  setSeed = TRUE,
+  seedValue = 1234
 )
 }
 \arguments{
@@ -41,15 +43,15 @@ for amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, sigm (e.g., maxVals =
 bnds = 150, bndsRate=1, bndsSaturation=500, resMean = 800, resSD = 100, aaShape = 3, spShape = 4, spBias = 20, sigm = 10))}
 
 \item{fixedFit}{Fix parameter to starting value. This is a list with bool values specified individually for
-amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., fixedFit = list(amp = F, tau = F, drc = F,
-bnds = F, bndsRate=T, bndsSaturation=T, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = T, sigm = T))
+amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., fixedFit = list(amp = FALSE, tau = FALSE, drc = FALSE,
+bnds = FALSE, bndsRate=TRUE, bndsSaturation=TRUE, resMean = FALSE, resSD = FALSE, aaShape = FALSE, spShape = FALSE, spBias = TRUE, sigm = TRUE))
 NB. Value if fixed at startVals.}
 
 \item{freeCombined}{If fitting 2+ datasets at once, which parameters are allowed to vary between both
-fits (default = all parameters fixed between the two fits e.g. parameter = F).
+fits (default = all parameters fixed between the two fits e.g. parameter = FALSE).
 This is a list with bool values specified individually for
-amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., freeCombined = list(amp = F,
-tau = F, drc = F, bnds = F, bndsRate=F, bndsSaturation=F, resMean = F, resSD = F, aaShape = F, spShape = F, spBias = F, sigm = F))}
+amp, tau, drc, bnds, resMean, resSD, aaShape, spShape, spBias, sigm (e.g., freeCombined = list(amp = FALSE,
+tau = FALSE, drc = FALSE, bnds = FALSE, bndsRate=FALSE, bndsSaturation=FALSE, resMean = FALSE, resSD = FALSE, aaShape = FALSE, spShape = FALSE, spBias = FALSE, sigm = FALSE))}
 
 \item{nCAF}{The number of CAF bins.}
 
@@ -79,6 +81,10 @@ squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS"
 \item{deControl}{Additional control parameters passed to DEoptim (see DEoptim.control)}
 
 \item{numCores}{Number of cores to use}
+
+\item{setSeed}{TRUE/FALSE}
+
+\item{seedValue}{seed value}
 }
 \value{
 dmcfit returns an object of class "dmcfit" with the following components:

@@ -6,14 +6,10 @@
 \usage{
 \method{plot}{dmcobs}(
   x,
-  figType = "all",
-  subject = NULL,
+  dataset = NULL,
+  figType = "summary",
   labels = c("Compatible", "Incompatible"),
-  cols = c("black", "gray"),
-  ltys = c(1, 1),
-  pchs = c(1, 1),
-  errorBars = FALSE,
-  errorBarType = "sd",
+  cols = c("green", "red"),
   ylimRt = NULL,
   ylimErr = NULL,
   xlimCDF = NULL,
@@ -27,8 +23,6 @@
   yaxts = TRUE,
   xylabPos = 2,
   resetPar = TRUE,
-  legend = TRUE,
-  legend.parameters = list(),
   ...
 )
 }
@@ -37,19 +31,9 @@
 
 \item{figType}{rtCorrect, errorRate, rtErrors, cdf, caf, delta, deltaErrors, deltaER, all}
 
-\item{subject}{NULL (aggregated data across all subjects) or integer for subject number}
-
 \item{labels}{Condition labels c("Compatible", "Incompatible") default}
 
 \item{cols}{Condition colours c("green", "red") default}
-
-\item{ltys}{Linetype see par}
-
-\item{pchs}{Symbols see par}
-
-\item{errorBars}{TRUE(default)/FALSE Plot errorbars}
-
-\item{errorBarType}{sd(default), or se}
 
 \item{ylimRt}{ylimit for Rt plots}
 
@@ -77,11 +61,21 @@
 
 \item{resetPar}{TRUE/FALSE Reset graphical parameters}
 
+\item{...}{additional plot pars}
+
+\item{subject}{NULL (aggregated data across all subjects) or integer for subject number}
+
+\item{ltys}{Linetype see par}
+
+\item{pchs}{Symbols see par}
+
+\item{errorBars}{TRUE(default)/FALSE Plot errorbars}
+
+\item{errorBarType}{sd(default), or se}
+
 \item{legend}{TRUE/FALSE}
 
 \item{legend.parameters}{list}
-
-\item{...}{additional plot pars}
 }
 \value{
 Plot (no return value)

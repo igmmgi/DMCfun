@@ -4,7 +4,7 @@
 \alias{summary.dmcfits_subject}
 \title{summary.dmcfits_subject: dmc fit aggregate summary}
 \usage{
-\method{summary}{dmcfits_subject}(object, digits = 2, ...)
+\method{summary}{dmcfits_subject}(object, digits = 2, subject = NULL, dataset = NULL, ...)
 }
 \arguments{
 \item{object}{Output from dmcFitAgg}

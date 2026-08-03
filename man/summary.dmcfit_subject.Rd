@@ -4,7 +4,7 @@
 \alias{summary.dmcfit_subject}
 \title{summary.dmcfit_subject: dmcfit individual subject}
 \usage{
-\method{summary}{dmcfit_subject}(object, digits = 2, ...)
+\method{summary}{dmcfit_subject}(object, digits = 2, subject = NULL, ...)
 }
 \arguments{
 \item{object}{Output from dmcFitSubject}

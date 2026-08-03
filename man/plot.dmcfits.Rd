@@ -7,6 +7,7 @@
 \method{plot}{dmcfits}(
   x,
   y,
+  dataset = NULL,
   figType = "summary",
   labels = c("Compatible", "Incompatible", "Observed", "Predicted"),
   cols = c("green", "red"),
