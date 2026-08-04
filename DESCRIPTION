@@ -26,6 +26,7 @@ Encoding: UTF-8
 Depends: R (>= 4.0.0)
 Imports:
   DEoptim,
+  methods,
   Rcpp (>= 0.12.16),
   dplyr (>= 1.0.0),
   parallel,
