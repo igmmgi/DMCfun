@@ -1,5 +1,7 @@
 context("plot")
 
+pdf(NULL)
+
 test_that("plot.dmcsim", {
 
   # test 1
@@ -144,3 +146,5 @@ test_that("plot.dmcfit", {
   testthat::expect_error(plot(resTh, datOb), NA)
 
 })
+
+dev.off()
