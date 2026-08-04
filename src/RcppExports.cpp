@@ -10,54 +10,6 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// calculateCostValueRMSE_cpp
-double calculateCostValueRMSE_cpp(List resTh, List resOb);
-RcppExport SEXP _DMCfun_calculateCostValueRMSE_cpp(SEXP resThSEXP, SEXP resObSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type resTh(resThSEXP);
-    Rcpp::traits::input_parameter< List >::type resOb(resObSEXP);
-    rcpp_result_gen = Rcpp::wrap(calculateCostValueRMSE_cpp(resTh, resOb));
-    return rcpp_result_gen;
-END_RCPP
-}
-// calculateCostValueSPE_cpp
-double calculateCostValueSPE_cpp(List resTh, List resOb);
-RcppExport SEXP _DMCfun_calculateCostValueSPE_cpp(SEXP resThSEXP, SEXP resObSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type resTh(resThSEXP);
-    Rcpp::traits::input_parameter< List >::type resOb(resObSEXP);
-    rcpp_result_gen = Rcpp::wrap(calculateCostValueSPE_cpp(resTh, resOb));
-    return rcpp_result_gen;
-END_RCPP
-}
-// calculateCostValueCS_cpp
-double calculateCostValueCS_cpp(List resTh, List resOb);
-RcppExport SEXP _DMCfun_calculateCostValueCS_cpp(SEXP resThSEXP, SEXP resObSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type resTh(resThSEXP);
-    Rcpp::traits::input_parameter< List >::type resOb(resObSEXP);
-    rcpp_result_gen = Rcpp::wrap(calculateCostValueCS_cpp(resTh, resOb));
-    return rcpp_result_gen;
-END_RCPP
-}
-// calculateCostValueGS_cpp
-double calculateCostValueGS_cpp(List resTh, List resOb);
-RcppExport SEXP _DMCfun_calculateCostValueGS_cpp(SEXP resThSEXP, SEXP resObSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type resTh(resThSEXP);
-    Rcpp::traits::input_parameter< List >::type resOb(resObSEXP);
-    rcpp_result_gen = Rcpp::wrap(calculateCostValueGS_cpp(resTh, resOb));
-    return rcpp_result_gen;
-END_RCPP
-}
 // dmcCppR
 List dmcCppR(List r_in);
 RcppExport SEXP _DMCfun_dmcCppR(SEXP r_inSEXP) {
@@ -71,10 +23,6 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_DMCfun_calculateCostValueRMSE_cpp", (DL_FUNC) &_DMCfun_calculateCostValueRMSE_cpp, 2},
-    {"_DMCfun_calculateCostValueSPE_cpp", (DL_FUNC) &_DMCfun_calculateCostValueSPE_cpp, 2},
-    {"_DMCfun_calculateCostValueCS_cpp", (DL_FUNC) &_DMCfun_calculateCostValueCS_cpp, 2},
-    {"_DMCfun_calculateCostValueGS_cpp", (DL_FUNC) &_DMCfun_calculateCostValueGS_cpp, 2},
     {"_DMCfun_dmcCppR", (DL_FUNC) &_DMCfun_dmcCppR, 1},
     {NULL, NULL, 0}
 };

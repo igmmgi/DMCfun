@@ -16,13 +16,16 @@ void run_dmc_sim(
     std::map<std::string, std::vector<std::vector<double>>> &trials
   );
 
+#include <mutex>
+
 void run_dmc_sim_ci(
     const Prms &p,
     std::map<std::string, std::vector<double>> &rsum,
     std::map<std::string, std::vector<double>> &rsim,
     std::map<std::string, std::vector<std::vector<double>>> &trials,
     const std::string comp,
-    const int sign
+    const int sign,
+    std::mutex &m
   );
 
 std::vector<double> automatic_activation(const Prms &p);

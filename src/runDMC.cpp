@@ -32,10 +32,12 @@ void run_dmc_sim(
   const std::vector<std::string> compatibility{"comp", "incomp"};
   const std::vector<int> sign{1, -1};
 
+  std::mutex m;
   for (int i = 0; i < 2; i++) {
     threads.emplace_back(run_dmc_sim_ci, std::ref(p), std::ref(rsum),
                          std::ref(rsim), std::ref(trials),
-                         std::ref(compatibility[i]), std::ref(sign[i]));
+                         std::ref(compatibility[i]), std::ref(sign[i]),
+                         std::ref(m));
   }
 
   for (auto &thread : threads)
@@ -58,7 +60,8 @@ void run_dmc_sim_ci(const Prms &p,
                     std::map<std::string, std::vector<double>> &rsim,
                     std::map<std::string, std::vector<std::vector<double>>> &trials,
                     const std::string comp,
-                    const int sign) {
+                    const int sign,
+                    std::mutex &m) {
 
   RNG rng = random_engine(p, sign);
 
@@ -164,7 +167,7 @@ std::vector<double> residual_rt(const Prms &p, RNG &rng) {
       i = std::max(0.0, dist(rng));
   } else if (p.resDist == 2) {
     // Standard uniform distribution with mean + sd
-    double range = std::max(0.01, sqrt((p.resSD * p.resSD / (1.0 / 12.0))) / 2);
+    double range = std::max(0.01, p.resSD * std::sqrt(3.0));
     boost::random::uniform_real_distribution<double> dist(p.resMean - range, p.resMean + range);
     for (auto &i : residual_distribution)
       i = std::max(0.0, dist(rng));
@@ -258,10 +261,10 @@ std::vector<double> calculate_summary(const std::vector<double> &rts,
   // rtCor, sdRtCor, perErr, rtErr, sdRtErr, perSlow
   std::vector<double> res(6);
   res[0] = accumulate(rts.begin(), rts.end(), 0.0) / rts.size();
-  res[1] = std::sqrt(std::inner_product(rts.begin(), rts.end(), rts.begin(), 0.0) / rts.size() - res[0] * res[0]);
+  res[1] = std::sqrt(std::max(0.0, std::inner_product(rts.begin(), rts.end(), rts.begin(), 0.0) / rts.size() - res[0] * res[0]));
   res[2] = (errs.size() / static_cast<float>(nTrl)) * 100;
   res[3] = accumulate(errs.begin(), errs.end(), 0.0) / errs.size();
-  res[4] = std::sqrt( std::inner_product(errs.begin(), errs.end(), errs.begin(), 0.0) / errs.size() - res[3] * res[3]);
+  res[4] = std::sqrt(std::max(0.0, std::inner_product(errs.begin(), errs.end(), errs.begin(), 0.0) / errs.size() - res[3] * res[3]));
   res[5] = (slows.size() / static_cast<double>(nTrl)) * 100;
 
   return res;
@@ -281,7 +284,10 @@ std::vector<double> calculate_percentile(const std::vector<double> vDelta,
       double pct_idx = (vDelta[i + 1] / 100.0) * (rts.size() - 1);
       pct_idx_int[i] = int(pct_idx);
       double pct_idx_dec = pct_idx - static_cast<double>(pct_idx_int[i]);
-      res_p[i] = rts[pct_idx_int[i]] + ((rts[pct_idx_int[i] + 1] - rts[pct_idx_int[i]]) * pct_idx_dec);
+      res_p[i] = rts[pct_idx_int[i]];
+      if (static_cast<size_t>(pct_idx_int[i] + 1) < rts.size()) {
+        res_p[i] += ((rts[pct_idx_int[i] + 1] - rts[pct_idx_int[i]]) * pct_idx_dec);
+      }
     }
   }
   if (type == 1) {

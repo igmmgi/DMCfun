@@ -260,7 +260,7 @@ dmcFit <- function(resOb,
     cl <- parallel::makeCluster(numCores)
     parallel::clusterEvalQ(cl, require("DMCfun"))
     on.exit({ try(parallel::stopCluster(cl), silent = TRUE) }, add = TRUE)
-    invisible(parallel::clusterExport(cl = cl, varlist = c("dmcSim", "calculateCostValue", "calculateCostValueRMSE_cpp", "calculateCostValueSPE_cpp", "calculateCostValueCS_cpp", "calculateCostValueGS_cpp"), envir = environment()))
+    invisible(parallel::clusterExport(cl = cl, varlist = c("dmcSim", "calculateCostValue"), envir = environment()))
 
     # calculate initial cost values across grid starting values and find min
     costValue <- pbapply::pblapply(cl = cl, X = 1:nrow(startValsGrid), FUN = pCostValue)
@@ -343,6 +343,7 @@ dmcFit <- function(resOb,
     if (tolower(costFunction) == "gs") {
       for (i in 1:length(dmcfit)) {
         dmcfit[[i]]$par["BIC"] <- dmcfit[[i]]$par$cost + (nFreeParametersTotal * log(sum(resOb[[i]]$data$outlier == 0)))
+        dmcfit[[i]]$par["AIC"] <- dmcfit[[i]]$par$cost + (nFreeParametersTotal * 2)
       }
     }
   }
@@ -515,7 +516,7 @@ dmcFitDE <- function(resOb,
   cl <- parallel::makeCluster(numCores)
     parallel::clusterEvalQ(cl, require("DMCfun"))
     on.exit({ try(parallel::stopCluster(cl), silent = TRUE) }, add = TRUE)
-  invisible(parallel::clusterExport(cl = cl, varlist = c("dmcSim", "calculateCostValue", "calculateCostValueRMSE_cpp", "calculateCostValueSPE_cpp", "calculateCostValueCS_cpp", "calculateCostValueGS_cpp"), envir = environment()))
+  invisible(parallel::clusterExport(cl = cl, varlist = c("dmcSim", "calculateCostValue"), envir = environment()))
 
   nParameters <- length(c(unlist(minVals[!as.logical(fixedFit)]), rep(unlist(minVals[as.logical(freeCombined)]), length(resOb)-1)))
   defaultControl <- list(VTR = 0, strategy = 1, NP = max(50, 10 * nParameters), itermax = 200, reltol = 1e-4, steptol = 20, trace = 1, cluster = cl)
@@ -619,6 +620,7 @@ dmcFitDE <- function(resOb,
     if (tolower(costFunction) == "gs") {
       for (i in 1:length(dmcfit)) {
         dmcfit[[i]]$par["BIC"] <- dmcfit[[i]]$par$cost + (nFreeParametersTotal * log(sum(resOb[[i]]$data$outlier == 0)))
+        dmcfit[[i]]$par["AIC"] <- dmcfit[[i]]$par$cost + (nFreeParametersTotal * 2)
       }
     }
   }
@@ -749,14 +751,14 @@ dmcFitSubject <- function(resOb,
     for (i in 1:length(resOb)) {
       if (is.null(resOb[[i]]$data)) {
         resObSubject[[i]] <- list(
-          deltaAgg = resOb[[i]]$deltaSubject[resOb[[i]]$deltaSubject$Subject == subject, ],
-          cafAgg = resOb[[i]]$cafSubject[resOb[[i]]$cafSubject$Subject == subject, ]
+          delta = resOb[[i]]$deltaSubject[resOb[[i]]$deltaSubject$Subject == subject, ],
+          caf = resOb[[i]]$cafSubject[resOb[[i]]$cafSubject$Subject == subject, ]
         )
       } else {
         resObSubject[[i]] <- list(
           data = resOb[[i]]$data[resOb[[i]]$data$Subject == subject, ],
-          deltaAgg = resOb[[i]]$deltaSubject[resOb[[i]]$deltaSubject$Subject == subject, ],
-          cafAgg = resOb[[i]]$cafSubject[resOb[[i]]$cafSubject$Subject == subject, ]
+          delta = resOb[[i]]$deltaSubject[resOb[[i]]$deltaSubject$Subject == subject, ],
+          caf = resOb[[i]]$cafSubject[resOb[[i]]$cafSubject$Subject == subject, ]
         )
       }
     }
@@ -894,14 +896,14 @@ dmcFitSubjectDE <- function(resOb,
     for (i in 1:length(resOb)) {
       if (is.null(resOb[[i]]$data)) {
         resObSubject[[i]] <- list(
-          deltaAgg = resOb[[i]]$deltaSubject[resOb[[i]]$deltaSubject$Subject == subject, ],
-          cafAgg = resOb[[i]]$cafSubject[resOb[[i]]$cafSubject$Subject == subject, ]
+          delta = resOb[[i]]$deltaSubject[resOb[[i]]$deltaSubject$Subject == subject, ],
+          caf = resOb[[i]]$cafSubject[resOb[[i]]$cafSubject$Subject == subject, ]
         )
       } else {
         resObSubject[[i]] <- list(
           data = resOb[[i]]$data[resOb[[i]]$data$Subject == subject, ],
-          deltaAgg = resOb[[i]]$deltaSubject[resOb[[i]]$deltaSubject$Subject == subject, ],
-          cafAgg = resOb[[i]]$cafSubject[resOb[[i]]$cafSubject$Subject == subject, ]
+          delta = resOb[[i]]$deltaSubject[resOb[[i]]$deltaSubject$Subject == subject, ],
+          caf = resOb[[i]]$cafSubject[resOb[[i]]$cafSubject$Subject == subject, ]
         )
       }
     }
@@ -1079,24 +1081,10 @@ minimizeCostValue <- function(x,
     }
   }
 
-  # implement bounds penalty
-  penalty <- 0
+  # implement bounds
   for (i in 1:length(prms)) {
-    prms_vals <- unlist(prms[[i]])
-    min_vals <- unlist(minVals)
-    max_vals <- unlist(maxVals)
-    
-    out_of_bounds <- pmax(0, min_vals - prms_vals) + pmax(0, prms_vals - max_vals)
-    if (sum(out_of_bounds) > 0) {
-      penalty <- penalty + 1e6 + sum(out_of_bounds) * 1e6
-    }
-    
-    prms[[i]] <- as.list(pmax(prms_vals, min_vals))
-    prms[[i]] <- as.list(pmin(unlist(prms[[i]]), max_vals))
-  }
-  
-  if (penalty > 0) {
-    return(penalty)
+    prms[[i]] <- as.list(pmax(unlist(prms[[i]]), unlist(minVals)))
+    prms[[i]] <- as.list(pmin(unlist(prms[[i]]), unlist(maxVals)))
   }
 
   resTh <- list()
@@ -1144,7 +1132,17 @@ minimizeCostValue <- function(x,
 #' cost <- calculateCostValueRMSE(resTh, resOb)
 #' @export
 calculateCostValueRMSE <- function(resTh, resOb) {
-  return(calculateCostValueRMSE_cpp(resTh, resOb))
+  n_rt  <- nrow(resTh$delta) * 2
+  n_err <- nrow(resTh$caf) * 2
+
+  costCAF   <- sqrt((1 / n_err) * sum((resTh$caf[c("accPerComp", "accPerIncomp")] - resOb$caf[c("accPerComp", "accPerIncomp")])**2))
+  costRT    <- sqrt((1 / n_rt) * sum((resTh$delta[c("meanComp", "meanIncomp")] - resOb$delta[c("meanComp", "meanIncomp")])**2))
+  weightRT  <- n_rt / (n_rt + n_err)
+  weightCAF <- (1 - weightRT) * 1500
+
+  costValue <- (weightCAF * costCAF) + (weightRT * costRT)
+
+  return(costValue)
 }
 
 #' @title calculateCostValueSPE
@@ -1170,7 +1168,15 @@ calculateCostValueRMSE <- function(resTh, resOb) {
 #' cost <- calculateCostValueSPE(resTh, resOb)
 #' @export
 calculateCostValueSPE <- function(resTh, resOb) {
-  return(calculateCostValueSPE_cpp(resTh, resOb))
+  costCAF <- sum(((resOb$caf[, c("accPerComp", "accPerIncomp")] -
+    resTh$caf[, c("accPerComp", "accPerIncomp")]) / resOb$caf[, c("accPerComp", "accPerIncomp")])**2)
+
+  costRT <- sum(((resOb$delta[, c("meanComp", "meanIncomp", "meanBin")] -
+    resTh$delta[, c("meanComp", "meanIncomp", "meanBin")]) / resOb$delta[, c("meanComp", "meanIncomp", "meanBin")])**2)
+
+  costValue <- costRT + costCAF
+
+  return(costValue)
 }
 
 
@@ -1192,9 +1198,70 @@ calculateCostValueSPE <- function(resTh, resOb) {
 #' cost  <- calculateCostValueCS(resTh, resOb)
 #' @export
 calculateCostValueCS <- function(resTh, resOb) {
-  return(calculateCostValueCS_cpp(resTh, resOb))
-}
+  # Helper to calculate bin statistics inline
+  calculate_bin_stat <- function(th_rts, boundary, n_cell_obs, n_cond_obs, p_th_cell, stat = "GS") {
+    if (length(boundary) != 5) return(0)
+    pPred <- c(0.1, 0.2, 0.2, 0.2, 0.2, 0.1)
+    obFreq <- n_cell_obs * pPred
+    bnds <- c(-Inf, boundary, Inf)
+    if (length(th_rts) > 0) {
+      thFreq <- as.numeric(table(cut(th_rts, breaks = bnds)))
+      thFreq <- (thFreq / sum(thFreq)) * (n_cond_obs * p_th_cell)
+    } else {
+      thFreq <- rep(0, length(pPred))
+    }
+    thFreq <- pmax(thFreq, 1e-5)
+    obFreq <- pmax(obFreq, 1e-5)
+    if (stat == "GS") {
+      val <- 2 * sum(obFreq * log(obFreq / thFreq))
+    } else {
+      val <- sum(((obFreq - thFreq)^2) / thFreq)
+    }
+    return(val)
+  }
 
+  costValue <- 0
+  
+  # Get exact counts of non-outlier trials from observed data
+  d <- resOb$data[resOb$data$outlier == 0, ]
+  n_comp_cor <- sum(d$Comp == "comp" & d$Error == 0)
+  n_comp_err <- sum(d$Comp == "comp" & d$Error == 1)
+  n_comp     <- n_comp_cor + n_comp_err
+  
+  n_incomp_cor <- sum(d$Comp == "incomp" & d$Error == 0)
+  n_incomp_err <- sum(d$Comp == "incomp" & d$Error == 1)
+  n_incomp     <- n_incomp_cor + n_incomp_err
+
+  # compatible correct
+  boundary <- resOb$prob$boundary[resOb$prob$Comp == "comp" & resOb$prob$Error == 0]
+  if (length(boundary) == 5) {
+    p_th <- resTh$summary$rtCor[1] / 100
+    costValue <- costValue + calculate_bin_stat(resTh$sim$rts_comp, boundary, n_comp_cor, n_comp, p_th, "CS")
+  }
+
+  # compatible error
+  boundary <- resOb$prob$boundary[resOb$prob$Comp == "comp" & resOb$prob$Error == 1]
+  if (length(boundary) == 5) {
+    p_th <- resTh$summary$perErr[1] / 100
+    costValue <- costValue + calculate_bin_stat(resTh$sim$errs_comp, boundary, n_comp_err, n_comp, p_th, "CS")
+  }
+
+  # incompatible correct
+  boundary <- resOb$prob$boundary[resOb$prob$Comp == "incomp" & resOb$prob$Error == 0]
+  if (length(boundary) == 5) {
+    p_th <- resTh$summary$rtCor[2] / 100
+    costValue <- costValue + calculate_bin_stat(resTh$sim$rts_incomp, boundary, n_incomp_cor, n_incomp, p_th, "CS")
+  }
+
+  # incompatible error
+  boundary <- resOb$prob$boundary[resOb$prob$Comp == "incomp" & resOb$prob$Error == 1]
+  if (length(boundary) == 5) {
+    p_th <- resTh$summary$perErr[2] / 100
+    costValue <- costValue + calculate_bin_stat(resTh$sim$errs_incomp, boundary, n_incomp_err, n_incomp, p_th, "CS")
+  }
+
+  return(costValue)
+}
 
 
 #' @title calculateCostValueGS
@@ -1215,7 +1282,69 @@ calculateCostValueCS <- function(resTh, resOb) {
 #' cost  <- calculateCostValueGS(resTh, resOb)
 #' @export
 calculateCostValueGS <- function(resTh, resOb) {
-  return(calculateCostValueGS_cpp(resTh, resOb))
+  # Helper to calculate bin statistics inline
+  calculate_bin_stat <- function(th_rts, boundary, n_cell_obs, n_cond_obs, p_th_cell, stat = "GS") {
+    if (length(boundary) != 5) return(0)
+    pPred <- c(0.1, 0.2, 0.2, 0.2, 0.2, 0.1)
+    obFreq <- n_cell_obs * pPred
+    bnds <- c(-Inf, boundary, Inf)
+    if (length(th_rts) > 0) {
+      thFreq <- as.numeric(table(cut(th_rts, breaks = bnds)))
+      thFreq <- (thFreq / sum(thFreq)) * (n_cond_obs * p_th_cell)
+    } else {
+      thFreq <- rep(0, length(pPred))
+    }
+    thFreq <- pmax(thFreq, 1e-5)
+    obFreq <- pmax(obFreq, 1e-5)
+    if (stat == "GS") {
+      val <- 2 * sum(obFreq * log(obFreq / thFreq))
+    } else {
+      val <- sum(((obFreq - thFreq)^2) / thFreq)
+    }
+    return(val)
+  }
+
+  costValue <- 0
+  
+  # Get exact counts of non-outlier trials from observed data
+  d <- resOb$data[resOb$data$outlier == 0, ]
+  n_comp_cor <- sum(d$Comp == "comp" & d$Error == 0)
+  n_comp_err <- sum(d$Comp == "comp" & d$Error == 1)
+  n_comp     <- n_comp_cor + n_comp_err
+  
+  n_incomp_cor <- sum(d$Comp == "incomp" & d$Error == 0)
+  n_incomp_err <- sum(d$Comp == "incomp" & d$Error == 1)
+  n_incomp     <- n_incomp_cor + n_incomp_err
+
+  # compatible correct
+  boundary <- resOb$prob$boundary[resOb$prob$Comp == "comp" & resOb$prob$Error == 0]
+  if (length(boundary) == 5) {
+    p_th <- resTh$summary$rtCor[1] / 100
+    costValue <- costValue + calculate_bin_stat(resTh$sim$rts_comp, boundary, n_comp_cor, n_comp, p_th, "GS")
+  }
+
+  # compatible error
+  boundary <- resOb$prob$boundary[resOb$prob$Comp == "comp" & resOb$prob$Error == 1]
+  if (length(boundary) == 5) {
+    p_th <- resTh$summary$perErr[1] / 100
+    costValue <- costValue + calculate_bin_stat(resTh$sim$errs_comp, boundary, n_comp_err, n_comp, p_th, "GS")
+  }
+
+  # incompatible correct
+  boundary <- resOb$prob$boundary[resOb$prob$Comp == "incomp" & resOb$prob$Error == 0]
+  if (length(boundary) == 5) {
+    p_th <- resTh$summary$rtCor[2] / 100
+    costValue <- costValue + calculate_bin_stat(resTh$sim$rts_incomp, boundary, n_incomp_cor, n_incomp, p_th, "GS")
+  }
+
+  # incompatible error
+  boundary <- resOb$prob$boundary[resOb$prob$Comp == "incomp" & resOb$prob$Error == 1]
+  if (length(boundary) == 5) {
+    p_th <- resTh$summary$perErr[2] / 100
+    costValue <- costValue + calculate_bin_stat(resTh$sim$errs_incomp, boundary, n_incomp_err, n_incomp, p_th, "GS")
+  }
+
+  return(costValue)
 }
 
 
