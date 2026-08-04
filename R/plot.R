@@ -572,14 +572,10 @@ plot.dmcob <- function(x,
 #' of the previous plots.
 #'
 #' @param x Output from dmcObservedData
+#' @param dataset Integer for dataset number
 #' @param figType rtCorrect, errorRate, rtErrors, cdf, caf, delta, deltaErrors, deltaER, all
-#' @param subject NULL (aggregated data across all subjects) or integer for subject number
 #' @param labels Condition labels c("Compatible", "Incompatible") default
 #' @param cols Condition colours c("green", "red") default
-#' @param ltys Linetype see par
-#' @param pchs Symbols see par
-#' @param errorBars TRUE(default)/FALSE Plot errorbars
-#' @param errorBarType sd(default), or se
 #' @param ylimRt ylimit for Rt plots
 #' @param ylimErr ylimit for error rate plots
 #' @param xlimCDF xlimit for CDF plot
@@ -593,8 +589,6 @@ plot.dmcob <- function(x,
 #' @param yaxts TRUE/FALSE
 #' @param xylabPos 2
 #' @param resetPar TRUE/FALSE Reset graphical parameters
-#' @param legend TRUE/FALSE
-#' @param legend.parameters list
 #' @param ... additional plot pars
 #'
 #' @return Plot (no return value)
@@ -916,6 +910,7 @@ plot.dmcfit_subject <- function(x,
 #'
 #' @param x Output from dmcFit
 #' @param y Observed data
+#' @param dataset Integer for dataset number
 #' @param figType summary, rtCorrect, errorRate, rtErrors, cdf, caf, delta, all
 #' @param labels Condition labels c("Compatible", "Incompatible", "Observed", "Predicted") default
 #' @param cols Condition colours c("green", "red") default
@@ -997,6 +992,7 @@ plot.dmcfits <- function(x,
 #' @param x Output from dmcFit
 #' @param y Observed data
 #' @param subject NULL (aggregated data across all subjects) or integer for subject number
+#' @param dataset Integer for dataset number
 #' @param figType summary, rtCorrect, errorRate, rtErrors, cdf, caf, delta, all
 #' @param labels Condition labels c("Compatible", "Incompatible", "Observed", "Predicted") default
 #' @param cols Condition colours c("green", "red") default

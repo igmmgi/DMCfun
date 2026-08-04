@@ -842,8 +842,6 @@ dmcFitSubject <- function(resOb,
 #' @param subjects NULL (aggregated data across all subjects) or integer for subject number
 #' @param deControl Additional control parameters passed to DEoptim (see DEoptim.control)
 #' @param numCores Number of cores to use
-#' @param setSeed TRUE/FALSE (default = TRUE) Lock the random seed for deterministic simulations.
-#' @param seedValue (default = 1234) The seed value used if setSeed is TRUE.
 #'
 #' @return dmcFitSubjectDE returns a list of objects of class "dmcfit"
 #'

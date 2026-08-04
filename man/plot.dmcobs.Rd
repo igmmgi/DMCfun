@@ -29,6 +29,8 @@
 \arguments{
 \item{x}{Output from dmcObservedData}
 
+\item{dataset}{Integer for dataset number}
+
 \item{figType}{rtCorrect, errorRate, rtErrors, cdf, caf, delta, deltaErrors, deltaER, all}
 
 \item{labels}{Condition labels c("Compatible", "Incompatible") default}
@@ -62,20 +64,6 @@
 \item{resetPar}{TRUE/FALSE Reset graphical parameters}
 
 \item{...}{additional plot pars}
-
-\item{subject}{NULL (aggregated data across all subjects) or integer for subject number}
-
-\item{ltys}{Linetype see par}
-
-\item{pchs}{Symbols see par}
-
-\item{errorBars}{TRUE(default)/FALSE Plot errorbars}
-
-\item{errorBarType}{sd(default), or se}
-
-\item{legend}{TRUE/FALSE}
-
-\item{legend.parameters}{list}
 }
 \value{
 Plot (no return value)

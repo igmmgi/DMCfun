@@ -37,6 +37,8 @@
 
 \item{subject}{NULL (aggregated data across all subjects) or integer for subject number}
 
+\item{dataset}{Integer for dataset number}
+
 \item{figType}{summary, rtCorrect, errorRate, rtErrors, cdf, caf, delta, all}
 
 \item{labels}{Condition labels c("Compatible", "Incompatible", "Observed", "Predicted") default}

@@ -11,6 +11,8 @@
 
 \item{digits}{Number of digits in the output}
 
+\item{dataset}{Integer for dataset number}
+
 \item{...}{pars}
 }
 \value{

@@ -56,6 +56,7 @@ summary.dmcfit <- function(object, digits = 2, ...) {
 #'
 #' @param object Output from dmcFit
 #' @param digits Number of digits in the output
+#' @param dataset Integer for dataset number
 #' @param ... pars
 #'
 #' @return DataFrame
@@ -87,6 +88,7 @@ summary.dmcfits <- function(object, digits = 2, dataset = NULL, ...) {
 #'
 #' @param object Output from dmcFitSubject
 #' @param digits Number of digits in the output
+#' @param subject Integer for subject number
 #' @param ... pars
 #'
 #' @return DataFrame
@@ -122,6 +124,8 @@ summary.dmcfit_subject <- function(object, digits = 2, subject = NULL, ...) {
 #'
 #' @param object Output from dmcFitAgg
 #' @param digits Number of digits in the output
+#' @param subject Integer for subject number
+#' @param dataset Integer for dataset number
 #' @param ... pars
 #'
 #' @return DataFrame

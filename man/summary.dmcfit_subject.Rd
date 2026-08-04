@@ -11,6 +11,8 @@
 
 \item{digits}{Number of digits in the output}
 
+\item{subject}{Integer for subject number}
+
 \item{...}{pars}
 }
 \value{
