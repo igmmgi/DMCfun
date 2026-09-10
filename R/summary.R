@@ -151,7 +151,7 @@ summary.dmcfits_subject <- function(object, digits = 2, subject = NULL, dataset 
   }
   outAvg <- outSubject %>%
     dplyr::group_by(DataSet) %>%
-    dplyr::summarize_all(mean) %>%
+    dplyr::summarize(dplyr::across(dplyr::everything(), mean)) %>%
     dplyr::select(-subject)
     
   if (!is.null(dataset)) {

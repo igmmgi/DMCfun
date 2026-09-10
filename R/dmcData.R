@@ -507,29 +507,29 @@ mean.dmcobs <- function(x, ...) {
   if (!is.null(x[[1]]$summary)) {
     meanob$summary <- mergeLists(x, "summary") %>%
       dplyr::group_by(Comp) %>%
-      dplyr::summarise_all(mean)
+      dplyr::summarize(dplyr::across(dplyr::everything(), mean))
       
     meanob$delta <- mergeLists(x, "delta") %>%
       dplyr::group_by(Bin) %>%
-      dplyr::summarize_all(mean)
+      dplyr::summarize(dplyr::across(dplyr::everything(), mean))
       
     meanob$caf <- mergeLists(x, "caf") %>%
       dplyr::group_by(Bin) %>%
-      dplyr::summarize_all(mean)
+      dplyr::summarize(dplyr::across(dplyr::everything(), mean))
   }
   
   if (!is.null(x[[1]]$summarySubject)) {
     meanob$summarySubject <- mergeLists(x, "summarySubject") %>%
       dplyr::group_by(Subject, Comp) %>%
-      dplyr::summarise_all(mean)
+      dplyr::summarize(dplyr::across(dplyr::everything(), mean))
       
     meanob$deltaSubject <- mergeLists(x, "deltaSubject") %>%
       dplyr::group_by(Subject, Bin) %>%
-      dplyr::summarize_all(mean)
+      dplyr::summarize(dplyr::across(dplyr::everything(), mean))
       
     meanob$cafSubject <- mergeLists(x, "cafSubject") %>%
       dplyr::group_by(Subject, Bin) %>%
-      dplyr::summarize_all(mean)
+      dplyr::summarize(dplyr::across(dplyr::everything(), mean))
   }
   
   class(meanob) <- "dmcob"

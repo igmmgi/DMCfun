@@ -248,7 +248,7 @@ dmcFit <- function(resOb,
         spLim = c(-startValsGrid$bnds[i], startValsGrid$bnds[i]), spDist = spDist, bndsRate = startValsGrid$bndsRate[i],
         bndsSaturation = startValsGrid$bndsSaturation[i], drOnset = drOnset, drDist = drDist, drShape = drShape, drLim = drLim,
         rtMax = rtMax, nTrl = nTrl, nDelta = nDelta, pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF,
-        printInputArgs = TRUE, printResults = FALSE
+        printInputArgs = FALSE, printResults = FALSE
       )
       cost <- 0
       for (i in 1:length(resOb)) {
@@ -258,7 +258,7 @@ dmcFit <- function(resOb,
     }
 
     cl <- parallel::makeCluster(numCores)
-    parallel::clusterEvalQ(cl, require("DMCfun"))
+    parallel::clusterEvalQ(cl, library(DMCfun))
     on.exit({ try(parallel::stopCluster(cl), silent = TRUE) }, add = TRUE)
     invisible(parallel::clusterExport(cl = cl, varlist = c("dmcSim", "calculateCostValue"), envir = environment()))
 
@@ -323,7 +323,8 @@ dmcFit <- function(resOb,
       spDist = spDist, spBias = prms[[i]]$spBias, spShape = prms[[i]]$spShape, spLim = c(-prms[[i]]$bnds, prms[[i]]$bnds),
       sigm = prms[[i]]$sigm, bndsRate = prms[[i]]$bndsRate, bndsSaturation = prms[[i]]$bndsSaturation, drOnset = drOnset,
       drDist = drDist, drShape = drShape, drLim = drLim, rtMax = rtMax, nTrl = nTrl, nDelta = nDelta, pDelta = pDelta,
-      tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF, printResults = TRUE
+      tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF, printResults = TRUE,
+      setSeed = setSeed, seedValue = seedValue
     )
   }
 
@@ -514,7 +515,7 @@ dmcFitDE <- function(resOb,
   # }
 
   cl <- parallel::makeCluster(numCores)
-    parallel::clusterEvalQ(cl, require("DMCfun"))
+    parallel::clusterEvalQ(cl, library(DMCfun))
     on.exit({ try(parallel::stopCluster(cl), silent = TRUE) }, add = TRUE)
   invisible(parallel::clusterExport(cl = cl, varlist = c("dmcSim", "calculateCostValue"), envir = environment()))
 
@@ -598,11 +599,11 @@ dmcFitDE <- function(resOb,
       sigm = prms[[i]]$sigm, drOnset = drOnset, bndsRate = prms[[i]]$bndsRate, bndsSaturation = prms[[i]]$bndsSaturation,
       drDist = drDist, drShape = drShape, drLim = drLim, rtMax = rtMax, nTrl = nTrl, nDelta = nDelta,
       pDelta = pDelta, tDelta = tDelta, deltaErrors = deltaErrors, nCAF = nCAF,
-      printResults = TRUE
+      printResults = TRUE, setSeed = setSeed, seedValue = seedValue
     )
   }
 
-  dmcfit[[1]]$sim$errs_comp
+
 
   # fitted parameters
   for (i in 1:length(resOb)) {
@@ -633,7 +634,6 @@ dmcFitDE <- function(resOb,
     return(dmcfit)
   }
 
-  return(dmcfit)
 }
 
 
@@ -788,7 +788,9 @@ dmcFitSubject <- function(resOb,
                                 printInputArgs  = printInputArgs,
                                 printResults    = printResults,
                                 optimControl    = optimControl,
-                                numCores        = numCores
+                                numCores        = numCores,
+                                setSeed         = setSeed,
+                                seedValue       = seedValue
     )
   }
 
@@ -973,18 +975,18 @@ mean.dmcfit_subject <- function(x, ...) {
 
   meanfit$summary <- mergeLists(x, "summary") %>%
     dplyr::group_by(Comp) %>%
-    dplyr::summarise_all(mean)
+    dplyr::summarize(dplyr::across(dplyr::everything(), mean))
 
   meanfit$delta <- mergeLists(x, "delta") %>%
     dplyr::group_by(Bin) %>%
-    dplyr::summarize_all(mean)
+    dplyr::summarize(dplyr::across(dplyr::everything(), mean))
 
   meanfit$caf <- mergeLists(x, "caf") %>%
     dplyr::group_by(Bin) %>%
-    dplyr::summarize_all(mean)
+    dplyr::summarize(dplyr::across(dplyr::everything(), mean))
 
   meanfit$par <- as.data.frame(mergeLists(x, "par")) %>%
-    dplyr::summarize_all(~ mean(unlist(.x)))
+    dplyr::summarize(dplyr::across(dplyr::everything(), ~ mean(unlist(.x))))
 
   meanfit$sim <- dmcSim(amp = meanfit$par$amp, tau = meanfit$par$tau, drc = meanfit$par$drc,
     bnds = meanfit$par$bnds, resMean = meanfit$par$resMean, resSD = meanfit$par$resSD,
