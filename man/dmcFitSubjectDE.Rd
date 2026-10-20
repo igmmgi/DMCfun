@@ -25,7 +25,7 @@ dmcFitSubjectDE(
   rtMax = 5000,
   subjects = c(),
   deControl = list(),
-  numCores = 2
+  numCores = NULL
 )
 }
 \arguments{
@@ -81,7 +81,7 @@ squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS"
 
 \item{deControl}{Additional control parameters passed to DEoptim (see DEoptim.control)}
 
-\item{numCores}{Number of cores to use}
+\item{numCores}{Number of cores to use (default = detectCores(), or 2 on CRAN)}
 }
 \value{
 dmcFitSubjectDE returns a list of objects of class "dmcfit"

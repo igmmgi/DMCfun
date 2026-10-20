@@ -40,46 +40,58 @@ export(dmcSims)
 export(errDist)
 export(rtDist)
 importFrom(Rcpp,evalCpp)
-importFrom(dplyr,"%>%")
-importFrom(dplyr,group_by)
-importFrom(dplyr,mutate)
-importFrom(dplyr,n)
-importFrom(dplyr,ntile)
-importFrom(dplyr,summarize)
-importFrom(grDevices,colorRampPalette)
-importFrom(grDevices,dev.off)
-importFrom(grDevices,pdf)
-importFrom(graphics,abline)
-importFrom(graphics,axis)
-importFrom(graphics,hist)
-importFrom(graphics,layout)
-importFrom(graphics,legend)
-importFrom(graphics,lines)
-importFrom(graphics,par)
-importFrom(graphics,plot)
-importFrom(graphics,title)
+importFrom(dplyr,
+  "%>%",
+  group_by,
+  mutate,
+  n,
+  ntile,
+  summarize
+)
+importFrom(grDevices,
+  colorRampPalette,
+  dev.off,
+  pdf
+)
+importFrom(graphics,
+  abline,
+  axis,
+  hist,
+  layout,
+  legend,
+  lines,
+  par,
+  plot,
+  title
+)
 importFrom(methods,is)
-importFrom(parallel,detectCores)
-importFrom(parallel,makeCluster)
-importFrom(parallel,stopCluster)
+importFrom(parallel,
+  detectCores,
+  makeCluster,
+  stopCluster
+)
 importFrom(pbapply,pblapply)
-importFrom(stats,density)
-importFrom(stats,ecdf)
-importFrom(stats,optim)
-importFrom(stats,quantile)
-importFrom(stats,rbeta)
-importFrom(stats,rnorm)
-importFrom(stats,rt)
-importFrom(stats,runif)
-importFrom(stats,sd)
-importFrom(stats,setNames)
-importFrom(stats,time)
+importFrom(stats,
+  density,
+  ecdf,
+  optim,
+  quantile,
+  rbeta,
+  rnorm,
+  rt,
+  runif,
+  sd,
+  setNames,
+  time
+)
 importFrom(tidyr,pivot_wider)
-importFrom(utils,data)
-importFrom(utils,modifyList)
-importFrom(utils,packageVersion)
-importFrom(utils,read.table)
-importFrom(utils,setTxtProgressBar)
-importFrom(utils,tail)
-importFrom(utils,txtProgressBar)
+importFrom(utils,
+  data,
+  modifyList,
+  packageVersion,
+  read.table,
+  setTxtProgressBar,
+  tail,
+  txtProgressBar
+)
 useDynLib(DMCfun, .registration=TRUE)

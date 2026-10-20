@@ -1,3 +1,22 @@
+defaultNumCores <- function() {
+  chk <- tolower(Sys.getenv("_R_CHECK_LIMIT_CORES_", ""))
+  if (nzchar(chk) && chk %in% c("true", "warn")) {
+    return(2L)
+  }
+  if (identical(tolower(Sys.getenv("NOT_CRAN", "")), "false")) {
+    return(2L)
+  }
+  optCores <- getOption("mc.cores", NULL)
+  if (!is.null(optCores)) {
+    return(as.integer(optCores))
+  }
+  cores <- parallel::detectCores()
+  if (is.na(cores) || cores < 1L) {
+    return(1L)
+  }
+  return(as.integer(cores))
+}
+
 #' @title dmcFit
 #'
 #' @description Fit theoretical data generated from dmcSim to observed data by
@@ -48,7 +67,7 @@
 #' @param printInputArgs TRUE (default) /FALSE
 #' @param printResults TRUE/FALSE (default)
 #' @param optimControl Additional control parameters passed to optim (see optim details section)
-#' @param numCores Number of cores to use
+#' @param numCores Number of cores to use (default = detectCores(), or 2 on CRAN)
 #' @param setSeed TRUE/FALSE (default = TRUE) Lock the random seed for deterministic simulations.
 #' @param seedValue (default = 1234) The seed value used if setSeed is TRUE.
 #'
@@ -137,9 +156,10 @@ dmcFit <- function(resOb,
                    printInputArgs  = TRUE,
                    printResults    = FALSE,
                    optimControl    = list(),
-                   numCores        = 2,
+                   numCores        = NULL,
                    setSeed         = TRUE,
                    seedValue       = 1234) {
+  if (is.null(numCores)) numCores <- defaultNumCores()
 
   if (inherits(resOb, "dmcob")) {
     resOb <- list(resOb)
@@ -257,8 +277,12 @@ dmcFit <- function(resOb,
       return(cost)
     }
 
-    cl <- parallel::makeCluster(numCores)
-    parallel::clusterEvalQ(cl, require("DMCfun"))
+    gridCores <- min(as.integer(numCores), nrow(startValsGrid))
+    cl <- parallel::makeCluster(gridCores)
+    parallel::clusterEvalQ(cl, {
+      Sys.setenv(OMP_NUM_THREADS = "1")
+      require("DMCfun")
+    })
     on.exit({ try(parallel::stopCluster(cl), silent = TRUE) }, add = TRUE)
     invisible(parallel::clusterExport(cl = cl, varlist = c("dmcSim", "calculateCostValue"), envir = environment()))
 
@@ -397,7 +421,7 @@ dmcFit <- function(resOb,
 #' @param costFunction The cost function to minimise: root mean square error ("RMSE": default),
 #' squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS")
 #' @param deControl Additional control parameters passed to DEoptim (see DEoptim.control)
-#' @param numCores Number of cores to use
+#' @param numCores Number of cores to use (default = detectCores(), or 2 on CRAN)
 #' @param setSeed TRUE/FALSE (default = TRUE) Lock the random seed for deterministic simulations.
 #' @param seedValue (default = 1234) The seed value used if setSeed is TRUE.
 #'
@@ -447,9 +471,10 @@ dmcFitDE <- function(resOb,
                      rtMax        = 5000,
                      costFunction = "RMSE",
                      deControl    = list(),
-                     numCores     = 2,
+                     numCores     = NULL,
                      setSeed      = TRUE,
                      seedValue    = 1234) {
+  if (is.null(numCores)) numCores <- defaultNumCores()
 
   if (inherits(resOb, "dmcob")) {
     resOb <- list(resOb)
@@ -514,8 +539,11 @@ dmcFitDE <- function(resOb,
   # }
 
   cl <- parallel::makeCluster(numCores)
-    parallel::clusterEvalQ(cl, require("DMCfun"))
-    on.exit({ try(parallel::stopCluster(cl), silent = TRUE) }, add = TRUE)
+  parallel::clusterEvalQ(cl, {
+    Sys.setenv(OMP_NUM_THREADS = "1")
+    require("DMCfun")
+  })
+  on.exit({ try(parallel::stopCluster(cl), silent = TRUE) }, add = TRUE)
   invisible(parallel::clusterExport(cl = cl, varlist = c("dmcSim", "calculateCostValue"), envir = environment()))
 
   nParameters <- length(c(unlist(minVals[!as.logical(fixedFit)]), rep(unlist(minVals[as.logical(freeCombined)]), length(resOb)-1)))
@@ -688,7 +716,7 @@ dmcFitDE <- function(resOb,
 #' @param printInputArgs TRUE (default) /FALSE
 #' @param printResults TRUE/FALSE (default)
 #' @param optimControl Additional control parameters passed to optim (see optim details section)
-#' @param numCores Number of cores to use
+#' @param numCores Number of cores to use (default = detectCores(), or 2 on CRAN)
 #' @param setSeed TRUE/FALSE (default = TRUE) Lock the random seed for deterministic simulations.
 #' @param seedValue (default = 1234) The seed value used if setSeed is TRUE.
 #'
@@ -732,9 +760,10 @@ dmcFitSubject <- function(resOb,
                           printInputArgs  = TRUE,
                           printResults    = FALSE,
                           optimControl    = list(),
-                          numCores        = 2,
+                          numCores        = NULL,
                           setSeed         = TRUE,
                           seedValue       = 1234) {
+  if (is.null(numCores)) numCores <- defaultNumCores()
 
   if (inherits(resOb, "dmcob")) {
     resOb <- list(resOb)
@@ -841,7 +870,7 @@ dmcFitSubject <- function(resOb,
 #' @param drLim The drift rate (dr) range
 #' @param subjects NULL (aggregated data across all subjects) or integer for subject number
 #' @param deControl Additional control parameters passed to DEoptim (see DEoptim.control)
-#' @param numCores Number of cores to use
+#' @param numCores Number of cores to use (default = detectCores(), or 2 on CRAN)
 #'
 #' @return dmcFitSubjectDE returns a list of objects of class "dmcfit"
 #'
@@ -877,7 +906,8 @@ dmcFitSubjectDE <- function(resOb,
                             rtMax        = 5000,
                             subjects     = c(),
                             deControl    = list(),
-                            numCores     = 2) {
+                            numCores     = NULL) {
+  if (is.null(numCores)) numCores <- defaultNumCores()
 
   if (inherits(resOb, "dmcob")) {
     resOb <- list(resOb)

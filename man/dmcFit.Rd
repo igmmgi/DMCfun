@@ -30,7 +30,7 @@ dmcFit(
   printInputArgs = TRUE,
   printResults = FALSE,
   optimControl = list(),
-  numCores = 2,
+  numCores = NULL,
   setSeed = TRUE,
   seedValue = 1234
 )
@@ -104,7 +104,7 @@ squared percentage error ("SPE"), or likelihood-ratio chi-square statistic ("GS"
 
 \item{optimControl}{Additional control parameters passed to optim (see optim details section)}
 
-\item{numCores}{Number of cores to use}
+\item{numCores}{Number of cores to use (default = detectCores(), or 2 on CRAN)}
 
 \item{setSeed}{TRUE/FALSE (default = TRUE) Lock the random seed for deterministic simulations.}
 

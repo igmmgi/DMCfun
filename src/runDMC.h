@@ -38,11 +38,12 @@ std::vector<double> calculate_summary(
     const unsigned long nTrl
   );
 
-std::vector<double> calculate_percentile(
+std::vector<double> calculate_percentile(const std::vector<double> &vDelta, std::vector<double> &rts, int tDelta);
+/* old
     std::vector<double> vDelta,
     std::vector<double> rts,
     int tDelta
-  );
+  ); */
 
 void calculate_delta(std::map<std::string, std::vector<double>> &rdelta);
 
