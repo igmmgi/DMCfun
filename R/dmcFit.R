@@ -1104,7 +1104,7 @@ minimizeCostValue <- function(x,
     nFreeCombined <- sum(freeCombined == TRUE)
     start <- 1
     for (i in 2:length(prms)) {
-      prms[[i]][as.logical(freeCombined)] <- x[-c(1:nParameters)][start:start+nFreeCombined-1]
+      prms[[i]][as.logical(freeCombined)] <- x[-c(1:nParameters)][start:(start + nFreeCombined - 1)]
       start <- start + nFreeCombined
     }
   }
